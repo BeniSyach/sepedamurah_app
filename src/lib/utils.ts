@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, isValid, parse, parseISO } from 'date-fns'
 import { type ClassValue, clsx } from 'clsx'
 import { id } from 'date-fns/locale'
 import { twMerge } from 'tailwind-merge'
@@ -104,6 +104,51 @@ export function formatTanggalLengkap(dateString?: string | null): string {
   try {
     const date = parseISO(dateString)
     return format(date, 'dd MMMM yyyy', { locale: id })
+  } catch {
+    return '-'
+  }
+}
+
+/**
+ * Format tanggal "YYYY-MM-DD HH:mm:ss" menjadi "dd-MM-yyyy" atau "dd-MM-yyyy HH:mm:ss" jika ada jam
+ */
+export function formatTanggaldanJam(dateString?: string | null): string {
+  if (!dateString) return '-'
+
+  try {
+    const date = parse(dateString, 'yyyy-MM-dd HH:mm:ss', new Date())
+    if (!isValid(date)) return '-'
+
+    const hasTime =
+      date.getHours() !== 0 ||
+      date.getMinutes() !== 0 ||
+      date.getSeconds() !== 0
+    return hasTime
+      ? format(date, 'dd-MM-yyyy HH:mm:ss', { locale: id })
+      : format(date, 'dd-MM-yyyy', { locale: id })
+  } catch {
+    return '-'
+  }
+}
+
+export function getNamaBulan(dateString?: string | null): string {
+  if (!dateString) return '-'
+  try {
+    const date = parseISO(dateString)
+    return format(date, 'MMMM', { locale: id })
+  } catch {
+    return '-'
+  }
+}
+
+/**
+ * Ambil jam dari tanggal/waktu (contoh: "2025-07-14 01:11:31" → "01:11:31")
+ */
+export function getJam(dateString?: string | null): string {
+  if (!dateString) return '-'
+  try {
+    const date = parseISO(dateString)
+    return format(date, 'HH:mm:ss')
   } catch {
     return '-'
   }

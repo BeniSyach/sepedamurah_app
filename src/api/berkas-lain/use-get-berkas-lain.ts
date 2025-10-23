@@ -6,6 +6,7 @@ interface UseBerkasLain {
   page?: number
   perPage?: number
   search?: string
+  user_id?: string | number
 }
 
 export function useGetBerkasLain(params: UseBerkasLain) {
@@ -17,6 +18,7 @@ export function useGetBerkasLain(params: UseBerkasLain) {
           page: params.page ?? 1,
           per_page: params.perPage ?? 10,
           search: params.search ?? '',
+          user_id: params.user_id,
         },
       })
       return data

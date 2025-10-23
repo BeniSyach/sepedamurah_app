@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetPermohonanSP2D } from '@/api'
+import { useAuthStore } from '@/stores/auth-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -17,12 +18,16 @@ const route = getRouteApi(
 export function Sp2dPublishKuasaBUD() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const user = useAuthStore((s) => s.user)
+  const userRole = localStorage.getItem('user_role')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
     search: search.search,
+    menu: 'sp2d_publish_kuasa_bud',
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (

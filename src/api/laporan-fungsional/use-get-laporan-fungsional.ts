@@ -6,6 +6,9 @@ interface UseLaporanFungsional {
   page?: number
   perPage?: number
   search?: string
+  jenis?: string
+  menu?: string
+  user_id?: string | number
 }
 
 export function useGetLaporanFungsional(params: UseLaporanFungsional) {
@@ -19,6 +22,9 @@ export function useGetLaporanFungsional(params: UseLaporanFungsional) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            jenis: params.jenis,
+            menu: params.menu,
+            user_id: params.user_id,
           },
         }
       )

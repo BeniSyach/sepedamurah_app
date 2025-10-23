@@ -6,6 +6,8 @@ interface UsePermohonanSP2D {
   page?: number
   perPage?: number
   search?: string
+  menu?: string
+  user_id?: string | number
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
@@ -17,6 +19,8 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
           page: params.page ?? 1,
           per_page: params.perPage ?? 10,
           search: params.search ?? '',
+          menu: params.menu,
+          user_id: params.user_id,
         },
       })
       return data

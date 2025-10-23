@@ -25,7 +25,7 @@ export function SudahParafSPD() {
     perPage: search.pageSize,
     search: search.search,
     menu: 'spd_sudah_paraf',
-    ...(userRole !== 'Administrator' && { user_id: user?.id }),
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (

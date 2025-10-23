@@ -25,7 +25,7 @@ export function BelumParafSPD() {
     perPage: search.pageSize,
     search: search.search,
     menu: 'spd_belum_paraf',
-    ...(userRole !== 'Administrator' && { user_id: user?.id }),
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (

@@ -1,6 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type BerkasLain } from '@/api'
-import { cn } from '@/lib/utils'
+import { cn, formatTanggal, getJam, getNamaBulan } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
@@ -50,39 +50,60 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     enableHiding: false,
   },
 
-  // ✅ tgl_surat
+  // ✅ nama SKPD
   {
-    accessorKey: 'tgl_surat',
+    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='tgl_surat' />
+      <DataTableColumnHeader column={column} title='Nama SKPD' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('tgl_surat')}
-      </LongText>
-    ),
+    cell: ({ row }) => {
+      const skpd = row.original.user.skpd
+      return (
+        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
+      )
+    },
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ users_id
+  // ✅ Berkas Bulan
   {
-    accessorKey: 'users_id',
+    accessorKey: 'Berkas Bulan',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='users_id' />
+      <DataTableColumnHeader column={column} title='Bulan' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('users_id')}</LongText>
-    ),
+    cell: ({ row }) => getNamaBulan(row.getValue('tgl_surat')),
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
+    meta: { className: 'min-w-[120px]' },
+  },
+
+  // ✅ tgl_surat
+  {
+    accessorKey: 'tgl_surat',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Tanggal Upload' />
+    ),
+    cell: ({ row }) => formatTanggal(row.getValue('tgl_surat')),
+    enableSorting: true,
+    meta: { className: 'min-w-[120px]' },
+  },
+
+  // ✅ tgl_surat
+  {
+    accessorKey: 'tgl_surat',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Jam Upload' />
+    ),
+    cell: ({ row }) => getJam(row.getValue('tgl_surat')),
+    enableSorting: true,
+    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ nama_dokumen
   {
     accessorKey: 'nama_dokumen',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nama_dokumen' />
+      <DataTableColumnHeader column={column} title='Nama Berkas' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
@@ -93,19 +114,28 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ status_tte
+  // ✅ status_tte dengan badge
   {
     accessorKey: 'status_tte',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='status_tte' />
+      <DataTableColumnHeader column={column} title='Status' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('status_tte')}
-      </LongText>
-    ),
+    cell: ({ row }) => {
+      const status = row.getValue('status_tte')
+      const isSigned = status === '1' // atau bisa status === 1 kalau tipe number
+
+      return (
+        <span
+          className={`inline-block rounded-full px-2 py-1 text-xs font-semibold text-white ${
+            isSigned ? 'bg-green-500' : 'bg-red-500'
+          }`}
+        >
+          {isSigned ? 'Sudah Ditandatangani' : 'Belum Ditandatangani'}
+        </span>
+      )
+    },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
+    meta: { className: 'min-w-[200px]' },
   },
 
   // ✅ Aksi

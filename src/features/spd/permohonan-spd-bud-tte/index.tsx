@@ -25,7 +25,7 @@ export function PermohonanSPDBUDTTE() {
     perPage: search.pageSize,
     search: search.search,
     menu: 'spd_ditandatangani_bud',
-    ...(userRole !== 'Administrator' && { user_id: user?.id }),
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (

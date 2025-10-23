@@ -1,4 +1,5 @@
-import type { PaginationLinks, PaginationMeta } from '@/api/users'
+import type { PaginationLinks, PaginationMeta, Users } from '@/api/users'
+import { type MasterSkpd } from '../master-data'
 
 export interface LaporanFungsionalResponse {
   data: LaporanFungsional[]
@@ -9,6 +10,7 @@ export interface LaporanFungsionalResponse {
 export interface LaporanFungsional {
   id: string
   id_pengirim: string
+  pengirim: Users
   kd_opd1: string
   kd_opd2: string
   kd_opd3: string
@@ -17,6 +19,7 @@ export interface LaporanFungsional {
   nama_pengirim: string
   id_operator: string
   nama_operator: string | null
+  operator: Users
   jenis_berkas: string
   nama_file: string
   nama_file_asli: string
@@ -33,4 +36,5 @@ export interface LaporanFungsional {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  skpd: MasterSkpd
 }

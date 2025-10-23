@@ -25,7 +25,7 @@ export function BerkasMasukSPD() {
     perPage: search.pageSize,
     search: search.search,
     menu: 'berkas_masuk_spd',
-    ...(userRole !== 'Administrator' && { user_id: user?.id }),
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (

@@ -26,7 +26,7 @@ export function PermohonanSPD() {
     perPage: search.pageSize,
     search: search.search,
     menu: 'permohonan_spd',
-    ...(userRole !== 'Administrator' && { user_id: user?.id }),
+    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (
