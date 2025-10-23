@@ -17,6 +17,7 @@ export function DataTableBulkActions<TData>({
   table,
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  // eslint-disable-next-line no-console
   console.log('data hapus', showDeleteConfirm)
   return (
     <>

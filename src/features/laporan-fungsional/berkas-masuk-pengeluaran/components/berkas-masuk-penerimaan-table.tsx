@@ -24,7 +24,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { roles } from '../data/data'
 import { ReferensiLaporanFungsionalColumns as columns } from './berkas-masuk-penerimaan-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 

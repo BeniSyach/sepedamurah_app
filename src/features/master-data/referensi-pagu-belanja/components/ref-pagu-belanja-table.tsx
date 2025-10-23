@@ -24,7 +24,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { roles } from '../data/data'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiPaguBelanjaColumns as columns } from './ref-pagu-belanja-columns'
 
@@ -112,22 +111,7 @@ export function ReferensiPaguBelanjaTable({
         table={table}
         searchPlaceholder='Search users...'
         searchKey='nm_rekening'
-        filters={[
-          {
-            columnId: 'is_active',
-            title: 'Status',
-            options: [
-              { label: 'Active', value: 'active' },
-              { label: 'Inactive', value: 'inactive' },
-              { label: 'Suspended', value: 'suspended' },
-            ],
-          },
-          {
-            columnId: 'role',
-            title: 'Role',
-            options: roles.map((role) => ({ ...role })),
-          },
-        ]}
+        filters={[]}
       />
 
       <div className='overflow-hidden rounded-md border'>

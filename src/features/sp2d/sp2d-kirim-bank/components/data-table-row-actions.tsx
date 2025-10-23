@@ -11,7 +11,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import { type User } from '../data/schema'
 import { useRefSp2dItem } from './berkas-masuk-sp2d-provider'
 
 type DataTableRowActionsProps = {

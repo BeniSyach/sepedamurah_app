@@ -24,7 +24,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { roles } from '../data/data'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiLogTTEColumns as columns } from './log-tte-columns'
 

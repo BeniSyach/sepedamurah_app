@@ -24,7 +24,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { roles } from '../data/data'
 import { ReferensiUpSkpdColumns as columns } from './besaran-up-skpd-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 

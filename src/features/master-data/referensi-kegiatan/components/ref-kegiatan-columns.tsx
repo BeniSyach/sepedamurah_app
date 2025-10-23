@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type Kegiatan } from '@/api'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-// import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const refKegiatanColummns: ColumnDef<Kegiatan>[] = [
