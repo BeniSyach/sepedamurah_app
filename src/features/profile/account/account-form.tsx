@@ -1,18 +1,10 @@
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuthStore } from '@/stores/auth-store'
 import { showSubmittedData } from '@/lib/show-submitted-data'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -23,46 +15,61 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { DatePicker } from '@/components/date-picker'
 
-const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'French', value: 'fr' },
-  { label: 'German', value: 'de' },
-  { label: 'Spanish', value: 'es' },
-  { label: 'Portuguese', value: 'pt' },
-  { label: 'Russian', value: 'ru' },
-  { label: 'Japanese', value: 'ja' },
-  { label: 'Korean', value: 'ko' },
-  { label: 'Chinese', value: 'zh' },
-] as const
-
-const accountFormSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Please enter your name.')
-    .min(2, 'Name must be at least 2 characters.')
-    .max(30, 'Name must not be longer than 30 characters.'),
-  dob: z.date('Please select your date of birth.'),
-  language: z.string('Please select a language.'),
-})
+// Schema validasi
+const accountFormSchema = z
+  .object({
+    email: z.string().email('Masukkan email yang valid.'),
+    no_hp: z.string().min(8, 'No HP minimal 8 digit.'),
+    foto: z.any().optional(),
+    visual_tte: z.any().optional(),
+    password: z
+      .string()
+      .optional()
+      .refine((val) => !val || val.length >= 6, {
+        message: 'Password minimal 6 karakter.',
+      }),
+    confirm_password: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      // Cek password dan konfirmasi hanya jika salah satu diisi
+      if (data.password || data.confirm_password) {
+        return data.password === data.confirm_password
+      }
+      return true
+    },
+    {
+      message: 'Password dan konfirmasi harus sama',
+      path: ['confirm_password'],
+    }
+  )
 
 type AccountFormValues = z.infer<typeof accountFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-  name: '',
-}
-
 export function AccountForm() {
+  const user = useAuthStore((s) => s.user)
+  const [fotoPreview, setFotoPreview] = useState<string>(
+    user?.image
+      ? `${import.meta.env.VITE_ASSET_URL}${user.image}`
+      : 'https://placehold.co/80x80'
+  )
+  const [ttePreview, setTtePreview] = useState<string>(
+    user?.visualisasi_tte
+      ? `${import.meta.env.VITE_ASSET_URL}${user.visualisasi_tte}`
+      : 'https://placehold.co/80x80'
+  )
+
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
-    defaultValues,
+    defaultValues: {
+      email: user?.email || '',
+      no_hp: user?.no_hp || '',
+      foto: null,
+      visual_tte: null,
+      password: '',
+      confirm_password: '',
+    },
   })
 
   function onSubmit(data: AccountFormValues) {
@@ -71,19 +78,18 @@ export function AccountForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <FormField
           control={form.control}
-          name='name'
+          name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='Your name' {...field} />
+                <Input placeholder='Masukkan email' {...field} />
               </FormControl>
               <FormDescription>
-                This is the name that will be displayed on your profile and in
-                emails.
+                Email ini akan digunakan untuk login dan notifikasi.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -91,13 +97,15 @@ export function AccountForm() {
         />
         <FormField
           control={form.control}
-          name='dob'
+          name='no_hp'
           render={({ field }) => (
-            <FormItem className='flex flex-col'>
-              <FormLabel>Date of birth</FormLabel>
-              <DatePicker selected={field.value} onSelect={field.onChange} />
+            <FormItem>
+              <FormLabel>No HP</FormLabel>
+              <FormControl>
+                <Input placeholder='Masukkan nomor HP' {...field} />
+              </FormControl>
               <FormDescription>
-                Your date of birth is used to calculate your age.
+                Nomor HP digunakan untuk verifikasi dan notifikasi.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -105,68 +113,121 @@ export function AccountForm() {
         />
         <FormField
           control={form.control}
-          name='language'
-          render={({ field }) => (
-            <FormItem className='flex flex-col'>
-              <FormLabel>Language</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant='outline'
-                      role='combobox'
-                      className={cn(
-                        'w-[200px] justify-between',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value
-                        ? languages.find(
-                            (language) => language.value === field.value
-                          )?.label
-                        : 'Select language'}
-                      <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className='w-[200px] p-0'>
-                  <Command>
-                    <CommandInput placeholder='Search language...' />
-                    <CommandEmpty>No language found.</CommandEmpty>
-                    <CommandGroup>
-                      <CommandList>
-                        {languages.map((language) => (
-                          <CommandItem
-                            value={language.label}
-                            key={language.value}
-                            onSelect={() => {
-                              form.setValue('language', language.value)
-                            }}
-                          >
-                            <CheckIcon
-                              className={cn(
-                                'size-4',
-                                language.value === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {language.label}
-                          </CommandItem>
-                        ))}
-                      </CommandList>
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+          name='foto'
+          render={() => (
+            <FormItem>
+              <FormLabel>Foto Profil</FormLabel>
+              <FormControl>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      form.setValue('foto', file)
+                      setFotoPreview(URL.createObjectURL(file))
+                    }
+                  }}
+                  className='h-8 py-0'
+                />
+              </FormControl>
+              {fotoPreview && (
+                <img
+                  src={fotoPreview}
+                  alt='Preview Foto'
+                  className='mt-2 h-32 w-32 rounded object-cover'
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://placehold.co/80x80'
+                  }}
+                />
+              )}
               <FormDescription>
-                This is the language that will be used in the dashboard.
+                Unggah foto profil Anda. Bisa dilihat preview sebelum disimpan.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Update account</Button>
+        <FormField
+          control={form.control}
+          name='visual_tte'
+          render={() => (
+            <FormItem>
+              <FormLabel>Visual TTE</FormLabel>
+              <FormControl>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      form.setValue('visual_tte', file)
+                      setTtePreview(URL.createObjectURL(file))
+                    }
+                  }}
+                  className='h-8 py-0'
+                />
+              </FormControl>
+              {ttePreview && (
+                <img
+                  src={ttePreview}
+                  alt='Preview Visual TTE'
+                  className='mt-2 h-32 w-32 rounded object-cover'
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://placehold.co/80x80'
+                  }}
+                />
+              )}
+              <FormDescription>
+                Unggah visual TTE Anda. Bisa dilihat preview sebelum disimpan.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password Baru</FormLabel>
+              <FormControl>
+                <Input
+                  type='password'
+                  placeholder='Masukkan password baru'
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Isi jika ingin mengganti password. Kosongkan jika tidak ingin
+                mengganti.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='confirm_password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Konfirmasi Password</FormLabel>
+              <FormControl>
+                <Input
+                  type='password'
+                  placeholder='Konfirmasi password baru'
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Masukkan ulang password baru untuk konfirmasi.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type='submit'>Perbarui Profil</Button>
       </form>
     </Form>
   )

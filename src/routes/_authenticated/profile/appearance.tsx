@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SettingsAppearance } from '@/features/settings/appearance'
+import { SettingsAppearance } from '@/features/profile/appearance'
 
 export const Route = createFileRoute('/_authenticated/profile/appearance')({
   component: SettingsAppearance,

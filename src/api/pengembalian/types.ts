@@ -1,4 +1,5 @@
 import type { PaginationLinks, PaginationMeta } from '@/api/users'
+import { type MasterSkpd } from '../master-data'
 
 export interface PengembalianResponse {
   data: Pengembalian[]
@@ -27,14 +28,16 @@ export interface Pengembalian {
   kd_opd5: string
   jml_pengembalian: string
   tgl_rekam: string
-  jml_yang_disetor: string | null
+  jml_yg_disetor: string | null
   tgl_setor: string
   nip_perekam: string
   kode_pengesahan: string
   kode_cabang: string
   nama_channel: string
   status_pembayaran_pajak: string
+  status_bayar: string
   created_at: string
   updated_at: string
   deleted_at: string | null
+  skpd: MasterSkpd
 }

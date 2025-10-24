@@ -30,7 +30,7 @@ export function AppearanceForm() {
   const { font, setFont } = useFont()
   const { theme, setTheme } = useTheme()
 
-  // This can come from your database or API.
+  // Nilai default bisa diambil dari database atau API
   const defaultValues: Partial<AppearanceFormValues> = {
     theme: theme as 'light' | 'dark',
     font,
@@ -77,7 +77,7 @@ export function AppearanceForm() {
                 <ChevronDownIcon className='absolute end-3 top-2.5 h-4 w-4 opacity-50' />
               </div>
               <FormDescription className='font-manrope'>
-                Set the font you want to use in the dashboard.
+                Pilih font yang ingin digunakan di dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -88,9 +88,9 @@ export function AppearanceForm() {
           name='theme'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Theme</FormLabel>
+              <FormLabel>Tema</FormLabel>
               <FormDescription>
-                Select the theme for the dashboard.
+                Pilih tema yang akan digunakan di dashboard.
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -120,7 +120,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Light
+                      Terang
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -146,7 +146,7 @@ export function AppearanceForm() {
                       </div>
                     </div>
                     <span className='block w-full p-2 text-center font-normal'>
-                      Dark
+                      Gelap
                     </span>
                   </FormLabel>
                 </FormItem>
@@ -155,7 +155,7 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type='submit'>Update preferences</Button>
+        <Button type='submit'>Perbarui Tampilan</Button>
       </form>
     </Form>
   )

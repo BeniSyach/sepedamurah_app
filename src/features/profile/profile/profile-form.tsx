@@ -1,56 +1,45 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuthStore } from '@/stores/auth-store'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormDescription,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 
+// Schema validasi
 const profileFormSchema = z.object({
-  username: z
-    .string('Please enter your username.')
-    .min(2, 'Username must be at least 2 characters.')
-    .max(30, 'Username must not be longer than 30 characters.'),
-  email: z.email({
-    error: (iss) =>
-      iss.input === undefined
-        ? 'Please select an email to display.'
-        : undefined,
-  }),
-  bio: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.url('Please enter a valid URL.'),
-      })
-    )
-    .optional(),
+  nama: z
+    .string()
+    .min(2, 'Nama harus minimal 2 karakter.')
+    .max(50, 'Nama tidak boleh lebih dari 50 karakter.'),
+  nik: z.string().length(16, 'NIK harus 16 karakter.'),
+  nip: z
+    .string()
+    .min(8, 'NIP minimal 8 karakter.')
+    .max(20, 'NIP maksimal 20 karakter.'),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  bio: 'I own a computer.',
-  urls: [
-    { value: 'https://shadcn.com' },
-    { value: 'http://twitter.com/shadcn' },
-  ],
-}
-
 export function ProfileForm() {
+  const user = useAuthStore((s) => s.user)
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      nama: user?.name || '',
+      nik: user?.nik || '',
+      nip: user?.nip || '',
+    },
     mode: 'onChange',
   })
 
@@ -58,20 +47,20 @@ export function ProfileForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-        className='space-y-8'
+        className='space-y-6'
       >
         <FormField
           control={form.control}
-          name='username'
+          name='nama'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nama Lengkap</FormLabel>
               <FormControl>
-                <Input placeholder='shadcn' {...field} />
+                <Input placeholder='Masukkan nama lengkap' {...field} />
               </FormControl>
               <FormDescription>
                 Ini adalah nama tampilan publik Anda. Nama ini bisa menggunakan
-                nama asli
+                nama asli.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -79,20 +68,31 @@ export function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name='bio'
+          name='nik'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel>NIK</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder='Tell us a little bit about yourself'
-                  className='resize-none'
-                  {...field}
-                />
+                <Input placeholder='Masukkan NIK' {...field} />
               </FormControl>
               <FormDescription>
-                You can <span>@mention</span> other users and organizations to
-                link to them.
+                Nomor Induk Kependudukan (NIK) harus 16 digit sesuai KTP.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='nip'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>NIP</FormLabel>
+              <FormControl>
+                <Input placeholder='Masukkan NIP' {...field} />
+              </FormControl>
+              <FormDescription>
+                Nomor Induk Pegawai (NIP) digunakan untuk identifikasi pegawai.
               </FormDescription>
               <FormMessage />
             </FormItem>

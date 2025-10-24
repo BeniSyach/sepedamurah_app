@@ -1,6 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type Pengembalian } from '@/api'
-import { cn } from '@/lib/utils'
+import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
@@ -51,12 +51,14 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
 
   // ✅ no_sts
   {
-    accessorKey: 'no_sts',
+    accessorKey: 'tgl_rekam',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='no_sts' />
+      <DataTableColumnHeader column={column} title='Tanggal Rekam' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('no_sts')}</LongText>
+      <LongText className='max-w-300 ps-3'>
+        {formatTanggal(row.getValue('tgl_rekam'))}
+      </LongText>
     ),
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
@@ -66,7 +68,7 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'nik',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nik' />
+      <DataTableColumnHeader column={column} title='NIK' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>{row.getValue('nik')}</LongText>
@@ -79,7 +81,7 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'nama',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nama' />
+      <DataTableColumnHeader column={column} title='Nama' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>{row.getValue('nama')}</LongText>
@@ -92,11 +94,27 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'alamat',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='alamat' />
+      <DataTableColumnHeader column={column} title='Alamat' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>{row.getValue('alamat')}</LongText>
     ),
+    enableSorting: true,
+    meta: { className: 'min-w-[160px]' },
+  },
+
+  // ✅ nama SKPD
+  {
+    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Nama SKPD' />
+    ),
+    cell: ({ row }) => {
+      const skpd = row.original.skpd
+      return (
+        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
+      )
+    },
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -135,11 +153,11 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'jml_pengembalian',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jml_pengembalian' />
+      <DataTableColumnHeader column={column} title='Jumlah Pengembalian' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
-        {row.getValue('jml_pengembalian')}
+        {formatRupiah(row.getValue('jml_pengembalian'))}
       </LongText>
     ),
     enableSorting: true,
@@ -150,41 +168,41 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'tgl_setor',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='tgl_setor' />
+      <DataTableColumnHeader column={column} title='Tanggal Setor' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
-        {row.getValue('tgl_setor')}
+        {formatTanggal(row.getValue('tgl_setor'))}
       </LongText>
     ),
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ jml_yang_disetor
+  // ✅ jml_yg_disetor
   {
-    accessorKey: 'jml_yang_disetor',
+    accessorKey: 'jml_yg_disetor',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jml_yang_disetor' />
+      <DataTableColumnHeader column={column} title='Jumlah Setor' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
-        {row.getValue('jml_yang_disetor')}
+        {formatRupiah(row.getValue('jml_yg_disetor'))}
       </LongText>
     ),
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ status_pembayaran_pajak
+  // ✅ status_bayar
   {
-    accessorKey: 'status_pembayaran_pajak',
+    accessorKey: 'status_bayar',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='status_pembayaran_pajak' />
+      <DataTableColumnHeader column={column} title='Status Bayar' />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
-        {row.getValue('status_pembayaran_pajak')}
+        {row.getValue('status_bayar')}
       </LongText>
     ),
     enableSorting: true,
