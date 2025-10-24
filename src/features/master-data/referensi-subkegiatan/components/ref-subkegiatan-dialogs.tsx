@@ -51,7 +51,7 @@ export function TasksDialogs() {
       {currentRow && (
         <>
           <SubKegiatansMutateDrawer
-            key={`ref-subkegiatan-update-${currentRow.kd_subkeg1}-${currentRow.kd_subkeg2}-${currentRow.kd_subkeg3}-${currentRow.kd_subkeg4}-${currentRow.kd_subkeg5}-${currentRow.kd_subkeg6}`}
+            key={`ref-subkegiatan-update-${currentRow.kd_subkeg1}.${currentRow.kd_subkeg2}.${currentRow.kd_subkeg3}.${currentRow.kd_subkeg4}.${currentRow.kd_subkeg5}.${currentRow.kd_subkeg6}`}
             open={open === 'update'}
             onOpenChange={() => {
               setOpen('update')

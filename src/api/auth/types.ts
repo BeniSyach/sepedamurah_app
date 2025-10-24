@@ -1,3 +1,5 @@
+import { type Menu } from '../users'
+
 export interface LoginVariables {
   nip: string
   password: string
@@ -16,6 +18,7 @@ export interface UserRule {
   updated_at: string
   deleted_at: string | null
   pivot: Pivot
+  menus: Menu[]
 }
 
 export interface User {

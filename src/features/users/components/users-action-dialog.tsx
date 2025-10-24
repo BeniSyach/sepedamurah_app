@@ -12,8 +12,17 @@ import {
   type Users,
   type UsersRole,
 } from '@/api'
+import { CheckIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Dialog,
   DialogContent,
@@ -51,7 +60,9 @@ const formSchema = z
     }),
     isEdit: z.boolean(),
     password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role Harus Diisi.'),
+    role: z
+      .array(z.string().min(1, 'Role Harus Diisi.'))
+      .min(1, 'Pilih minimal 1 role'),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
   })
   .refine(
@@ -103,11 +114,7 @@ export function UsersActionDialog({
   const { mutateAsync: postUsersAsync } = usePostUsers()
   const { mutateAsync: putUsersAsync } = usePutUsers()
 
-  const {
-    data: dataUserRole,
-    isLoading: isLoadingUserRole,
-    isError: isErrorUserRole,
-  } = useGetUserRole({
+  const { data: dataUserRole, isError: isErrorUserRole } = useGetUserRole({
     page: 1,
     perPage: 100, // ambil banyak biar bisa isi select
   })
@@ -158,13 +165,14 @@ export function UsersActionDialog({
           ...currentRow,
           password: '',
           confirmPassword: '',
+          role: currentRow.rules?.map((r) => r.id.toString()) ?? [],
         }
       : {
           nik: '',
           nip: '',
           name: '',
           email: '',
-          role: '',
+          role: [],
           no_hp: '',
           password: '',
           kd_opd1: '',
@@ -349,27 +357,49 @@ export function UsersActionDialog({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='role'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>Role</FormLabel>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder='Pilih Role'
-                      className='col-span-4'
-                      isPending={isLoadingUserRole}
-                      items={roles.map(({ label, value }) => ({
-                        label,
-                        value,
-                      }))}
-                    />
+                    <FormControl className='col-span-4'>
+                      <Command className='bg-popover text-popover-foreground w-full rounded-md border'>
+                        <CommandInput placeholder='Pilih Role...' />
+                        <CommandList>
+                          {roles.length === 0 && (
+                            <CommandEmpty>Tidak ada role</CommandEmpty>
+                          )}
+                          <CommandGroup>
+                            {roles.map((r) => (
+                              <CommandItem
+                                key={r.value}
+                                onSelect={() => {
+                                  if (!field.value.includes(r.value)) {
+                                    field.onChange([...field.value, r.value])
+                                  } else {
+                                    field.onChange(
+                                      field.value.filter((v) => v !== r.value)
+                                    )
+                                  }
+                                }}
+                              >
+                                <span>{r.label}</span>
+                                {field.value.includes(r.value) && (
+                                  <CheckIcon className='ms-auto h-4 w-4' />
+                                )}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='password'

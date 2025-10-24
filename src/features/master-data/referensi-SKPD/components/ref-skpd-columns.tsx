@@ -65,7 +65,7 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
       const kd_opd5 = row.original.kd_opd5
 
       // Gabungkan dengan format, misal 1-02 (kd_subkeg2 di-padding 2 digit)
-      const formatted = `${kd_opd1}-${kd_opd2}-${kd_opd3}-${kd_opd4}-${kd_opd5}`
+      const formatted = `${kd_opd1}.${kd_opd2}.${kd_opd3}.${kd_opd4}.${kd_opd5}`
 
       return <div className='ps-3'>{formatted}</div>
     },

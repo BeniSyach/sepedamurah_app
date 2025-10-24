@@ -63,14 +63,17 @@ export const sidebarData: SidebarData = {
   ],
   navGroups: [
     {
+      id: 'umum',
       title: 'Umum',
       items: [
         {
+          id: 'dashboard',
           title: 'Dashboard',
           url: '/dashboard',
           icon: LayoutDashboard,
         },
         {
+          id: 'profile',
           title: 'Profil',
           url: '/profile',
           icon: UserCircle,
@@ -78,73 +81,88 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'data-utama',
       title: 'Data Utama',
       items: [
         {
+          id: 'master-data',
           title: 'Master Data',
           icon: Database,
           items: [
             {
+              id: 'referensi-urusan',
               title: 'Referensi Urusan',
               url: '/master-data/referensi-urusan',
               icon: ListChecks,
             },
             {
+              id: 'referensi-bidang-urusan',
               title: 'Referensi Bidang Urusan',
               url: '/master-data/referensi-bidang-urusan',
               icon: List,
             },
             {
+              id: 'referensi-program',
               title: 'Referensi Program',
               url: '/master-data/referensi-program',
               icon: ClipboardList,
             },
             {
+              id: 'referensi-kegiatan',
               title: 'Referensi Kegiatan',
               url: '/master-data/referensi-kegiatan',
               icon: ActivitySquare,
             },
             {
+              id: 'referensi-subkegiatan',
               title: 'Referensi Sub Kegiatan',
               url: '/master-data/referensi-subkegiatan',
               icon: ListTree,
             },
             {
+              id: 'referensi-rekening',
               title: 'Referensi Rekening',
               url: '/master-data/referensi-rekening',
               icon: Banknote,
             },
             {
+              id: 'referensi-pagu-belanja',
               title: 'Referensi Pagu Belanja',
               url: '/master-data/referensi-pagu-belanja',
               icon: Wallet,
             },
             {
+              id: 'referensi-jenis-spm',
               title: 'Referensi Jenis SPM',
               url: '/master-data/referensi-jenis-spm',
               icon: FileSpreadsheet,
             },
             {
+              id: 'referensi-ceklis',
               title: 'Referensi Ceklis Kelengkapan Dokumen PPK-SKPD',
               url: '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD',
               icon: ClipboardCheck,
             },
             {
+              id: 'referensi-persetujuan',
               title: 'Referensi Persetujuan',
               url: '/master-data/referensi-persetujuan',
               icon: CheckCircle,
             },
             {
+              id: 'referensi-jenis-belanja',
               title: 'Referensi Jenis Belanja',
               url: '/master-data/referensi-jenis-belanja',
               icon: CreditCard,
             },
             {
+              id: 'referensi-sumber-dana',
               title: 'Referensi Sumber Dana',
               url: '/master-data/referensi-sumber-dana',
               icon: Coins,
             },
             {
+              id: 'referensi-skpd',
               title: 'Referensi SKPD',
               url: '/master-data/referensi-SKPD',
               icon: Building2,
@@ -152,20 +170,24 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'alokasi-dana',
           title: 'Alokasi Dana',
           icon: Banknote,
           items: [
             {
+              id: 'pagu-sumber-dana',
               title: 'Pagu Sumber Dana',
               url: '/alokasi-dana/pagu-sumber-dana',
               icon: Wallet,
             },
             {
+              id: 'besaran-up-skpd',
               title: 'Besaran UP SKPD',
               url: '/alokasi-dana/besaran-up-skpd',
               icon: Scale,
             },
             {
+              id: 'realisasi-tf-sumber-dana',
               title: 'Realisasi Transfer Sumber Dana',
               url: '/alokasi-dana/realisasi-transfer-sumber-dana',
               icon: ArrowRightLeft,
@@ -175,29 +197,35 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'manajemen-aplikasi',
       title: 'Manajemen Aplikasi',
       items: [
         {
+          id: 'user-role',
           title: 'User Role',
           url: '/manajemen-apps/user-role',
           icon: Shield,
         },
         {
+          id: 'akses-operator',
           title: 'Akses Operator',
           url: '/manajemen-apps/akses-operator',
           icon: KeyRound,
         },
         {
+          id: 'akses-kuasa-bud',
           title: 'Akses Kuasa BUD',
           url: '/manajemen-apps/akses-kuasa-bud',
           icon: LockKeyhole,
         },
         {
+          id: 'batas-waktu',
           title: 'Batas Waktu',
           url: '/manajemen-apps/batas-waktu',
           icon: AlarmClock,
         },
         {
+          id: 'users',
           title: 'Users',
           url: '/users',
           icon: Users,
@@ -205,14 +233,17 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'history',
       title: 'History',
       items: [
         {
+          id: 'log-tte',
           title: 'Log TTE',
           url: '/history/log-tte',
           icon: History,
         },
         {
+          id: 'log-hapus-user',
           title: 'Log Hapus Users',
           url: '/history/log-hapus-users',
           icon: UserX,
@@ -220,33 +251,40 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'dokumen',
       title: 'Dokumen',
       items: [
         {
+          id: 'SPD',
           title: 'SPD',
           icon: FileText,
           items: [
             {
+              id: 'berkas-masuk-spd',
               title: 'Berkas Masuk',
               url: '/dokumen/spd/berkas-masuk',
               icon: Inbox,
             },
             {
+              id: 'permohonan-spd',
               title: 'Permohonan SPD',
               url: '/dokumen/spd/permohonan-spd',
               icon: FilePlus2,
             },
             {
+              id: 'permohonan-diterima-spd',
               title: 'Permohonan Diterima',
               url: '/dokumen/spd/permohonan-diterima',
               icon: CheckCircle2,
             },
             {
+              id: 'permohonan-ditolak-spd',
               title: 'Permohonan Ditolak',
               url: '/dokumen/spd/permohonan-ditolak',
               icon: XCircle,
             },
             {
+              id: 'spd-ditandatangani-bud',
               title: 'SPD Ditandatangani BUD',
               url: '/dokumen/spd/spd-ditandatangani-bud',
               icon: Stamp,
@@ -254,15 +292,18 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'spd-bud-tte',
           title: 'SPD BUD TTE',
           icon: FileSignature,
           items: [
             {
+              id: 'permohonan-spd-bud-tte',
               title: 'Permohonan SPD BUD TTE',
               url: '/dokumen/spd/permohonan-spd-bud-tte',
               icon: FileSignature,
             },
             {
+              id: 'permohonan-diterima-spd-tte',
               title: 'Permohonan Diterima',
               url: '/dokumen/spd/permohonan-diterima',
               icon: CheckCircle2,
@@ -270,15 +311,18 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'paraf-spd',
           title: 'Paraf SPD',
           icon: PenLine,
           items: [
             {
+              id: 'spd-belum-paraf',
               title: 'SPD Belum Paraf',
               url: '/dokumen/spd/belum-paraf',
               icon: FileClock,
             },
             {
+              id: 'spd-sudah-paraf',
               title: 'SPD Sudah paraf',
               url: '/dokumen/spd/sudah-paraf',
               icon: FileCheck2,
@@ -286,35 +330,42 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'sp2d',
           title: 'SP2D',
           icon: FileCheck2,
           items: [
             {
+              id: 'berkas-masuk-sp2d',
               title: 'Berkas masuk',
               url: '/dokumen/sp2d/berkas-masuk',
               icon: Inbox,
             },
             {
+              id: 'permohonan-penerbitan-sp2d',
               title: 'Permohonan Penerbitan SP2D',
               url: '/dokumen/sp2d/permohonan-penerbitan-sp2d',
               icon: FilePlus2,
             },
             {
+              id: 'permohonan-diterima-sp2d',
               title: 'Permohonan Diterima',
               url: '/dokumen/sp2d/permohonan-diterima',
               icon: CheckCircle2,
             },
             {
+              id: 'permohonan-ditolak-sp2d',
               title: 'Permohonan Ditolak',
               url: '/dokumen/sp2d/permohonan-ditolak',
               icon: XCircle,
             },
             {
+              id: 'sp2d-di-publish-bud',
               title: 'SP2D Di Publish Kuasa BUD',
               url: '/dokumen/sp2d/sp2d-di-publish-kuasa-bud',
               icon: Stamp,
             },
             {
+              id: 'sp2d-kirim-bank',
               title: 'SP2D Kirim Ke Bank',
               url: '/dokumen/sp2d/sp2d-kirim-ke-bank',
               icon: Send,
@@ -322,15 +373,18 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'sp2d-tte',
           title: 'SP2D TTE',
           icon: FileSignature,
           items: [
             {
+              id: 'permohonan-sp2d-tte',
               title: 'Permohonan SP2D TTE',
               url: '/dokumen/sp2d/permohonan-sp2d-tte',
               icon: FileSignature,
             },
             {
+              id: 'permohonan-diterima-tte',
               title: 'Permohonan Diterima',
               url: '/dokumen/sp2d/permohonan-diterima',
               icon: CheckCircle2,
@@ -340,28 +394,34 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'laporan-fungsional',
       title: 'Laporan Fungsional',
       items: [
         {
+          id: 'pengeluaran',
           title: 'Pengeluaran',
           icon: ArrowUpCircle,
           items: [
             {
+              id: 'berkas-masuk-pengeluaran',
               title: 'Berkas Masuk Pengeluaran',
               url: '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran',
               icon: UserCog,
             },
             {
+              id: 'pengeluaran-menu',
               title: 'Pengeluaran',
               url: '/dokumen/laporan-fungsional/pengeluaran',
               icon: ArrowUpCircle,
             },
             {
+              id: 'pengeluaran-diterima',
               title: 'Pengeluaran - Diterima',
               url: '/dokumen/laporan-fungsional/pengeluaran-diterima',
               icon: CheckCircle2,
             },
             {
+              id: 'pengeluaran-ditolak',
               title: 'Pengeluaran - Ditolak',
               url: '/dokumen/laporan-fungsional/pengeluaran-ditolak',
               icon: XCircle,
@@ -369,25 +429,30 @@ export const sidebarData: SidebarData = {
           ],
         },
         {
+          id: 'penerimaan',
           title: 'Penerimaan',
           icon: ArrowDownCircle,
           items: [
             {
+              id: 'berkas-masuk-penerimaan',
               title: 'Berkas Masuk Penerimaan',
               url: '/dokumen/laporan-fungsional/berkas-masuk-penerimaan',
               icon: UserCog,
             },
             {
+              id: 'penerimaan-menu',
               title: 'Penerimaan',
               url: '/dokumen/laporan-fungsional/penerimaan',
               icon: ArrowDownCircle,
             },
             {
+              id: 'penerimaan-diterima',
               title: 'Penerimaan - Diterima',
               url: '/dokumen/laporan-fungsional/penerimaan-diterima',
               icon: CheckCircle2,
             },
             {
+              id: 'penerimaan-ditolak',
               title: 'Penerimaan - Ditolak',
               url: '/dokumen/laporan-fungsional/penerimaan-ditolak',
               icon: XCircle,
@@ -397,9 +462,11 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'berkas-lain',
       title: 'Berkas TTE Lain-lain',
       items: [
         {
+          id: 'berkas-lain-menu',
           title: 'Berkas Lain',
           url: '/dokumen/berkas-lain',
           icon: FolderOpen,
@@ -407,9 +474,11 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'pengembalian',
       title: 'Pengembalian',
       items: [
         {
+          id: 'pengembalian-menu',
           title: 'Pengembalian',
           url: '/pengembalian',
           icon: RotateCcw,
@@ -417,182 +486,34 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      id: 'laporan',
       title: 'Laporan',
       items: [
         {
+          id: 'buku-laporan',
           title: 'Buku Laporan',
           url: '/laporan/buku-laporan',
           icon: BookOpen,
         },
         {
+          id: 'laporan-realisasi-sumber-dana',
           title: 'Laporan Realisasi Sumber Dana',
           url: '/laporan/realisasi-sumber-dana',
           icon: BarChart3,
         },
         {
+          id: 'laporan-daftar-belanja-skpd',
           title: 'Laporan Daftar Belanja per SKPD',
           url: '/laporan/daftar-belanja-per-skpd',
           icon: FileBarChart,
         },
         {
+          id: 'laporan-realisasi-belanja',
           title: 'Laporan Realisasi Belanja',
           url: '/laporan/realisasi-belanja',
           icon: PieChart,
         },
       ],
     },
-    // default
-    // {
-    //   title: 'General',
-    //   items: [
-    //     {
-    //       title: 'Dashboard',
-    //       url: '/dashboard',
-    //       icon: LayoutDashboard,
-    //     },
-    //     {
-    //       title: 'Tasks',
-    //       url: '/tasks',
-    //       icon: ListTodo,
-    //     },
-    //     {
-    //       title: 'Apps',
-    //       url: '/apps',
-    //       icon: Package,
-    //     },
-    //     {
-    //       title: 'Chats',
-    //       url: '/chats',
-    //       badge: '3',
-    //       icon: MessagesSquare,
-    //     },
-    //     {
-    //       title: 'Users',
-    //       url: '/users',
-    //       icon: Users,
-    //     },
-    //     {
-    //       title: 'Secured by Clerk',
-    //       icon: ClerkLogo,
-    //       items: [
-    //         {
-    //           title: 'Sign In',
-    //           url: '/clerk/sign-in',
-    //         },
-    //         {
-    //           title: 'Sign Up',
-    //           url: '/clerk/sign-up',
-    //         },
-    //         {
-    //           title: 'User Management',
-    //           url: '/clerk/user-management',
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: 'Pages',
-    //   items: [
-    //     {
-    //       title: 'Auth',
-    //       icon: ShieldCheck,
-    //       items: [
-    //         {
-    //           title: 'Sign In',
-    //           url: '/sign-in',
-    //         },
-    //         {
-    //           title: 'Sign In (2 Col)',
-    //           url: '/sign-in-2',
-    //         },
-    //         {
-    //           title: 'Sign Up',
-    //           url: '/sign-up',
-    //         },
-    //         {
-    //           title: 'Forgot Password',
-    //           url: '/forgot-password',
-    //         },
-    //         {
-    //           title: 'OTP',
-    //           url: '/otp',
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: 'Errors',
-    //       icon: Bug,
-    //       items: [
-    //         {
-    //           title: 'Unauthorized',
-    //           url: '/errors/unauthorized',
-    //           icon: Lock,
-    //         },
-    //         {
-    //           title: 'Forbidden',
-    //           url: '/errors/forbidden',
-    //           icon: UserX,
-    //         },
-    //         {
-    //           title: 'Not Found',
-    //           url: '/errors/not-found',
-    //           icon: FileX,
-    //         },
-    //         {
-    //           title: 'Internal Server Error',
-    //           url: '/errors/internal-server-error',
-    //           icon: ServerOff,
-    //         },
-    //         {
-    //           title: 'Maintenance Error',
-    //           url: '/errors/maintenance-error',
-    //           icon: Construction,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: 'Other',
-    //   items: [
-    //     {
-    //       title: 'Settings',
-    //       icon: Settings,
-    //       items: [
-    //         {
-    //           title: 'Profile',
-    //           url: '/settings',
-    //           icon: UserCog,
-    //         },
-    //         {
-    //           title: 'Account',
-    //           url: '/settings/account',
-    //           icon: Wrench,
-    //         },
-    //         {
-    //           title: 'Appearance',
-    //           url: '/settings/appearance',
-    //           icon: Palette,
-    //         },
-    //         {
-    //           title: 'Notifications',
-    //           url: '/settings/notifications',
-    //           icon: Bell,
-    //         },
-    //         {
-    //           title: 'Display',
-    //           url: '/settings/display',
-    //           icon: Monitor,
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: 'Help Center',
-    //       url: '/help-center',
-    //       icon: HelpCircle,
-    //     },
-    //   ],
-    // },
   ],
 }

@@ -109,7 +109,7 @@ export function RealisasiTransferSumberDanaTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Search users...'
+        searchPlaceholder='Cari Realisasi Transfer Sumber Dana...'
         searchKey='nm_rekening'
         filters={[]}
       />

@@ -23,10 +23,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { MenuTree } from '@/components/ui/tree-checkbox'
+import { buildMenuTree } from '@/components/layout/menu-tree-helper'
 
 const formSchema = z.object({
   id: z.string().optional(),
   rule: z.string().min(1, 'Role Harus Ada.'),
+  menuIds: z
+    .array(z.string())
+    .min(1, 'Pilih minimal 1 menu yang bisa diakses.'),
 })
 type UserRoleForm = z.infer<typeof formSchema>
 
@@ -43,21 +48,34 @@ export function UserRolesActionDialog({
 }: UserRoleActionDialogProps) {
   const isEdit = !!currentRow
 
+  const menuTree = buildMenuTree()
   const { mutateAsync: postUserRoleAsync } = usePostUsersRole()
   const { mutateAsync: putUserRoleAsync } = usePutUsersRole()
 
   const form = useForm<UserRoleForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      id: '',
-      rule: '',
-    },
+    defaultValues: currentRow
+      ? {
+          id: currentRow.id,
+          rule: currentRow.rule,
+          menuIds: currentRow.menus?.map((m) => m.menu) ?? [],
+        }
+      : {
+          id: '',
+          rule: '',
+          menuIds: [],
+        },
   })
 
   const onSubmit = async (data: UserRoleForm) => {
+    const payload = {
+      id: data.id,
+      rule: data.rule,
+      menuIds: data.menuIds, // Laravel backend bisa handle array menu di controller
+    }
     const requestPromise = isEdit
-      ? putUserRoleAsync(data)
-      : postUserRoleAsync(data)
+      ? putUserRoleAsync(payload)
+      : postUserRoleAsync(payload)
 
     await toast.promise(requestPromise, {
       loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
@@ -123,6 +141,25 @@ export function UserRolesActionDialog({
                     </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='menuIds'
+                render={({ field }) => (
+                  <div>
+                    <FormLabel>Pilih Menu yang Bisa Diakses</FormLabel>
+                    <MenuTree
+                      nodes={menuTree}
+                      checked={field.value} // gunakan nilai dari form
+                      onCheck={(checked) => field.onChange(checked)} // update form value
+                    />
+                    {field.value.length === 0 && (
+                      <p className='mt-1 text-sm text-red-500'>
+                        Pilih minimal 1 menu
+                      </p>
+                    )}
+                  </div>
                 )}
               />
             </form>

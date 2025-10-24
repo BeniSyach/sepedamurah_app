@@ -48,7 +48,7 @@ export function TasksDialogs() {
       {currentRow && (
         <>
           <TasksMutateDrawer
-            key={`ref-program-update-${currentRow.kd_prog1}-${currentRow.kd_prog2}-${currentRow.kd_prog3}`}
+            key={`ref-program-update-${currentRow.kd_prog1}.${currentRow.kd_prog2}.${currentRow.kd_prog3}`}
             open={open === 'update'}
             onOpenChange={() => {
               setOpen('update')

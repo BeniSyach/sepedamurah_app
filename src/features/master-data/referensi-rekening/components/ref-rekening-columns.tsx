@@ -66,7 +66,7 @@ export const ReferensiRekeningColumns: ColumnDef<Rekening>[] = [
       const kd_rekening6 = row.original.kd_rekening6
 
       // Gabungkan dengan format, misal 1-02 (kd_subkeg2 di-padding 2 digit)
-      const formatted = `${kd_rekening1}-${kd_rekening2}-${kd_rekening3}-${kd_rekening4}-${kd_rekening5}-${kd_rekening6}`
+      const formatted = `${kd_rekening1}.${kd_rekening2}.${kd_rekening3}.${kd_rekening4}.${kd_rekening5}.${kd_rekening6}`
 
       return <div className='ps-3'>{formatted}</div>
     },

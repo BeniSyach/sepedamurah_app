@@ -57,7 +57,7 @@ export const refUursanColummns: ColumnDef<BidangUrusan>[] = [
       const kd_bu2 = row.original.kd_bu2
 
       // Gabungkan dengan format, misal 1-02 (kd_bu2 di-padding 2 digit)
-      const formatted = `${kd_bu1}-${kd_bu2.toString().padStart(2, '0')}`
+      const formatted = `${kd_bu1}.${kd_bu2.toString().padStart(2, '0')}`
 
       return <div className='ps-3'>{formatted}</div>
     },

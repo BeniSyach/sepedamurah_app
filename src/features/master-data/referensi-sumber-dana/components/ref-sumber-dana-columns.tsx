@@ -66,7 +66,7 @@ export const ReferensiSumberDanaColumns: ColumnDef<SumberDana>[] = [
       const kd_ref6 = row.original.kd_ref6
 
       // Gabungkan dengan format, misal 1-02 (kd_ref2 di-padding 2 digit)
-      const formatted = `${kd_ref1}-${kd_ref2}-${kd_ref3}-${kd_ref4}-${kd_ref5}-${kd_ref6}`
+      const formatted = `${kd_ref1}.${kd_ref2}.${kd_ref3}.${kd_ref4}.${kd_ref5}.${kd_ref6}`
 
       return <div className='ps-3'>{formatted}</div>
     },

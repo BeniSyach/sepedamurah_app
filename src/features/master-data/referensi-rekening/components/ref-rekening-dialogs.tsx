@@ -52,7 +52,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <RekeningsActionDialog
-            key={`ref-rekening-edit-${currentRow.kd_rekening1}-${currentRow.kd_rekening2}-${currentRow.kd_rekening3}-${currentRow.kd_rekening4}-${currentRow.kd_rekening5}`}
+            key={`ref-rekening-edit-${currentRow.kd_rekening1}.${currentRow.kd_rekening2}.${currentRow.kd_rekening3}.${currentRow.kd_rekening4}.${currentRow.kd_rekening5}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -64,7 +64,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`ref-rekening-delete-${currentRow.kd_rekening1}-${currentRow.kd_rekening2}-${currentRow.kd_rekening3}-${currentRow.kd_rekening4}-${currentRow.kd_rekening5}`}
+            key={`ref-rekening-delete-${currentRow.kd_rekening1}.${currentRow.kd_rekening2}.${currentRow.kd_rekening3}.${currentRow.kd_rekening4}.${currentRow.kd_rekening5}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {

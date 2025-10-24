@@ -16,7 +16,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <UsersActionDialog
-            key={`master-skpd-edit-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}-${currentRow.kd_ref4}-${currentRow.kd_ref5}-${currentRow.kd_ref6}`}
+            key={`master-skpd-edit-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}.${currentRow.kd_ref4}.${currentRow.kd_ref5}.${currentRow.kd_ref6}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -28,7 +28,7 @@ export function UsersDialogs() {
           />
 
           <RefRealisasiTransferSumberDanasDeleteDialog
-            key={`master-skpd-delete-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}-${currentRow.kd_ref4}-${currentRow.kd_ref5}-${currentRow.kd_ref6}`}
+            key={`master-skpd-delete-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}.${currentRow.kd_ref4}.${currentRow.kd_ref5}.${currentRow.kd_ref6}`}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')

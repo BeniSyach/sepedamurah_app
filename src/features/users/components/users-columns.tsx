@@ -81,34 +81,38 @@ export const usersColumns: ColumnDef<Users>[] = [
     enableSorting: true,
   },
 
-  // ✅ NIK
+  // ✅ nama SKPD
   {
-    accessorKey: 'nik',
+    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='NIK' />
+      <DataTableColumnHeader column={column} title='Nama SKPD' />
     ),
-    cell: ({ row }) => <div className='truncate'>{row.getValue('nik')}</div>,
-    enableSorting: false,
+    cell: ({ row }) => {
+      const skpd = row.original.skpd
+      return (
+        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
+      )
+    },
+    enableSorting: true,
+    meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ NIP
+  // ✅ Level Akses / Role
   {
-    accessorKey: 'nip',
+    accessorKey: 'access_level',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='NIP' />
+      <DataTableColumnHeader column={column} title='Level Akses' />
     ),
-    cell: ({ row }) => <div className='truncate'>{row.getValue('nip')}</div>,
-    enableSorting: false,
-  },
-
-  // ✅ No HP
-  {
-    accessorKey: 'no_hp',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='No HP' />
+    cell: ({ row }) => (
+      <Badge
+        variant='secondary'
+        className='bg-blue-100 text-blue-800 capitalize dark:bg-blue-900 dark:text-blue-100'
+      >
+        {row.getValue('access_level') || '-'}
+      </Badge>
     ),
-    cell: ({ row }) => <div>{row.getValue('no_hp')}</div>,
     enableSorting: false,
+    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Status aktif / nonaktif
@@ -131,23 +135,6 @@ export const usersColumns: ColumnDef<Users>[] = [
     },
     enableSorting: false,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
-  },
-
-  // ✅ Tanggal dibuat
-  {
-    accessorKey: 'date_created',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Created At' />
-    ),
-    cell: ({ row }) => {
-      const date = row.getValue('date_created') as string | null
-      return (
-        <div className='text-muted-foreground'>
-          {date ? new Date(date).toLocaleDateString() : '-'}
-        </div>
-      )
-    },
-    enableSorting: true,
   },
 
   // ✅ Aksi

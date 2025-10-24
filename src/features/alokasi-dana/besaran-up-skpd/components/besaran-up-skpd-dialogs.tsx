@@ -44,7 +44,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <UsersActionDialog
-            key={`besaran-pagu-up-skpd-edit-${currentRow.kd_opd1}-${currentRow.kd_opd2}-${currentRow.kd_opd3}-${currentRow.kd_opd4}-${currentRow.kd_opd5}`}
+            key={`besaran-pagu-up-skpd-edit-${currentRow.kd_opd1}.${currentRow.kd_opd2}.${currentRow.kd_opd3}.${currentRow.kd_opd4}.${currentRow.kd_opd5}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -56,7 +56,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`besaran-pagu-up-skpd-delete-${currentRow.kd_opd1}-${currentRow.kd_opd2}-${currentRow.kd_opd3}-${currentRow.kd_opd4}-${currentRow.kd_opd5}`}
+            key={`besaran-pagu-up-skpd-delete-${currentRow.kd_opd1}.${currentRow.kd_opd2}.${currentRow.kd_opd3}.${currentRow.kd_opd4}.${currentRow.kd_opd5}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {

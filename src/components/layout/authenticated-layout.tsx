@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useMemo } from 'react'
 import { Outlet, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -20,6 +21,7 @@ import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
+import type { NavCollapsible, NavItem, NavLink } from './types'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -39,6 +41,53 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
     }
   }, [accessToken, navigate])
 
+  // 🔥 Ambil role yang aktif dari localStorage
+  const activeRole = localStorage.getItem('user_role')
+
+  // 🔥 Ambil hanya menu dari rule yang sesuai role aktif
+  const userMenuNames = useMemo(() => {
+    if (!user?.rules || !activeRole) return []
+    const activeRule = user.rules.find((rule) => rule.rule === activeRole)
+    return activeRule ? activeRule.menus.map((m) => m.menu) : []
+  }, [user, activeRole])
+
+  function filterMenuItems(items: NavItem[], allowedIds: string[]): NavItem[] {
+    return items.reduce<NavItem[]>((acc, item) => {
+      // untuk collapsible
+      let filteredChildren: NavItem[] | undefined = undefined
+      if ('items' in item && item.items) {
+        filteredChildren = filterMenuItems(item.items, allowedIds)
+      }
+
+      // keep item jika id allowed atau ada anak yang tersisa
+      if (
+        allowedIds.includes(item.id) ||
+        (filteredChildren && filteredChildren.length > 0)
+      ) {
+        if ('items' in item) {
+          // collapsible item
+          acc.push({ ...item, items: filteredChildren } as NavCollapsible)
+        } else {
+          // link item
+          acc.push(item as NavLink)
+        }
+      }
+
+      return acc
+    }, [])
+  }
+
+  const filteredNavGroups = useMemo(() => {
+    return sidebarData.navGroups
+      .map((group) => {
+        const filteredItems = filterMenuItems(group.items, userMenuNames)
+        return { ...group, items: filteredItems }
+      })
+      .filter(
+        (group) => userMenuNames.includes(group.id) || group.items.length > 0
+      )
+  }, [userMenuNames])
+
   return (
     <SearchProvider>
       <SidebarProvider defaultOpen={defaultOpen}>
@@ -49,7 +98,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               <TeamSwitcher teams={sidebarData.teams} />
             </SidebarHeader>
             <SidebarContent>
-              {sidebarData.navGroups.map((props) => (
+              {filteredNavGroups.map((props) => (
                 <NavGroup key={props.title} {...props} />
               ))}
             </SidebarContent>

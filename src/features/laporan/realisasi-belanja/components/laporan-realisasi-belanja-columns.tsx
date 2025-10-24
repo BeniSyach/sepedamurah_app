@@ -43,7 +43,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
       const kd_ref1 = row.original.kd_ref1
       const kd_ref2 = row.original.kd_ref2
       const kd_ref3 = row.original.kd_ref3
-      return <div className='ps-3'>{`${kd_ref1}-${kd_ref2}-${kd_ref3}`}</div>
+      return <div className='ps-3'>{`${kd_ref1}.${kd_ref2}.${kd_ref3}`}</div>
     },
     enableSorting: false,
     meta: { className: 'min-w-[120px]' },

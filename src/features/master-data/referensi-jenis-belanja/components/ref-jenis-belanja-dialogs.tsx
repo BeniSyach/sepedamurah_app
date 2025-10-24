@@ -49,7 +49,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <JenisBelanjasActionDialog
-            key={`ref-jenis-belanja-edit-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}`}
+            key={`ref-jenis-belanja-edit-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -61,7 +61,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`ref-jenis-belanja-delete-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}`}
+            key={`ref-jenis-belanja-delete-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {

@@ -59,7 +59,7 @@ export const refKegiatanColummns: ColumnDef<Kegiatan>[] = [
       const kd_keg5 = row.original.kd_keg5
 
       // Gabungkan dengan format, misal 1-02 (kd_keg2 di-padding 2 digit)
-      const formatted = `${kd_keg1}-${kd_keg2}-${kd_keg3}-${kd_keg4}-${kd_keg5}`
+      const formatted = `${kd_keg1}.${kd_keg2}.${kd_keg3}.${kd_keg4}.${kd_keg5}`
 
       return <div className='ps-3'>{formatted}</div>
     },

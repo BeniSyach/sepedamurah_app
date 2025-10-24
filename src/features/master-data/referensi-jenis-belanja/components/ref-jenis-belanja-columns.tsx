@@ -63,7 +63,7 @@ export const ReferensiJenisBelanjaColumns: ColumnDef<JenisBelanja>[] = [
       const kd_ref3 = row.original.kd_ref3
 
       // Gabungkan dengan format, misal 1-02 (kd_ref2 di-padding 2 digit)
-      const formatted = `${kd_ref1}-${kd_ref2}-${kd_ref3}`
+      const formatted = `${kd_ref1}.${kd_ref2}.${kd_ref3}`
 
       return <div className='ps-3'>{formatted}</div>
     },

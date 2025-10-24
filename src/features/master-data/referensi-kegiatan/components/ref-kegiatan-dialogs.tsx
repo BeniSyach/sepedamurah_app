@@ -50,7 +50,7 @@ export function TasksDialogs() {
       {currentRow && (
         <>
           <KegiatansMutateDrawer
-            key={`ref-kegiatan-update-${currentRow.kd_keg1}-${currentRow.kd_keg2}-${currentRow.kd_keg3}-${currentRow.kd_keg4}-${currentRow.kd_keg5}`}
+            key={`ref-kegiatan-update-${currentRow.kd_keg1}.${currentRow.kd_keg2}.${currentRow.kd_keg3}.${currentRow.kd_keg4}.${currentRow.kd_keg5}`}
             open={open === 'update'}
             onOpenChange={() => {
               setOpen('update')

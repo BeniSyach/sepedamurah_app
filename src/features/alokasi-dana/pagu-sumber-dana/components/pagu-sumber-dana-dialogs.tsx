@@ -43,7 +43,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <UsersActionDialog
-            key={`pagu-sumber-dana-edit-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}-${currentRow.kd_ref4}-${currentRow.kd_ref5}-${currentRow.kd_ref6}`}
+            key={`pagu-sumber-dana-edit-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}.${currentRow.kd_ref4}.${currentRow.kd_ref5}.${currentRow.kd_ref6}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -55,7 +55,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`pagu-sumber-dana-delete-${currentRow.kd_ref1}-${currentRow.kd_ref2}-${currentRow.kd_ref3}-${currentRow.kd_ref4}-${currentRow.kd_ref5}-${currentRow.kd_ref6}`}
+            key={`pagu-sumber-dana-delete-${currentRow.kd_ref1}.${currentRow.kd_ref2}.${currentRow.kd_ref3}.${currentRow.kd_ref4}.${currentRow.kd_ref5}.${currentRow.kd_ref6}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {

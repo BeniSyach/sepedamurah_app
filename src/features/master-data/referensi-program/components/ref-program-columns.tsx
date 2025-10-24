@@ -58,7 +58,7 @@ export const refProgramColummns: ColumnDef<Program>[] = [
       const kd_prog3 = row.original.kd_prog3
 
       // Gabungkan dengan format, misal 1-02 (kd_prog2 di-padding 2 digit)
-      const formatted = `${kd_prog1}-${kd_prog2}-${kd_prog3}`
+      const formatted = `${kd_prog1}.${kd_prog2}.${kd_prog3}`
 
       return <div className='ps-3'>{formatted}</div>
     },

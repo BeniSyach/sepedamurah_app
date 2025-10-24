@@ -47,7 +47,7 @@ export function TasksDialogs() {
       {currentRow && (
         <>
           <TasksMutateDrawer
-            key={`ref-bidanng-urusan-update-${currentRow.kd_bu1}-${currentRow.kd_bu2}`}
+            key={`ref-bidanng-urusan-update-${currentRow.kd_bu1}.${currentRow.kd_bu2}`}
             open={open === 'update'}
             onOpenChange={() => {
               setOpen('update')
