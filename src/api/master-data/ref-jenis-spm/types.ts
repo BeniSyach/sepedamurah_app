@@ -1,7 +1,7 @@
 import type { PaginationLinks, PaginationMeta } from '@/api/users'
 
 export interface JenisSpm {
-  id: string
+  id: number
   kategori: string
   nama_berkas: string
   status_penerimaan: string

@@ -3,11 +3,11 @@ import { api } from '../common/client'
 import type { BerkasLain } from './types'
 
 interface CreateBerkasLainPayload {
-  tgl_surat: string
+  tgl_surat: Date
   nama_file_asli: string
   nama_dokumen: string
-  status_tte: string
-  file_sdh_tte: string
+  status_tte?: string
+  file_sdh_tte?: string
   users_id: string
 }
 

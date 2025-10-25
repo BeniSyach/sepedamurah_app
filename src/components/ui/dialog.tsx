@@ -79,6 +79,56 @@ function DialogContent({
   )
 }
 
+export function DialogContentLarge({
+  title,
+  description,
+  children,
+  className,
+  showCloseButton = true,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  title?: string
+  description?: string
+  showCloseButton?: boolean
+}) {
+  return (
+    <DialogPrimitive.Portal>
+      <DialogPrimitive.Overlay className='data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50' />
+
+      <DialogPrimitive.Content
+        {...props}
+        className={cn(
+          // Posisi tengah + ukuran besar tapi tidak full
+          'bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[90vh] w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border shadow-xl duration-200',
+          // Animasi halus Radix
+          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          className
+        )}
+      >
+        {/* Header sticky */}
+        <div className='bg-background sticky top-0 z-10 flex items-center justify-between border-b p-4'>
+          <div>
+            {title && <h2 className='text-lg font-semibold'>{title}</h2>}
+            {description && (
+              <p className='text-muted-foreground text-sm'>{description}</p>
+            )}
+          </div>
+
+          {showCloseButton && (
+            <DialogPrimitive.Close className='text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:ring-ring rounded-md p-1 transition focus:ring-2 focus:ring-offset-2 focus:outline-hidden'>
+              <XIcon className='size-5' />
+              <span className='sr-only'>Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </div>
+
+        {/* Konten scrollable */}
+        <div className='overflow-y-auto p-6'>{children}</div>
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Portal>
+  )
+}
+
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

@@ -36,14 +36,15 @@ const formSchema = z.object({
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
   nama_file_asli: z.string().min(1, 'File Harus Ada.'),
   bulan: z.string().min(1, 'bulan Harus Ada.'),
-  keterangan: z.string().min(1, 'Keterangan SPD Harus Ada.'),
+  keterangan: z.string().min(1, 'Keterangan Laporan Fungsional Harus Ada.'),
   kd_opd1: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd2: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  id_pengirim: z.string().min(1, 'pengirim SPD Harus Ada.'),
-  nama_pengirim: z.string().min(1, 'pengirim SPD Harus Ada.'),
+  id_pengirim: z.string().min(1, 'pengirim Laporan Fungsional Harus Ada.'),
+  nama_pengirim: z.string().min(1, 'pengirim Laporan Fungsional Harus Ada.'),
+  jenis_berkas: z.string().min(1, 'jenis berkas Laporan Fungsional Harus Ada.'),
 })
 type LaporanFungsionalForm = z.infer<typeof formSchema>
 
@@ -119,6 +120,7 @@ export function UsersActionDialog({
       kd_opd3: '',
       kd_opd4: '',
       kd_opd5: '',
+      jenis_berkas: 'Pengeluaran',
     },
   })
   const fileRef = form.register('nama_file_asli')

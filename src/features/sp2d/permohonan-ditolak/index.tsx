@@ -7,7 +7,6 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/berkas-masuk-sp2d-buttons'
 import { UsersDialogs } from './components/berkas-masuk-sp2d-dialogs'
 import { Sp2dItemProvider } from './components/berkas-masuk-sp2d-provider'
 import { BerkasMasukSP2DTable } from './components/berkas-masuk-sp2d-table'
@@ -50,7 +49,6 @@ export function PermohonanDitolakSP2D() {
               Data Ini adalah Permohonan Ditolak SP2D
             </p>
           </div>
-          <RefRekeningPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {/* <UsersTable data={users} search={search} navigate={navigate} /> */}

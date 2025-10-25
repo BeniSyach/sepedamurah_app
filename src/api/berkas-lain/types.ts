@@ -11,7 +11,7 @@ export interface BerkasLainResponse {
 
 export interface BerkasLain {
   id: string
-  tgl_surat: string
+  tgl_surat: Date | undefined
   nama_file_asli: string
   nama_dokumen: string
   status_tte: string
