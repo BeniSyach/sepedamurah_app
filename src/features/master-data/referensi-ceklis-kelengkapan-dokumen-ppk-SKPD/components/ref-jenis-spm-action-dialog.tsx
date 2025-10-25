@@ -84,12 +84,13 @@ export function CeklisSPMsActionDialog({
 
   const form = useForm<CeklisSPMForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      id: '',
-      kategori: '',
-      nama_berkas: '',
-      status_penerimaan: '',
-    },
+    defaultValues: currentRow
+      ? { ...currentRow, id: String(currentRow.id) }
+      : {
+          kategori: '',
+          nama_berkas: '',
+          status_penerimaan: '',
+        },
   })
 
   const onSubmit = async (data: CeklisSPMForm) => {
