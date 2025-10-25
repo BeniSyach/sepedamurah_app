@@ -7,9 +7,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { UsersDialogs } from './components/berkas-masuk-spd-dialogs'
-import { PermohonanSpdProvider } from './components/berkas-masuk-spd-provider'
-import { PermohonanDitolakSPDTable } from './components/berkas-masuk-spd-table'
+import { UsersDialogs } from './components/permohonan-ditolak-dialogs'
+import { PermohonanSpdProvider } from './components/permohonan-ditolak-provider'
+import { PermohonanDitolakSPDTable } from './components/permohonan-ditolak-table'
 
 const route = getRouteApi('/_authenticated/dokumen/spd/permohonan-ditolak')
 

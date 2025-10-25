@@ -7,9 +7,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { UsersDialogs } from './components/berkas-masuk-sp2d-dialogs'
-import { Sp2dItemProvider } from './components/berkas-masuk-sp2d-provider'
-import { BerkasMasukSP2DTable } from './components/berkas-masuk-sp2d-table'
+import { UsersDialogs } from './components/permohonan-sp2d-tte-dialogs'
+import { Sp2dItemProvider } from './components/permohonan-sp2d-tte-provider'
+import { BerkasMasukSP2DTable } from './components/permohonan-sp2d-tte-table'
 
 const route = getRouteApi('/_authenticated/dokumen/sp2d/permohonan-sp2d-tte')
 

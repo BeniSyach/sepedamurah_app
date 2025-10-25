@@ -7,10 +7,10 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/berkas-masuk-spd-buttons'
-import { UsersDialogs } from './components/berkas-masuk-spd-dialogs'
-import { PermohonanSpdProvider } from './components/berkas-masuk-spd-provider'
-import { PermohonanDiterimaSPDTable } from './components/berkas-masuk-spd-table'
+import { RefRekeningPrimaryButtons } from './components/permohonan-diterima-buttons'
+import { UsersDialogs } from './components/permohonan-diterima-dialogs'
+import { PermohonanSpdProvider } from './components/permohonan-diterima-provider'
+import { PermohonanDiterimaSPDTable } from './components/permohonan-diterima-table'
 
 const route = getRouteApi('/_authenticated/dokumen/spd/permohonan-diterima')
 

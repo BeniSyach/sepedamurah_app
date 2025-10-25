@@ -7,9 +7,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { UsersDialogs } from './components/berkas-masuk-penerimaan-dialogs'
-import { LaporanFungsionalProvider } from './components/berkas-masuk-penerimaan-provider'
-import { BerkasMasukPenerimaanTable } from './components/berkas-masuk-penerimaan-table'
+import { UsersDialogs } from './components/pengeluaran-diterima-dialogs'
+import { LaporanFungsionalProvider } from './components/pengeluaran-diterima-provider'
+import { BerkasMasukPenerimaanTable } from './components/pengeluaran-diterima-table'
 
 const route = getRouteApi(
   '/_authenticated/dokumen/laporan-fungsional/pengeluaran-diterima'

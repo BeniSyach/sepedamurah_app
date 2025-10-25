@@ -6,10 +6,10 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/berkas-masuk-penerimaan-buttons'
-import { UsersDialogs } from './components/berkas-masuk-penerimaan-dialogs'
-import { PengembalianProvider } from './components/berkas-masuk-penerimaan-provider'
-import { PengembalianTable } from './components/berkas-masuk-penerimaan-table'
+import { RefRekeningPrimaryButtons } from './components/pengembalian-buttons'
+import { UsersDialogs } from './components/pengembalian-dialogs'
+import { PengembalianProvider } from './components/pengembalian-provider'
+import { PengembalianTable } from './components/pengembalian-table'
 
 const route = getRouteApi('/_authenticated/pengembalian/')
 

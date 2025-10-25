@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 // import { type User } from '../data/schema'
-import { useRefLaporanFungsional } from './berkas-masuk-penerimaan-provider'
+import { useRefLaporanFungsional } from './berkas-masuk-pengeluaran-provider'
 
 type DataTableRowActionsProps = {
   row: Row<LaporanFungsional>

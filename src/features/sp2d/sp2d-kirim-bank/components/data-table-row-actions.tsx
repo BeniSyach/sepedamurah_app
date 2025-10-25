@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRefSp2dItem } from './berkas-masuk-sp2d-provider'
+import { useRefSp2dItem } from './sp2d-kirim-bank-provider'
 
 type DataTableRowActionsProps = {
   row: Row<Sp2dItem>

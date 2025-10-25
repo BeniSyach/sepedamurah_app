@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRefLaporanFungsional } from './berkas-masuk-penerimaan-provider'
+import { useRefLaporanFungsional } from './pengeluaran-diterima-provider'
 
 type DataTableRowActionsProps = {
   row: Row<LaporanFungsional>

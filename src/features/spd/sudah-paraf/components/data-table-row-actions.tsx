@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 // import { type User } from '../data/schema'
-import { useRefPermohonanSpd } from './berkas-masuk-spd-provider'
+import { useRefPermohonanSpd } from './sudah-paraf-provider'
 
 type DataTableRowActionsProps = {
   row: Row<SpdTerkirim>

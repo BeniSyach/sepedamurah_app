@@ -7,9 +7,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { UsersDialogs } from './components/berkas-masuk-spd-dialogs'
-import { PermohonanSpdProvider } from './components/berkas-masuk-spd-provider'
-import { SpdDitandatanganiBUDTable } from './components/berkas-masuk-spd-table'
+import { UsersDialogs } from './components/spd-ditandatangani-bud-dialogs'
+import { PermohonanSpdProvider } from './components/spd-ditandatangani-bud-provider'
+import { SpdDitandatanganiBUDTable } from './components/spd-ditandatangani-bud-table'
 
 const route = getRouteApi('/_authenticated/dokumen/spd/spd-ditandatangani-bud')
 

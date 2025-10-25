@@ -7,9 +7,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { UsersDialogs } from './components/berkas-masuk-spd-dialogs'
-import { PermohonanSpdProvider } from './components/berkas-masuk-spd-provider'
-import { BerkasMasukTable } from './components/berkas-masuk-spd-table'
+import { UsersDialogs } from './components/belum-paraf-dialogs'
+import { PermohonanSpdProvider } from './components/belum-paraf-provider'
+import { BerkasMasukTable } from './components/belum-paraf-table'
 
 const route = getRouteApi('/_authenticated/dokumen/spd/belum-paraf')
 
