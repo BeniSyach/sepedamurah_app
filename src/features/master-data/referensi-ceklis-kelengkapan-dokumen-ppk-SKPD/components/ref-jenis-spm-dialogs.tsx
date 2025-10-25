@@ -12,7 +12,7 @@ export function UsersDialogs() {
 
   const handleDelete = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync(currentRow.id)
+    const deletePromise = mutateAsync(String(currentRow.id))
 
     await toast.promise(deletePromise, {
       loading: 'Menghapus data...',
