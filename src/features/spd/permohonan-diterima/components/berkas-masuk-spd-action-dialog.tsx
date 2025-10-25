@@ -3,8 +3,14 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type PermohonanSpd } from '@/api'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import {
+  type MasterSkpd,
+  useGetRefSKPD,
+  usePostSpdTerkirim,
+  usePutSpdTerkirim,
+  type SpdTerkirim,
+} from '@/api'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,76 +29,28 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
+import { Textarea } from '@/components/ui/textarea'
+import { SelectDropdown } from '@/components/select-dropdown'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
-    username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
-    email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role is required.'),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true
-      return data.password.length > 0
-    },
-    {
-      message: 'Password is required.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return password.length >= 8
-    },
-    {
-      message: 'Password must be at least 8 characters long.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /[a-z]/.test(password)
-    },
-    {
-      message: 'Password must contain at least one lowercase letter.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /\d/.test(password)
-    },
-    {
-      message: 'Password must contain at least one number.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true
-      return password === confirmPassword
-    },
-    {
-      message: "Passwords don't match.",
-      path: ['confirmPassword'],
-    }
-  )
-type UserForm = z.infer<typeof formSchema>
+const formSchema = z.object({
+  id: z.string().optional(),
+  nama_file: z.string().min(1, 'Permohonan SPD Harus Ada.'),
+  nama_file_asli: z.string().min(1, 'File Harus Ada.'),
+  id_operator: z.string().min(1, 'operator Harus Ada.'),
+  nama_operator: z.string().min(1, 'operator Harus Ada.'),
+  kd_opd1: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd2: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  id_penerima: z.string().min(1, 'Penerima SPD Harus Ada.'),
+  nama_penerima: z.string().min(1, 'Penerima SPD Harus Ada.'),
+  keterangan: z.string().min(1, 'Keterangan SPD Harus Ada.'),
+})
+type SpdTerkirimForm = z.infer<typeof formSchema>
 
 type UserActionDialogProps = {
-  currentRow?: PermohonanSpd
+  currentRow?: SpdTerkirim
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -103,35 +61,78 @@ export function UsersActionDialog({
   onOpenChange,
 }: UserActionDialogProps) {
   const isEdit = !!currentRow
-  const form = useForm<UserForm>({
-    resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
-      : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+
+  const { mutateAsync: postSPDTerkirimAsync } = usePostSpdTerkirim()
+  const { mutateAsync: putSPDTerkirimAsync } = usePutSpdTerkirim()
+
+  const {
+    data: dataSKPD,
+    isLoading: isLoadingSKPD,
+    isError: isErrorSKPD,
+  } = useGetRefSKPD({
+    page: 1,
+    perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
-  }
+  // Ambil data dari response
+  const itemsSKPD =
+    dataSKPD?.data?.map((item: MasterSkpd) => ({
+      // Gabungkan kd_opd1...5 menjadi satu string
+      value: [
+        item.kd_opd1,
+        item.kd_opd2,
+        item.kd_opd3,
+        item.kd_opd4,
+        item.kd_opd5,
+      ]
+        .filter(Boolean) // hilangkan undefined/null jika ada
+        .join('-'), // hasil: "00-01-01-02-03"
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
+      label: item.nm_opd ?? '',
+    })) ?? []
+
+  // Kalau error, bisa fallback ke array kosong
+  const safeItemsSKPD = isErrorSKPD ? [] : itemsSKPD
+
+  const form = useForm<SpdTerkirimForm>({
+    resolver: zodResolver(formSchema),
+    defaultValues: currentRow ?? {
+      id: '',
+      nama_file: '',
+      nama_file_asli: '',
+      id_operator: '',
+      nama_operator: '',
+      kd_opd1: '',
+      kd_opd2: '',
+      kd_opd3: '',
+      kd_opd4: '',
+      kd_opd5: '',
+    },
+  })
+  const fileRef = form.register('nama_file_asli')
+
+  const onSubmit = async (data: SpdTerkirimForm) => {
+    const requestPromise = isEdit
+      ? putSPDTerkirimAsync(data)
+      : postSPDTerkirimAsync(data)
+
+    await toast.promise(requestPromise, {
+      loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
+      success: () => {
+        onOpenChange(false)
+        form.reset()
+        return isEdit
+          ? 'Data Permohonan SPD berhasil diperbarui!'
+          : 'Data Permohonan SPD berhasil ditambahkan!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
+  }
 
   return (
     <Dialog
@@ -143,30 +144,66 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Edit SPD' : 'Tambah Baru SPD'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit ? 'Perbarui SPD disini. ' : 'Tambah baru SPD disini. '}
+            Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='PermohonanSPD-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='kd_opd1'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      First Name
+                      Pilih SKPD
+                    </FormLabel>
+
+                    <SelectDropdown
+                      defaultValue={field.value}
+                      onValueChange={(value) => {
+                        // Pisahkan string "00-01-01-02-03"
+                        const parts = value.split('-')
+
+                        // Set ke masing-masing field
+                        form.setValue('kd_opd1', parts[0] ?? '')
+                        form.setValue('kd_opd2', parts[1] ?? '')
+                        form.setValue('kd_opd3', parts[2] ?? '')
+                        form.setValue('kd_opd4', parts[3] ?? '')
+                        form.setValue('kd_opd5', parts[4] ?? '')
+
+                        // Jalankan field.onChange agar form tahu kd_opd1 juga berubah
+                        field.onChange(parts[0])
+                      }}
+                      placeholder='Pilih SKPD'
+                      className='col-span-4 w-full'
+                      isPending={isLoadingSKPD}
+                      items={safeItemsSKPD}
+                      disabled={isErrorSKPD}
+                    />
+
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='nama_file'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Permohonan SPD
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='John'
+                        placeholder='Permohonan SPD'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -178,111 +215,43 @@ export function UsersActionDialog({
               />
               <FormField
                 control={form.control}
-                name='lastName'
+                name='nama_file_asli'
+                render={() => (
+                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
+                    {/* Label di sisi kiri */}
+                    <FormLabel className='col-span-2 text-end'>
+                      Upload File
+                    </FormLabel>
+
+                    {/* Input file */}
+                    <div className='col-span-4 flex flex-col'>
+                      <FormControl>
+                        <Input
+                          type='file'
+                          {...fileRef}
+                          className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
+                        />
+                      </FormControl>
+
+                      {/* Pesan error di bawah input */}
+                      <FormMessage className='mt-1 text-xs text-red-500' />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='keterangan'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Last Name
+                      Keterangan
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Doe'
+                      <Textarea
+                        placeholder='Keterangan'
                         className='col-span-4'
                         autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john.doe@gmail.com'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='+123456789'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
                         {...field}
                       />
                     </FormControl>

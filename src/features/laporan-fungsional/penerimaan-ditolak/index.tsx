@@ -7,7 +7,6 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/berkas-masuk-penerimaan-buttons'
 import { UsersDialogs } from './components/berkas-masuk-penerimaan-dialogs'
 import { LaporanFungsionalProvider } from './components/berkas-masuk-penerimaan-provider'
 import { BerkasMasukPenerimaanTable } from './components/berkas-masuk-penerimaan-table'
@@ -53,7 +52,6 @@ export function PenerimaanDitolakLaporanFungsional() {
               Data Ini adalah Penerimaan - Ditolak Laporan Fungsional
             </p>
           </div>
-          <RefRekeningPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {/* <UsersTable data={users} search={search} navigate={navigate} /> */}

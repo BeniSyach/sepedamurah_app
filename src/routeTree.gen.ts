@@ -37,8 +37,6 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
-import { Route as AuthenticatedProfileNotificationsRouteImport } from './routes/_authenticated/profile/notifications'
-import { Route as AuthenticatedProfileDisplayRouteImport } from './routes/_authenticated/profile/display'
 import { Route as AuthenticatedProfileAppearanceRouteImport } from './routes/_authenticated/profile/appearance'
 import { Route as AuthenticatedProfileAccountRouteImport } from './routes/_authenticated/profile/account'
 import { Route as AuthenticatedMasterDataReferensiUrusanRouteImport } from './routes/_authenticated/master-data/referensi-urusan'
@@ -243,18 +241,6 @@ const AuthenticatedSettingsAccountRoute =
     id: '/account',
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedProfileNotificationsRoute =
-  AuthenticatedProfileNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
-  } as any)
-const AuthenticatedProfileDisplayRoute =
-  AuthenticatedProfileDisplayRouteImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => AuthenticatedProfileRouteRoute,
   } as any)
 const AuthenticatedProfileAppearanceRoute =
   AuthenticatedProfileAppearanceRouteImport.update({
@@ -624,8 +610,6 @@ export interface FileRoutesByFullPath {
   '/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
   '/profile/account': typeof AuthenticatedProfileAccountRoute
   '/profile/appearance': typeof AuthenticatedProfileAppearanceRoute
-  '/profile/display': typeof AuthenticatedProfileDisplayRoute
-  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -706,8 +690,6 @@ export interface FileRoutesByTo {
   '/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
   '/profile/account': typeof AuthenticatedProfileAccountRoute
   '/profile/appearance': typeof AuthenticatedProfileAppearanceRoute
-  '/profile/display': typeof AuthenticatedProfileDisplayRoute
-  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -792,8 +774,6 @@ export interface FileRoutesById {
   '/_authenticated/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
   '/_authenticated/profile/account': typeof AuthenticatedProfileAccountRoute
   '/_authenticated/profile/appearance': typeof AuthenticatedProfileAppearanceRoute
-  '/_authenticated/profile/display': typeof AuthenticatedProfileDisplayRoute
-  '/_authenticated/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -878,8 +858,6 @@ export interface FileRouteTypes {
     | '/master-data/referensi-urusan'
     | '/profile/account'
     | '/profile/appearance'
-    | '/profile/display'
-    | '/profile/notifications'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -960,8 +938,6 @@ export interface FileRouteTypes {
     | '/master-data/referensi-urusan'
     | '/profile/account'
     | '/profile/appearance'
-    | '/profile/display'
-    | '/profile/notifications'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -1045,8 +1021,6 @@ export interface FileRouteTypes {
     | '/_authenticated/master-data/referensi-urusan'
     | '/_authenticated/profile/account'
     | '/_authenticated/profile/appearance'
-    | '/_authenticated/profile/display'
-    | '/_authenticated/profile/notifications'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -1298,20 +1272,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/account'
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/profile/notifications': {
-      id: '/_authenticated/profile/notifications'
-      path: '/notifications'
-      fullPath: '/profile/notifications'
-      preLoaderRoute: typeof AuthenticatedProfileNotificationsRouteImport
-      parentRoute: typeof AuthenticatedProfileRouteRoute
-    }
-    '/_authenticated/profile/display': {
-      id: '/_authenticated/profile/display'
-      path: '/display'
-      fullPath: '/profile/display'
-      preLoaderRoute: typeof AuthenticatedProfileDisplayRouteImport
-      parentRoute: typeof AuthenticatedProfileRouteRoute
     }
     '/_authenticated/profile/appearance': {
       id: '/_authenticated/profile/appearance'
@@ -1690,8 +1650,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedProfileRouteRouteChildren {
   AuthenticatedProfileAccountRoute: typeof AuthenticatedProfileAccountRoute
   AuthenticatedProfileAppearanceRoute: typeof AuthenticatedProfileAppearanceRoute
-  AuthenticatedProfileDisplayRoute: typeof AuthenticatedProfileDisplayRoute
-  AuthenticatedProfileNotificationsRoute: typeof AuthenticatedProfileNotificationsRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
 
@@ -1699,9 +1657,6 @@ const AuthenticatedProfileRouteRouteChildren: AuthenticatedProfileRouteRouteChil
   {
     AuthenticatedProfileAccountRoute: AuthenticatedProfileAccountRoute,
     AuthenticatedProfileAppearanceRoute: AuthenticatedProfileAppearanceRoute,
-    AuthenticatedProfileDisplayRoute: AuthenticatedProfileDisplayRoute,
-    AuthenticatedProfileNotificationsRoute:
-      AuthenticatedProfileNotificationsRoute,
     AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
   }
 

@@ -7,7 +7,6 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/berkas-masuk-spd-buttons'
 import { UsersDialogs } from './components/berkas-masuk-spd-dialogs'
 import { PermohonanSpdProvider } from './components/berkas-masuk-spd-provider'
 import { SpdDitandatanganiBUDTable } from './components/berkas-masuk-spd-table'
@@ -50,7 +49,6 @@ export function SpdDitandatanganiBUD() {
               Data Ini adalah SPD Ditandatangani BUD
             </p>
           </div>
-          <RefRekeningPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {/* <UsersTable data={users} search={search} navigate={navigate} /> */}

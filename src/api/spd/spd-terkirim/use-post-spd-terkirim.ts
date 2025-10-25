@@ -3,31 +3,31 @@ import { api } from '../../common/client'
 import type { SpdTerkirim } from './types'
 
 interface CreateSpdTerkirimPayload {
-  id_berkas: string | null
+  id_berkas?: string | null
   id_penerima: string
   nama_penerima: string
   id_operator: string
   nama_operator: string
-  namafile: string
+  namafile?: string
   nama_file_asli: string
-  nama_file_lampiran: string | null
-  tanggal_upload: string
+  nama_file_lampiran?: string | null
+  tanggal_upload?: string
   keterangan: string
-  paraf_kbud: string
-  tgl_paraf: string
-  tte: string
-  passpharase: string | null
-  status: string
-  tgl_tte: string
-  id_penandatangan: string
-  nama_penandatangan: string
+  paraf_kbud?: string
+  tgl_paraf?: string
+  tte?: string
+  passpharase?: string | null
+  status?: string
+  tgl_tte?: string
+  id_penandatangan?: string
+  nama_penandatangan?: string
   kd_opd1: string
   kd_opd2: string
   kd_opd3: string
   kd_opd4: string
   kd_opd5: string
-  file_tte: string
-  publish: string
+  file_tte?: string
+  publish?: string
 }
 
 /**
