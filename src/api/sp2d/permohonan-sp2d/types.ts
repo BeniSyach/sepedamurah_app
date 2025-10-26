@@ -2,9 +2,11 @@ import type { PaginationLinks, PaginationMeta } from '@/api/users'
 import { type Sp2dData } from '../sp2d-kirim'
 
 export interface Sp2dResponse {
+  success: boolean
+  message: string
   data: Sp2dItem[]
-  links: PaginationLinks
   meta: PaginationMeta
+  links: PaginationLinks
 }
 
 export interface Sp2dItem {
@@ -62,6 +64,27 @@ export interface Sp2dItem {
   sp2dkirim: Sp2dData[]
 }
 
+// ==============================
+// NESTED OBJECT TYPES
+// ==============================
+
+interface Urusan {
+  kd_urusan: string
+  nm_urusan: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+interface Bu {
+  kd_bu1: string
+  kd_bu2: string
+  nm_bu: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
 interface Program {
   kd_prog1: string
   kd_prog2: string
@@ -92,6 +115,19 @@ interface SubKegiatan {
   kd_subkeg5: string
   kd_subkeg6: string
   nm_subkegiatan: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+interface RekeningRef {
+  kd_rekening1: string
+  kd_rekening2: string
+  kd_rekening3: string
+  kd_rekening4: string
+  kd_rekening5: string
+  kd_rekening6: string
+  nm_rekening: string
   created_at: string
   updated_at: string
   deleted_at: string | null
@@ -132,28 +168,7 @@ interface RekeningItem {
   subkegiatan: SubKegiatan | null
   rekening: RekeningRef
   bu: Bu
-}
-
-interface RekeningRef {
-  kd_rekening1: string
-  kd_rekening2: string
-  kd_rekening3: string
-  kd_rekening4: string
-  kd_rekening5: string
-  kd_rekening6: string
-  nm_rekening: string
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
-}
-
-interface Bu {
-  kd_bu1: string
-  kd_bu2: string
-  nm_bu: string
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+  urusan: Urusan
 }
 
 interface Skpd {
@@ -171,7 +186,7 @@ interface Skpd {
   deleted_at: string | null
 }
 
-export interface SumberDanaItem {
+interface SumberDanaItem {
   id: number
   sp2d_id: string
   kd_ref1: string | null

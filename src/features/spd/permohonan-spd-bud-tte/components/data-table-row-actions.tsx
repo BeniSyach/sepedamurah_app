@@ -11,7 +11,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import { type User } from '../data/schema'
 import { useRefPermohonanSpd } from './permohonan-spd-bud-tte-provider'
 
 type DataTableRowActionsProps = {

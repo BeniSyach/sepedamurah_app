@@ -1,7 +1,7 @@
 'use client'
 
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   type CeklisKelengkapanDokumen,
@@ -13,9 +13,18 @@ import {
   type SumberDana,
   useGetRefJenisSPM,
 } from '@/api'
+import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Dialog,
   DialogContentLarge,
@@ -32,53 +41,78 @@ import {
 import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
-import { SelectDropdown } from '@/components/select-dropdown'
+import { UrusanSection } from './urusan-section'
+
+// ============================
+// 🧾 VALIDATION SCHEMA
+// ============================
+const rekeningSchema = z.object({
+  nm_rekening: z.string().min(1),
+  nilai: z.string().min(1),
+})
+
+const subKegiatanSchema = z.object({
+  nm_subkegiatan: z.string().min(1),
+  rekening: z.array(rekeningSchema).min(1),
+})
+
+const kegiatanSchema = z.object({
+  nm_kegiatan: z.string().min(1),
+  subKegiatan: z.array(subKegiatanSchema).min(1),
+})
+
+const programSchema = z.object({
+  nm_program: z.string().min(1),
+  kegiatan: z.array(kegiatanSchema).min(1),
+})
+
+const bidangSchema = z.object({
+  nm_bu: z.string().min(1),
+  program: z.array(programSchema).min(1),
+})
+
+const urusanSchema = z.object({
+  nm_urusan: z.string().min(1),
+  bidangUrusan: z.array(bidangSchema).min(1),
+})
 
 const formSchema = z.object({
   id: z.string().optional(),
-  no_spm: z.string().min(1, 'Nomor SPM Harus Ada.'),
-  jenis_berkas: z.string().min(1, 'Jenis Berkas Harus Ada.'),
-  id_berkas: z.array(z.string().min(1)).nonempty('Ceklis Dokumen Harus Ada.'),
-  kode_urusan: z.string().min(1, 'Kode Urusan Harus Ada.'),
-  kode_bidang_urusan: z.string().min(1, 'Kode Bidang Urusan Harus Ada.'),
-  kode_program: z.string().min(1, 'Kode Program Harus Ada.'),
-  kode_kegiatan: z.string().min(1, 'Kode Kegiatan Harus Ada.'),
-  kode_subkegiatan: z.string().min(1, 'Kode Sub Kegiatan Harus Ada.'),
-  kode_rekening: z.string().min(1, 'Kode rekening Harus Ada.'),
-  kd_opd1: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd2: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  sumber_dana1: z.string().min(1, 'Sumber Dana Harus Ada.'),
-  nilai_belanja: z.string().min(1, 'Nilai Belanja Harus Ada.'),
-  nama_file: z.string().min(1, 'Uraian SPM Harus Ada.'),
-  nama_file_asli: z.string().min(1, 'File Harus Ada.'),
-  id_user: z.string().min(1, 'Pengirim Harus Ada.'),
-  nama_user: z.string().min(1, 'Pengirim Harus Ada.'),
-  agreement: z.string().min(1, 'Pengirim Harus Ada.'),
-  kd_belanja1: z.string().nullable().optional(),
-  kd_belanja2: z.string().nullable().optional(),
-  kd_belanja3: z.string().nullable().optional(),
-  jenis_belanja: z.string().nullable().optional(),
+  no_spm: z.string().min(1, 'Nomor SPM wajib diisi'),
+  jenis_berkas: z.string().min(1),
+  id_berkas: z.array(z.string().min(1)).nonempty(),
+  kd_opd1: z.string().min(1),
+  kd_opd2: z.string().min(1),
+  kd_opd3: z.string().min(1),
+  kd_opd4: z.string().min(1),
+  kd_opd5: z.string().min(1),
+  nilai_belanja: z.string().min(1),
+  nama_file: z.string().min(1),
+  nama_file_asli: z.string().min(1),
+  id_user: z.string().min(1),
+  nama_user: z.string().min(1),
+  agreement: z.string().min(1),
+  urusan: z.array(urusanSchema).nonempty('Minimal 1 urusan'),
+  sumber_dana: z.array(z.string().min(1)).nonempty('Sumber dana wajib diisi'),
 })
-type PermohonanSP2DForm = z.infer<typeof formSchema>
 
-type PermohonanSP2DActionDialogProps = {
-  currentRow?: Sp2dItem
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+type FormValues = z.infer<typeof formSchema>
 
+// ============================
+// 🎨 COMPONENT
+// ============================
 export function UsersActionDialog({
   currentRow,
   open,
   onOpenChange,
-}: PermohonanSP2DActionDialogProps) {
+}: {
+  currentRow?: Sp2dItem
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
   const isEdit = !!currentRow
-
-  const { mutateAsync: postPermohonanSP2DAsync } = usePostPermohonanSp2d()
-  const { mutateAsync: putPermohonanSP2DAsync } = usePutPermohonanSp2d()
+  const { mutateAsync: post } = usePostPermohonanSp2d()
+  const { mutateAsync: put } = usePutPermohonanSp2d()
 
   // jenis_bekas
   const { data, isLoading, isError } = useGetRefCeklisSPM({
@@ -86,20 +120,9 @@ export function UsersActionDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  // sumber Dana
-  const {
-    data: dataSD,
-    isLoading: pendingSD,
-    isError: errorSD,
-  } = useGetRefSumberDana({
-    page: 1,
-    perPage: 100, // ambil banyak biar bisa isi select
-  })
-
-  // Ambil data dari response
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
-      // Gabungkan kd_opd1...5 menjadi satu string
       value: [
         item.kd_ref1,
         item.kd_ref2,
@@ -108,58 +131,97 @@ export function UsersActionDialog({
         item.kd_ref5,
         item.kd_ref6,
       ]
-        .filter(Boolean) // hilangkan undefined/null jika ada
-        .join('-'), // hasil: "00-01-01-02-03"
-
+        .filter(Boolean)
+        .join('.'),
       label: item.nm_ref ?? '',
     })) ?? []
 
-  // Kalau error, bisa fallback ke array kosong
-  const safeItems = isError ? [] : itemsSD
-
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow, // ambil semua field dari data yang sedang diedit
-          id_berkas: Array.isArray(currentRow.id_berkas)
-            ? currentRow.id_berkas
-            : currentRow.id_berkas
-              ? [currentRow.id_berkas]
-              : [],
+          id: currentRow.id_sp2d ?? '',
+          no_spm: currentRow.no_spm ?? '',
+          jenis_berkas: currentRow.jenis_berkas ?? '',
+          id_berkas: currentRow.id_berkas
+            ? [currentRow.id_berkas]
+            : ['default'],
+          kd_opd1: currentRow.kd_opd1 ?? '',
+          kd_opd2: currentRow.kd_opd2 ?? '',
+          kd_opd3: currentRow.kd_opd3 ?? '',
+          kd_opd4: currentRow.kd_opd4 ?? '',
+          kd_opd5: currentRow.kd_opd5 ?? '',
+          nilai_belanja: currentRow.nilai_belanja ?? '',
+          nama_file: currentRow.nama_file ?? '',
+          nama_file_asli: currentRow.nama_file_asli ?? '',
+          id_user: currentRow.id_user ?? '',
+          nama_user: currentRow.nama_user ?? '',
+          agreement: currentRow.agreement ?? '',
+          urusan:
+            currentRow.rekening?.map((u) => ({
+              nm_urusan: u.urusan?.nm_urusan ?? '',
+              bidangUrusan: [
+                {
+                  nm_bu: u.bu?.nm_bu ?? '',
+                  program: [
+                    {
+                      nm_program: u.program?.nm_program ?? '',
+                      kegiatan: [
+                        {
+                          nm_kegiatan: u.kegiatan?.nm_kegiatan ?? '',
+                          subKegiatan: [
+                            {
+                              nm_subkegiatan:
+                                u.subkegiatan?.nm_subkegiatan ?? '',
+                              rekening: [
+                                {
+                                  nm_rekening: u.rekening?.nm_rekening ?? '',
+                                  nilai: u.nilai ?? '',
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            })) ?? [],
+
+          sumber_dana:
+            currentRow.sumber_dana?.map(
+              (s) =>
+                `${s.kd_ref1}.${s.kd_ref2}.${s.kd_ref3}.${s.kd_ref4}.${s.kd_ref5}.${s.kd_ref6}`
+            ) ?? [],
         }
       : {
           id: '',
           no_spm: '',
           jenis_berkas: '',
           id_berkas: [],
-          kode_urusan: '',
-          kode_bidang_urusan: '',
-          kode_program: '',
-          kode_kegiatan: '',
-          kode_subkegiatan: '',
-          kode_rekening: '',
           kd_opd1: '',
           kd_opd2: '',
           kd_opd3: '',
           kd_opd4: '',
           kd_opd5: '',
-          sumber_dana1: '',
           nilai_belanja: '',
           nama_file: '',
           nama_file_asli: '',
           id_user: '',
           nama_user: '',
           agreement: '',
-          kd_belanja1: '',
-          kd_belanja2: '',
-          kd_belanja3: '',
-          jenis_belanja: '',
+          urusan: [],
+          sumber_dana: [],
         },
   })
 
-  const jenisBerkasValue = form.watch('jenis_berkas')
-  // ceklis Berkas SPM
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'urusan',
+  })
+
+  const jenisBerkasValue = form.watch('jenis_berkas') // ceklis Berkas SPM
   const { data: dataJenisSPM, isLoading: pendingJenisSPM } = useGetRefJenisSPM({
     page: 1,
     perPage: 100,
@@ -170,26 +232,15 @@ export function UsersActionDialog({
 
   const fileRef = form.register('nama_file_asli')
 
-  const onSubmit = async (data: PermohonanSP2DForm) => {
-    const requestPromise = isEdit
-      ? putPermohonanSP2DAsync(data)
-      : postPermohonanSP2DAsync(data)
-
-    await toast.promise(requestPromise, {
-      loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
+  const onSubmit = async (data: FormValues) => {
+    const req = isEdit ? put(data) : post(data)
+    await toast.promise(req, {
+      loading: 'Menyimpan data...',
       success: () => {
         onOpenChange(false)
-        form.reset()
-        return isEdit
-          ? 'Data Permohonan SP2D berhasil diperbarui!'
-          : 'Data Permohonan SP2D berhasil ditambahkan!'
+        return isEdit ? 'Data berhasil diperbarui!' : 'Data berhasil disimpan!'
       },
-      error: (err) => {
-        const message =
-          err?.response?.data?.message ||
-          'Terjadi kesalahan saat menyimpan data.'
-        return message
-      },
+      error: 'Gagal menyimpan data.',
     })
   }
 
@@ -202,8 +253,8 @@ export function UsersActionDialog({
       }}
     >
       <DialogContentLarge
-        title='Tambah Dokumen'
-        description='Isi semua kolom di bawah ini untuk Membuat SP2D'
+        title='Form Permohonan SP2D'
+        description='Lengkapi data di bawah ini.'
       >
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
@@ -232,6 +283,7 @@ export function UsersActionDialog({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='jenis_berkas'
@@ -278,7 +330,6 @@ export function UsersActionDialog({
               />
 
               {/* === LIST CEKLIS BERKAS === */}
-              {/* === LIST CEKLIS BERKAS === */}
               {jenisBerkasValue && (
                 <FormField
                   control={form.control}
@@ -289,7 +340,6 @@ export function UsersActionDialog({
                       <FormLabel className='col-span-2 pt-2 text-end'>
                         Daftar Berkas
                       </FormLabel>
-
                       {/* Isi kolom kanan */}
                       <div className='col-span-4'>
                         {pendingJenisSPM ? (
@@ -343,7 +393,6 @@ export function UsersActionDialog({
                           </div>
                         )}
                       </div>
-
                       {/* Error message sejajar dengan kolom kanan */}
                       <FormMessage className='col-span-4 col-start-3' />
                     </FormItem>
@@ -351,99 +400,147 @@ export function UsersActionDialog({
                 />
               )}
 
+              {/* === URUSAN SECTION === */}
+              <div className='space-y-3'>
+                <div className='flex items-center justify-between'>
+                  <FormLabel>Urusan & Program</FormLabel>
+                  <Button
+                    type='button'
+                    size='sm'
+                    variant='outline'
+                    onClick={() =>
+                      append({
+                        nm_urusan: '',
+                        bidangUrusan: [
+                          {
+                            nm_bu: '',
+                            program: [
+                              {
+                                nm_program: '',
+                                kegiatan: [
+                                  {
+                                    nm_kegiatan: '',
+                                    subKegiatan: [
+                                      {
+                                        nm_subkegiatan: '',
+                                        rekening: [
+                                          { nm_rekening: '', nilai: '' },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      })
+                    }
+                  >
+                    <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
+                  </Button>
+                </div>
+
+                {fields.map((f, i) => (
+                  <UrusanSection
+                    key={f.id}
+                    control={form.control}
+                    indexUrusan={i}
+                    removeUrusan={() => remove(i)}
+                  />
+                ))}
+              </div>
+
               <FormField
                 control={form.control}
-                name='sumber_dana1'
+                name='sumber_dana'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Pilih Operator
-                    </FormLabel>
-
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder='Pilih Sumber Dana'
-                      className='col-span-4 w-full'
-                      isPending={pendingSD}
-                      items={safeItems}
-                      disabled={errorSD}
-                    />
-
-                    <FormMessage className='col-span-4 col-start-3' />
+                  <FormItem>
+                    <FormLabel>Sumber Dana</FormLabel>
+                    <FormControl>
+                      <Command className='rounded-md border'>
+                        <CommandInput placeholder='Pilih sumber dana...' />
+                        <CommandList>
+                          {itemsSD.length === 0 && (
+                            <CommandEmpty>Tidak ada data</CommandEmpty>
+                          )}
+                          <CommandGroup>
+                            {itemsSD.map((r) => (
+                              <CommandItem
+                                key={r.value}
+                                onSelect={() => {
+                                  if (!field.value.includes(r.value)) {
+                                    field.onChange([...field.value, r.value])
+                                  } else {
+                                    field.onChange(
+                                      field.value.filter((v) => v !== r.value)
+                                    )
+                                  }
+                                }}
+                              >
+                                <span>{r.label}</span>
+                                {field.value.includes(r.value) && (
+                                  <CheckIcon className='ml-auto h-4 w-4' />
+                                )}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='nilai_belanja'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Nilai Belanja
-                    </FormLabel>
+                  <FormItem>
+                    <FormLabel>Nilai Belanja</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Nilai belanja'
-                        className='col-span-4'
-                        {...field}
-                      />
+                      <Input {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='nama_file'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Keterangan
-                    </FormLabel>
+                  <FormItem>
+                    <FormLabel>Uraian SPM</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder='Keterangan'
-                        className='col-span-4'
-                        {...field}
-                      />
+                      <Textarea {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='nama_file_asli'
                 render={() => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
-                    {/* Label di sisi kiri */}
-                    <FormLabel className='col-span-2 text-end'>
-                      Upload File
-                    </FormLabel>
-
-                    {/* Input file */}
-                    <div className='col-span-4 flex flex-col'>
-                      <FormControl>
-                        <Input
-                          type='file'
-                          {...fileRef}
-                          className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
-                        />
-                      </FormControl>
-
-                      {/* Pesan error di bawah input */}
-                      <FormMessage className='mt-1 text-xs text-red-500' />
-                    </div>
+                  <FormItem>
+                    <FormLabel>Upload File</FormLabel>
+                    <FormControl>
+                      <Input type='file' {...fileRef} />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </form>
           </Form>
         </div>
+
         <DialogFooter>
           <Button type='submit' form='sp2d-form'>
-            Simpan Perubahan
+            Simpan
           </Button>
         </DialogFooter>
       </DialogContentLarge>

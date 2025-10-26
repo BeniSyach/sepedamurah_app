@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,6 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { LaporanPembayaranModal } from './components/pengembalian-dana-modal'
 
 // 🧩 Schema validasi
 const formSchema = z.object({
@@ -35,11 +37,13 @@ const formSchema = z.object({
   tahun: z.string().min(4, 'Tahun wajib dipilih'),
   rekening: z.string().min(1, 'Pilih rekening'),
   jumlah: z.string().min(1, 'Jumlah wajib diisi'),
+  keterangan: z.string().min(5, 'Keterangan wajib diisi'),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
 export default function PengembalianDanaForm() {
+  const [open, setOpen] = useState(false)
   const router = useRouter()
 
   const form = useForm<FormValues>({
@@ -280,6 +284,27 @@ export default function PengembalianDanaForm() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name='keterangan'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='dark:text-gray-200'>
+                      Keterangan
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={3}
+                        placeholder='Keterangan'
+                        {...field}
+                        className='dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button
                 type='submit'
                 className='w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md transition-all duration-300 hover:from-indigo-600 hover:to-purple-600 dark:from-indigo-600 dark:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800'
@@ -307,14 +332,19 @@ export default function PengembalianDanaForm() {
             alt='Ilustrasi Pengembalian Dana'
             className='w-[80%] drop-shadow-2xl'
           />
-
-          <button
-            id='laporan-bayar'
-            className='mt-6 flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-2 text-white shadow-md transition-all hover:bg-amber-600 hover:shadow-lg focus:ring-2 focus:ring-amber-400 focus:outline-none'
+          <Button
+            type='button'
+            onClick={() => setOpen(true)}
+            className='my-5 bg-yellow-400'
           >
-            <i className='zmdi zmdi-assignment text-lg'></i>
-            <span>Cek Laporan Pembayaran</span>
-          </button>
+            Cek Laporan Pembayaran
+          </Button>
+          {/* Trigger Modal */}
+          <LaporanPembayaranModal
+            key='cek-pengembalian-dana'
+            open={open}
+            onOpenChange={setOpen}
+          />
         </div>
       </motion.div>
     </motion.div>
