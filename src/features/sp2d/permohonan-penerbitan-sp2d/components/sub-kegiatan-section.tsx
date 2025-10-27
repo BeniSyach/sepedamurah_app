@@ -44,11 +44,11 @@ export function SubKegiatanSection({
     <div className='mt-3 ml-16 space-y-3 border-l pl-4'>
       <FormField
         control={control}
-        name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.kd_subkegiatan`} // kirim gabungan kode
+        name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.kd_subkegiatan`}
         render={({ field }) => (
           <FormItem>
             <div className='flex items-center justify-between'>
-              <FormLabel>Sub Kegiatan</FormLabel>
+              <FormLabel className='font-medium'>Sub Kegiatan</FormLabel>
               <Button
                 type='button'
                 size='icon'
@@ -59,6 +59,7 @@ export function SubKegiatanSection({
                 <Minus className='h-4 w-4' />
               </Button>
             </div>
+
             <FormControl>
               {isPending ? (
                 <p className='text-muted-foreground text-sm'>
@@ -73,9 +74,10 @@ export function SubKegiatanSection({
                   onValueChange={field.onChange}
                   value={field.value || ''}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className='min-h-[44px] break-words whitespace-normal'>
                     <SelectValue placeholder='Pilih Sub Kegiatan' />
                   </SelectTrigger>
+
                   <SelectContent>
                     {subList.map((sub: SubKegiatan) => {
                       const kdFull = [
@@ -90,8 +92,15 @@ export function SubKegiatanSection({
                         .join('.')
 
                       return (
-                        <SelectItem key={kdFull} value={kdFull}>
-                          {kdFull} — {sub.nm_subkegiatan}
+                        <SelectItem
+                          key={kdFull}
+                          value={kdFull}
+                          className='py-2 break-words whitespace-normal'
+                        >
+                          <span className='block text-left'>
+                            <span className='font-semibold'>{kdFull}</span> —{' '}
+                            {sub.nm_subkegiatan}
+                          </span>
                         </SelectItem>
                       )
                     })}
@@ -99,6 +108,7 @@ export function SubKegiatanSection({
                 </Select>
               )}
             </FormControl>
+
             <FormMessage />
           </FormItem>
         )}

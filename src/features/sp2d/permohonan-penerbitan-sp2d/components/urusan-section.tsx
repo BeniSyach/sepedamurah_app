@@ -29,8 +29,6 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
 
@@ -96,13 +94,17 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
                     onValueChange={field.onChange}
                     value={field.value || ''}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className='min-h-[44px] break-words whitespace-normal'>
                       <SelectValue placeholder='Pilih Urusan' />
                     </SelectTrigger>
                     <SelectContent>
                       {urusanList.map((u: Urusan) => (
-                        <SelectItem key={u.kd_urusan} value={u.nm_urusan}>
-                          {u.nm_urusan}
+                        <SelectItem
+                          key={u.kd_urusan}
+                          value={u.nm_urusan}
+                          className='py-2 break-words whitespace-normal'
+                        >
+                          {u.kd_urusan}. {u.nm_urusan}
                         </SelectItem>
                       ))}
                     </SelectContent>

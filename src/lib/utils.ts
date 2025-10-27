@@ -1,6 +1,7 @@
 import { format, isValid, parse, parseISO } from 'date-fns'
 import { type ClassValue, clsx } from 'clsx'
 import { id } from 'date-fns/locale'
+import QRCode from 'qrcode'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -80,6 +81,15 @@ export function formatRupiah(value: unknown, withPrefix = true): string {
   return withPrefix ? `Rp ${formatted}` : formatted
 }
 
+export function formatRupiahControlled(value: string | number): string {
+  const number = Number(String(value).replace(/\D/g, '')) || 0
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(number)
+}
+
 /**
  * Format tanggal ISO (ex: "2025-01-02T00:00:00.000000Z")
  * menjadi format "dd-MM-yyyy" (ex: "02-01-2025")
@@ -152,4 +162,57 @@ export function getJam(dateString?: string | null): string {
   } catch {
     return '-'
   }
+}
+
+/**
+ * Generate QR Code dengan logo di tengah
+ * @param text Teks yang ingin di-encode
+ * @param logoUrl URL logo (bisa dari aset backend)
+ * @param size Ukuran QR Code (default: 200)
+ * @returns dataURL base64 PNG
+ */
+export async function createQRCodeWithLogo(
+  text: string,
+  logoUrl: string,
+  size = 200
+): Promise<string> {
+  // Buat canvas
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('Canvas context gagal dibuat')
+
+  // Generate QR code di canvas
+  await QRCode.toCanvas(canvas, text, {
+    width: size,
+    margin: 2,
+    color: {
+      dark: '#000000',
+      light: '#ffffff',
+    },
+  })
+
+  // Load logo
+  const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous' // penting untuk hindari CORS error
+    img.src = logoUrl
+    img.onload = () => resolve(img)
+    img.onerror = reject
+  })
+
+  // Hitung posisi tengah
+  const logoSize = size * 0.25 // 25% dari ukuran QR
+  const x = (size - logoSize) / 2
+  const y = (size - logoSize) / 2
+
+  // Gambar background putih untuk logo agar QR tetap bisa discan
+  ctx.fillStyle = 'white'
+  ctx.fillRect(x - 5, y - 5, logoSize + 10, logoSize + 10)
+
+  // Gambar logo di tengah
+  ctx.drawImage(logo, x, y, logoSize, logoSize)
+
+  return canvas.toDataURL('image/png')
 }
