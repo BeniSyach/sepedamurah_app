@@ -3,7 +3,6 @@
 
 import { useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
-import { type Urusan, useGetRefUrusan } from '@/api'
 import { ChevronDown, Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,13 +17,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
 import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -33,18 +26,10 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan`,
   })
-
-  const { data, isPending, isError } = useGetRefUrusan({
-    page: 1,
-    perPage: 100,
-  })
-
-  const urusanList = data?.data || []
 
   return (
     <Collapsible
@@ -60,6 +45,7 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
           <div className='mr-3 flex items-center justify-between'>
             <span>Urusan #{indexUrusan + 1}</span>
             <Button
+              disabled
               type='button'
               size='icon'
               variant='destructive'
@@ -83,31 +69,11 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
             <FormItem>
               <FormLabel>Nama Urusan</FormLabel>
               <FormControl>
-                {isPending ? (
-                  <p className='text-muted-foreground text-sm'>
-                    Memuat data urusan...
-                  </p>
-                ) : isError ? (
-                  <p className='text-destructive text-sm'>
-                    Gagal memuat data urusan.
-                  </p>
-                ) : (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value || ''}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder='Pilih Urusan' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {urusanList.map((u: Urusan) => (
-                        <SelectItem key={u.kd_urusan} value={u.nm_urusan}>
-                          {u.nm_urusan}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                <Input
+                  {...field}
+                  disabled
+                  placeholder='Contoh: Urusan Pemerintahan Umum'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -126,6 +92,7 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
 
         <Button
           type='button'
+          disabled
           size='sm'
           variant='outline'
           onClick={() => append({ nm_bu: '', program: [] })}

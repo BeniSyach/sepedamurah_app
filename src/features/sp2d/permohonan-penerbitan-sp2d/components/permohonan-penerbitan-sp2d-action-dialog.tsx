@@ -41,6 +41,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
+import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import { UrusanSection } from './urusan-section'
 
 // ============================
@@ -144,8 +145,12 @@ export function UsersActionDialog({
           no_spm: currentRow.no_spm ?? '',
           jenis_berkas: currentRow.jenis_berkas ?? '',
           id_berkas: currentRow.id_berkas
-            ? [currentRow.id_berkas]
-            : ['default'],
+            ? Array.isArray(currentRow.id_berkas)
+              ? currentRow.id_berkas.map(String) // kalau sudah array
+              : String(currentRow.id_berkas)
+                  .split(',')
+                  .map((v) => v.trim()) // kalau masih string "28,29,30"
+            : [],
           kd_opd1: currentRow.kd_opd1 ?? '',
           kd_opd2: currentRow.kd_opd2 ?? '',
           kd_opd3: currentRow.kd_opd3 ?? '',
@@ -157,37 +162,8 @@ export function UsersActionDialog({
           id_user: currentRow.id_user ?? '',
           nama_user: currentRow.nama_user ?? '',
           agreement: currentRow.agreement ?? '',
-          urusan:
-            currentRow.rekening?.map((u) => ({
-              nm_urusan: u.urusan?.nm_urusan ?? '',
-              bidangUrusan: [
-                {
-                  nm_bu: u.bu?.nm_bu ?? '',
-                  program: [
-                    {
-                      nm_program: u.program?.nm_program ?? '',
-                      kegiatan: [
-                        {
-                          nm_kegiatan: u.kegiatan?.nm_kegiatan ?? '',
-                          subKegiatan: [
-                            {
-                              nm_subkegiatan:
-                                u.subkegiatan?.nm_subkegiatan ?? '',
-                              rekening: [
-                                {
-                                  nm_rekening: u.rekening?.nm_rekening ?? '',
-                                  nilai: u.nilai ?? '',
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            })) ?? [],
+          // ✅ Gunakan helper yang menggabungkan rekening berdasarkan urusan
+          urusan: mapRekeningToFormData(currentRow),
 
           sumber_dana:
             currentRow.sumber_dana?.map(

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFieldArray } from 'react-hook-form'
+import { type SubKegiatan, useGetRefSubKegiatan } from '@/api'
 import { Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -7,8 +8,15 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { RekeningSection } from './rekening-section'
 
 export function SubKegiatanSection({
@@ -25,15 +33,22 @@ export function SubKegiatanSection({
     name: `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening`,
   })
 
+  const { data, isPending, isError } = useGetRefSubKegiatan({
+    page: 1,
+    perPage: 100,
+  })
+
+  const subList = data?.data || []
+
   return (
     <div className='mt-3 ml-16 space-y-3 border-l pl-4'>
       <FormField
         control={control}
-        name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.nm_subkegiatan`}
+        name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.kd_subkegiatan`} // kirim gabungan kode
         render={({ field }) => (
           <FormItem>
             <div className='flex items-center justify-between'>
-              <FormLabel>Nama Sub Kegiatan</FormLabel>
+              <FormLabel>Sub Kegiatan</FormLabel>
               <Button
                 type='button'
                 size='icon'
@@ -45,11 +60,46 @@ export function SubKegiatanSection({
               </Button>
             </div>
             <FormControl>
-              <Input
-                {...field}
-                placeholder='Contoh: Sub Kegiatan Patroli Malam'
-              />
+              {isPending ? (
+                <p className='text-muted-foreground text-sm'>
+                  Memuat data sub kegiatan...
+                </p>
+              ) : isError ? (
+                <p className='text-destructive text-sm'>
+                  Gagal memuat data sub kegiatan.
+                </p>
+              ) : (
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value || ''}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Pilih Sub Kegiatan' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subList.map((sub: SubKegiatan) => {
+                      const kdFull = [
+                        sub.kd_subkeg1,
+                        sub.kd_subkeg2,
+                        sub.kd_subkeg3,
+                        sub.kd_subkeg4,
+                        sub.kd_subkeg5,
+                        sub.kd_subkeg6,
+                      ]
+                        .filter(Boolean)
+                        .join('.')
+
+                      return (
+                        <SelectItem key={kdFull} value={kdFull}>
+                          {kdFull} — {sub.nm_subkegiatan}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+              )}
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />

@@ -186,7 +186,7 @@ interface Skpd {
   deleted_at: string | null
 }
 
-interface SumberDanaItem {
+export interface SumberDanaItem {
   id: number
   sp2d_id: string
   kd_ref1: string | null
