@@ -29,6 +29,10 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
 
