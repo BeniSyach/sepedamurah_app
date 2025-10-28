@@ -13,7 +13,7 @@ export interface RealisasiTransferSumberDana {
   tahun: string
   jumlah_sumber: number
   keterangan: number | string
-  keterangan_2: string | null
+  keterangan_2: string
   created_at: string
   updated_at: string
   deleted_at: string | null

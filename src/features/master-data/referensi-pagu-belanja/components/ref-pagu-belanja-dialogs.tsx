@@ -1,5 +1,6 @@
 import { UsersActionDialog } from './ref-pagu-belanja-action-dialog'
 import { RefPaguBelanjasDeleteDialog } from './ref-pagu-belanja-delete-dialog'
+import { TasksImportDialog } from './ref-pagu-belanja-import-dialog'
 import { useRefPaguBelanja } from './ref-pagu-belanja-provider'
 
 export function UsersDialogs() {
@@ -10,6 +11,12 @@ export function UsersDialogs() {
         key='pagu-belanja-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
+      />
+
+      <TasksImportDialog
+        key='ref-pagu-belanja-import'
+        open={open === 'import'}
+        onOpenChange={() => setOpen('import')}
       />
 
       {currentRow && (

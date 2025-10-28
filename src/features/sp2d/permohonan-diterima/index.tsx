@@ -7,7 +7,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/permohonan-diterima-buttons'
+// import { RefRekeningPrimaryButtons } from './components/permohonan-diterima-buttons'
 import { UsersDialogs } from './components/permohonan-diterima-dialogs'
 import { Sp2dItemProvider } from './components/permohonan-diterima-provider'
 import { BerkasMasukSP2DTable } from './components/permohonan-diterima-table'
@@ -50,7 +50,7 @@ export function PermohonanDiterimaSP2D() {
               Data Ini adalah Permohonan Diterima SP2D
             </p>
           </div>
-          <RefRekeningPrimaryButtons />
+          {/* <RefRekeningPrimaryButtons /> */}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {/* <UsersTable data={users} search={search} navigate={navigate} /> */}

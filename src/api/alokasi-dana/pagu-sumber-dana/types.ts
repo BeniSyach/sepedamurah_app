@@ -9,9 +9,9 @@ export interface PaguSumberDana {
   kd_ref5: string
   kd_ref6: string
   tahun: string
-  tgl_rekam: string
+  tgl_rekam: Date | undefined
   pagu: string
-  jumlah_silpa: number
+  jumlah_silpa: string
   created_at: string
   updated_at: string
   deleted_at: string | null

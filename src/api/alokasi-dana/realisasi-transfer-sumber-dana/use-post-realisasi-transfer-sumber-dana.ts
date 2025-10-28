@@ -10,11 +10,11 @@ interface CreateRealisasiTransferSumberDanaPayload {
   kd_ref5: string
   kd_ref6: string
   nm_sumber: string
-  tgl_diterima: string
+  tgl_diterima: Date
   tahun: string
-  jumlah_sumber: number
-  keterangan: number | string
-  keterangan_2: string | null
+  jumlah_sumber: string
+  keterangan?: string
+  keterangan_2?: string | null
 }
 
 /**

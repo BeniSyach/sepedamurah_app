@@ -3,7 +3,7 @@ import { api } from '../../common/client'
 import type { RealisasiTransferSumberDana } from './types'
 
 interface UpdateRealisasiTransferSumberDanaPayload {
-  id: string
+  id?: string
   kd_ref1: string
   kd_ref2: string
   kd_ref3: string
@@ -11,11 +11,11 @@ interface UpdateRealisasiTransferSumberDanaPayload {
   kd_ref5: string
   kd_ref6: string
   nm_sumber: string
-  tgl_diterima: string
+  tgl_diterima: Date
   tahun: string
-  jumlah_sumber: number
-  keterangan: number | string
-  keterangan_2: string | null
+  jumlah_sumber: string
+  keterangan?: string
+  keterangan_2?: string | null
 }
 
 /**

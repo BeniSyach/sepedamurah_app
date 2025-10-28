@@ -10,7 +10,7 @@ interface UpdateUpSkpdPayload {
   kd_opd5: string
   tahun: string
   pagu: string
-  up_kkpd: string
+  up_kkpd: string | null
 }
 
 /**

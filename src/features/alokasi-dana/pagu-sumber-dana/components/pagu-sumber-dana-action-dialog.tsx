@@ -1,10 +1,18 @@
 'use client'
 
+import { useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type PaguSumberDana } from '@/api'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import {
+  type SumberDana,
+  usePostPaguSumberDana,
+  usePutPaguSumberDana,
+  type PaguSumberDana,
+  useGetRefSumberDana,
+} from '@/api'
+import { toast } from 'sonner'
+import { formatRupiahControlled } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,73 +31,24 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
+import { DatePicker } from '@/components/date-picker'
+import { SelectDropdown } from '@/components/select-dropdown'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
-    username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
-    email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role is required.'),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true
-      return data.password.length > 0
-    },
-    {
-      message: 'Password is required.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return password.length >= 8
-    },
-    {
-      message: 'Password must be at least 8 characters long.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /[a-z]/.test(password)
-    },
-    {
-      message: 'Password must contain at least one lowercase letter.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /\d/.test(password)
-    },
-    {
-      message: 'Password must contain at least one number.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true
-      return password === confirmPassword
-    },
-    {
-      message: "Passwords don't match.",
-      path: ['confirmPassword'],
-    }
-  )
-type UserForm = z.infer<typeof formSchema>
+// === Zod Schema ===
+const formSchema = z.object({
+  sumber_dana: z.string().min(1, 'Sumber Dana wajib dipilih.'),
+  tahun: z.string().regex(/^\d{4}$/, 'Tahun harus berupa 4 digit angka.'),
+  tgl_rekam: z.date('tanggal Rekam Harus Ada.'),
+  pagu: z
+    .string()
+    .regex(/^\d+$/, 'Pagu harus berupa angka dalam bentuk string.'),
+  jumlah_silpa: z
+    .string()
+    .regex(/^\d+$/, 'Jumlah Silpa harus berupa angka dalam bentuk string.'),
+  isEdit: z.boolean().optional(),
+})
+
+type PaguSumberDanaForm = z.infer<typeof formSchema>
 
 type UserActionDialogProps = {
   currentRow?: PaguSumberDana
@@ -97,41 +56,110 @@ type UserActionDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
+const currentYear = new Date().getFullYear()
+
 export function UsersActionDialog({
   currentRow,
   open,
   onOpenChange,
 }: UserActionDialogProps) {
   const isEdit = !!currentRow
-  const form = useForm<UserForm>({
+
+  // Buat array tahun: 3 tahun ke belakang sampai 3 tahun ke depan
+  const years = useMemo(() => {
+    const arr = []
+    for (let y = currentYear - 3; y <= currentYear + 3; y++) {
+      arr.push({
+        label: y.toString(),
+        value: y.toString(),
+      })
+    }
+    return arr
+  }, [currentYear])
+
+  const { mutateAsync: postPaguSumberDanaAsync } = usePostPaguSumberDana()
+  const { mutateAsync: putPaguSumberDanaAsync } = usePutPaguSumberDana()
+
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const itemsSD =
+    dataSD?.data?.map((item: SumberDana) => ({
+      value: [
+        item.kd_ref1,
+        item.kd_ref2,
+        item.kd_ref3,
+        item.kd_ref4,
+        item.kd_ref5,
+        item.kd_ref6,
+      ]
+        .filter(Boolean)
+        .join('.'),
+      label: item.nm_ref ?? '',
+    })) ?? []
+
+  const form = useForm<PaguSumberDanaForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
+          sumber_dana: [
+            currentRow.kd_ref1,
+            currentRow.kd_ref2,
+            currentRow.kd_ref3,
+            currentRow.kd_ref4,
+            currentRow.kd_ref5,
+            currentRow.kd_ref6,
+          ]
+            .filter(Boolean)
+            .join('.'),
+          tahun: currentRow.tahun,
+          tgl_rekam: currentRow.tgl_rekam,
+          pagu: currentRow.pagu,
+          jumlah_silpa: String(currentRow.jumlah_silpa),
+          isEdit: true,
         }
       : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
+          sumber_dana: '',
+          tahun: '',
+          tgl_rekam: new Date(),
+          pagu: '',
+          jumlah_silpa: '',
+          isEdit: false,
         },
   })
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
-  }
+  const onSubmit = async (data: PaguSumberDanaForm) => {
+    const [kd_ref1, kd_ref2, kd_ref3, kd_ref4, kd_ref5, kd_ref6] =
+      data.sumber_dana.split('.')
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
+    const payload = {
+      ...data,
+      kd_ref1,
+      kd_ref2,
+      kd_ref3,
+      kd_ref4,
+      kd_ref5,
+      kd_ref6,
+    }
+    const requestPromise = isEdit
+      ? putPaguSumberDanaAsync(payload)
+      : postPaguSumberDanaAsync(payload)
+
+    await toast.promise(requestPromise, {
+      loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
+      success: () => {
+        onOpenChange(false)
+        form.reset()
+        return isEdit
+          ? 'Data Pagu Sumber Dana diperbarui!'
+          : 'Data Pagu Sumber Dana ditambahkan!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
+  }
 
   return (
     <Dialog
@@ -143,10 +171,14 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>
+            {isEdit ? 'Edit Pagu Sumber Dana' : 'Tambah Baru Pagu Sumber Dana'}
+          </DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit
+              ? 'Perbarui Pagu Sumber Dana disini. '
+              : 'Tambah baru Pagu Sumber Dana disini. '}
+            Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
@@ -158,132 +190,115 @@ export function UsersActionDialog({
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='sumber_dana'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Sumber Dana
+                    </FormLabel>
+
+                    <div className='col-span-4'>
+                      <SelectDropdown
+                        defaultValue={String(field.value ?? '')}
+                        onValueChange={(val) => field.onChange(val)}
+                        placeholder='Pilih Sumber Dana'
+                        className='w-full break-words whitespace-normal'
+                        items={itemsSD.map(({ label, value }) => ({
+                          label,
+                          value,
+                        }))}
+                      />
+
+                      <FormMessage className='col-span-4 col-start-3 mt-1 text-sm text-red-500' />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='tgl_rekam'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      First Name
+                      Tanggal Surat
+                    </FormLabel>
+                    <DatePicker
+                      selected={field.value}
+                      onSelect={field.onChange}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='tahun'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Pilih Tahun
+                    </FormLabel>
+
+                    <SelectDropdown
+                      defaultValue={currentYear.toString()} // default tahun sekarang
+                      onValueChange={(value) => {
+                        // Kalau value tahun, bisa langsung set ke form
+                        field.onChange(value)
+                      }}
+                      placeholder='Pilih Tahun'
+                      className='col-span-4 w-full'
+                      items={years} // array tahun
+                    />
+
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='pagu'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>Pagu</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Jumlah Pagu'
+                        className='col-span-4'
+                        type='text'
+                        inputMode='numeric'
+                        value={formatRupiahControlled(field.value || '')}
+                        onChange={(e) => {
+                          // Hapus semua karakter selain angka
+                          const raw = e.target.value.replace(/\D/g, '')
+                          field.onChange(raw)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='jumlah_silpa'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Jumlah Silpa
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='John'
+                        placeholder='Jumlah Silpa'
                         className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john.doe@gmail.com'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='+123456789'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
+                        type='text'
+                        inputMode='numeric'
+                        value={formatRupiahControlled(field.value || '')}
+                        onChange={(e) => {
+                          // Hapus semua karakter selain angka
+                          const raw = e.target.value.replace(/\D/g, '')
+                          field.onChange(raw)
+                        }}
                       />
                     </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />

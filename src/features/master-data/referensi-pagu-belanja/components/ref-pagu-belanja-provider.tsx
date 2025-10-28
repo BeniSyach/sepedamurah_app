@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { type PaguBelanja } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefPaguBelanjaDialogType = 'add' | 'edit' | 'delete'
+type RefPaguBelanjaDialogType = 'add' | 'edit' | 'delete' | 'import'
 
 type RefPaguBelanjaContextType = {
   open: RefPaguBelanjaDialogType | null

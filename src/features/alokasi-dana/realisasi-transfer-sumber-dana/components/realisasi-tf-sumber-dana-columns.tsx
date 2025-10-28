@@ -1,6 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type RealisasiTransferSumberDana } from '@/api'
-import { cn } from '@/lib/utils'
+import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
@@ -60,7 +60,7 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
       ),
       cell: ({ row }) => (
         <LongText className='max-w-300 ps-3'>
-          {row.getValue('tgl_diterima')}
+          {formatTanggal(row.getValue('tgl_diterima'))}
         </LongText>
       ),
       enableSorting: true,
@@ -82,12 +82,14 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
 
     // ✅ jumlah
     {
-      accessorKey: 'jumlah',
+      accessorKey: 'jumlah_sumber',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Jumlah' />
       ),
       cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>{row.getValue('jumlah')}</LongText>
+        <LongText className='max-w-300 ps-3'>
+          {formatRupiah(row.getValue('jumlah_sumber'))}
+        </LongText>
       ),
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
