@@ -104,20 +104,35 @@ export function BatasWaktusActionDialog({
 
   const form = useForm<BatasWaktuForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      id: '',
-      hari: '',
-      kd_opd1: '',
-      kd_opd2: '',
-      kd_opd3: '',
-      kd_opd4: '',
-      kd_opd5: '',
-      waktu_awal: '',
-      waktu_akhir: '',
-      istirahat_awal: '',
-      istirahat_akhir: '',
-      keterangan: '',
-    },
+    defaultValues: isEdit
+      ? {
+          id: currentRow.id ?? '',
+          hari: currentRow.hari ?? '',
+          kd_opd1: currentRow?.kd_opd1 ?? '',
+          kd_opd2: currentRow?.kd_opd2 ?? '',
+          kd_opd3: currentRow?.kd_opd3 ?? '',
+          kd_opd4: currentRow?.kd_opd4 ?? '',
+          kd_opd5: currentRow?.kd_opd5 ?? '',
+          waktu_awal: currentRow.waktu_awal ?? '',
+          waktu_akhir: currentRow.waktu_akhir ?? '',
+          istirahat_awal: currentRow.istirahat_awal ?? '',
+          istirahat_akhir: currentRow.istirahat_akhir ?? '',
+          keterangan: currentRow.keterangan ?? '',
+        }
+      : {
+          id: '',
+          hari: '',
+          kd_opd1: '',
+          kd_opd2: '',
+          kd_opd3: '',
+          kd_opd4: '',
+          kd_opd5: '',
+          waktu_awal: '',
+          waktu_akhir: '',
+          istirahat_awal: '',
+          istirahat_akhir: '',
+          keterangan: '',
+        },
   })
 
   const onSubmit = async (data: BatasWaktuForm) => {
@@ -180,19 +195,25 @@ export function BatasWaktusActionDialog({
                     </FormLabel>
 
                     <SelectDropdown
-                      defaultValue={field.value}
+                      // 💡 Gunakan gabungan kode SKPD sebagai default value
+                      defaultValue={
+                        [
+                          form.getValues('kd_opd1'),
+                          form.getValues('kd_opd2'),
+                          form.getValues('kd_opd3'),
+                          form.getValues('kd_opd4'),
+                          form.getValues('kd_opd5'),
+                        ]
+                          .filter(Boolean)
+                          .join('-') || undefined
+                      }
                       onValueChange={(value) => {
-                        // Pisahkan string "00-01-01-02-03"
                         const parts = value.split('-')
-
-                        // Set ke masing-masing field
                         form.setValue('kd_opd1', parts[0] ?? '')
                         form.setValue('kd_opd2', parts[1] ?? '')
                         form.setValue('kd_opd3', parts[2] ?? '')
                         form.setValue('kd_opd4', parts[3] ?? '')
                         form.setValue('kd_opd5', parts[4] ?? '')
-
-                        // Jalankan field.onChange agar form tahu kd_opd1 juga berubah
                         field.onChange(parts[0])
                       }}
                       placeholder='Pilih SKPD'

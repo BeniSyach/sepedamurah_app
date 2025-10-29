@@ -104,15 +104,25 @@ export function AksesKuasaBUDsActionDialog({
 
   const form = useForm<AksesKuasaBUDForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      id: '',
-      id_kbud: '',
-      kd_opd1: '',
-      kd_opd2: '',
-      kd_opd3: '',
-      kd_opd4: '',
-      kd_opd5: '',
-    },
+    defaultValues: isEdit
+      ? {
+          id: currentRow?.id ?? '',
+          id_kbud: currentRow?.id_kbud ?? '',
+          kd_opd1: currentRow?.kd_opd1 ?? '',
+          kd_opd2: currentRow?.kd_opd2 ?? '',
+          kd_opd3: currentRow?.kd_opd3 ?? '',
+          kd_opd4: currentRow?.kd_opd4 ?? '',
+          kd_opd5: currentRow?.kd_opd5 ?? '',
+        }
+      : {
+          id: '',
+          id_kbud: '',
+          kd_opd1: '',
+          kd_opd2: '',
+          kd_opd3: '',
+          kd_opd4: '',
+          kd_opd5: '',
+        },
   })
 
   const onSubmit = async (data: AksesKuasaBUDForm) => {
@@ -198,19 +208,25 @@ export function AksesKuasaBUDsActionDialog({
                     </FormLabel>
 
                     <SelectDropdown
-                      defaultValue={field.value}
+                      // 💡 Gunakan gabungan kode SKPD sebagai default value
+                      defaultValue={
+                        [
+                          form.getValues('kd_opd1'),
+                          form.getValues('kd_opd2'),
+                          form.getValues('kd_opd3'),
+                          form.getValues('kd_opd4'),
+                          form.getValues('kd_opd5'),
+                        ]
+                          .filter(Boolean)
+                          .join('-') || undefined
+                      }
                       onValueChange={(value) => {
-                        // Pisahkan string "00-01-01-02-03"
                         const parts = value.split('-')
-
-                        // Set ke masing-masing field
                         form.setValue('kd_opd1', parts[0] ?? '')
                         form.setValue('kd_opd2', parts[1] ?? '')
                         form.setValue('kd_opd3', parts[2] ?? '')
                         form.setValue('kd_opd4', parts[3] ?? '')
                         form.setValue('kd_opd5', parts[4] ?? '')
-
-                        // Jalankan field.onChange agar form tahu kd_opd1 juga berubah
                         field.onChange(parts[0])
                       }}
                       placeholder='Pilih SKPD'
