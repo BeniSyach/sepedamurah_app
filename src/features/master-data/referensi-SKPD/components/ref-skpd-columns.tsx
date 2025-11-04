@@ -3,7 +3,6 @@ import { type MasterSkpd } from '@/api'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
@@ -39,12 +38,12 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -67,7 +66,7 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
       // Gabungkan dengan format, misal 1-02 (kd_subkeg2 di-padding 2 digit)
       const formatted = `${kd_opd1}.${kd_opd2}.${kd_opd3}.${kd_opd4}.${kd_opd5}`
 
-      return <div className='ps-3'>{formatted}</div>
+      return <div>{formatted}</div>
     },
     enableSorting: false,
     meta: { className: 'min-w-[120px]' },
@@ -79,11 +78,8 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama SKPD' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('nm_opd')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nm_opd')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ status_penerimaan
@@ -98,11 +94,11 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
       const isAda = String(value) === '1'
       const text = isAda ? 'Ada Penerimaan' : 'Tidak Ada Penerimaan'
       const badgeClass = isAda
-        ? 'bg-blue-100 text-blue-700 border border-blue-300'
+        ? 'bg-blue-100 text-blue-700 border border-blue-300 '
         : 'bg-yellow-100 text-yellow-700 border border-yellow-300'
 
       return (
-        <div className='flex items-center ps-3'>
+        <div className='flex items-center text-center'>
           <span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badgeClass}`}
           >
@@ -112,7 +108,6 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
       )
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ status
@@ -128,7 +123,7 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
 
       return (
         <span
-          className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium ${
+          className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-center text-xs font-medium ${
             isActive
               ? 'bg-green-100 text-green-700 ring-1 ring-green-600/20'
               : 'bg-red-100 text-red-700 ring-1 ring-red-600/20'
@@ -139,7 +134,6 @@ export const ReferensiMasterSkpdColumns: ColumnDef<MasterSkpd>[] = [
       )
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Aksi

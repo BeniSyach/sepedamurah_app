@@ -25,7 +25,7 @@ export function BerkasMasukPengeluaran() {
   const { data, isLoading, isError } = useGetLaporanFungsional({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     jenis: 'Pengeluaran',
     menu: 'berkas_masuk_pengeluaran',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),

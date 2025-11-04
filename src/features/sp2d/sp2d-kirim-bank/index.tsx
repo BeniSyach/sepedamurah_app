@@ -23,7 +23,7 @@ export function Sp2dKirimBank() {
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     menu: 'sp2d_kirim_bank',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

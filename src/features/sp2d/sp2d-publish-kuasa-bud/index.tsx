@@ -25,7 +25,7 @@ export function Sp2dPublishKuasaBUD() {
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     menu: 'sp2d_publish_kuasa_bud',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

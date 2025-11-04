@@ -3,7 +3,6 @@ import { type BerkasLain } from '@/api'
 import { cn, formatTanggal, getJam, getNamaBulan } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
@@ -39,12 +38,12 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -58,12 +57,9 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.user.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Berkas Bulan
@@ -74,7 +70,6 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     ),
     cell: ({ row }) => getNamaBulan(row.getValue('tgl_surat')),
     enableSorting: true,
-    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ tgl_surat
@@ -85,7 +80,6 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     ),
     cell: ({ row }) => formatTanggal(row.getValue('tgl_surat')),
     enableSorting: true,
-    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ tgl_surat
@@ -96,7 +90,6 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     ),
     cell: ({ row }) => getJam(row.getValue('tgl_surat')),
     enableSorting: true,
-    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ nama_dokumen
@@ -105,13 +98,8 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Berkas' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('nama_dokumen')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nama_dokumen')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ status_tte dengan badge
@@ -126,7 +114,7 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
 
       return (
         <span
-          className={`inline-block rounded-full px-2 py-1 text-xs font-semibold text-white ${
+          className={`inline-block rounded-full px-2 py-1 text-center text-xs font-semibold text-white ${
             isSigned ? 'bg-green-500' : 'bg-red-500'
           }`}
         >
@@ -135,7 +123,6 @@ export const ReferensiBerkasLainColumns: ColumnDef<BerkasLain>[] = [
       )
     },
     enableSorting: true,
-    meta: { className: 'min-w-[200px]' },
   },
 
   // ✅ Aksi

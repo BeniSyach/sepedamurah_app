@@ -3,7 +3,6 @@ import { type PaguSumberDana } from '@/api'
 import { cn, formatRupiah, formatTanggalLengkap } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
@@ -39,12 +38,12 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -57,12 +56,9 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
       <DataTableColumnHeader column={column} title='Tanggal' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatTanggalLengkap(row.getValue('tgl_rekam'))}
-      </LongText>
+      <div>{formatTanggalLengkap(row.getValue('tgl_rekam'))}</div>
     ),
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama Suber Dana
@@ -73,14 +69,9 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     ),
     cell: ({ row }) => {
       const sumber_dana = row.original.sumber_dana
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {sumber_dana?.nm_ref ?? '-'}
-        </LongText>
-      )
+      return <div>{sumber_dana?.nm_ref ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ pagu
@@ -89,13 +80,8 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Pagu' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('pagu'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('pagu'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ jumlah_silpa
@@ -104,13 +90,8 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Jumlah Silpa' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('jumlah_silpa'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('jumlah_silpa'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
   // ✅ Aksi
   {

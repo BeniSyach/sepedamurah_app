@@ -1,10 +1,8 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type LaporanFungsional } from '@/api'
 import { cn, formatTanggal, getJam, getNamaBulan } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
@@ -41,12 +39,12 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
     // ✅ Nomor Urut (tetap berlanjut antar halaman)
     {
       id: 'no',
-      header: () => <div className='w-12 text-center'>No</div>,
+      header: () => <div>No</div>,
       cell: ({ row, table }) => {
         const pageIndex = table.getState().pagination.pageIndex
         const pageSize = table.getState().pagination.pageSize
         const number = pageIndex * pageSize + row.index + 1
-        return <div className='w-12 text-center'>{number}</div>
+        return <div>{number}</div>
       },
       enableSorting: false,
       enableHiding: false,
@@ -60,12 +58,9 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
       ),
       cell: ({ row }) => {
         const skpd = row.original.skpd
-        return (
-          <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-        )
+        return <div>{skpd?.nm_opd ?? '-'}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ Berkas Bulan
@@ -76,7 +71,6 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
       ),
       cell: ({ row }) => getNamaBulan(row.getValue('tanggal_upload')),
       enableSorting: true,
-      meta: { className: 'min-w-[120px]' },
     },
 
     // ✅ Tanggal Upload
@@ -87,7 +81,6 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
       ),
       cell: ({ row }) => formatTanggal(row.getValue('tanggal_upload')),
       enableSorting: true,
-      meta: { className: 'min-w-[120px]' },
     },
 
     // ✅ Jam Upload
@@ -98,7 +91,6 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
       ),
       cell: ({ row }) => getJam(row.getValue('tanggal_upload')),
       enableSorting: true,
-      meta: { className: 'min-w-[120px]' },
     },
 
     // ✅ Keterangan
@@ -107,13 +99,8 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Keterangan' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {row.getValue('nama_file')}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{row.getValue('nama_file')}</div>,
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ status
@@ -127,21 +114,30 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
         const ditolak = row.original?.ditolak
         const alasanTolak = row.original?.alasan_tolak
 
-        let color = 'bg-yellow-100 text-yellow-800'
+        let color =
+          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
         let text = 'Berkas sedang diproses'
 
         if (ditolak) {
-          color = 'bg-red-100 text-red-800'
+          color = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
           text = `Berkas ditolak${alasanTolak ? `: ${alasanTolak}` : ''}`
         } else if (diterima) {
-          color = 'bg-green-100 text-green-800'
+          color =
+            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
           text = 'Berkas telah diverifikasi'
         }
 
-        return <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
+        return (
+          <div className='ps-3'>
+            <div
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-center text-xs font-medium ${color}`}
+            >
+              {text}
+            </div>
+          </div>
+        )
       },
       enableSorting: true,
-      meta: { className: 'min-w-[220px]' },
     },
 
     // ✅ Aksi

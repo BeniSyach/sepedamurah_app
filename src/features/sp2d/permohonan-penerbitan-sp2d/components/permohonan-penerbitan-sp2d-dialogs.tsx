@@ -22,7 +22,7 @@ export function UsersDialogs() {
 
   const isAfterClosingTime = () => {
     const now = new Date()
-    return now.getHours() >= 16
+    return now.getHours() >= 23
   }
 
   // 🧠 Deteksi ketika user membuka form add/edit

@@ -24,7 +24,7 @@ export function PermohonanSPD() {
   const { data, isLoading, isError } = useGetPermohonanSPD({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_pengirim,
     menu: 'permohonan_spd',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

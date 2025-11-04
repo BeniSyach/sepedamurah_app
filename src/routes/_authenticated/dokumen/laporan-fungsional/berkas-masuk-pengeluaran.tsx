@@ -5,7 +5,7 @@ import { BerkasMasukPengeluaran } from '@/features/laporan-fungsional/berkas-mas
 const BerkasMasukPengeluaranSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
-  search: z.string().optional().catch(''),
+  nama_file: z.string().optional().catch(''),
 })
 
 export const Route = createFileRoute(

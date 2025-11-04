@@ -54,8 +54,6 @@ export function RefProgramTable({
 
   // Synced with URL states (updated to match route search schema defaults)
   const {
-    globalFilter,
-    onGlobalFilterChange,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -67,9 +65,6 @@ export function RefProgramTable({
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: true, key: 'filter' },
     columnFilters: [
-      { columnId: 'kd_prog1', searchKey: 'kd_prog1', type: 'string' },
-      { columnId: 'kd_prog2', searchKey: 'kd_prog2', type: 'string' },
-      { columnId: 'kd_prog3', searchKey: 'kd_prog3', type: 'string' },
       { columnId: 'nm_program', searchKey: 'nm_program', type: 'string' },
     ],
   })
@@ -88,7 +83,6 @@ export function RefProgramTable({
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter,
       pagination,
     },
     enableRowSelection: true,
@@ -108,7 +102,6 @@ export function RefProgramTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onGlobalFilterChange,
     onColumnFiltersChange,
   })
 

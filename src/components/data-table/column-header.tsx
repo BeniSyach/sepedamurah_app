@@ -39,7 +39,7 @@ export function DataTableColumnHeader<TData, TValue>({
             size='sm'
             className='data-[state=open]:bg-accent -ms-3 h-8'
           >
-            <span>{title}</span>
+            <div>{title}</div>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDownIcon className='ms-2 h-4 w-4' />
             ) : column.getIsSorted() === 'asc' ? (

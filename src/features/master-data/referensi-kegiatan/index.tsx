@@ -21,7 +21,7 @@ export function ReferensiKegiatan() {
   const { data, isLoading, isError } = useGetRefKegiatan({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nm_kegiatan,
   })
 
   return (

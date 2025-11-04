@@ -33,12 +33,12 @@ export const refKegiatanColummns: ColumnDef<Kegiatan>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -61,7 +61,7 @@ export const refKegiatanColummns: ColumnDef<Kegiatan>[] = [
       // Gabungkan dengan format, misal 1-02 (kd_keg2 di-padding 2 digit)
       const formatted = `${kd_keg1}.${kd_keg2}.${kd_keg3}.${kd_keg4}.${kd_keg5}`
 
-      return <div className='ps-3'>{formatted}</div>
+      return <div>{formatted}</div>
     },
     enableSorting: false,
     meta: { className: 'min-w-[120px]' },
@@ -72,9 +72,7 @@ export const refKegiatanColummns: ColumnDef<Kegiatan>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Kegiatan' />
     ),
-    cell: ({ row }) => (
-      <div className='truncate'>{row.getValue('nm_kegiatan')}</div>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nm_kegiatan')}</div>,
     enableSorting: true,
   },
 

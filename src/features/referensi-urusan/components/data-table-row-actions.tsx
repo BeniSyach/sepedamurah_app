@@ -1,5 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
+import { type Urusan } from '@/api'
 import { Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,18 +11,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { refUrusanSchema } from '../data/schema'
 import { useRefUrusan } from './ref-urusan-provider'
 
-type DataTableRowActionsProps<TData> = {
-  row: Row<TData>
+type DataTableRowActionsProps = {
+  row: Row<Urusan>
 }
 
-export function DataTableRowActions<TData>({
-  row,
-}: DataTableRowActionsProps<TData>) {
-  const task = refUrusanSchema.parse(row.original)
-
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefUrusan()
 
   return (
@@ -38,7 +34,7 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem
           onClick={() => {
-            setCurrentRow(task)
+            setCurrentRow(row.original)
             setOpen('update')
           }}
         >
@@ -47,7 +43,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            setCurrentRow(task)
+            setCurrentRow(row.original)
             setOpen('delete')
           }}
         >

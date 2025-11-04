@@ -2,8 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type Urusan } from '@/api'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
-// import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const refUursanColummns: ColumnDef<Urusan>[] = [
@@ -35,12 +33,14 @@ export const refUursanColummns: ColumnDef<Urusan>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -52,11 +52,8 @@ export const refUursanColummns: ColumnDef<Urusan>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Kode Referensi' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-40 ps-3'>{row.getValue('kd_urusan')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('kd_urusan')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Nama Urusan
@@ -65,9 +62,7 @@ export const refUursanColummns: ColumnDef<Urusan>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Urusan' />
     ),
-    cell: ({ row }) => (
-      <div className='truncate'>{row.getValue('nm_urusan')}</div>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nm_urusan')}</div>,
     enableSorting: true,
   },
 

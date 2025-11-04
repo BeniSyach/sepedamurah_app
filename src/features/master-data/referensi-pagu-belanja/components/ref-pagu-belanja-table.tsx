@@ -65,9 +65,11 @@ export function ReferensiPaguBelanjaTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
+      {
+        columnId: 'rekening.nm_rekening',
+        searchKey: 'rekening.nm_rekening',
+        type: 'string',
+      },
     ],
   })
 
@@ -109,8 +111,8 @@ export function ReferensiPaguBelanjaTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Search users...'
-        searchKey='nm_rekening'
+        searchPlaceholder='Search Pagu Belanja...'
+        searchKey='rekening.nm_rekening'
         filters={[]}
       />
 

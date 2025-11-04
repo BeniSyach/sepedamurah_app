@@ -3,7 +3,6 @@ import { type BatasWaktu } from '@/api'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
@@ -39,12 +38,12 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -58,12 +57,9 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ hari
@@ -72,11 +68,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Hari' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('hari')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('hari')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ waktu_awal
@@ -85,13 +78,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Waktu Awal' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('waktu_awal')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('waktu_awal')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ waktu_akhir
@@ -100,13 +88,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Waktu Akhir' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('waktu_akhir')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('waktu_akhir')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ istirahat_awal
@@ -115,13 +98,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Istirahat Awal' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('istirahat_awal')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('istirahat_awal')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ istirahat_akhir
@@ -130,13 +108,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Istirahat Akhir' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('istirahat_akhir')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('istirahat_akhir')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ keterangan
@@ -145,13 +118,8 @@ export const ReferensiBatasWaktuColumns: ColumnDef<BatasWaktu>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Keterangan' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('keterangan')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('keterangan')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Aksi

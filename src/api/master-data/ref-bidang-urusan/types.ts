@@ -9,14 +9,14 @@ export interface BidangUrusan {
   deleted_at: string | null
 }
 
-export interface BidangUrusanLinks {
+interface BidangUrusanLinks {
   first: string | null
   last: string | null
   prev: string | null
   next: string | null
 }
 
-export interface BidangUrusanMeta {
+interface BidangUrusanMeta {
   current_page: number
   from: number | null
   last_page: number

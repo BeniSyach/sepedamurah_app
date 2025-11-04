@@ -64,7 +64,9 @@ export function BerkasMasukSP2DTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [{ columnId: 'name', searchKey: 'name', type: 'string' }],
+    columnFilters: [
+      { columnId: 'nama_file', searchKey: 'nama_file', type: 'string' },
+    ],
   })
 
   const totalRows = meta?.total ?? data.length

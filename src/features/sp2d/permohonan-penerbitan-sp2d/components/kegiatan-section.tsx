@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { useGetRefKegiatan } from '@/api'
+import { useGetRefKegiatanSp2d } from '@/api'
 import { Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,16 +28,32 @@ export function KegiatanSection({
   indexKegiatan,
   removeKegiatan,
 }: any) {
-  const { setValue } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
+  // ✅ Ambil kd_prog dari parent (ProgramSection)
+  const kd_prog1 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kd_prog1`
+  )
+  const kd_prog2 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kd_prog2`
+  )
+  const kd_prog3 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kd_prog3`
+  )
+
+  // 🔥 Ambil data kegiatan berdasarkan program
+  const { data, isPending, isError } = useGetRefKegiatanSp2d({
+    page: 1,
+    perPage: 200,
+    kd_prog1,
+    kd_prog2,
+    kd_prog3,
+  })
+
+  // handle subkegiatan
   const { fields, append, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan`,
-  })
-
-  const { data, isPending, isError } = useGetRefKegiatan({
-    page: 1,
-    perPage: 200,
   })
 
   const kegiatanOptions =
@@ -52,11 +68,7 @@ export function KegiatanSection({
         .filter(Boolean)
         .join('.'),
       label: item.nm_kegiatan,
-      kd_keg1: item.kd_keg1,
-      kd_keg2: item.kd_keg2,
-      kd_keg3: item.kd_keg3,
-      kd_keg4: item.kd_keg4,
-      kd_keg5: item.kd_keg5,
+      ...item,
     })) ?? []
 
   return (
@@ -78,6 +90,7 @@ export function KegiatanSection({
                 <Minus className='h-4 w-4' />
               </Button>
             </div>
+
             <FormControl>
               {isPending ? (
                 <Skeleton className='h-9 w-full' />
@@ -92,30 +105,22 @@ export function KegiatanSection({
                     const selected = kegiatanOptions.find(
                       (k) => k.value === val
                     )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg1`,
-                      selected?.kd_keg1 ?? ''
-                    )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg2`,
-                      selected?.kd_keg2 ?? ''
-                    )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg3`,
-                      selected?.kd_keg3 ?? ''
-                    )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg4`,
-                      selected?.kd_keg4 ?? ''
-                    )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg5`,
-                      selected?.kd_keg5 ?? ''
-                    )
-                    setValue(
-                      `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.nm_kegiatan`,
-                      selected?.label ?? ''
-                    )
+                    if (selected) {
+                      // ✅ Simpan kode dan nama kegiatan ke form
+                      const basePath = `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}`
+                      setValue(`${basePath}.kd_keg1`, selected.kd_keg1 ?? '')
+                      setValue(`${basePath}.kd_keg2`, selected.kd_keg2 ?? '')
+                      setValue(`${basePath}.kd_keg3`, selected.kd_keg3 ?? '')
+                      setValue(`${basePath}.kd_keg4`, selected.kd_keg4 ?? '')
+                      setValue(`${basePath}.kd_keg5`, selected.kd_keg5 ?? '')
+                      setValue(
+                        `${basePath}.nm_kegiatan`,
+                        selected.nm_kegiatan ?? selected.label
+                      )
+
+                      // ✅ Reset subKegiatan lama agar fetch ulang berdasarkan kegiatan baru
+                      setValue(`${basePath}.subKegiatan`, [])
+                    }
                   }}
                   value={
                     kegiatanOptions.find(
@@ -158,7 +163,7 @@ export function KegiatanSection({
         )}
       />
 
-      {/* daftar sub kegiatan */}
+      {/* ✅ daftar sub kegiatan */}
       {fields.map((sub, si) => (
         <SubKegiatanSection
           key={sub.id}
@@ -176,7 +181,12 @@ export function KegiatanSection({
         type='button'
         size='sm'
         variant='outline'
-        onClick={() => append({ nm_subkegiatan: '', rekening: [] })}
+        onClick={() =>
+          append({
+            nm_subkegiatan: '',
+            rekening: [],
+          })
+        }
       >
         <Plus className='mr-2 h-4 w-4' /> Tambah Sub Kegiatan
       </Button>

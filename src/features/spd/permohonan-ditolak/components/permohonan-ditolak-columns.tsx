@@ -3,7 +3,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type PermohonanSpd } from '@/api'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
@@ -27,11 +26,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='nama_pengirim' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('nama_pengirim')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nama_pengirim')}</div>,
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -49,7 +44,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
         <div className='flex items-center gap-2 ps-3'>
           {value ? (
             <>
-              <LongText className='max-w-300'>{value}</LongText>
+              <div className='max-w-300'>{value}</div>
               <Badge
                 variant='secondary'
                 className='bg-green-100 text-green-800 hover:bg-green-100'
@@ -69,7 +64,6 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       )
     },
     enableSorting: true,
-    meta: { className: 'min-w-[200px]' },
   },
 
   // ✅ tanggal_upload
@@ -85,10 +79,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       const parsedDate = parseISO(value.replace(' ', 'T'))
       const tanggal = format(parsedDate, 'yyyy-MM-dd')
 
-      return <span className='ps-3'>{tanggal}</span>
+      return <span>{tanggal}</span>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[140px]' },
   },
 
   // ✅ jam_upload
@@ -104,10 +97,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       const parsedDate = parseISO(value.replace(' ', 'T'))
       const jam = format(parsedDate, 'HH:mm:ss')
 
-      return <span className='ps-3'>{jam}</span>
+      return <span>{jam}</span>
     },
     enableSorting: false, // bisa diset true kalau mau
-    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ status
@@ -132,10 +124,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
         text = 'Berkas telah diverifikasi'
       }
 
-      return <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
+      return <Badge className={`ps-3 ${color}`}>{text}</Badge>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[220px]' },
   },
 
   // ✅ Aksi

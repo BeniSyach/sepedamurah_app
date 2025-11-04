@@ -64,9 +64,7 @@ export function BerkasMasukSP2DTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
+      { columnId: 'nama_file', searchKey: 'nama_file', type: 'string' },
     ],
   })
 

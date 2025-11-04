@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { useGetRefProgram } from '@/api'
+import { useGetRefProgramSp2d } from '@/api'
 import { Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,16 +27,28 @@ export function ProgramSection({
   indexProgram,
   removeProgram,
 }: any) {
-  const { setValue } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
+  // 🔥 Ambil kd_bu1 & kd_bu2 dari form parent
+  const kd_bu1 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu1`
+  )
+  const kd_bu2 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu2`
+  )
+
+  // 🔁 Daftar kegiatan di bawah program
   const { fields, append, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan`,
   })
 
-  const { data, isPending, isError } = useGetRefProgram({
+  // 🔁 Ambil data program dari API
+  const { data, isPending, isError } = useGetRefProgramSp2d({
     page: 1,
     perPage: 100,
+    kd_bu1,
+    kd_bu2,
   })
 
   // ✅ Bentuk opsi dropdown
@@ -50,6 +62,11 @@ export function ProgramSection({
       kd_prog2: item.kd_prog2,
       kd_prog3: item.kd_prog3,
     })) ?? []
+
+  // 🧩 Ambil nilai yang aktif di form
+  const currentValues =
+    control._formValues?.urusan?.[indexUrusan]?.bidangUrusan?.[indexBidang]
+      ?.program?.[indexProgram]
 
   return (
     <div className='mt-3 ml-8 space-y-3 border-l pl-4'>
@@ -83,7 +100,8 @@ export function ProgramSection({
                   onValueChange={(val) => {
                     field.onChange(val)
                     const selected = programOptions.find((p) => p.value === val)
-                    // ✅ Simpan kode dan nama ke form
+
+                    // ✅ Simpan kode & nama program ke form
                     setValue(
                       `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kd_prog1`,
                       selected?.kd_prog1 ?? ''
@@ -100,25 +118,38 @@ export function ProgramSection({
                       `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.nm_program`,
                       selected?.label ?? ''
                     )
+
+                    // ✅ Kirim nilai program ke semua kegiatan di bawahnya
+                    const kegiatanList =
+                      control._formValues?.urusan?.[indexUrusan]
+                        ?.bidangUrusan?.[indexBidang]?.program?.[indexProgram]
+                        ?.kegiatan ?? []
+
+                    kegiatanList.forEach((_: any, ki: number) => {
+                      setValue(
+                        `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${ki}.kd_prog1`,
+                        selected?.kd_prog1 ?? ''
+                      )
+                      setValue(
+                        `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${ki}.kd_prog2`,
+                        selected?.kd_prog2 ?? ''
+                      )
+                      setValue(
+                        `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${ki}.kd_prog3`,
+                        selected?.kd_prog3 ?? ''
+                      )
+                      setValue(
+                        `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${ki}.nm_program`,
+                        selected?.label ?? ''
+                      )
+                    })
                   }}
                   value={
                     programOptions.find(
                       (p) =>
-                        p.kd_prog1 ===
-                          (control._formValues?.urusan?.[indexUrusan]
-                            ?.bidangUrusan?.[indexBidang]?.program?.[
-                            indexProgram
-                          ]?.kd_prog1 ?? '') &&
-                        p.kd_prog2 ===
-                          (control._formValues?.urusan?.[indexUrusan]
-                            ?.bidangUrusan?.[indexBidang]?.program?.[
-                            indexProgram
-                          ]?.kd_prog2 ?? '') &&
-                        p.kd_prog3 ===
-                          (control._formValues?.urusan?.[indexUrusan]
-                            ?.bidangUrusan?.[indexBidang]?.program?.[
-                            indexProgram
-                          ]?.kd_prog3 ?? '')
+                        p.kd_prog1 === (currentValues?.kd_prog1 ?? '') &&
+                        p.kd_prog2 === (currentValues?.kd_prog2 ?? '') &&
+                        p.kd_prog3 === (currentValues?.kd_prog3 ?? '')
                     )?.value || ''
                   }
                 >
@@ -161,7 +192,17 @@ export function ProgramSection({
         type='button'
         size='sm'
         variant='outline'
-        onClick={() => append({ nm_kegiatan: '', subKegiatan: [] })}
+        onClick={() =>
+          append({
+            nm_kegiatan: '',
+            subKegiatan: [],
+            // default isi kode program biar langsung ikut
+            kd_prog1: currentValues?.kd_prog1 ?? '',
+            kd_prog2: currentValues?.kd_prog2 ?? '',
+            kd_prog3: currentValues?.kd_prog3 ?? '',
+            nm_program: currentValues?.nm_program ?? '',
+          })
+        }
       >
         <Plus className='mr-2 h-4 w-4' /> Tambah Kegiatan
       </Button>

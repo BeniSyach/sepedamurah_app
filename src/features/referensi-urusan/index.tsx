@@ -21,7 +21,7 @@ export function ReferensiUrusan() {
   const { data, isLoading, isError } = useGetRefUrusan({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nm_urusan,
   })
 
   return (

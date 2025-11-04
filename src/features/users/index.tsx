@@ -24,7 +24,6 @@ export function Users() {
     perPage: search.pageSize,
     search: search.name,
     status: search.status,
-    role: search.role,
   })
 
   return (

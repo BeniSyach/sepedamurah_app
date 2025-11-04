@@ -3,7 +3,6 @@ import { type PaguBelanja } from '@/api'
 import { cn, formatRupiah } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
@@ -39,12 +38,12 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -54,16 +53,13 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama Urusan
@@ -74,28 +70,22 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     ),
     cell: ({ row }) => {
       const urusan = row.original.urusan
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {urusan?.nm_urusan ?? '-'}
-        </LongText>
-      )
+      return <div>{urusan?.nm_urusan ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama Bu
   {
     accessorKey: 'bu.nm_bu', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Bidang Urusan' />
+      <DataTableColumnHeader column={column} title='B.. Urusan' />
     ),
     cell: ({ row }) => {
       const bu = row.original.bu
-      return <LongText className='max-w-300 ps-3'>{bu?.nm_bu ?? '-'}</LongText>
+      return <div>{bu?.nm_bu ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama program
@@ -106,14 +96,9 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     ),
     cell: ({ row }) => {
       const program = row.original.program
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {program?.nm_program ?? '-'}
-        </LongText>
-      )
+      return <div>{program?.nm_program ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama kegiatan
@@ -124,32 +109,22 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     ),
     cell: ({ row }) => {
       const kegiatan = row.original.kegiatan
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {kegiatan?.nm_kegiatan ?? '-'}
-        </LongText>
-      )
+      return <div>{kegiatan?.nm_kegiatan ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama subkegiatan
   {
     accessorKey: 'subkegiatan.nm_subkegiatan', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Sub Kegiatan' />
+      <DataTableColumnHeader column={column} title='SubKegiatan' />
     ),
     cell: ({ row }) => {
       const subkegiatan = row.original.subkegiatan
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {subkegiatan?.nm_subkegiatan ?? '-'}
-        </LongText>
-      )
+      return <div>{subkegiatan?.nm_subkegiatan ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama rekening
@@ -160,30 +135,18 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     ),
     cell: ({ row }) => {
       const rekening = row.original.rekening
-      return (
-        <LongText className='max-w-300 ps-3'>
-          {rekening?.nm_rekening ?? '-'}
-        </LongText>
-      )
+      return <div>{rekening?.nm_rekening ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ pergeseran
-  {
-    accessorKey: 'kd_berapax',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Pergeseran' />
-    ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('kd_berapax')}
-      </LongText>
-    ),
-    enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
-  },
+  // // ✅ pergeseran
+  // {
+  //   accessorKey: 'kd_berapax',
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title='#' />,
+  //   cell: ({ row }) => <div>{row.getValue('kd_berapax')}</div>,
+  //   enableSorting: true,
+  // },
 
   // ✅ jumlah pagu
   {
@@ -191,13 +154,8 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Jumlah Pagu' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('jumlah_pagu'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('jumlah_pagu'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Aksi

@@ -3,7 +3,6 @@ import { type UpSkpd } from '@/api'
 import { cn, formatRupiah } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
@@ -39,12 +38,12 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -58,12 +57,9 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ tahun
@@ -72,11 +68,8 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='tahun' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('tahun')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('tahun')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ pagu
@@ -85,13 +78,8 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='UP Tunai' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('pagu'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('pagu'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ up_kkpd
@@ -100,13 +88,8 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='UP KKPD' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('up_kkpd'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('up_kkpd'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
   {
     id: 'total', // karena ini hasil hitungan, bukan field dari API
@@ -118,12 +101,9 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
       const upKkpd = Number(row.getValue('up_kkpd')) || 0
       const total = pagu + upKkpd
 
-      return (
-        <LongText className='max-w-300 ps-3'>{formatRupiah(total)}</LongText>
-      )
+      return <div>{formatRupiah(total)}</div>
     },
     enableSorting: false, // tidak bisa sorting karena bukan kolom asli
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Aksi

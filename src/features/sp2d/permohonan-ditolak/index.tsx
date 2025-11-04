@@ -23,7 +23,7 @@ export function PermohonanDitolakSP2D() {
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     menu: 'sp2d_ditolak',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

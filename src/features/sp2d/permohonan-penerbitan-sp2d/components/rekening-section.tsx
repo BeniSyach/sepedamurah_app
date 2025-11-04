@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useGetRefRekening } from '@/api'
+import { useGetRefRekeningSp2d } from '@/api'
 import { Minus } from 'lucide-react'
 import { formatRupiahControlled } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -28,10 +28,24 @@ export function RekeningSection({
   indexSub,
   indexRek,
   removeRekening,
+  // ✅ Tambahkan props dari SubKegiatanSection
+  kd_subkeg1,
+  kd_subkeg2,
+  kd_subkeg3,
+  kd_subkeg4,
+  kd_subkeg5,
+  kd_subkeg6,
 }: any) {
-  const { data, isPending, isError } = useGetRefRekening({
+  // ✅ Panggil API rekening berdasarkan sub kegiatan yang dipilih
+  const { data, isPending, isError } = useGetRefRekeningSp2d({
     page: 1,
     perPage: 100,
+    kd_subkeg1,
+    kd_subkeg2,
+    kd_subkeg3,
+    kd_subkeg4,
+    kd_subkeg5,
+    kd_subkeg6,
   })
 
   const rekeningList = data?.data || []
@@ -66,9 +80,36 @@ export function RekeningSection({
                 <p className='text-destructive text-sm'>
                   Gagal memuat data rekening.
                 </p>
+              ) : rekeningList.length === 0 ? (
+                <p className='text-muted-foreground text-sm'>
+                  Tidak ada data rekening untuk sub kegiatan ini.
+                </p>
               ) : (
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(val) => {
+                    field.onChange(val)
+                    const selected = rekeningList.find(
+                      (rek: any) => rek.nm_rekening === val
+                    )
+                    if (selected) {
+                      const basePath = `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening.${indexRek}`
+                      // ✅ simpan kode rekening juga ke form
+                      const kdList = [
+                        selected.kd_rekening1,
+                        selected.kd_rekening2,
+                        selected.kd_rekening3,
+                        selected.kd_rekening4,
+                        selected.kd_rekening5,
+                        selected.kd_rekening6,
+                      ]
+                      kdList.forEach((kd, i) => {
+                        control.setValue(
+                          `${basePath}.kd_rekening${i + 1}`,
+                          kd ?? ''
+                        )
+                      })
+                    }
+                  }}
                   value={field.value || ''}
                 >
                   <SelectTrigger className='min-h-[44px] break-words whitespace-normal'>
@@ -111,6 +152,7 @@ export function RekeningSection({
         )}
       />
 
+      {/* ====== NILAI ====== */}
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening.${indexRek}.nilai`}
@@ -124,7 +166,6 @@ export function RekeningSection({
                 placeholder='Rp 0,00'
                 value={formatRupiahControlled(field.value || '')}
                 onChange={(e) => {
-                  // Hapus semua karakter selain angka
                   const raw = e.target.value.replace(/\D/g, '')
                   field.onChange(raw)
                 }}

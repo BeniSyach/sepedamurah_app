@@ -54,8 +54,6 @@ export function RefSubKegiatanTable({
 
   // Synced with URL states (updated to match route search schema defaults)
   const {
-    globalFilter,
-    onGlobalFilterChange,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -89,21 +87,12 @@ export function RefSubKegiatanTable({
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter,
       pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const nm_subkegiatan = String(
-        row.getValue('nm_subkegiatan')
-      ).toLowerCase()
-      const searchValue = String(filterValue).toLowerCase()
-
-      return nm_subkegiatan.includes(searchValue)
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -111,7 +100,6 @@ export function RefSubKegiatanTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onGlobalFilterChange,
     onColumnFiltersChange,
   })
 

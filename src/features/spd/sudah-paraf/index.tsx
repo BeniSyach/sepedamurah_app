@@ -23,7 +23,7 @@ export function SudahParafSPD() {
   const { data, isLoading, isError } = useGetSPDTerkirim({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_pengirim,
     menu: 'spd_sudah_paraf',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

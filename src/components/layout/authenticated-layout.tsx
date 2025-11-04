@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo } from 'react'
 import { Outlet, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'

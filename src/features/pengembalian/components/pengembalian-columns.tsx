@@ -3,7 +3,6 @@ import { type Pengembalian } from '@/api'
 import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 
 export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   // ✅ Checkbox selector
@@ -38,12 +37,12 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -55,13 +54,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Tanggal Rekam' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatTanggal(row.getValue('tgl_rekam'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatTanggal(row.getValue('tgl_rekam'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nik
@@ -70,11 +64,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='NIK' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('nik')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nik')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama
@@ -83,11 +74,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('nama')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nama')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ alamat
@@ -96,11 +84,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Alamat' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('alamat')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('alamat')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama SKPD
@@ -111,12 +96,9 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ keterangan
@@ -125,13 +107,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='keterangan' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('keterangan')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('keterangan')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nm_rekening
@@ -140,13 +117,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='nm_rekening' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('nm_rekening')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nm_rekening')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ jml_pengembalian
@@ -156,12 +128,9 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
       <DataTableColumnHeader column={column} title='Jumlah Pengembalian' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('jml_pengembalian'))}
-      </LongText>
+      <div>{formatRupiah(row.getValue('jml_pengembalian'))}</div>
     ),
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ tgl_setor
@@ -170,13 +139,8 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Tanggal Setor' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatTanggal(row.getValue('tgl_setor'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatTanggal(row.getValue('tgl_setor'))}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ jml_yg_disetor
@@ -186,12 +150,9 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
       <DataTableColumnHeader column={column} title='Jumlah Setor' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('jml_yg_disetor'))}
-      </LongText>
+      <div>{formatRupiah(row.getValue('jml_yg_disetor'))}</div>
     ),
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ status_bayar
@@ -200,12 +161,7 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Status Bayar' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('status_bayar')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('status_bayar')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 ]

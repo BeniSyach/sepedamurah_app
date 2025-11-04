@@ -24,7 +24,7 @@ export function BerkasLainLain() {
   const { data, isLoading, isError } = useGetBerkasLain({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_dokumen,
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 

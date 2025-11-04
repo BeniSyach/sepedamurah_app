@@ -13,14 +13,14 @@ export interface SubKegiatan {
   deleted_at: string | null
 }
 
-export interface SubKegiatanLinks {
+interface SubKegiatanLinks {
   first: string
   last: string
   prev: string | null
   next: string | null
 }
 
-export interface SubKegiatanMeta {
+interface SubKegiatanMeta {
   current_page: number
   from: number
   last_page: number

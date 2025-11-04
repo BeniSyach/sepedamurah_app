@@ -163,10 +163,16 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>
+            {isEdit
+              ? 'Edit Realisasi Transfer Sumber Dana'
+              : 'Tambah Baru Realisasi Transfer Sumber Dana'}
+          </DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit
+              ? 'Perbarui Realisasi Transfer Sumber Dana disini. '
+              : 'Tambah baru Realisasi Transfer Sumber Dana disini. '}
+            Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>

@@ -71,9 +71,7 @@ export const refProgramColummns: ColumnDef<Program>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Program' />
     ),
-    cell: ({ row }) => (
-      <div className='truncate'>{row.getValue('nm_program')}</div>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nm_program')}</div>,
     enableSorting: true,
   },
 

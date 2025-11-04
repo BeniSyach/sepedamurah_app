@@ -25,7 +25,7 @@ export function PenerimaanDitolakLaporanFungsional() {
   const { data, isLoading, isError } = useGetLaporanFungsional({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     jenis: 'Penerimaan',
     menu: 'fungsional_penerimaan_ditolak',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),

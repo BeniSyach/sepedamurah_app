@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type laporanBelanjaData } from '@/api'
 import { formatRupiah } from '@/lib/utils'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 
 const bulanKeys: (keyof laporanBelanjaData)[] = [
   'belanja_jan',
@@ -43,10 +42,9 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
       const kd_ref1 = row.original.kd_ref1
       const kd_ref2 = row.original.kd_ref2
       const kd_ref3 = row.original.kd_ref3
-      return <div className='ps-3'>{`${kd_ref1}.${kd_ref2}.${kd_ref3}`}</div>
+      return <div>{`${kd_ref1}.${kd_ref2}.${kd_ref3}`}</div>
     },
     enableSorting: false,
-    meta: { className: 'min-w-[120px]' },
     footer: () => null,
   },
 
@@ -55,13 +53,8 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Jenis Belanja' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('jenis_belanja')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('jenis_belanja')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
     footer: () => 'Total', // Footer label
   },
 
@@ -77,7 +70,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
       const sum = bulanKeys
         .slice(0, bulanLaluIndex + 1)
         .reduce((acc, key) => acc + Number(row.original[key] ?? 0), 0)
-      return <LongText className='ps-3'>{formatRupiah(sum)}</LongText>
+      return <div>{formatRupiah(sum)}</div>
     },
     footer: (props) => {
       const bulanLaluIndex = new Date().getMonth() - 1
@@ -91,10 +84,9 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
               .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0),
           0
         )
-      return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+      return <div className='font-semibold'>{formatRupiah(total)}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Bulan Ini
@@ -106,7 +98,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     cell: ({ row }) => {
       const bulanIniIndex = new Date().getMonth()
       const value = row.original[bulanKeys[bulanIniIndex]] ?? 0
-      return <LongText className='ps-3'>{formatRupiah(value)}</LongText>
+      return <div>{formatRupiah(value)}</div>
     },
     footer: (props) => {
       const bulanIniIndex = new Date().getMonth()
@@ -117,10 +109,9 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
             acc + Number(row.original[bulanKeys[bulanIniIndex]] ?? 0),
           0
         )
-      return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+      return <div className='font-semibold'>{formatRupiah(total)}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ s.d Bulan Ini
@@ -134,7 +125,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
       const sum = bulanKeys
         .slice(0, bulanIniIndex + 1)
         .reduce((acc, key) => acc + Number(row.original[key] ?? 0), 0)
-      return <LongText className='ps-3'>{formatRupiah(sum)}</LongText>
+      return <div>{formatRupiah(sum)}</div>
     },
     footer: (props) => {
       const bulanIniIndex = new Date().getMonth()
@@ -148,9 +139,8 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
               .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0),
           0
         )
-      return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+      return <div className='font-semibold'>{formatRupiah(total)}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 ]

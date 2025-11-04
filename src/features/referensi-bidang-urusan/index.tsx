@@ -21,7 +21,7 @@ export function ReferensiBidangUrusan() {
   const { data, isLoading, isError } = useGetRefBidangUrusan({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nm_bu,
   })
 
   return (

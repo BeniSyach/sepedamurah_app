@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type LaporanRealisasiSumberDana } from '@/api'
 import { formatRupiah } from '@/lib/utils'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 
 export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>[] =
   [
@@ -39,10 +38,10 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
         // Gabungkan dengan format, misal 1-02 (kd_ref2 di-padding 2 digit)
         const formatted = `${kd_ref1}.${kd_ref2}.${kd_ref3}.${kd_ref4}.${kd_ref5}.${kd_ref6}`
 
-        return <div className='ps-3'>{formatted}</div>
+        return <div>{formatted}</div>
       },
       enableSorting: false,
-      meta: { className: 'min-w-[120px]' },
+
       footer: () => 'TOTAL',
     },
 
@@ -52,13 +51,8 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Uraian' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {row.getValue('nm_sumber')}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{row.getValue('nm_sumber')}</div>,
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
       footer: () => null,
     },
 
@@ -68,19 +62,14 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Pagu Anggaran' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('pagu'))}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{formatRupiah(row.getValue('pagu'))}</div>,
       footer: (props) => {
         const total = props.table
           .getFilteredRowModel()
           .rows.reduce((sum, row) => sum + Number(row.getValue('pagu')), 0)
-        return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+        return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ jumlah_silpa
@@ -90,9 +79,7 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
         <DataTableColumnHeader column={column} title='Saldo Awal Tahun Lalu' />
       ),
       cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('jumlah_silpa'))}
-        </LongText>
+        <div>{formatRupiah(row.getValue('jumlah_silpa'))}</div>
       ),
       footer: (props) => {
         const total = props.table
@@ -101,10 +88,9 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
             (sum, row) => sum + Number(row.getValue('jumlah_silpa')),
             0
           )
-        return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+        return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ Dana Masuk
@@ -113,11 +99,7 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Dana Masuk' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('sumber_dana'))}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{formatRupiah(row.getValue('sumber_dana'))}</div>,
       footer: (props) => {
         const total = props.table
           .getFilteredRowModel()
@@ -125,10 +107,9 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
             (sum, row) => sum + Number(row.getValue('sumber_dana')),
             0
           )
-        return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+        return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ Realisasi Belanja SKPD
@@ -137,19 +118,14 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Realisasi Belanja SKPD' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('belanja'))}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{formatRupiah(row.getValue('belanja'))}</div>,
       footer: (props) => {
         const total = props.table
           .getFilteredRowModel()
           .rows.reduce((sum, row) => sum + Number(row.getValue('belanja')), 0)
-        return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+        return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
 
     // ✅ Sisa Sumber Dana
@@ -158,18 +134,13 @@ export const ReferensiPengembalianColumns: ColumnDef<LaporanRealisasiSumberDana>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Sisa Sumber Dana' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('sisa'))}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{formatRupiah(row.getValue('sisa'))}</div>,
       footer: (props) => {
         const total = props.table
           .getFilteredRowModel()
           .rows.reduce((sum, row) => sum + Number(row.getValue('sisa')), 0)
-        return <div className='ps-3 font-semibold'>{formatRupiah(total)}</div>
+        return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
       enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
     },
   ]

@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 // Mapping status (kamu bisa ubah sesuai kebutuhan backend)
@@ -47,12 +46,12 @@ export const usersColumns: ColumnDef<Users>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -64,11 +63,8 @@ export const usersColumns: ColumnDef<Users>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-40 ps-3'>{row.getValue('name')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('name')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Email
@@ -89,12 +85,9 @@ export const usersColumns: ColumnDef<Users>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Level Akses / Role
@@ -104,15 +97,18 @@ export const usersColumns: ColumnDef<Users>[] = [
       <DataTableColumnHeader column={column} title='Level Akses' />
     ),
     cell: ({ row }) => (
-      <Badge
-        variant='secondary'
-        className='bg-blue-100 text-blue-800 capitalize dark:bg-blue-900 dark:text-blue-100'
+      <div
+        className={cn(
+          // 🌸 tampilan seperti badge
+          'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize',
+          // 🌸 warna biru seperti sebelumnya
+          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+        )}
       >
         {row.getValue('access_level') || '-'}
-      </Badge>
+      </div>
     ),
     enableSorting: false,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ Status aktif / nonaktif

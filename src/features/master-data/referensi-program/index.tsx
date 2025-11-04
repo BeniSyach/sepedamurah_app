@@ -21,7 +21,7 @@ export function ReferensiProgram() {
   const { data, isLoading, isError } = useGetRefProgram({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nm_program,
   })
 
   return (

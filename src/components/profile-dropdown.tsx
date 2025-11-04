@@ -42,7 +42,7 @@ export function ProfileDropdown() {
             <div className='flex flex-col gap-1.5'>
               <p className='text-sm leading-none font-medium'>{user?.name}</p>
               <p className='text-muted-foreground text-xs leading-none'>
-                {user?.email}
+                {user?.skpd.nm_opd}
               </p>
             </div>
           </DropdownMenuLabel>

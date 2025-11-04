@@ -12,14 +12,14 @@ export interface Kegiatan {
   deleted_at: string | null
 }
 
-export interface KegiatanLinks {
+interface KegiatanLinks {
   first: string
   last: string
   prev: string | null
   next: string | null
 }
 
-export interface KegiatanMeta {
+interface KegiatanMeta {
   current_page: number
   from: number
   last_page: number

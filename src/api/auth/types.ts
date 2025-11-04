@@ -1,3 +1,4 @@
+import { type MasterSkpd } from '../master-data'
 import { type Menu } from '../users'
 
 export interface LoginVariables {
@@ -6,12 +7,12 @@ export interface LoginVariables {
   captcha?: string
 }
 
-export interface Pivot {
+interface Pivot {
   users_id: string
   users_rule_id: string
 }
 
-export interface UserRule {
+interface UserRule {
   id: string
   rule: string
   created_at: string
@@ -40,6 +41,7 @@ export interface User {
   deleted: string
   chat_id: string | null
   updated_at: string
+  skpd: MasterSkpd
   rules: UserRule[] // 👈 daftar role yang dimiliki user
 }
 

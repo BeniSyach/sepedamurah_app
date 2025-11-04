@@ -54,8 +54,6 @@ export function RefKegiatanTable({
 
   // Synced with URL states (updated to match route search schema defaults)
   const {
-    globalFilter,
-    onGlobalFilterChange,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -67,7 +65,7 @@ export function RefKegiatanTable({
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: true, key: 'filter' },
     columnFilters: [
-      { columnId: 'nm_urusan', searchKey: 'nm_urusan', type: 'string' },
+      { columnId: 'nm_kegiatan', searchKey: 'nm_kegiatan', type: 'string' },
     ],
   })
 
@@ -85,19 +83,12 @@ export function RefKegiatanTable({
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter,
       pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const nm_kegiatan = String(row.getValue('nm_kegiatan')).toLowerCase()
-      const searchValue = String(filterValue).toLowerCase()
-
-      return nm_kegiatan.includes(searchValue)
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -105,7 +96,6 @@ export function RefKegiatanTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onGlobalFilterChange,
     onColumnFiltersChange,
   })
 

@@ -65,9 +65,7 @@ export function BerkasLainTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
+      { columnId: 'nama_dokumen', searchKey: 'nama_dokumen', type: 'string' },
     ],
   })
 

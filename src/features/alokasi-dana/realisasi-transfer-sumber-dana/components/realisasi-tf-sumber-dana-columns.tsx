@@ -3,7 +3,6 @@ import { type RealisasiTransferSumberDana } from '@/api'
 import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTransferSumberDana>[] =
@@ -43,11 +42,7 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Nama Sumber Dana' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {row.getValue('nm_sumber')}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{row.getValue('nm_sumber')}</div>,
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
     },
@@ -59,9 +54,7 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
         <DataTableColumnHeader column={column} title='Tanggal Diterima' />
       ),
       cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatTanggal(row.getValue('tgl_diterima'))}
-        </LongText>
+        <div>{formatTanggal(row.getValue('tgl_diterima'))}</div>
       ),
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
@@ -73,9 +66,7 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Tahun' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>{row.getValue('tahun')}</LongText>
-      ),
+      cell: ({ row }) => <div>{row.getValue('tahun')}</div>,
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
     },
@@ -87,40 +78,30 @@ export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTra
         <DataTableColumnHeader column={column} title='Jumlah' />
       ),
       cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {formatRupiah(row.getValue('jumlah_sumber'))}
-        </LongText>
+        <div>{formatRupiah(row.getValue('jumlah_sumber'))}</div>
       ),
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
     },
 
-    // ✅ keterangan
-    {
-      accessorKey: 'keterangan',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='keterangan' />
-      ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {row.getValue('keterangan')}
-        </LongText>
-      ),
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
-    },
+    // // ✅ keterangan
+    // {
+    //   accessorKey: 'keterangan',
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} title='keterangan' />
+    //   ),
+    //   cell: ({ row }) => <div>{row.getValue('keterangan')}</div>,
+    //   enableSorting: true,
+    //   meta: { className: 'min-w-[160px]' },
+    // },
 
     // ✅ keterangan_2
     {
       accessorKey: 'keterangan_2',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='keterangan_2' />
+        <DataTableColumnHeader column={column} title='Keterangan' />
       ),
-      cell: ({ row }) => (
-        <LongText className='max-w-300 ps-3'>
-          {row.getValue('keterangan_2')}
-        </LongText>
-      ),
+      cell: ({ row }) => <div>{row.getValue('keterangan_2')}</div>,
       enableSorting: true,
       meta: { className: 'min-w-[160px]' },
     },

@@ -2,8 +2,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useFieldArray } from 'react-hook-form'
-import { type Urusan, useGetRefUrusan } from '@/api'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+// 🔥 tambahkan useFormContext
+import { type Urusan, useGetRefUrusanSp2d } from '@/api'
 import { ChevronDown, Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,17 +32,16 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
+  const { setValue } = useFormContext()
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan`,
   })
 
-  const { data, isPending, isError } = useGetRefUrusan({
+  const { data, isPending, isError } = useGetRefUrusanSp2d({
     page: 1,
     perPage: 100,
   })
@@ -80,7 +80,7 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
       <CollapsibleContent className='mt-3 space-y-3'>
         <FormField
           control={control}
-          name={`urusan.${indexUrusan}.nm_urusan`}
+          name={`urusan.${indexUrusan}.kd_urusan`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nama Urusan</FormLabel>
@@ -95,22 +95,44 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
                   </p>
                 ) : (
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(val) => {
+                      const selected = urusanList.find(
+                        (u) => u.kd_urusan === val
+                      )
+
+                      // ✅ update field kd_urusan
+                      field.onChange(selected?.kd_urusan ?? '')
+
+                      // ✅ kirim data ke nm_urusan (nama urusan)
+                      setValue(
+                        `urusan.${indexUrusan}.nm_urusan`,
+                        selected?.nm_urusan ?? ''
+                      )
+
+                      // 🔥 optional: reset bidang urusan agar fresh jika ganti urusan
+                      setValue(`urusan.${indexUrusan}.bidangUrusan`, [])
+                    }}
                     value={field.value || ''}
                   >
                     <SelectTrigger className='min-h-[44px] break-words whitespace-normal'>
                       <SelectValue placeholder='Pilih Urusan' />
                     </SelectTrigger>
                     <SelectContent>
-                      {urusanList.map((u: Urusan) => (
-                        <SelectItem
-                          key={u.kd_urusan}
-                          value={u.nm_urusan}
-                          className='py-2 break-words whitespace-normal'
-                        >
-                          {u.kd_urusan}. {u.nm_urusan}
-                        </SelectItem>
-                      ))}
+                      {urusanList.length === 0 ? (
+                        <div className='text-muted-foreground p-2 text-sm'>
+                          Tidak ada data urusan
+                        </div>
+                      ) : (
+                        urusanList.map((u: Urusan) => (
+                          <SelectItem
+                            key={u.kd_urusan}
+                            value={u.kd_urusan}
+                            className='py-2 break-words whitespace-normal'
+                          >
+                            {u.kd_urusan}. {u.nm_urusan}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 )}

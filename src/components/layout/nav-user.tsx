@@ -51,7 +51,9 @@ export function NavUser({ userData }: NavUserProps) {
                   <span className='truncate font-semibold'>
                     {userData.name}
                   </span>
-                  <span className='truncate text-xs'>{userData.email}</span>
+                  <span className='truncate text-xs'>
+                    {userData?.skpd?.nm_opd}
+                  </span>
                 </div>
                 <ChevronsUpDown className='ms-auto size-4' />
               </SidebarMenuButton>
@@ -78,7 +80,9 @@ export function NavUser({ userData }: NavUserProps) {
                     <span className='truncate font-semibold'>
                       {userData.name}
                     </span>
-                    <span className='truncate text-xs'>{userData.email}</span>
+                    <span className='truncate text-xs'>
+                      {userData?.skpd?.nm_opd}
+                    </span>
                   </div>
                 </div>
               </DropdownMenuLabel>

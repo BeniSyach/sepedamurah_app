@@ -25,7 +25,7 @@ export function PengeluaranDitolakLaporanFungsional() {
   const { data, isLoading, isError } = useGetLaporanFungsional({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     jenis: 'Pengeluaran',
     menu: 'fungsional_pengeluaran_ditolak',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),

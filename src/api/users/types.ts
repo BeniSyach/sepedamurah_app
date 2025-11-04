@@ -13,7 +13,7 @@ export interface Menu {
   menu: string
 }
 
-export interface RuleUsers {
+interface RuleUsers {
   id: string
   rule: string
   menus: Menu[]

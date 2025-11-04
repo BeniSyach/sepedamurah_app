@@ -21,7 +21,7 @@ export function Pengembalian() {
   const { data, isLoading, isError } = useGetPengembalian({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama,
   })
 
   return (

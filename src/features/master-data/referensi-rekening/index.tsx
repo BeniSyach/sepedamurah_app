@@ -21,7 +21,7 @@ export function ReferensiRekening() {
   const { data, isLoading, isError } = useGetRefRekening({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nm_rekening,
   })
 
   return (

@@ -4,7 +4,6 @@ import { cn, formatRupiah, formatTanggaldanJam } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
@@ -40,12 +39,12 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -59,9 +58,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
@@ -71,11 +68,9 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'no_spm',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='no_spm' />
+      <DataTableColumnHeader column={column} title='No SPM' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>{row.getValue('no_spm')}</LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('no_spm')}</div>,
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -84,13 +79,9 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'jenis_berkas',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jenis_berkas' />
+      <DataTableColumnHeader column={column} title='jenis berkas' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('jenis_berkas')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('jenis_berkas')}</div>,
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -106,7 +97,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       // Ambil nama referensi dari setiap item
       const names = sumberDana.map((sd) => sd.referensi?.nm_ref).filter(Boolean) // buang null/undefined
 
-      return <LongText className='max-w-300 ps-3'>{names.join(', ')}</LongText>
+      return <div>{names.join(', ')}</div>
     },
     enableSorting: false, // bisa diubah jika mau sorting custom
     meta: { className: 'min-w-[160px]' },
@@ -116,13 +107,9 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'nama_file',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Uraian Keperluan' />
+      <DataTableColumnHeader column={column} title='Uraian' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('nama_file')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nama_file')}</div>,
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -131,13 +118,9 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'nilai_belanja',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nilai_belanja' />
+      <DataTableColumnHeader column={column} title='nilai belanja' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatRupiah(row.getValue('nilai_belanja'))}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{formatRupiah(row.getValue('nilai_belanja'))}</div>,
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
@@ -146,12 +129,10 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'tanggal_upload',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Tanggal & waktu Terima' />
+      <DataTableColumnHeader column={column} title='Tanggal Terima' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {formatTanggaldanJam(row.getValue('tanggal_upload'))}
-      </LongText>
+      <div>{formatTanggaldanJam(row.getValue('tanggal_upload'))}</div>
     ),
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },

@@ -23,7 +23,7 @@ export function BerkasMasukSP2D() {
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     menu: 'berkas_masuk_sp2d',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

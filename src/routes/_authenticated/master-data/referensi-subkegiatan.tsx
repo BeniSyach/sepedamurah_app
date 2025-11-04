@@ -5,7 +5,7 @@ import { ReferensiSubKegiatan } from '@/features/master-data/referensi-subkegiat
 const refSubKegiatanSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
-  search: z.string().optional().catch(''),
+  nm_subkegiatan: z.string().optional().catch(''),
 })
 
 export const Route = createFileRoute(

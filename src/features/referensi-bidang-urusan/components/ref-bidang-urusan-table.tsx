@@ -54,8 +54,6 @@ export function RefBidangUrusanTable({
 
   // Synced with URL states (updated to match route search schema defaults)
   const {
-    globalFilter,
-    onGlobalFilterChange,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -65,11 +63,7 @@ export function RefBidangUrusanTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: true, key: 'filter' },
-    columnFilters: [
-      { columnId: 'kd_urusan', searchKey: 'kd_urusan', type: 'string' },
-      { columnId: 'nm_urusan', searchKey: 'nm_urusan', type: 'string' },
-    ],
+    columnFilters: [{ columnId: 'nm_bu', searchKey: 'nm_bu', type: 'string' }],
   })
 
   const totalRows = meta?.total ?? data.length
@@ -86,19 +80,12 @@ export function RefBidangUrusanTable({
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter,
       pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const nm_bu = String(row.getValue('nm_bu')).toLowerCase()
-      const searchValue = String(filterValue).toLowerCase()
-
-      return nm_bu.includes(searchValue)
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -106,7 +93,6 @@ export function RefBidangUrusanTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onGlobalFilterChange,
     onColumnFiltersChange,
   })
 

@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
@@ -41,12 +40,12 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    header: () => <div>No</div>,
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
-      return <div className='w-12 text-center'>{number}</div>
+      return <div>{number}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -60,12 +59,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
-      return (
-        <LongText className='max-w-300 ps-3'>{skpd?.nm_opd ?? '-'}</LongText>
-      )
+      return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama_pengirim
@@ -74,13 +70,8 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='nama_pengirim' />
     ),
-    cell: ({ row }) => (
-      <LongText className='max-w-300 ps-3'>
-        {row.getValue('nama_pengirim')}
-      </LongText>
-    ),
+    cell: ({ row }) => <div>{row.getValue('nama_pengirim')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama_operator
@@ -96,7 +87,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
         <div className='flex items-center gap-2 ps-3'>
           {value ? (
             <>
-              <LongText className='max-w-300'>{value}</LongText>
+              <div className='max-w-300'>{value}</div>
               <Badge
                 variant='secondary'
                 className='bg-green-100 text-green-800 hover:bg-green-100'
@@ -135,7 +126,6 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       return <span className='ps-3'>{tanggal}</span>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[140px]' },
   },
 
   // ✅ jam_upload
@@ -154,7 +144,6 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       return <span className='ps-3'>{jam}</span>
     },
     enableSorting: false, // bisa diset true kalau mau
-    meta: { className: 'min-w-[120px]' },
   },
 
   // ✅ status
@@ -182,7 +171,6 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       return <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[220px]' },
   },
 
   // ✅ Aksi

@@ -5,7 +5,7 @@ import { ReferensiBidangUrusan } from '@/features/referensi-bidang-urusan'
 const refBidangUrusanSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
-  search: z.string().optional().catch(''),
+  nm_bu: z.string().optional().catch(''),
 })
 
 export const Route = createFileRoute(

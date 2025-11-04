@@ -26,7 +26,7 @@ export function PermohonanPenerbitanSP2D() {
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
-    search: search.search,
+    search: search.nama_file,
     menu: 'permohonan_sp2d',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

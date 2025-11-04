@@ -10,14 +10,14 @@ export interface Program {
   deleted_at: string | null
 }
 
-export interface ProgramLinks {
+interface ProgramLinks {
   first: string
   last: string
   prev: string | null
   next: string | null
 }
 
-export interface ProgramMeta {
+interface ProgramMeta {
   current_page: number
   from: number
   last_page: number

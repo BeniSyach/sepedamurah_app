@@ -54,8 +54,6 @@ export function RefUrusanTable({
 
   // Synced with URL states (updated to match route search schema defaults)
   const {
-    globalFilter,
-    onGlobalFilterChange,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -65,7 +63,6 @@ export function RefUrusanTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: true, key: 'filter' },
     columnFilters: [
       { columnId: 'kd_urusan', searchKey: 'kd_urusan', type: 'string' },
       { columnId: 'nm_urusan', searchKey: 'nm_urusan', type: 'string' },
@@ -86,20 +83,12 @@ export function RefUrusanTable({
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter,
       pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const kd_urusan = String(row.getValue('kd_urusan')).toLowerCase()
-      const nm_urusan = String(row.getValue('nm_urusan')).toLowerCase()
-      const searchValue = String(filterValue).toLowerCase()
-
-      return kd_urusan.includes(searchValue) || nm_urusan.includes(searchValue)
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -107,7 +96,6 @@ export function RefUrusanTable({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onGlobalFilterChange,
     onColumnFiltersChange,
   })
 

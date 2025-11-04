@@ -16,7 +16,7 @@ export interface UsersRole {
   menus: UsersRoleMenu[] // relasi ke menu
 }
 
-export interface UsersRoleMenu {
+interface UsersRoleMenu {
   id: string
   role_id: string
   menu: string

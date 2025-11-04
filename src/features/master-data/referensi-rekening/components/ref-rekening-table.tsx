@@ -65,9 +65,7 @@ export function ReferensiRekeningTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
+      { columnId: 'nm_rekening', searchKey: 'nm_rekening', type: 'string' },
     ],
   })
 

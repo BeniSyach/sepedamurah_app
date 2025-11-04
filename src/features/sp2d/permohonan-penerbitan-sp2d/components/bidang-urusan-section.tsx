@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { useGetRefBidangUrusan } from '@/api'
+import { useGetRefBidangUrusanSp2d } from '@/api'
 import { Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,16 +26,25 @@ export function BidangUrusanSection({
   indexBidang,
   removeBidang,
 }: any) {
-  const { setValue } = useFormContext()
+  const { setValue, getValues, watch } = useFormContext()
+  const kd_urusan = watch(`urusan.${indexUrusan}.kd_urusan`)
+  const kd_bu1 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu1`
+  )
+  const kd_bu2 = watch(
+    `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu2`
+  )
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program`,
   })
 
-  const { data, isPending, isError } = useGetRefBidangUrusan({
+  // 🔥 Ambil bidang urusan berdasarkan kd_urusan
+  const { data, isPending, isError } = useGetRefBidangUrusanSp2d({
     page: 1,
     perPage: 100,
+    kd_urusan: kd_urusan,
   })
 
   const bidangOptions =
@@ -77,6 +86,8 @@ export function BidangUrusanSection({
                   onValueChange={(val) => {
                     field.onChange(val)
                     const selected = bidangOptions.find((b) => b.value === val)
+
+                    // Set nilai bidang urusan di form
                     setValue(
                       `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu1`,
                       selected?.kd_bu1 ?? ''
@@ -92,13 +103,7 @@ export function BidangUrusanSection({
                   }}
                   value={
                     bidangOptions.find(
-                      (b) =>
-                        b.kd_bu1 ===
-                          (control._formValues?.urusan?.[indexUrusan]
-                            ?.bidangUrusan?.[indexBidang]?.kd_bu1 ?? '') &&
-                        b.kd_bu2 ===
-                          (control._formValues?.urusan?.[indexUrusan]
-                            ?.bidangUrusan?.[indexBidang]?.kd_bu2 ?? '')
+                      (b) => b.kd_bu1 === kd_bu1 && b.kd_bu2 === kd_bu2
                     )?.value || ''
                   }
                 >
@@ -106,20 +111,26 @@ export function BidangUrusanSection({
                     <SelectValue placeholder='Pilih Bidang Urusan' />
                   </SelectTrigger>
                   <SelectContent>
-                    {bidangOptions.map((b) => (
-                      <SelectItem
-                        key={b.value}
-                        value={b.value}
-                        className='py-2 break-words whitespace-normal'
-                      >
-                        <span className='block text-left'>
-                          <span className='font-semibold'>
-                            {b.kd_bu1}.{b.kd_bu2}
-                          </span>{' '}
-                          — {b.label}
-                        </span>
-                      </SelectItem>
-                    ))}
+                    {bidangOptions.length === 0 ? (
+                      <div className='text-muted-foreground p-2 text-sm'>
+                        Tidak ada bidang urusan untuk urusan ini
+                      </div>
+                    ) : (
+                      bidangOptions.map((b) => (
+                        <SelectItem
+                          key={b.value}
+                          value={b.value}
+                          className='py-2 break-words whitespace-normal'
+                        >
+                          <span className='block text-left'>
+                            <span className='font-semibold'>
+                              {b.kd_bu1}.{b.kd_bu2}
+                            </span>{' '}
+                            — {b.label}
+                          </span>
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               )}
@@ -145,13 +156,19 @@ export function BidangUrusanSection({
         type='button'
         size='sm'
         variant='outline'
-        onClick={() =>
+        onClick={() => {
+          // ✅ saat tambah program, ikutkan kd_bu1 dan kd_bu2
+          const bidang = getValues(
+            `urusan.${indexUrusan}.bidangUrusan.${indexBidang}`
+          )
           append({
             nm_program: '',
             kd_program: '',
             kegiatan: [],
+            kd_bu1: bidang?.kd_bu1 ?? '',
+            kd_bu2: bidang?.kd_bu2 ?? '',
           })
-        }
+        }}
       >
         <Plus className='mr-2 h-4 w-4' /> Tambah Program
       </Button>
