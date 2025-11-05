@@ -1,0 +1,1865 @@
+import { useEffect, useState } from 'react'
+import z from 'zod'
+import { Controller, useForm } from 'react-hook-form'
+import { CaretSortIcon } from '@radix-ui/react-icons'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  useGetLevelRekening,
+  useGetRefBidangUrusanSp2d,
+  useGetRefJenisBelanja,
+  useGetRefKegiatanSp2d,
+  useGetRefProgramSp2d,
+  useGetRefSKPD,
+  useGetRefSubKegiatanSp2d,
+  useGetRefSumberDana,
+  useGetRefUrusanSp2d,
+} from '@/api'
+import { CheckIcon } from 'lucide-react'
+import { showSubmittedData } from '@/lib/show-submitted-data'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { DatePicker } from '@/components/date-picker'
+import RangeDatePicker from '@/components/form-date-range'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { LongText } from '@/components/long-text'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+
+const jenis_laporan = [
+  { label: 'LRA Sumber Dana', value: 'lra_sd' },
+  { label: 'Rincian Saldo Buku Besar', value: 'r_saldo_buku_besar' },
+  {
+    label: 'Laporan Realisasi Anggaran Per Priode',
+    value: 'lra_anggaran_per_priode',
+  },
+  {
+    label: 'Laporan Realisasi Anggaran per Urusan',
+    value: 'lra_anggaran_per_urusan',
+  },
+  {
+    label: 'Laporan Realisasi Anggaran per Program Kegiatan',
+    value: 'lra_anggaran_per_program_kegiatan',
+  },
+  {
+    label: 'Laporan Realisasi Anggaran Yg Memunculkan Pendapatan dan Belanja',
+    value: 'lra_pendapatan_belanja',
+  },
+] as const
+const languages = [
+  { label: 'English', value: 'en' },
+  { label: 'French', value: 'fr' },
+  { label: 'German', value: 'de' },
+  { label: 'Spanish', value: 'es' },
+  { label: 'Portuguese', value: 'pt' },
+  { label: 'Russian', value: 'ru' },
+  { label: 'Japanese', value: 'ja' },
+  { label: 'Korean', value: 'ko' },
+  { label: 'Chinese', value: 'zh' },
+] as const
+
+const accountFormSchema = z.object({
+  jenis_laporan: z.string('Jenis laporan Tidak Boleh Kosong'),
+  tanggal: z.date(),
+  urusan: z.string('Urusan Tidak Boleh Kosong'),
+  bidang_urusan: z.object({
+    kd_bu1: z.string(),
+    kd_bu2: z.string(),
+    nm_bu: z.string(),
+  }),
+  skpd: z.object({
+    kd_opd1: z.string(),
+    kd_opd2: z.string(),
+    kd_opd3: z.string(),
+    kd_opd4: z.string(),
+    kd_opd5: z.string(),
+    nm_opd: z.string(),
+  }),
+  program: z.object({
+    kd_prog1: z.string(),
+    kd_prog2: z.string(),
+    kd_prog3: z.string(),
+    nm_program: z.string(),
+  }),
+  kegiatan: z.object({
+    kd_keg1: z.string(),
+    kd_keg2: z.string(),
+    kd_keg3: z.string(),
+    kd_keg4: z.string(),
+    kd_keg5: z.string(),
+    nm_kegiatan: z.string(),
+  }),
+  level_rekening: z.string('Level Rekening Tidak Boleh Kosong'),
+  range_tanggal: z.object({
+    from: z.date(),
+    to: z.date().optional(),
+  }),
+  jenis_belanja: z.string('Jenis Belanja Tidak Boleh Kosong'),
+  language: z.string('Please select a language.'),
+  sumber_dana: z.object({
+    kd_ref1: z.string(),
+    kd_ref2: z.string(),
+    kd_ref3: z.string(),
+    kd_ref4: z.string(),
+    kd_ref5: z.string(),
+    kd_ref6: z.string(),
+    nm_ref: z.string(),
+  }),
+  subkegiatan: z.object({
+    kd_subkeg1: z.string(),
+    kd_subkeg2: z.string(),
+    kd_subkeg3: z.string(),
+    kd_subkeg4: z.string(),
+    kd_subkeg5: z.string(),
+    kd_subkeg6: z.string(),
+    nm_subkegiatan: z.string(),
+  }),
+})
+
+type AccountFormValues = z.output<typeof accountFormSchema>
+
+const defaultValues: AccountFormValues = {
+  jenis_laporan: '',
+  urusan: '',
+  bidang_urusan: {
+    kd_bu1: '',
+    kd_bu2: '',
+    nm_bu: '',
+  },
+  range_tanggal: {
+    from: new Date(),
+    to: undefined,
+  },
+  level_rekening: '',
+  jenis_belanja: '',
+  language: '',
+  tanggal: new Date(),
+  sumber_dana: {
+    kd_ref1: '',
+    kd_ref2: '',
+    kd_ref3: '',
+    kd_ref4: '',
+    kd_ref5: '',
+    kd_ref6: '',
+    nm_ref: '',
+  },
+  skpd: {
+    kd_opd1: '',
+    kd_opd2: '',
+    kd_opd3: '',
+    kd_opd4: '',
+    kd_opd5: '',
+    nm_opd: '',
+  },
+  program: {
+    kd_prog1: '',
+    kd_prog2: '',
+    kd_prog3: '',
+    nm_program: '',
+  },
+  kegiatan: {
+    kd_keg1: '',
+    kd_keg2: '',
+    kd_keg3: '',
+    kd_keg4: '',
+    kd_keg5: '',
+    nm_kegiatan: '',
+  },
+  subkegiatan: {
+    kd_subkeg1: '',
+    kd_subkeg2: '',
+    kd_subkeg3: '',
+    kd_subkeg4: '',
+    kd_subkeg5: '',
+    kd_subkeg6: '',
+    nm_subkegiatan: '',
+  },
+}
+
+export function LaporanPembukuan() {
+  const form = useForm<AccountFormValues>({
+    resolver: zodResolver(accountFormSchema),
+    defaultValues,
+  })
+
+  const {
+    data: dataUrusan,
+    isPending: pendingUrusan,
+    isError: errorUrusan,
+  } = useGetRefUrusanSp2d({
+    page: 1,
+    perPage: 100,
+  })
+  const urusanList = dataUrusan?.data || []
+  const urusanValue = form.watch('urusan')
+
+  const {
+    data: dataBU,
+    isPending: pendingBU,
+    isError: errorBU,
+  } = useGetRefBidangUrusanSp2d({
+    page: 1,
+    perPage: 100,
+    kd_urusan: urusanValue || '',
+  })
+  const buList = dataBU?.data || []
+  const buValue = form.watch('bidang_urusan')
+
+  const {
+    data: dataSKPD,
+    isPending: pendingSKPD,
+    isError: errorSKPD,
+  } = useGetRefSKPD({
+    page: 1,
+    perPage: 100,
+  })
+  const SKPDList = dataSKPD?.data || []
+
+  const {
+    data: dataProgram,
+    isPending: pendingProgram,
+    isError: errorProgram,
+  } = useGetRefProgramSp2d({
+    page: 1,
+    perPage: 100,
+    kd_bu1: buValue.kd_bu1,
+    kd_bu2: buValue.kd_bu2,
+  })
+  const programList = dataProgram?.data || []
+  const programValue = form.watch('program')
+
+  const {
+    data: dataKeg,
+    isPending: pendingKeg,
+    isError: errorKeg,
+  } = useGetRefKegiatanSp2d({
+    page: 1,
+    perPage: 200,
+    kd_prog1: programValue.kd_prog1,
+    kd_prog2: programValue.kd_prog2,
+    kd_prog3: programValue.kd_prog3,
+  })
+  const kegiatanList = dataKeg?.data || []
+  const kegiatanValue = form.watch('kegiatan')
+
+  const {
+    data: dataSubKeg,
+    isPending: pendingSubkeg,
+    isError: errorSubkeg,
+  } = useGetRefSubKegiatanSp2d({
+    page: 1,
+    perPage: 200,
+    kd_keg1: kegiatanValue.kd_keg1,
+    kd_keg2: kegiatanValue.kd_keg2,
+    kd_keg3: kegiatanValue.kd_keg3,
+    kd_keg4: kegiatanValue.kd_keg4,
+    kd_keg5: kegiatanValue.kd_keg5,
+  })
+  const subkegiatanList = dataSubKeg?.data || []
+
+  const {
+    data: dataLevelRek,
+    isPending: pendingLevelRek,
+    isError: errorLevelRek,
+  } = useGetLevelRekening()
+  const levelRekList = dataLevelRek || []
+
+  const {
+    data: dataBelanja,
+    isPending: pendingBelanja,
+    isError: errorBelanja,
+  } = useGetRefJenisBelanja({
+    page: 1,
+    perPage: 100,
+  })
+  const jenisBelanjaList = dataBelanja?.data || []
+
+  const {
+    data: dataSD,
+    isPending: pendingSD,
+    isError: errorSD,
+  } = useGetRefSumberDana({
+    page: 1,
+    perPage: 100,
+  })
+  const sumberDanaList = dataSD?.data || []
+
+  function onSubmit(data: AccountFormValues) {
+    showSubmittedData(data)
+  }
+  useEffect(() => {
+    if (urusanValue) {
+      form.setValue('bidang_urusan', { kd_bu1: '', kd_bu2: '', nm_bu: '' })
+    }
+  }, [urusanValue])
+  return (
+    <>
+      {/* ===== Top Heading ===== */}
+      <Header>
+        <Search />
+        <div className='ms-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ConfigDrawer />
+          <ProfileDropdown />
+        </div>
+      </Header>
+      <Main>
+        <div className='space-y-0.5'>
+          <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
+            Laporan Pembukuan
+          </h1>
+        </div>
+        <Separator className='my-4 lg:my-6' />
+        <div className='flex flex-1 flex-col space-y-2 overflow-hidden md:space-y-2 lg:flex-row lg:space-y-0 lg:space-x-12'>
+          <div className='flex flex-1 flex-col space-y-6 overflow-hidden p-6'>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className='space-y-8'
+              >
+                {/* === Baris 1 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='jenis_laporan'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left break-words whitespace-normal',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {field.value
+                                      ? jenis_laporan.find(
+                                          (jl) => jl.value === field.value
+                                        )?.label
+                                      : 'Pilih Jenis Laporan'}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari jenis laporan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {jenis_laporan.map((jl) => (
+                                      <CommandItem
+                                        value={jl.label}
+                                        key={jl.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'jenis_laporan',
+                                            jl.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            jl.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {jl.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='tanggal'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <DatePicker
+                            selected={field.value}
+                            onSelect={field.onChange}
+                          />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='urusan'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={pendingUrusan || errorUrusan}
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingUrusan
+                                      ? 'Memuat...'
+                                      : field.value
+                                        ? (() => {
+                                            const selected = urusanList.find(
+                                              (item) =>
+                                                item.kd_urusan === field.value
+                                            )
+                                            return selected ? (
+                                              <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                                {selected.kd_urusan} -{' '}
+                                                {selected.nm_urusan}
+                                              </LongText>
+                                            ) : (
+                                              'Tidak ditemukan'
+                                            )
+                                          })()
+                                        : 'Pilih Urusan'}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Urusan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {urusanList.map((item) => (
+                                      <CommandItem
+                                        value={item.nm_urusan}
+                                        key={item.kd_urusan}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'urusan',
+                                            item.kd_urusan
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            item.kd_urusan === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_urusan} - {item.nm_urusan}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 2 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <Controller
+                      name='range_tanggal'
+                      control={form.control}
+                      render={({ field }) => (
+                        <RangeDatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder='Pilih tanggal'
+                          disabled={false}
+                          className='max-w-md'
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Rek Akun'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='bidang_urusan'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={
+                                    !urusanValue || pendingBU || errorBU
+                                  }
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingBU ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_bu1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_bu1}.
+                                        {field.value.kd_bu2} -{' '}
+                                        {field.value.nm_bu}
+                                      </LongText>
+                                    ) : !urusanValue ? (
+                                      'Pilih urusan terlebih dahulu'
+                                    ) : (
+                                      'Pilih Bidang Urusan'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Bidang Urusan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {buList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_bu1}-${item.kd_bu2}`}
+                                        value={item.nm_bu}
+                                        onSelect={() =>
+                                          form.setValue('bidang_urusan', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value &&
+                                              item.kd_bu1 ===
+                                                field.value.kd_bu1 &&
+                                              item.kd_bu2 === field.value.kd_bu2
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_bu1}.{item.kd_bu2} -{' '}
+                                        {item.nm_bu}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 3 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <div className='flex-1'>
+                      <FormField
+                        control={form.control}
+                        name='level_rekening'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-col'>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant='outline'
+                                    role='combobox'
+                                    disabled={pendingLevelRek || errorLevelRek}
+                                    className={cn(
+                                      'min-h-[2.5rem] w-full justify-between text-left',
+                                      !field.value && 'text-muted-foreground'
+                                    )}
+                                  >
+                                    <div className='flex-1 text-left'>
+                                      {pendingLevelRek
+                                        ? 'Memuat...'
+                                        : field.value
+                                          ? (() => {
+                                              const selected =
+                                                levelRekList.find(
+                                                  (item) =>
+                                                    item.kode === field.value
+                                                )
+                                              return selected ? (
+                                                <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                                  {selected.kode} -{' '}
+                                                  {selected.nm_level_rek}
+                                                </LongText>
+                                              ) : (
+                                                'Tidak ditemukan'
+                                              )
+                                            })()
+                                          : 'Pilih Level Rekening'}
+                                    </div>
+                                    <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+
+                              <PopoverContent
+                                align='start'
+                                className='w-[var(--radix-popover-trigger-width)] p-0'
+                              >
+                                <Command className='max-h-[300px] overflow-y-auto'>
+                                  <CommandInput placeholder='Cari jenis laporan...' />
+                                  <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                  <CommandGroup>
+                                    <CommandList>
+                                      {levelRekList.map((item) => (
+                                        <CommandItem
+                                          value={item.nm_level_rek}
+                                          key={item.kode}
+                                          onSelect={() =>
+                                            form.setValue(
+                                              'level_rekening',
+                                              item.kode
+                                            )
+                                          }
+                                        >
+                                          <CheckIcon
+                                            className={cn(
+                                              'size-4',
+                                              item.kode === field.value
+                                                ? 'opacity-100'
+                                                : 'opacity-0'
+                                            )}
+                                          />
+                                          {item.kode} - {item.nm_level_rek}
+                                        </CommandItem>
+                                      ))}
+                                    </CommandList>
+                                  </CommandGroup>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='jenis_belanja'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={pendingBelanja || errorBelanja}
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingBelanja
+                                      ? 'Memuat...'
+                                      : field.value
+                                        ? (() => {
+                                            const selected = urusanList.find(
+                                              (item) =>
+                                                item.kd_urusan === field.value
+                                            )
+                                            return selected ? (
+                                              <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                                {selected.kd_urusan} -{' '}
+                                                {selected.nm_urusan}
+                                              </LongText>
+                                            ) : (
+                                              'Tidak ditemukan'
+                                            )
+                                          })()
+                                        : 'Pilih Rek Kelompok'}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Urusan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {urusanList.map((item) => (
+                                      <CommandItem
+                                        value={item.nm_urusan}
+                                        key={item.kd_urusan}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'urusan',
+                                            item.kd_urusan
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            item.kd_urusan === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_urusan} - {item.nm_urusan}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='skpd'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={pendingSKPD || errorSKPD}
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_opd1 &&
+                                      'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingSKPD ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_opd1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_opd1}.
+                                        {field.value.kd_opd2}.
+                                        {field.value.kd_opd3}.
+                                        {field.value.kd_opd4}.
+                                        {field.value.kd_opd5} -{' '}
+                                        {field.value.nm_opd}
+                                      </LongText>
+                                    ) : (
+                                      'Pilih SKPD'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari SKPD...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {SKPDList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_opd1}.${item.kd_opd2}.${item.kd_opd3}.${item.kd_opd4}.${item.kd_opd5}`}
+                                        value={item.nm_opd}
+                                        onSelect={() =>
+                                          form.setValue('skpd', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value?.kd_opd1 ===
+                                              item.kd_opd1 &&
+                                              field.value?.kd_opd2 ===
+                                                item.kd_opd2 &&
+                                              field.value?.kd_opd3 ===
+                                                item.kd_opd3 &&
+                                              field.value?.kd_opd4 ===
+                                                item.kd_opd4 &&
+                                              field.value?.kd_opd5 ===
+                                                item.kd_opd5
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_opd1}.{item.kd_opd2}.
+                                        {item.kd_opd3}.{item.kd_opd4}.
+                                        {item.kd_opd5} - {item.nm_opd}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 4 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih No. Bukti'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Rek Jenis'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Unit'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 5 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='sumber_dana'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={pendingSD || errorSD}
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingSD ? (
+                                      'Memuat...'
+                                    ) : field.value && field.value.kd_ref1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_ref1}.
+                                        {field.value.kd_ref2}.
+                                        {field.value.kd_ref3}.
+                                        {field.value.kd_ref4}.
+                                        {field.value.kd_ref5}.
+                                        {field.value.kd_ref6} -{' '}
+                                        {field.value.nm_ref}
+                                      </LongText>
+                                    ) : (
+                                      'Pilih Sumber Dana'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Sumber Dana...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {sumberDanaList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_ref1}-${item.kd_ref2}-${item.kd_ref3}-${item.kd_ref4}-${item.kd_ref5}-${item.kd_ref6}`}
+                                        value={item.nm_ref}
+                                        onSelect={() =>
+                                          form.setValue('sumber_dana', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value &&
+                                              item.kd_ref1 ===
+                                                field.value.kd_ref1 &&
+                                              item.kd_ref2 ===
+                                                field.value.kd_ref2
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_ref1}.{item.kd_ref2}.
+                                        {item.kd_ref3}.{item.kd_ref4}.
+                                        {item.kd_ref5}.{item.kd_ref6} -{' '}
+                                        {item.nm_ref}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Rek Objek'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Sub Unit'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 6 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Jenis Jurnal'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Rek Rincian'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='program'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={
+                                    !buValue || pendingProgram || errorProgram
+                                  }
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_prog1 &&
+                                      'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingProgram ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_prog1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_prog1}.
+                                        {field.value.kd_prog2}.
+                                        {field.value.kd_prog3} -{' '}
+                                        {field.value.nm_program}
+                                      </LongText>
+                                    ) : !buValue ? (
+                                      'Pilih Bidang Urusan terlebih dahulu'
+                                    ) : (
+                                      'Pilih Program'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Program...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {programList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_prog1}-${item.kd_prog2}-${item.kd_prog3}`}
+                                        value={item.nm_program}
+                                        onSelect={() =>
+                                          form.setValue('program', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value?.kd_prog1 ===
+                                              item.kd_prog1 &&
+                                              field.value?.kd_prog2 ===
+                                                item.kd_prog2 &&
+                                              field.value?.kd_prog3 ===
+                                                item.kd_prog3
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_prog1}.{item.kd_prog2}.
+                                        {item.kd_prog3} - {item.nm_program}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 7 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  {/* Kolom 2 kosong */}
+                  <div className='flex-1' />
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='reportType'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value
+                                    ? languages.find(
+                                        (language) =>
+                                          language.value === field.value
+                                      )?.label
+                                    : 'Pilih Sub Rincian'}
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-[200px] p-0'>
+                              <Command>
+                                <CommandInput placeholder='Cari jenis...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {languages.map((language) => (
+                                      <CommandItem
+                                        value={language.label}
+                                        key={language.value}
+                                        onSelect={() =>
+                                          form.setValue(
+                                            'reportType',
+                                            language.value
+                                          )
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            language.value === field.value
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {language.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='kegiatan'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={
+                                    !programValue || pendingKeg || errorKeg
+                                  }
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_keg1 &&
+                                      'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingKeg ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_keg1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_keg1}.
+                                        {field.value.kd_keg2}.
+                                        {field.value.kd_keg3}.
+                                        {field.value.kd_keg4}.
+                                        {field.value.kd_keg5} -{' '}
+                                        {field.value.nm_kegiatan}
+                                      </LongText>
+                                    ) : !programValue ? (
+                                      'Pilih Program terlebih dahulu'
+                                    ) : (
+                                      'Pilih Kegiatan'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Kegiatan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {kegiatanList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_keg1}-${item.kd_keg2}-${item.kd_keg3}-${item.kd_keg4}-${item.kd_keg5}`}
+                                        value={item.nm_kegiatan}
+                                        onSelect={() =>
+                                          form.setValue('kegiatan', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value?.kd_keg1 ===
+                                              item.kd_keg1 &&
+                                              field.value?.kd_keg2 ===
+                                                item.kd_keg2 &&
+                                              field.value?.kd_keg3 ===
+                                                item.kd_keg3 &&
+                                              field.value?.kd_keg4 ===
+                                                item.kd_keg4 &&
+                                              field.value?.kd_keg5 ===
+                                                item.kd_keg5
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_keg1}.{item.kd_keg2}.
+                                        {item.kd_keg3}.{item.kd_keg4}.
+                                        {item.kd_keg5} - {item.nm_kegiatan}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Baris 8 === */}
+                <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
+                  {/* Kolom 1 kosong */}
+                  <div className='flex-1' />
+
+                  {/* Kolom 2 kosong */}
+                  <div className='flex-1' />
+
+                  <div className='flex-1'>
+                    <FormField
+                      control={form.control}
+                      name='subkegiatan'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-col'>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  role='combobox'
+                                  disabled={
+                                    !kegiatanValue ||
+                                    pendingSubkeg ||
+                                    errorSubkeg
+                                  }
+                                  className={cn(
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_subkeg1 &&
+                                      'text-muted-foreground'
+                                  )}
+                                >
+                                  <div className='flex-1 text-left'>
+                                    {pendingSubkeg ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_subkeg1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_subkeg1}.
+                                        {field.value.kd_subkeg2}.
+                                        {field.value.kd_subkeg3}.
+                                        {field.value.kd_subkeg4}.
+                                        {field.value.kd_subkeg5}.
+                                        {field.value.kd_subkeg6} -{' '}
+                                        {field.value.nm_subkegiatan}
+                                      </LongText>
+                                    ) : !kegiatanValue ? (
+                                      'Pilih Kegiatan terlebih dahulu'
+                                    ) : (
+                                      'Pilih Sub Kegiatan'
+                                    )}
+                                  </div>
+                                  <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Sub Kegiatan...' />
+                                <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                                <CommandGroup>
+                                  <CommandList>
+                                    {subkegiatanList.map((item) => (
+                                      <CommandItem
+                                        key={`${item.kd_subkeg1}-${item.kd_subkeg2}-${item.kd_subkeg3}-${item.kd_subkeg4}-${item.kd_subkeg5}-${item.kd_subkeg6}`}
+                                        value={item.nm_subkegiatan}
+                                        onSelect={() =>
+                                          form.setValue('subkegiatan', item)
+                                        }
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            field.value?.kd_subkeg1 ===
+                                              item.kd_subkeg1 &&
+                                              field.value?.kd_subkeg2 ===
+                                                item.kd_subkeg2 &&
+                                              field.value?.kd_subkeg3 ===
+                                                item.kd_subkeg3 &&
+                                              field.value?.kd_subkeg4 ===
+                                                item.kd_subkeg4 &&
+                                              field.value?.kd_subkeg5 ===
+                                                item.kd_subkeg5 &&
+                                              field.value?.kd_subkeg6 ===
+                                                item.kd_subkeg6
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {item.kd_subkeg1}.{item.kd_subkeg2}.
+                                        {item.kd_subkeg3}.{item.kd_subkeg4}.
+                                        {item.kd_subkeg5}.{item.kd_subkeg6} -{' '}
+                                        {item.nm_subkegiatan}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandList>
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* === Tombol === */}
+                <div className='flex justify-end space-x-4 pt-6'>
+                  <Button type='button' variant='outline'>
+                    Preview
+                  </Button>
+                  <Button type='submit'>Cetak Laporan</Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+      </Main>
+    </>
+  )
+}

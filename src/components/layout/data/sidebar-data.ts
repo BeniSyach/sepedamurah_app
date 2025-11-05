@@ -491,7 +491,7 @@ export const sidebarData: SidebarData = {
       items: [
         {
           id: 'buku-laporan',
-          title: 'Buku Laporan',
+          title: 'Laporan Pembukuan',
           url: '/laporan/buku-laporan',
           icon: BookOpen,
         },
