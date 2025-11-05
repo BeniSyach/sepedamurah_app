@@ -14,6 +14,9 @@ import {
   useGetRefUrusanSp2d,
   useGetRekAkun,
   useGetRekJenis,
+  useGetRekObjek,
+  useGetRekRincian,
+  useGetSubRincian,
 } from '@/api'
 import { CheckIcon } from 'lucide-react'
 import { useGetRekKelompok } from '@/api/master-data/rek-kelompok'
@@ -65,86 +68,123 @@ const jenis_laporan = [
     value: 'lra_pendapatan_belanja',
   },
 ] as const
-const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'French', value: 'fr' },
-  { label: 'German', value: 'de' },
-  { label: 'Spanish', value: 'es' },
-  { label: 'Portuguese', value: 'pt' },
-  { label: 'Russian', value: 'ru' },
-  { label: 'Japanese', value: 'ja' },
-  { label: 'Korean', value: 'ko' },
-  { label: 'Chinese', value: 'zh' },
-] as const
 
 const accountFormSchema = z.object({
   jenis_laporan: z.string('Jenis laporan Tidak Boleh Kosong'),
   tanggal: z.date(),
   urusan: z.string('Urusan Tidak Boleh Kosong'),
-  bidang_urusan: z.object({
-    kd_bu1: z.string(),
-    kd_bu2: z.string(),
-    nm_bu: z.string(),
-  }),
-  skpd: z.object({
-    kd_opd1: z.string(),
-    kd_opd2: z.string(),
-    kd_opd3: z.string(),
-    kd_opd4: z.string(),
-    kd_opd5: z.string(),
-    nm_opd: z.string(),
-  }),
-  program: z.object({
-    kd_prog1: z.string(),
-    kd_prog2: z.string(),
-    kd_prog3: z.string(),
-    nm_program: z.string(),
-  }),
-  kegiatan: z.object({
-    kd_keg1: z.string(),
-    kd_keg2: z.string(),
-    kd_keg3: z.string(),
-    kd_keg4: z.string(),
-    kd_keg5: z.string(),
-    nm_kegiatan: z.string(),
-  }),
+  bidang_urusan: z
+    .object({
+      kd_bu1: z.string(),
+      kd_bu2: z.string(),
+      nm_bu: z.string(),
+    })
+    .optional(),
+  skpd: z
+    .object({
+      kd_opd1: z.string(),
+      kd_opd2: z.string(),
+      kd_opd3: z.string(),
+      kd_opd4: z.string(),
+      kd_opd5: z.string(),
+      nm_opd: z.string(),
+    })
+    .optional(),
+  program: z
+    .object({
+      kd_prog1: z.string(),
+      kd_prog2: z.string(),
+      kd_prog3: z.string(),
+      nm_program: z.string(),
+    })
+    .optional(),
+  kegiatan: z
+    .object({
+      kd_keg1: z.string(),
+      kd_keg2: z.string(),
+      kd_keg3: z.string(),
+      kd_keg4: z.string(),
+      kd_keg5: z.string(),
+      nm_kegiatan: z.string(),
+    })
+    .optional(),
   level_rekening: z.string('Level Rekening Tidak Boleh Kosong'),
-  range_tanggal: z.object({
-    from: z.date(),
-    to: z.date().optional(),
-  }),
+  range_tanggal: z
+    .object({
+      from: z.date(),
+      to: z.date().optional(),
+    })
+    .optional(),
   jenis_belanja: z.string('Jenis Belanja Tidak Boleh Kosong'),
   language: z.string('Please select a language.'),
-  sumber_dana: z.object({
-    kd_ref1: z.string(),
-    kd_ref2: z.string(),
-    kd_ref3: z.string(),
-    kd_ref4: z.string(),
-    kd_ref5: z.string(),
-    kd_ref6: z.string(),
-    nm_ref: z.string(),
-  }),
-  subkegiatan: z.object({
-    kd_subkeg1: z.string(),
-    kd_subkeg2: z.string(),
-    kd_subkeg3: z.string(),
-    kd_subkeg4: z.string(),
-    kd_subkeg5: z.string(),
-    kd_subkeg6: z.string(),
-    nm_subkegiatan: z.string(),
-  }),
+  sumber_dana: z
+    .object({
+      kd_ref1: z.string(),
+      kd_ref2: z.string(),
+      kd_ref3: z.string(),
+      kd_ref4: z.string(),
+      kd_ref5: z.string(),
+      kd_ref6: z.string(),
+      nm_ref: z.string(),
+    })
+    .optional(),
+  subkegiatan: z
+    .object({
+      kd_subkeg1: z.string(),
+      kd_subkeg2: z.string(),
+      kd_subkeg3: z.string(),
+      kd_subkeg4: z.string(),
+      kd_subkeg5: z.string(),
+      kd_subkeg6: z.string(),
+      nm_subkegiatan: z.string(),
+    })
+    .optional(),
   rek_akun: z.string('Rek Akun Tidak Boleh Kosong'),
-  rek_kelompok: z.object({
-    kd_kel1: z.string(),
-    kd_kel2: z.string(),
-    nm_rek_kelompok: z.string(),
-  }),
-  rek_jenis: z.object({
-    kd_jenis1: z.string(),
-    kd_jenis2: z.string(),
-    kd_jenis3: z.string(),
-    nm_rek_jenis: z.string(),
-  }),
+  rek_kelompok: z
+    .object({
+      kd_kel1: z.string(),
+      kd_kel2: z.string(),
+      nm_rek_kelompok: z.string(),
+    })
+    .optional(),
+  rek_jenis: z
+    .object({
+      kd_jenis1: z.string(),
+      kd_jenis2: z.string(),
+      kd_jenis3: z.string(),
+      nm_rek_jenis: z.string(),
+    })
+    .optional(),
+  rek_objek: z
+    .object({
+      kd_objek1: z.string(),
+      kd_objek2: z.string(),
+      kd_objek3: z.string(),
+      kd_objek4: z.string(),
+      nm_rek_objek: z.string(),
+    })
+    .optional(),
+  rek_rincian: z
+    .object({
+      kd_rincian1: z.string(),
+      kd_rincian2: z.string(),
+      kd_rincian3: z.string(),
+      kd_rincian4: z.string(),
+      kd_rincian5: z.string(),
+      nm_rek_rincian: z.string(),
+    })
+    .optional(),
+  sub_rincian: z
+    .object({
+      kd_subrincian1: z.string(),
+      kd_subrincian2: z.string(),
+      kd_subrincian3: z.string(),
+      kd_subrincian4: z.string(),
+      kd_subrincian5: z.string(),
+      kd_subrincian6: z.string(),
+      nm_sub_rincian: z.string(),
+    })
+    .optional(),
 })
 
 type AccountFormValues = z.output<typeof accountFormSchema>
@@ -217,6 +257,30 @@ const defaultValues: AccountFormValues = {
     kd_jenis3: '',
     nm_rek_jenis: '',
   },
+  rek_objek: {
+    kd_objek1: '',
+    kd_objek2: '',
+    kd_objek3: '',
+    kd_objek4: '',
+    nm_rek_objek: '',
+  },
+  rek_rincian: {
+    kd_rincian1: '',
+    kd_rincian2: '',
+    kd_rincian3: '',
+    kd_rincian4: '',
+    kd_rincian5: '',
+    nm_rek_rincian: '',
+  },
+  sub_rincian: {
+    kd_subrincian1: '',
+    kd_subrincian2: '',
+    kd_subrincian3: '',
+    kd_subrincian4: '',
+    kd_subrincian5: '',
+    kd_subrincian6: '',
+    nm_sub_rincian: '',
+  },
 }
 
 export function LaporanPembukuan() {
@@ -224,6 +288,8 @@ export function LaporanPembukuan() {
     resolver: zodResolver(accountFormSchema),
     defaultValues,
   })
+
+  const jenisLaporanValue = form.watch('jenis_laporan')
 
   const {
     data: dataUrusan,
@@ -265,8 +331,8 @@ export function LaporanPembukuan() {
   } = useGetRefProgramSp2d({
     page: 1,
     perPage: 100,
-    kd_bu1: buValue.kd_bu1,
-    kd_bu2: buValue.kd_bu2,
+    kd_bu1: buValue?.kd_bu1,
+    kd_bu2: buValue?.kd_bu2,
   })
   const programList = dataProgram?.data || []
   const programValue = form.watch('program')
@@ -278,9 +344,9 @@ export function LaporanPembukuan() {
   } = useGetRefKegiatanSp2d({
     page: 1,
     perPage: 200,
-    kd_prog1: programValue.kd_prog1,
-    kd_prog2: programValue.kd_prog2,
-    kd_prog3: programValue.kd_prog3,
+    kd_prog1: programValue?.kd_prog1,
+    kd_prog2: programValue?.kd_prog2,
+    kd_prog3: programValue?.kd_prog3,
   })
   const kegiatanList = dataKeg?.data || []
   const kegiatanValue = form.watch('kegiatan')
@@ -292,11 +358,11 @@ export function LaporanPembukuan() {
   } = useGetRefSubKegiatanSp2d({
     page: 1,
     perPage: 200,
-    kd_keg1: kegiatanValue.kd_keg1,
-    kd_keg2: kegiatanValue.kd_keg2,
-    kd_keg3: kegiatanValue.kd_keg3,
-    kd_keg4: kegiatanValue.kd_keg4,
-    kd_keg5: kegiatanValue.kd_keg5,
+    kd_keg1: kegiatanValue?.kd_keg1,
+    kd_keg2: kegiatanValue?.kd_keg2,
+    kd_keg3: kegiatanValue?.kd_keg3,
+    kd_keg4: kegiatanValue?.kd_keg4,
+    kd_keg5: kegiatanValue?.kd_keg5,
   })
   const subkegiatanList = dataSubKeg?.data || []
 
@@ -330,10 +396,49 @@ export function LaporanPembukuan() {
     isPending: pendingRekJenis,
     isError: errorRekJenis,
   } = useGetRekJenis({
-    kd_jenis1: rekKelompokValue.kd_kel1,
-    kd_jenis2: rekKelompokValue.kd_kel2,
+    kd_jenis1: rekKelompokValue?.kd_kel1,
+    kd_jenis2: rekKelompokValue?.kd_kel2,
   })
   const rekJenisList = dataRekJenis || []
+  const rekJenisValue = form.watch('rek_jenis')
+
+  const {
+    data: dataRekObjek,
+    isPending: pendingRekObjek,
+    isError: errorRekObjek,
+  } = useGetRekObjek({
+    kd_objek1: rekJenisValue?.kd_jenis1,
+    kd_objek2: rekJenisValue?.kd_jenis2,
+    kd_objek3: rekJenisValue?.kd_jenis3,
+  })
+  const rekObjekList = dataRekObjek || []
+  const rekObjekValue = form.watch('rek_objek')
+
+  const {
+    data: dataRekRincian,
+    isPending: pendingRekRincian,
+    isError: errorRekRincian,
+  } = useGetRekRincian({
+    kd_rincian1: rekObjekValue?.kd_objek1,
+    kd_rincian2: rekObjekValue?.kd_objek2,
+    kd_rincian3: rekObjekValue?.kd_objek3,
+    kd_rincian4: rekObjekValue?.kd_objek4,
+  })
+  const rekRincianList = dataRekRincian || []
+  const rekRincianValue = form.watch('rek_rincian')
+
+  const {
+    data: dataSubRincian,
+    isPending: pendingSubRincian,
+    isError: errorSubRincian,
+  } = useGetSubRincian({
+    kd_subrincian1: rekRincianValue?.kd_rincian1,
+    kd_subrincian2: rekRincianValue?.kd_rincian2,
+    kd_subrincian3: rekRincianValue?.kd_rincian3,
+    kd_subrincian4: rekRincianValue?.kd_rincian4,
+    kd_subrincian5: rekRincianValue?.kd_rincian5,
+  })
+  const subRincianList = dataSubRincian || []
 
   const {
     data: dataSD,
@@ -476,7 +581,14 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
-                                  disabled={pendingUrusan || errorUrusan}
+                                  disabled={
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    pendingUrusan ||
+                                    errorUrusan
+                                  }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
                                     !field.value && 'text-muted-foreground'
@@ -579,7 +691,17 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
-                                  disabled={pendingRekAkun || errorRekAkun}
+                                  disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    pendingRekAkun ||
+                                    errorRekAkun
+                                  }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
                                     !field.value && 'text-muted-foreground'
@@ -661,7 +783,13 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
-                                    !urusanValue || pendingBU || errorBU
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !urusanValue ||
+                                    pendingBU ||
+                                    errorBU
                                   }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
@@ -746,7 +874,12 @@ export function LaporanPembukuan() {
                                   <Button
                                     variant='outline'
                                     role='combobox'
-                                    disabled={pendingLevelRek || errorLevelRek}
+                                    disabled={
+                                      jenisLaporanValue ===
+                                        'lra_anggaran_per_urusan' ||
+                                      pendingLevelRek ||
+                                      errorLevelRek
+                                    }
                                     className={cn(
                                       'min-h-[2.5rem] w-full justify-between text-left',
                                       !field.value && 'text-muted-foreground'
@@ -833,6 +966,13 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
                                     !rekAkunValue ||
                                     pendingRekKel ||
                                     errorRekKel
@@ -917,7 +1057,14 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
-                                  disabled={pendingSKPD || errorSKPD}
+                                  disabled={
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    pendingSKPD ||
+                                    errorSKPD
+                                  }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
                                     !field.value?.kd_opd1 &&
@@ -997,7 +1144,8 @@ export function LaporanPembukuan() {
 
                 {/* === Baris 4 === */}
                 <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
-                  <div className='flex-1'>
+                  <div className='flex-1' />
+                  {/* <div className='flex-1'>
                     <FormField
                       control={form.control}
                       name='reportType'
@@ -1060,7 +1208,7 @@ export function LaporanPembukuan() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div> */}
 
                   <div className='flex-1'>
                     <FormField
@@ -1075,6 +1223,13 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
                                     !rekKelompokValue ||
                                     pendingRekJenis ||
                                     errorRekJenis
@@ -1086,7 +1241,7 @@ export function LaporanPembukuan() {
                                   )}
                                 >
                                   <div className='flex-1 text-left'>
-                                    {pendingProgram ? (
+                                    {pendingRekJenis ? (
                                       'Memuat...'
                                     ) : field.value?.kd_jenis1 ? (
                                       <LongText className='max-w-[180px] md:max-w-[250px]'>
@@ -1149,8 +1304,8 @@ export function LaporanPembukuan() {
                       )}
                     />
                   </div>
-
-                  <div className='flex-1'>
+                  <div className='flex-1' />
+                  {/* <div className='flex-1'>
                     <FormField
                       control={form.control}
                       name='reportType'
@@ -1213,7 +1368,7 @@ export function LaporanPembukuan() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* === Baris 5 === */}
@@ -1282,7 +1437,15 @@ export function LaporanPembukuan() {
                                               item.kd_ref1 ===
                                                 field.value.kd_ref1 &&
                                               item.kd_ref2 ===
-                                                field.value.kd_ref2
+                                                field.value.kd_ref2 &&
+                                              item.kd_ref3 ===
+                                                field.value.kd_ref3 &&
+                                              item.kd_ref4 ===
+                                                field.value.kd_ref4 &&
+                                              item.kd_ref5 ===
+                                                field.value.kd_ref5 &&
+                                              item.kd_ref6 ===
+                                                field.value.kd_ref6
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
@@ -1306,7 +1469,7 @@ export function LaporanPembukuan() {
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='reportType'
+                      name='rek_objek'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -1315,47 +1478,81 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
+                                  disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !rekJenisValue ||
+                                    pendingRekObjek ||
+                                    errorRekObjek
+                                  }
                                   className={cn(
-                                    'w-full justify-between',
-                                    !field.value && 'text-muted-foreground'
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_objek1 &&
+                                      'text-muted-foreground'
                                   )}
                                 >
-                                  {field.value
-                                    ? languages.find(
-                                        (language) =>
-                                          language.value === field.value
-                                      )?.label
-                                    : 'Pilih Rek Objek'}
+                                  <div className='flex-1 text-left'>
+                                    {pendingRekObjek ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_objek1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_objek1}.
+                                        {field.value.kd_objek2}.
+                                        {field.value.kd_objek3}.
+                                        {field.value.kd_objek4} -{' '}
+                                        {field.value.nm_rek_objek}
+                                      </LongText>
+                                    ) : !rekJenisValue ? (
+                                      'Pilih Rek Jenis terlebih dahulu'
+                                    ) : (
+                                      'Pilih Rek Objek'
+                                    )}
+                                  </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className='w-[200px] p-0'>
-                              <Command>
-                                <CommandInput placeholder='Cari jenis...' />
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Rek Objek...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {languages.map((language) => (
+                                    {rekObjekList.map((item) => (
                                       <CommandItem
-                                        value={language.label}
-                                        key={language.value}
+                                        key={item.id}
+                                        value={item.nm_rek_objek}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'reportType',
-                                            language.value
-                                          )
+                                          form.setValue('rek_objek', item)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            language.value === field.value
+                                            field.value?.kd_objek1 ===
+                                              item.kd_objek1 &&
+                                              field.value?.kd_objek2 ===
+                                                item.kd_objek2 &&
+                                              field.value?.kd_objek3 ===
+                                                item.kd_objek3 &&
+                                              field.value?.kd_objek4 ===
+                                                item.kd_objek4
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {language.label}
+                                        {item.kd_objek1}.{item.kd_objek2}.
+                                        {item.kd_objek3}.{item.kd_objek4} -{' '}
+                                        {item.nm_rek_objek}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
@@ -1368,7 +1565,8 @@ export function LaporanPembukuan() {
                     />
                   </div>
 
-                  <div className='flex-1'>
+                  <div className='flex-1' />
+                  {/* <div className='flex-1'>
                     <FormField
                       control={form.control}
                       name='reportType'
@@ -1431,12 +1629,13 @@ export function LaporanPembukuan() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* === Baris 6 === */}
                 <div className='flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6'>
-                  <div className='flex-1'>
+                  <div className='flex-1' />
+                  {/* <div className='flex-1'>
                     <FormField
                       control={form.control}
                       name='reportType'
@@ -1499,12 +1698,12 @@ export function LaporanPembukuan() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div> */}
 
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='reportType'
+                      name='rek_rincian'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -1513,47 +1712,85 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
+                                  disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !rekObjekValue ||
+                                    pendingRekRincian ||
+                                    errorRekRincian
+                                  }
                                   className={cn(
-                                    'w-full justify-between',
-                                    !field.value && 'text-muted-foreground'
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_rincian1 &&
+                                      'text-muted-foreground'
                                   )}
                                 >
-                                  {field.value
-                                    ? languages.find(
-                                        (language) =>
-                                          language.value === field.value
-                                      )?.label
-                                    : 'Pilih Rek Rincian'}
+                                  <div className='flex-1 text-left'>
+                                    {pendingRekRincian ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_rincian1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_rincian1}.
+                                        {field.value.kd_rincian2}.
+                                        {field.value.kd_rincian3}.
+                                        {field.value.kd_rincian4}.
+                                        {field.value.kd_rincian5} -{' '}
+                                        {field.value.nm_rek_rincian}
+                                      </LongText>
+                                    ) : !programValue ? (
+                                      'Pilih Rek Objek terlebih dahulu'
+                                    ) : (
+                                      'Pilih Rek Rincian'
+                                    )}
+                                  </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className='w-[200px] p-0'>
-                              <Command>
-                                <CommandInput placeholder='Cari jenis...' />
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Rek Rincian...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {languages.map((language) => (
+                                    {rekRincianList.map((item) => (
                                       <CommandItem
-                                        value={language.label}
-                                        key={language.value}
+                                        key={`${item.kd_rincian1}-${item.kd_rincian2}-${item.kd_rincian3}-${item.kd_rincian4}-${item.kd_rincian5}`}
+                                        value={item.nm_rek_rincian}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'reportType',
-                                            language.value
-                                          )
+                                          form.setValue('rek_rincian', item)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            language.value === field.value
+                                            field.value?.kd_rincian1 ===
+                                              item.kd_rincian1 &&
+                                              field.value?.kd_rincian2 ===
+                                                item.kd_rincian2 &&
+                                              field.value?.kd_rincian3 ===
+                                                item.kd_rincian3 &&
+                                              field.value?.kd_rincian4 ===
+                                                item.kd_rincian4 &&
+                                              field.value?.kd_rincian5 ===
+                                                item.kd_rincian5
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {language.label}
+                                        {item.kd_rincian1}.{item.kd_rincian2}.
+                                        {item.kd_rincian3}.{item.kd_rincian4}.
+                                        {item.kd_rincian5} -{' '}
+                                        {item.nm_rek_rincian}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
@@ -1579,7 +1816,15 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
-                                    !buValue || pendingProgram || errorProgram
+                                    jenisLaporanValue ===
+                                      'r_saldo_buku_besar' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !buValue ||
+                                    pendingProgram ||
+                                    errorProgram
                                   }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
@@ -1661,7 +1906,7 @@ export function LaporanPembukuan() {
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='reportType'
+                      name='sub_rincian'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -1670,47 +1915,91 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
+                                  disabled={
+                                    jenisLaporanValue === 'lra_sd' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_priode' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !rekRincianValue ||
+                                    pendingSubRincian ||
+                                    errorSubRincian
+                                  }
                                   className={cn(
-                                    'w-full justify-between',
-                                    !field.value && 'text-muted-foreground'
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_subrincian1 &&
+                                      'text-muted-foreground'
                                   )}
                                 >
-                                  {field.value
-                                    ? languages.find(
-                                        (language) =>
-                                          language.value === field.value
-                                      )?.label
-                                    : 'Pilih Sub Rincian'}
+                                  <div className='flex-1 text-left'>
+                                    {pendingSubRincian ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_subrincian1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_subrincian1}.
+                                        {field.value.kd_subrincian2}.
+                                        {field.value.kd_subrincian3}.
+                                        {field.value.kd_subrincian4}.
+                                        {field.value.kd_subrincian5}.
+                                        {field.value.kd_subrincian6} -{' '}
+                                        {field.value.nm_sub_rincian}
+                                      </LongText>
+                                    ) : !rekRincianValue ? (
+                                      'Pilih Rek Rincian terlebih dahulu'
+                                    ) : (
+                                      'Pilih Sub Rincian'
+                                    )}
+                                  </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className='w-[200px] p-0'>
-                              <Command>
-                                <CommandInput placeholder='Cari jenis...' />
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Sub Rincian...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {languages.map((language) => (
+                                    {subRincianList.map((item) => (
                                       <CommandItem
-                                        value={language.label}
-                                        key={language.value}
+                                        key={`${item.kd_subrincian1}-${item.kd_subrincian2}-${item.kd_subrincian3}-${item.kd_subrincian4}-${item.kd_subrincian5}-${item.kd_subrincian6}`}
+                                        value={item.nm_sub_rincian}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'reportType',
-                                            language.value
-                                          )
+                                          form.setValue('sub_rincian', item)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            language.value === field.value
+                                            field.value?.kd_subrincian1 ===
+                                              item.kd_subrincian1 &&
+                                              field.value?.kd_subrincian2 ===
+                                                item.kd_subrincian2 &&
+                                              field.value?.kd_subrincian3 ===
+                                                item.kd_subrincian3 &&
+                                              field.value?.kd_subrincian4 ===
+                                                item.kd_subrincian4 &&
+                                              field.value?.kd_subrincian5 ===
+                                                item.kd_subrincian5 &&
+                                              field.value?.kd_subrincian6 ===
+                                                item.kd_subrincian6
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {language.label}
+                                        {item.kd_subrincian1}.
+                                        {item.kd_subrincian2}.
+                                        {item.kd_subrincian3}.
+                                        {item.kd_subrincian4}.
+                                        {item.kd_subrincian5}.
+                                        {item.kd_subrincian6} -{' '}
+                                        {item.nm_sub_rincian}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
@@ -1736,7 +2025,15 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
-                                    !programValue || pendingKeg || errorKeg
+                                    jenisLaporanValue ===
+                                      'r_saldo_buku_besar' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
+                                    !programValue ||
+                                    pendingKeg ||
+                                    errorKeg
                                   }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
@@ -1838,6 +2135,12 @@ export function LaporanPembukuan() {
                                   variant='outline'
                                   role='combobox'
                                   disabled={
+                                    jenisLaporanValue ===
+                                      'r_saldo_buku_besar' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_urusan' ||
+                                    jenisLaporanValue ===
+                                      'lra_anggaran_per_program_kegiatan' ||
                                     !kegiatanValue ||
                                     pendingSubkeg ||
                                     errorSubkeg

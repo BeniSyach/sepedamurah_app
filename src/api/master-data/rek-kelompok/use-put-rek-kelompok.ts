@@ -21,7 +21,7 @@ export function usePutRefRekKelompok() {
       payload: UpdateLevelRekPayload
     ): Promise<RekKelompok> => {
       const { data } = await api.put<RekKelompok>(
-        `/master-data/rek-akun/${payload.id}`,
+        `/master-data/rek-kelompok/${payload.id}`,
         payload
       )
       return data

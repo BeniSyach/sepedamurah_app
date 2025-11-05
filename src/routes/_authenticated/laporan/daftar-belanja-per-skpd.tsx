@@ -1,8 +1,14 @@
+import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
-import { ComingSoon } from '@/components/coming-soon'
+import { DaftarBelanjaPerSKPD } from '@/features/laporan/daftar-belanja-per-skpd'
+
+const LaporanRealiasaiBelanjaSearchSchema = z.object({
+  tahun: z.string().optional().catch(''),
+})
 
 export const Route = createFileRoute(
   '/_authenticated/laporan/daftar-belanja-per-skpd'
 )({
-  component: ComingSoon,
+  validateSearch: LaporanRealiasaiBelanjaSearchSchema,
+  component: DaftarBelanjaPerSKPD,
 })
