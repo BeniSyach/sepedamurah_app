@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { CaretSortIcon } from '@radix-ui/react-icons'
@@ -6,15 +6,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   useGetLevelRekening,
   useGetRefBidangUrusanSp2d,
-  useGetRefJenisBelanja,
   useGetRefKegiatanSp2d,
   useGetRefProgramSp2d,
   useGetRefSKPD,
   useGetRefSubKegiatanSp2d,
   useGetRefSumberDana,
   useGetRefUrusanSp2d,
+  useGetRekAkun,
+  useGetRekJenis,
 } from '@/api'
 import { CheckIcon } from 'lucide-react'
+import { useGetRekKelompok } from '@/api/master-data/rek-kelompok'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -26,14 +28,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import {
   Popover,
   PopoverContent,
@@ -138,6 +133,18 @@ const accountFormSchema = z.object({
     kd_subkeg6: z.string(),
     nm_subkegiatan: z.string(),
   }),
+  rek_akun: z.string('Rek Akun Tidak Boleh Kosong'),
+  rek_kelompok: z.object({
+    kd_kel1: z.string(),
+    kd_kel2: z.string(),
+    nm_rek_kelompok: z.string(),
+  }),
+  rek_jenis: z.object({
+    kd_jenis1: z.string(),
+    kd_jenis2: z.string(),
+    kd_jenis3: z.string(),
+    nm_rek_jenis: z.string(),
+  }),
 })
 
 type AccountFormValues = z.output<typeof accountFormSchema>
@@ -197,6 +204,18 @@ const defaultValues: AccountFormValues = {
     kd_subkeg5: '',
     kd_subkeg6: '',
     nm_subkegiatan: '',
+  },
+  rek_akun: '',
+  rek_kelompok: {
+    kd_kel1: '',
+    kd_kel2: '',
+    nm_rek_kelompok: '',
+  },
+  rek_jenis: {
+    kd_jenis1: '',
+    kd_jenis2: '',
+    kd_jenis3: '',
+    nm_rek_jenis: '',
   },
 }
 
@@ -289,14 +308,32 @@ export function LaporanPembukuan() {
   const levelRekList = dataLevelRek || []
 
   const {
-    data: dataBelanja,
-    isPending: pendingBelanja,
-    isError: errorBelanja,
-  } = useGetRefJenisBelanja({
-    page: 1,
-    perPage: 100,
+    data: dataRekAkun,
+    isPending: pendingRekAkun,
+    isError: errorRekAkun,
+  } = useGetRekAkun()
+  const rekAkunList = dataRekAkun || []
+  const rekAkunValue = form.watch('rek_akun')
+
+  const {
+    data: dataRekKel,
+    isPending: pendingRekKel,
+    isError: errorRekKel,
+  } = useGetRekKelompok({
+    kd_kel1: rekAkunValue,
   })
-  const jenisBelanjaList = dataBelanja?.data || []
+  const rekKelList = dataRekKel || []
+  const rekKelompokValue = form.watch('rek_kelompok')
+
+  const {
+    data: dataRekJenis,
+    isPending: pendingRekJenis,
+    isError: errorRekJenis,
+  } = useGetRekJenis({
+    kd_jenis1: rekKelompokValue.kd_kel1,
+    kd_jenis2: rekKelompokValue.kd_kel2,
+  })
+  const rekJenisList = dataRekJenis || []
 
   const {
     data: dataSD,
@@ -533,7 +570,7 @@ export function LaporanPembukuan() {
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='reportType'
+                      name='rek_akun'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -542,47 +579,63 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
+                                  disabled={pendingRekAkun || errorRekAkun}
                                   className={cn(
-                                    'w-full justify-between',
+                                    'min-h-[2.5rem] w-full justify-between text-left',
                                     !field.value && 'text-muted-foreground'
                                   )}
                                 >
-                                  {field.value
-                                    ? languages.find(
-                                        (language) =>
-                                          language.value === field.value
-                                      )?.label
-                                    : 'Pilih Rek Akun'}
+                                  <div className='flex-1 text-left'>
+                                    {pendingRekAkun
+                                      ? 'Memuat...'
+                                      : field.value
+                                        ? (() => {
+                                            const selected = rekAkunList.find(
+                                              (item) =>
+                                                item.kode === field.value
+                                            )
+                                            return selected ? (
+                                              <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                                {selected.kode} -{' '}
+                                                {selected.nm_rek_akun}
+                                              </LongText>
+                                            ) : (
+                                              'Tidak ditemukan'
+                                            )
+                                          })()
+                                        : 'Pilih Rek Akun'}
+                                  </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className='w-[200px] p-0'>
-                              <Command>
-                                <CommandInput placeholder='Cari jenis...' />
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Rek Akun...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {languages.map((language) => (
+                                    {rekAkunList.map((item) => (
                                       <CommandItem
-                                        value={language.label}
-                                        key={language.value}
+                                        value={item.nm_rek_akun}
+                                        key={item.kode}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'reportType',
-                                            language.value
-                                          )
+                                          form.setValue('rek_akun', item.kode)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            language.value === field.value
+                                            item.kode === field.value
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {language.label}
+                                        {item.kode} - {item.nm_rek_akun}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
@@ -730,7 +783,7 @@ export function LaporanPembukuan() {
                                 className='w-[var(--radix-popover-trigger-width)] p-0'
                               >
                                 <Command className='max-h-[300px] overflow-y-auto'>
-                                  <CommandInput placeholder='Cari jenis laporan...' />
+                                  <CommandInput placeholder='Cari Level Rekening...' />
                                   <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                   <CommandGroup>
                                     <CommandList>
@@ -770,7 +823,7 @@ export function LaporanPembukuan() {
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='jenis_belanja'
+                      name='rek_kelompok'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -779,31 +832,30 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
-                                  disabled={pendingBelanja || errorBelanja}
+                                  disabled={
+                                    !rekAkunValue ||
+                                    pendingRekKel ||
+                                    errorRekKel
+                                  }
                                   className={cn(
                                     'min-h-[2.5rem] w-full justify-between text-left',
                                     !field.value && 'text-muted-foreground'
                                   )}
                                 >
                                   <div className='flex-1 text-left'>
-                                    {pendingBelanja
-                                      ? 'Memuat...'
-                                      : field.value
-                                        ? (() => {
-                                            const selected = urusanList.find(
-                                              (item) =>
-                                                item.kd_urusan === field.value
-                                            )
-                                            return selected ? (
-                                              <LongText className='max-w-[180px] md:max-w-[250px]'>
-                                                {selected.kd_urusan} -{' '}
-                                                {selected.nm_urusan}
-                                              </LongText>
-                                            ) : (
-                                              'Tidak ditemukan'
-                                            )
-                                          })()
-                                        : 'Pilih Rek Kelompok'}
+                                    {pendingRekKel ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_kel1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_kel1}.
+                                        {field.value.kd_kel2} -{' '}
+                                        {field.value.nm_rek_kelompok}
+                                      </LongText>
+                                    ) : !urusanValue ? (
+                                      'Pilih Rek Akun terlebih dahulu'
+                                    ) : (
+                                      'Pilih Rek Kelompok'
+                                    )}
                                   </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
@@ -815,30 +867,32 @@ export function LaporanPembukuan() {
                               className='w-[var(--radix-popover-trigger-width)] p-0'
                             >
                               <Command className='max-h-[300px] overflow-y-auto'>
-                                <CommandInput placeholder='Cari Urusan...' />
+                                <CommandInput placeholder='Cari Rek Kelompok...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {urusanList.map((item) => (
+                                    {rekKelList.map((item) => (
                                       <CommandItem
-                                        value={item.nm_urusan}
-                                        key={item.kd_urusan}
+                                        key={`${item.kd_kel1}-${item.kd_kel2}`}
+                                        value={item.nm_rek_kelompok}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'urusan',
-                                            item.kd_urusan
-                                          )
+                                          form.setValue('rek_kelompok', item)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            item.kd_urusan === field.value
+                                            field.value &&
+                                              item.kd_kel1 ===
+                                                field.value.kd_kel1 &&
+                                              item.kd_kel2 ===
+                                                field.value.kd_kel2
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {item.kd_urusan} - {item.nm_urusan}
+                                        {item.kd_kel1}.{item.kd_kel2} -{' '}
+                                        {item.nm_rek_kelompok}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
@@ -1011,7 +1065,7 @@ export function LaporanPembukuan() {
                   <div className='flex-1'>
                     <FormField
                       control={form.control}
-                      name='reportType'
+                      name='rek_jenis'
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <Popover>
@@ -1020,47 +1074,70 @@ export function LaporanPembukuan() {
                                 <Button
                                   variant='outline'
                                   role='combobox'
+                                  disabled={
+                                    !rekKelompokValue ||
+                                    pendingRekJenis ||
+                                    errorRekJenis
+                                  }
                                   className={cn(
-                                    'w-full justify-between',
-                                    !field.value && 'text-muted-foreground'
+                                    'min-h-[2.5rem] w-full justify-between text-left',
+                                    !field.value?.kd_jenis1 &&
+                                      'text-muted-foreground'
                                   )}
                                 >
-                                  {field.value
-                                    ? languages.find(
-                                        (language) =>
-                                          language.value === field.value
-                                      )?.label
-                                    : 'Pilih Rek Jenis'}
+                                  <div className='flex-1 text-left'>
+                                    {pendingProgram ? (
+                                      'Memuat...'
+                                    ) : field.value?.kd_jenis1 ? (
+                                      <LongText className='max-w-[180px] md:max-w-[250px]'>
+                                        {field.value.kd_jenis1}.
+                                        {field.value.kd_jenis2}.
+                                        {field.value.kd_jenis3} -{' '}
+                                        {field.value.nm_rek_jenis}
+                                      </LongText>
+                                    ) : !buValue ? (
+                                      'Pilih Rek Kelompok terlebih dahulu'
+                                    ) : (
+                                      'Pilih Rek jenis'
+                                    )}
+                                  </div>
                                   <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className='w-[200px] p-0'>
-                              <Command>
-                                <CommandInput placeholder='Cari jenis...' />
+
+                            <PopoverContent
+                              align='start'
+                              className='w-[var(--radix-popover-trigger-width)] p-0'
+                            >
+                              <Command className='max-h-[300px] overflow-y-auto'>
+                                <CommandInput placeholder='Cari Rek Jenis...' />
                                 <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                                 <CommandGroup>
                                   <CommandList>
-                                    {languages.map((language) => (
+                                    {rekJenisList.map((item) => (
                                       <CommandItem
-                                        value={language.label}
-                                        key={language.value}
+                                        key={`${item.kd_jenis1}-${item.kd_jenis2}-${item.kd_jenis3}`}
+                                        value={item.nm_rek_jenis}
                                         onSelect={() =>
-                                          form.setValue(
-                                            'reportType',
-                                            language.value
-                                          )
+                                          form.setValue('rek_jenis', item)
                                         }
                                       >
                                         <CheckIcon
                                           className={cn(
                                             'size-4',
-                                            language.value === field.value
+                                            field.value?.kd_jenis1 ===
+                                              item.kd_jenis1 &&
+                                              field.value?.kd_jenis2 ===
+                                                item.kd_jenis2 &&
+                                              field.value?.kd_jenis3 ===
+                                                item.kd_jenis3
                                               ? 'opacity-100'
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {language.label}
+                                        {item.kd_jenis1}.{item.kd_jenis2}.
+                                        {item.kd_jenis3} - {item.nm_rek_jenis}
                                       </CommandItem>
                                     ))}
                                   </CommandList>
