@@ -1,11 +1,11 @@
-import { UsersActionDialog } from './daftar-belanja-per-skpd-action-dialog'
+import { DetailPerSKPD } from './daftar-belanja-per-skpd-action-dialog'
 import { useRefDaftarBelanjaSKPD } from './daftar-belanja-per-skpd-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefDaftarBelanjaSKPD()
   return (
     <>
-      <UsersActionDialog
+      <DetailPerSKPD
         key='daftar-belanja-per-skpd-lihat'
         open={open === 'lihat'}
         onOpenChange={() => setOpen('lihat')}
@@ -13,7 +13,7 @@ export function UsersDialogs() {
 
       {currentRow && (
         <>
-          <UsersActionDialog
+          <DetailPerSKPD
             key={`daftar-belanja-per-skpd-${currentRow.nm_opd}`}
             open={open === 'export'}
             onOpenChange={() => {
@@ -22,7 +22,6 @@ export function UsersDialogs() {
                 setCurrentRow(null)
               }, 500)
             }}
-            currentRow={currentRow}
           />
         </>
       )}
