@@ -1,17 +1,26 @@
-import { useDeletePermohonanSPD } from '@/api'
+import { usePutPermohonanSpd, usePutSpdTerkirim } from '@/api'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useRefPermohonanSpd } from './belum-paraf-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefPermohonanSpd()
-  const { mutateAsync } = useDeletePermohonanSPD()
+  const { mutateAsync: putSPDTerkirimAsync } = usePutSpdTerkirim()
+  const { mutateAsync: putPermohonanSPDAsync } = usePutPermohonanSpd()
+  const user = useAuthStore((s) => s.user)
 
   const handleterima = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.id })
+    const now = new Date()
+    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+    const formData = new FormData()
+    formData.append('id', currentRow.id)
+    formData.append('tgl_paraf', formatted)
+    formData.append('paraf_kbud', '1')
+    const updateSPDTerkirim = putSPDTerkirimAsync(formData)
 
-    await toast.promise(deletePromise, {
+    await toast.promise(updateSPDTerkirim, {
       loading: 'SPD Diterima...',
       success: () => {
         setOpen(null)
@@ -27,9 +36,25 @@ export function UsersDialogs() {
 
   const handletolak = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.id })
+    if (!user) {
+      toast.error('User belum login.')
+      return
+    }
+    const now = new Date()
+    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+    const formData = new FormData()
+    formData.append('id', currentRow.id_berkas ?? '')
+    formData.append('id_operator', user.id.toString())
+    formData.append('nama_operator', user.name ?? '')
+    const alasan = prompt('Masukkan alasan penolakan:')
+    if (!alasan) return toast.error('Alasan wajib diisi.')
+    formData.append('proses', 'Ditolak')
+    formData.append('alasan_tolak', alasan)
+    formData.append('ditolak', formatted)
+    formData.append('diterima', '')
+    const updateSPDTerkirim = putPermohonanSPDAsync(formData)
 
-    await toast.promise(deletePromise, {
+    await toast.promise(updateSPDTerkirim, {
       loading: 'SPD Ditolak...',
       success: () => {
         setOpen(null)
@@ -48,8 +73,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <ConfirmDialog
-            key={`spd-ditandatangani-bud-terima-${currentRow.id}`}
-            destructive
+            key={`belum-paraf-kbud-terima-${currentRow.id}`}
             open={open === 'terima'}
             onOpenChange={() => {
               setOpen('terima')
@@ -59,18 +83,18 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleterima}
             className='max-w-md'
-            title={`Terima SPD Ini: ${currentRow.keterangan} ?`}
+            title={`Terima SPD Ini: ${currentRow.namafile} ?`}
             desc={
               <>
-                Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.keterangan}</strong>. <br />
+                Apakah Anda akan Menverifikasi SPD ini
+                <strong>{currentRow.namafile} ?</strong>. <br />
                 Tindakan ini tidak dapat dibatalkan.
               </>
             }
             confirmText='Terima'
           />
           <ConfirmDialog
-            key={`spd-ditandatangani-bud-tolak-${currentRow.id}`}
+            key={`belum-paraf-kbud-tolak-${currentRow.id}`}
             destructive
             open={open === 'tolak'}
             onOpenChange={() => {
@@ -81,11 +105,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handletolak}
             className='max-w-md'
-            title={`Tolak SPD Ini: ${currentRow.keterangan} ?`}
+            title={`Tolak SPD Ini: ${currentRow.namafile} ?`}
             desc={
               <>
-                Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.keterangan}</strong>. <br />
+                Kamu akan Menolak SPD ini
+                <strong>{currentRow.namafile}</strong>. <br />
                 Tindakan ini tidak dapat dibatalkan.
               </>
             }

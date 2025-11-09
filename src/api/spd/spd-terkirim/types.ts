@@ -1,5 +1,6 @@
 import { type MasterSkpd } from '@/api/master-data'
 import type { PaginationLinks, PaginationMeta } from '@/api/users'
+import { type PermohonanSpd } from '../permohonan-spd'
 
 export interface SpdTerkirimResponse {
   data: SpdTerkirim[]
@@ -38,4 +39,5 @@ export interface SpdTerkirim {
   updated_at: string
   deleted_at: string | null
   skpd: MasterSkpd
+  permohonan: PermohonanSpd
 }

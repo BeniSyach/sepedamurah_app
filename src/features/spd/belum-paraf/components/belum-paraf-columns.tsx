@@ -51,6 +51,16 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
     enableHiding: false,
   },
 
+  // ✅ namafile
+  {
+    accessorKey: 'namafile',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='SPD' />
+    ),
+    cell: ({ row }) => <div>{row.getValue('namafile')}</div>,
+    enableSorting: true,
+  },
+
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
@@ -120,7 +130,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
       if (!value) return '-'
 
       const parsedDate = parseISO(value.replace(' ', 'T'))
-      const tanggal = format(parsedDate, 'yyyy-MM-dd')
+      const tanggal = format(parsedDate, 'dd-MM-yyyy')
 
       return <span className='ps-3'>{tanggal}</span>
     },

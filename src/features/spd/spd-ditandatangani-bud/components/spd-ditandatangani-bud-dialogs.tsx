@@ -1,74 +1,97 @@
-import { useDeletePermohonanSPD } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { UsersActionDialog } from './spd-ditandatangani-bud-action-dialog'
 import { useRefPermohonanSpd } from './spd-ditandatangani-bud-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefPermohonanSpd()
-  const { mutateAsync } = useDeletePermohonanSPD()
 
-  const handleDelete = async () => {
+  // Fungsi download file
+  const handleDownload = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.id })
 
-    await toast.promise(deletePromise, {
-      loading: 'Menghapus data...',
-      success: () => {
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/spd/permohonan-spd/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+            },
+          }
+        )
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', currentRow.nama_file_asli)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        // Tutup dialog setelah download berhasil
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
-
-        return `Data berhasil dihapus.`
-      },
-      error: (err) => {
-        return err.data.message
-      },
-    })
+      })(),
+      {
+        loading: 'Mengunduh file...',
+        success: 'File berhasil diunduh!',
+        error: 'Gagal mengunduh file.',
+      }
+    )
   }
 
   return (
     <>
-      <UsersActionDialog
-        key='spd-ditandatangani-bud-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
-      />
-
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`spd-ditandatangani-bud-edit-${currentRow.id}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-
           <ConfirmDialog
-            key={`spd-ditandatangani-bud-delete-${currentRow.id}`}
+            key={`spd-ditandatangani-bud-download-${currentRow.id}`}
             destructive
-            open={open === 'delete'}
+            open={open === 'download'}
             onOpenChange={() => {
-              setOpen('delete')
+              setOpen('download')
               setTimeout(() => {
                 setCurrentRow(null)
               }, 500)
             }}
-            handleConfirm={handleDelete}
+            handleConfirm={handleDownload}
             className='max-w-md'
-            title={`Hapus SPD Ditandatangani BUD Ini: ${currentRow.nama_file_lampiran} ?`}
+            title={`Download SPD  Ini: ${currentRow.namafile} ?`}
             desc={
               <>
-                Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.nama_file_lampiran}</strong>. <br />
-                Tindakan ini tidak dapat dibatalkan.
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.namafile}</strong>.
               </>
             }
-            confirmText='Delete'
+            confirmText='Download'
+          />
+          <ConfirmDialog
+            key={`spd-ditandatangani-bud-download-${currentRow.id}`}
+            destructive
+            open={open === 'cekTTE'}
+            onOpenChange={() => {
+              setOpen('cekTTE')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            handleConfirm={handleDownload}
+            className='max-w-md'
+            title={`Download SPD TTE Ini: ${currentRow.namafile} ?`}
+            desc={
+              <>
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.namafile}</strong>.
+              </>
+            }
+            confirmText='Download'
           />
         </>
       )}

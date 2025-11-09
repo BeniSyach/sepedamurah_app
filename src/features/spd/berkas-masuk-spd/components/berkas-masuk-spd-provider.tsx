@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import { type PermohonanSpd } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefPermohonanSpdDialogType = 'edit' | 'delete'
+type RefPermohonanSpdDialogType =
+  | 'edit'
+  | 'delete'
+  | 'kirimspd'
+  | 'download'
+  | 'periksa'
 
 type RefPermohonanSpdContextType = {
   open: RefPermohonanSpdDialogType | null

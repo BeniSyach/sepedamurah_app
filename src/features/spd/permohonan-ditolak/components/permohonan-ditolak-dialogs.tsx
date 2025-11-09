@@ -1,7 +1,8 @@
 import { useDeletePermohonanSPD } from '@/api'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { UsersActionDialog } from './permohonan-ditolak-action-dialog'
+import { PermohonanSPDDitolaksActionDialog } from './permohonan-ditolak-action-dialog'
+import { PermohonanSPDDitolakPeriksa } from './permohonan-ditolak-periksa'
 import { useRefPermohonanSpd } from './permohonan-ditolak-provider'
 
 export function UsersDialogs() {
@@ -27,15 +28,9 @@ export function UsersDialogs() {
   }
   return (
     <>
-      <UsersActionDialog
-        key='spd-ditolak-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
-      />
-
       {currentRow && (
         <>
-          <UsersActionDialog
+          <PermohonanSPDDitolakPeriksa
             key={`spd-ditolak-periksa-${currentRow.id}`}
             open={open === 'periksa'}
             onOpenChange={() => {
@@ -47,7 +42,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersActionDialog
+          <PermohonanSPDDitolaksActionDialog
             key={`spd-ditolak-edit-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {
@@ -71,11 +66,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
+            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.nama_file} ?`}
             desc={
               <>
                 Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.jenis_berkas}</strong>. <br />
+                <strong>{currentRow.nama_file}</strong>. <br />
                 Tindakan ini tidak dapat dibatalkan.
               </>
             }

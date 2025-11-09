@@ -11,7 +11,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import { type User } from '../data/schema'
 import { useRefPermohonanSpd } from './permohonan-diterima-provider'
 
 type DataTableRowActionsProps = {
@@ -36,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('periksa')
+              setOpen('kirimspd')
             }}
           >
             Kirim SPD
@@ -60,11 +59,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('periksa')
+              setOpen('download')
             }}
-            className='text-red-500!'
           >
             Download
+            <DropdownMenuShortcut>
+              <Download size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('downloadTTE')
+            }}
+          >
+            SPD TTE
             <DropdownMenuShortcut>
               <Download size={16} />
             </DropdownMenuShortcut>

@@ -1,10 +1,13 @@
 import { useDeletePermohonanSPD } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PermohonanSPDsActionDialog } from './permohonan-spd-action-dialog'
+import { PermohonanSPDPeriksa } from './permohonan-spd-periksa'
 import { useRefPermohonanSpd } from './permohonan-spd-provider'
 
 export function UsersDialogs() {
+  const levelAkses = localStorage.getItem('user_role')
   const { open, setOpen, currentRow, setCurrentRow } = useRefPermohonanSpd()
   const { mutateAsync } = useDeletePermohonanSPD()
 
@@ -24,6 +27,47 @@ export function UsersDialogs() {
         return err.data.message
       },
     })
+  }
+
+  // Fungsi download file
+  const handleDownload = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/spd/permohonan-spd/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+            },
+          }
+        )
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', currentRow.nama_file_asli)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        // Tutup dialog setelah download berhasil
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+      })(),
+      {
+        loading: 'Mengunduh file...',
+        success: 'File berhasil diunduh!',
+        error: 'Gagal mengunduh file.',
+      }
+    )
   }
 
   return (
@@ -47,7 +91,19 @@ export function UsersDialogs() {
             }}
             currentRow={currentRow}
           />
-
+          {levelAkses !== 'Bendahara' && (
+            <PermohonanSPDPeriksa
+              key={`permohonan-spd-periksa-${currentRow.id}`}
+              open={open === 'periksa'}
+              onOpenChange={() => {
+                setOpen('periksa')
+                setTimeout(() => {
+                  setCurrentRow(null)
+                }, 500)
+              }}
+              currentRow={currentRow}
+            />
+          )}
           <ConfirmDialog
             key={`permohonan-spd-delete-${currentRow.id}`}
             destructive
@@ -60,15 +116,35 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
+            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.nama_file} ?`}
             desc={
               <>
                 Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.jenis_berkas}</strong>. <br />
+                <strong>{currentRow.nama_file}</strong>. <br />
                 Tindakan ini tidak dapat dibatalkan.
               </>
             }
             confirmText='Delete'
+          />
+
+          <ConfirmDialog
+            key={`permohonan-spd-download-${currentRow.id}`}
+            destructive={false}
+            open={open === 'download'}
+            onOpenChange={() => {
+              setOpen('download')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleDownload}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Download'
           />
         </>
       )}

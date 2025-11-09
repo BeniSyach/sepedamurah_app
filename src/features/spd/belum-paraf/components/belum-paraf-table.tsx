@@ -65,7 +65,7 @@ export function BerkasMasukTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     columnFilters: [
-      { columnId: 'nama_pengirim', searchKey: 'nama_pengirim', type: 'string' },
+      { columnId: 'namafile', searchKey: 'namafile', type: 'string' },
     ],
   })
 
@@ -108,7 +108,7 @@ export function BerkasMasukTable({
       <DataTableToolbar
         table={table}
         searchPlaceholder='Cari Paraf SPD...'
-        searchKey='nama_pengirim'
+        searchKey='namafile'
       />
 
       <div className='overflow-hidden rounded-md border'>

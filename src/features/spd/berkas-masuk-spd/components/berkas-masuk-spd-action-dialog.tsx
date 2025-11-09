@@ -58,7 +58,7 @@ type PermohonanSPDActionDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function PermohonanSPDDitolaksActionDialog({
+export function BerkasMasukSPDsActionDialog({
   currentRow,
   open,
   onOpenChange,

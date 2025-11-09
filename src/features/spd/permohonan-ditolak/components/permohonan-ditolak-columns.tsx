@@ -77,7 +77,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       if (!value) return '-'
 
       const parsedDate = parseISO(value.replace(' ', 'T'))
-      const tanggal = format(parsedDate, 'yyyy-MM-dd')
+      const tanggal = format(parsedDate, 'dd-MM-yyyy')
 
       return <span>{tanggal}</span>
     },

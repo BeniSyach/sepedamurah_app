@@ -37,16 +37,21 @@ export function usePostSpdTerkirim() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreateSpdTerkirimPayload
-    ): Promise<SpdTerkirim> => {
-      const { data } = await api.post<SpdTerkirim>('/spd/spd-terkirim', payload)
+    mutationFn: async (payload: CreateSpdTerkirimPayload | FormData) => {
+      const { data } = await api.post<SpdTerkirim>(
+        '/spd/spd-terkirim',
+        payload,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
       return data
     },
     onSuccess: () => {
       // Refresh daftar urusan setelah berhasil menambah
       queryClient.invalidateQueries({
         queryKey: ['useGetSPDTerkirim'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetPermohonanSPD'],
       })
     },
     onError: (err) => {

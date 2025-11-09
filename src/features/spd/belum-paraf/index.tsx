@@ -23,7 +23,6 @@ export function BelumParafSPD() {
   const { data, isLoading, isError } = useGetSPDTerkirim({
     page: search.page,
     perPage: search.pageSize,
-    search: search.nama_pengirim,
     menu: 'spd_belum_paraf',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

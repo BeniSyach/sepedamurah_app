@@ -9,7 +9,7 @@ interface CreatePermohonanSpdPayload {
   nama_operator?: string | null
   jenis_berkas?: string | null
   nama_file: string
-  nama_file_asli: string
+  nama_file_asli: FileList
   kode_file?: string
   diterima?: string | null
   ditolak?: string | null
@@ -30,12 +30,11 @@ export function usePostPermohonanSpd() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreatePermohonanSpdPayload
-    ): Promise<PermohonanSpd> => {
+    mutationFn: async (payload: CreatePermohonanSpdPayload | FormData) => {
       const { data } = await api.post<PermohonanSpd>(
         '/spd/permohonan-spd',
-        payload
+        payload,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       )
       return data
     },
