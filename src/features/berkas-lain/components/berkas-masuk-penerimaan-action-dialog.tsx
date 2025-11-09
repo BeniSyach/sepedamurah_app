@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePostBerkasLain, usePutBerkasLain, type BerkasLain } from '@/api'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -28,8 +29,17 @@ import { DatePicker } from '@/components/date-picker'
 
 const formSchema = z.object({
   id: z.string().optional(),
-  tgl_surat: z.date('tanggal surat Harus Ada.'),
-  nama_file_asli: z.string().min(1, 'File Harus Ada.'),
+  tgl_surat: z.date('tanggal Surat Harus Ada.'),
+  nama_file_asli: z
+    .any()
+    .refine(
+      (val) =>
+        (val instanceof FileList &&
+          val.length > 0 &&
+          val[0].type === 'application/pdf') ||
+        (typeof val === 'string' && val.trim() !== ''),
+      'File harus PDF atau sudah ada file sebelumnya.'
+    ),
   nama_dokumen: z.string().min(1, 'nama dokumen Harus Ada.'),
   users_id: z.string().min(1, 'User Harus Ada.'),
 })
@@ -47,27 +57,59 @@ export function UsersActionDialog({
   onOpenChange,
 }: BerkasLainActionDialogProps) {
   const isEdit = !!currentRow
-
+  const user = useAuthStore((s) => s.user)
   const { mutateAsync: postBerkasLainAsync } = usePostBerkasLain()
   const { mutateAsync: putBerkasLainAsync } = usePutBerkasLain()
 
   const form = useForm<BerkasLainForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      id: '',
-      nama_dokumen: '',
-      nama_file_asli: '',
-      users_id: '',
-      tgl_surat: new Date(),
-    },
+    defaultValues:
+      isEdit && currentRow
+        ? {
+            id: currentRow.id ?? '',
+            nama_dokumen: currentRow.nama_dokumen ?? '',
+            nama_file_asli: currentRow.nama_file_asli,
+            users_id: currentRow.users_id?.toString() ?? '',
+            tgl_surat: currentRow.tgl_surat
+              ? new Date(currentRow.tgl_surat)
+              : new Date(),
+          }
+        : {
+            id: '',
+            nama_dokumen: '',
+            nama_file_asli: undefined,
+            users_id: user?.id.toString(),
+            tgl_surat: new Date(),
+          },
   })
 
   const fileRef = form.register('nama_file_asli')
 
   const onSubmit = async (data: BerkasLainForm) => {
+    const formData = new FormData()
+    formData.append('id', data.id ?? '')
+    formData.append('users_id', data.users_id ?? '')
+    formData.append('nama_dokumen', data.nama_dokumen ?? '')
+    if (data.tgl_surat) {
+      const d = new Date(data.tgl_surat)
+      const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`
+      formData.append('tgl_surat', formatted)
+    } else {
+      const now = new Date()
+      const formattedNow = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+      formData.append('tgl_surat', formattedNow)
+    }
+    // ✅ Jika user upload file baru
+    if (
+      data.nama_file_asli instanceof FileList &&
+      data.nama_file_asli.length > 0
+    ) {
+      formData.append('nama_file_asli', data.nama_file_asli[0])
+    }
+
     const requestPromise = isEdit
-      ? putBerkasLainAsync(data)
-      : postBerkasLainAsync(data)
+      ? putBerkasLainAsync(formData)
+      : postBerkasLainAsync(formData)
 
     await toast.promise(requestPromise, {
       loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
@@ -111,7 +153,7 @@ export function UsersActionDialog({
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='laporan-fungsional-pengeluaran'
+              id='berkas-masuk-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
@@ -181,7 +223,7 @@ export function UsersActionDialog({
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='berkas-masuk-form'>
             Simpan Perubahan
           </Button>
         </DialogFooter>

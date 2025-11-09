@@ -45,6 +45,7 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 const formSchema = z
   .object({
+    id: z.string().optional(),
     nik: z.string().min(1, 'NIK Tidak Boleh Kosong.'),
     nip: z.string().min(1, 'NIP Tidak Boleh Kosong.'),
     name: z.string().min(1, 'Nama Tidak Boleh Kosong.'),
@@ -160,33 +161,23 @@ export function UsersActionDialog({
 
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          kd_opd1: currentRow?.kd_opd1 ?? '',
-          kd_opd2: currentRow?.kd_opd2 ?? '',
-          kd_opd3: currentRow?.kd_opd3 ?? '',
-          kd_opd4: currentRow?.kd_opd4 ?? '',
-          kd_opd5: currentRow?.kd_opd5 ?? '',
-          password: '',
-          confirmPassword: '',
-          role: currentRow.rules?.map((r) => r.id.toString()) ?? [],
-        }
-      : {
-          nik: '',
-          nip: '',
-          name: '',
-          email: '',
-          role: [],
-          no_hp: '',
-          password: '',
-          kd_opd1: '',
-          kd_opd2: '',
-          kd_opd3: '',
-          kd_opd4: '',
-          kd_opd5: '',
-          confirmPassword: '',
-        },
+    defaultValues: {
+      id: currentRow?.id.toString() ?? '',
+      nik: currentRow?.nik ?? '',
+      nip: currentRow?.nip ?? '',
+      name: currentRow?.name ?? '',
+      email: currentRow?.email ?? '',
+      no_hp: currentRow?.no_hp ?? '',
+      kd_opd1: currentRow?.kd_opd1 ?? '',
+      kd_opd2: currentRow?.kd_opd2 ?? '',
+      kd_opd3: currentRow?.kd_opd3 ?? '',
+      kd_opd4: currentRow?.kd_opd4 ?? '',
+      kd_opd5: currentRow?.kd_opd5 ?? '',
+      password: '',
+      confirmPassword: '',
+      role: currentRow?.rules?.map((r) => r.id.toString()) ?? [],
+      isEdit: isEdit ?? false,
+    },
   })
 
   const onSubmit = async (data: UserForm) => {

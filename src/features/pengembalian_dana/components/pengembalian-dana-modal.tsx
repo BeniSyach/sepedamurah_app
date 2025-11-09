@@ -1,9 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { type Pengembalian } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { Dialog, DialogContentLarge } from '@/components/ui/dialog'
 import {
   Form,
@@ -14,10 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  type PengembalianDanaItem,
-  PengembalianDanaTable,
-} from './pengembalian-dana-table-'
+import { PengembalianDanaTable } from './pengembalian-dana-table-'
 
 // 🧩 Schema validasi
 const filterSchema = z.object({
@@ -38,32 +38,29 @@ export function LaporanPembayaranModal({
   open,
   onOpenChange,
 }: PengembalianDanaActionDialogProps) {
+  const [pengembalianData, setPengembalianData] = useState<Pengembalian[]>([])
   const form = useForm<FormValues>({
     resolver: zodResolver(filterSchema),
     defaultValues: { nik: '' },
   })
 
-  // Contoh data sementara
-  const data: PengembalianDanaItem[] = [
-    {
-      noSts: '001/STS/2025',
-      nik: '1234567890123456',
-      name: 'Beni Syach',
-      nilai: 1000000,
-      keterangan: 'Pengembalian Dana',
-      tanggal: '26-10-2025',
-      status: 'Selesai',
-      rekening: '5.2.1.01.01 - Belanja Barang',
-      tahun: 2025,
-    },
-  ]
+  const onSubmit = async (data: FormValues) => {
+    const promise = api.get('/pengembalian', {
+      params: {
+        page: 1,
+        perPage: 100,
+        nik: data.nik,
+      },
+    })
 
-  const onSubmit = async () => {
-    toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
+    await toast.promise(promise, {
       loading: 'Mengecek Data...',
-      success: 'Data Berhasil Di ambil',
+      success: 'Data Berhasil diambil',
       error: 'Terjadi kesalahan. Coba lagi.',
     })
+
+    const response = await promise
+    setPengembalianData(response.data.data) // simpan di state
   }
 
   return (
@@ -115,7 +112,9 @@ export function LaporanPembayaranModal({
         </Form>
 
         {/* Table */}
-        <PengembalianDanaTable data={data} />
+        <div className='max-h-[300px] overflow-y-auto'>
+          <PengembalianDanaTable data={pengembalianData} />
+        </div>
       </DialogContentLarge>
     </Dialog>
   )

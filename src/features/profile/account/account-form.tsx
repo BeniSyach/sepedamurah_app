@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { usePutUsers } from '@/api'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,10 +20,15 @@ import { Input } from '@/components/ui/input'
 // Schema validasi
 const accountFormSchema = z
   .object({
+    id: z.string().optional(),
     email: z.string().email('Masukkan email yang valid.'),
     no_hp: z.string().min(8, 'No HP minimal 8 digit.'),
-    foto: z.any().optional(),
-    visual_tte: z.any().optional(),
+    foto: z
+      .instanceof(File) // kalau ingin pastikan tipe File
+      .optional(),
+    visual_tte: z
+      .instanceof(File) // kalau ingin pastikan tipe File
+      .optional(),
     password: z
       .string()
       .optional()
@@ -49,6 +55,7 @@ type AccountFormValues = z.infer<typeof accountFormSchema>
 
 export function AccountForm() {
   const user = useAuthStore((s) => s.user)
+  const { mutateAsync: putUsersAsync } = usePutUsers()
   const [fotoPreview, setFotoPreview] = useState<string>(
     user?.image
       ? `${import.meta.env.VITE_ASSET_URL}${user.image}`
@@ -63,17 +70,46 @@ export function AccountForm() {
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
+      id: user?.id.toString(),
       email: user?.email || '',
       no_hp: user?.no_hp || '',
-      foto: null,
-      visual_tte: null,
+      foto: undefined,
+      visual_tte: undefined,
       password: '',
       confirm_password: '',
     },
   })
 
-  function onSubmit(data: AccountFormValues) {
-    showSubmittedData(data)
+  const onSubmit = async (data: AccountFormValues) => {
+    const formData = new FormData()
+    formData.append('id', data.id || '')
+    formData.append('email', data.email)
+    formData.append('no_hp', data.no_hp)
+
+    // Cek langsung apakah ada File
+    if (data.foto instanceof File) {
+      formData.append('image', data.foto)
+    }
+
+    if (data.visual_tte instanceof File) {
+      formData.append('visualisasi_tte', data.visual_tte)
+    }
+
+    const requestPromise = putUsersAsync(formData)
+
+    await toast.promise(requestPromise, {
+      loading: 'Menyimpan perubahan...',
+      success: () => {
+        form.reset()
+        return 'Data berhasil diperbarui!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
   }
 
   return (

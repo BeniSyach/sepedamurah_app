@@ -5,6 +5,12 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from '@tanstack/react-router'
+import {
+  type DatRekeningItem,
+  type MasterSkpd,
+  useGetDatRekening,
+  useGetRefSKPD,
+} from '@/api'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
@@ -26,11 +32,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { SelectDropdown } from '@/components/select-dropdown'
 import { LaporanPembayaranModal } from './components/pengembalian-dana-modal'
 
 // 🧩 Schema validasi
 const formSchema = z.object({
-  opd: z.string().min(1, 'Pilih SKPD/SATKER'),
+  skpd: z.string().min(1, 'Pilih SKPD/SATKER'),
   nik: z.string().min(16, 'NIK minimal 16 digit'),
   name: z.string().min(3, 'Nama wajib diisi'),
   alamat: z.string().min(5, 'Alamat wajib diisi'),
@@ -49,7 +56,7 @@ export default function PengembalianDanaForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      opd: '',
+      skpd: '',
       nik: '',
       name: '',
       alamat: '',
@@ -58,6 +65,50 @@ export default function PengembalianDanaForm() {
       jumlah: '',
     },
   })
+
+  const { data: dataRek } = useGetDatRekening({
+    page: 1,
+    perPage: 100,
+    status_rek: '1',
+  })
+
+  const itemsRek =
+    dataRek?.data?.map((item: DatRekeningItem) => {
+      const kode = [
+        item.kd_rek1,
+        item.kd_rek2,
+        item.kd_rek3,
+        item.kd_rek4,
+        item.kd_rek5,
+        item.kd_rek6,
+      ]
+        .filter(Boolean)
+        .join('.')
+
+      return {
+        value: kode,
+        label: `${kode} - ${item.nm_rekening ?? '-'}`,
+      }
+    }) ?? []
+
+  const { data: dataSKPD } = useGetRefSKPD({
+    page: 1,
+    perPage: 100,
+  })
+
+  const itemsSKPD =
+    dataSKPD?.data?.map((item: MasterSkpd) => ({
+      value: [
+        item.kd_opd1,
+        item.kd_opd2,
+        item.kd_opd3,
+        item.kd_opd4,
+        item.kd_opd5,
+      ]
+        .filter(Boolean)
+        .join('.'),
+      label: item.nm_opd ?? '0',
+    })) ?? []
 
   const onSubmit = async () => {
     toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
@@ -111,31 +162,23 @@ export default function PengembalianDanaForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <FormField
                 control={form.control}
-                name='opd'
+                name='skpd'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='dark:text-gray-200'>
-                      SKPD / SATKER
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className='dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'>
-                          <SelectValue placeholder='Pilih SKPD/SATKER' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value='Dinas Pendidikan'>
-                          Dinas Pendidikan
-                        </SelectItem>
-                        <SelectItem value='Dinas Kesehatan'>
-                          Dinas Kesehatan
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
+                    <FormLabel>SKPD</FormLabel>
+                    <div className='col-span-4'>
+                      <SelectDropdown
+                        defaultValue={String(field.value ?? '')}
+                        onValueChange={(val) => field.onChange(val)}
+                        placeholder='Pilih SKPD'
+                        className='w-full break-words whitespace-normal'
+                        items={itemsSKPD.map(({ label, value }) => ({
+                          label,
+                          value,
+                        }))}
+                      />
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -232,28 +275,20 @@ export default function PengembalianDanaForm() {
                 name='rekening'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='dark:text-gray-200'>
-                      Rekening
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className='dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'>
-                          <SelectValue placeholder='Pilih Rekening' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value='5.2.1.01.01 - Belanja Barang'>
-                          5.2.1.01.01 - Belanja Barang
-                        </SelectItem>
-                        <SelectItem value='5.2.2.01.02 - Belanja Jasa'>
-                          5.2.2.01.02 - Belanja Jasa
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
+                    <FormLabel>Rekening</FormLabel>
+                    <div className='col-span-4'>
+                      <SelectDropdown
+                        defaultValue={String(field.value ?? '')}
+                        onValueChange={(val) => field.onChange(val)}
+                        placeholder='Pilih Rekening'
+                        className='w-full break-words whitespace-normal'
+                        items={itemsRek.map(({ label, value }) => ({
+                          label,
+                          value,
+                        }))}
+                      />
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />

@@ -27,8 +27,10 @@ export function usePostUsers() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (payload: CreateUsersPayload): Promise<Users> => {
-      const { data } = await api.post<Users>('/users', payload)
+    mutationFn: async (payload: CreateUsersPayload | FormData) => {
+      const { data } = await api.post<Users>('/users', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       return data
     },
     onSuccess: () => {

@@ -1,8 +1,9 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { usePutUsers } from '@/api'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -17,7 +18,8 @@ import { Input } from '@/components/ui/input'
 
 // Schema validasi
 const profileFormSchema = z.object({
-  nama: z
+  id: z.string().optional(),
+  name: z
     .string()
     .min(2, 'Nama harus minimal 2 karakter.')
     .max(50, 'Nama tidak boleh lebih dari 50 karakter.'),
@@ -32,26 +34,42 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 export function ProfileForm() {
   const user = useAuthStore((s) => s.user)
-
+  const { mutateAsync: putUsersAsync } = usePutUsers()
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      nama: user?.name || '',
+      id: user?.id.toString() ?? '',
+      name: user?.name || '',
       nik: user?.nik || '',
       nip: user?.nip || '',
     },
     mode: 'onChange',
   })
 
+  const onSubmit = async (data: ProfileFormValues) => {
+    const requestPromise = putUsersAsync(data)
+
+    await toast.promise(requestPromise, {
+      loading: 'Menyimpan perubahan...',
+      success: () => {
+        form.reset()
+        return 'Data berhasil diperbarui!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
+  }
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-        className='space-y-6'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <FormField
           control={form.control}
-          name='nama'
+          name='name'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nama Lengkap</FormLabel>
