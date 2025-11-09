@@ -38,8 +38,10 @@ export function usePostSp2dKirim() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (payload: CreateSp2dKirimPayload): Promise<Sp2dData> => {
-      const { data } = await api.post<Sp2dData>('/sp2d/sp2d-kirim', payload)
+    mutationFn: async (payload: CreateSp2dKirimPayload | FormData) => {
+      const { data } = await api.post<Sp2dData>('/sp2d/sp2d-kirim', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       return data
     },
     onSuccess: () => {

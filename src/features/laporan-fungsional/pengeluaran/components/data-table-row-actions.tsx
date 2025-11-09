@@ -4,7 +4,6 @@ import { type LaporanFungsional } from '@/api'
 import {
   Download,
   DownloadCloudIcon,
-  Eye,
   FolderSearch,
   LucideFolderSearch,
   Pen,
@@ -40,18 +39,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('lihat')
-            }}
-          >
-            Lihat
-            <DropdownMenuShortcut>
-              <Eye size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

@@ -3,7 +3,6 @@ import { type Row } from '@tanstack/react-table'
 import { type LaporanFungsional } from '@/api'
 import {
   Download,
-  Eye,
   FolderSearch,
   LucideFolderSearch,
   Trash2,
@@ -40,7 +39,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
               setOpen('lihat')
@@ -51,7 +50,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator /> */}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

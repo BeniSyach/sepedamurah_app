@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { z } from 'zod'
@@ -27,8 +28,11 @@ import {
 } from '@/components/ui/command'
 import {
   Dialog,
+  DialogContent,
   DialogContentLarge,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -41,8 +45,33 @@ import {
 import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
-import { UrusanSection } from '../../permohonan-penerbitan-sp2d/components/urusan-section'
-import { mapRekeningToFormData } from '../../permohonan-penerbitan-sp2d/data/mapRekeningToFormData'
+import PdfEditorPdfLib from '../../permohonan-sp2d-tte/components/pdf-sp2d-tte'
+import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
+import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // ============================
 // 🧾 VALIDATION SCHEMA
@@ -77,6 +106,10 @@ const urusanSchema = z.object({
   bidangUrusan: z.array(bidangSchema).min(1),
 })
 
+const passSchema = z.object({
+  passphrase: z.string().min(3, 'Passphrase wajib diisi'),
+})
+
 const formSchema = z.object({
   id: z.string().optional(),
   no_spm: z.string().min(1, 'Nomor SPM wajib diisi'),
@@ -95,6 +128,7 @@ const formSchema = z.object({
   agreement: z.string().min(1),
   urusan: z.array(urusanSchema).nonempty('Minimal 1 urusan'),
   sumber_dana: z.array(z.string().min(1)).nonempty('Sumber dana wajib diisi'),
+  passphrase: z.string().optional(),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -102,7 +136,7 @@ type FormValues = z.infer<typeof formSchema>
 // ============================
 // 🎨 COMPONENT
 // ============================
-export function UsersActionDialog({
+export function BerkasMasukPeriksaDialog({
   currentRow,
   open,
   onOpenChange,
@@ -192,6 +226,15 @@ export function UsersActionDialog({
         },
   })
 
+  // === Form Passphrase ===
+  const passForm = useForm({
+    resolver: zodResolver(passSchema),
+    defaultValues: { passphrase: '' },
+  })
+
+  // Simulasi dialog passphrase aktif via form field
+  const showPassDialog = !!form.watch('passphrase')
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'urusan',
@@ -220,6 +263,13 @@ export function UsersActionDialog({
     })
   }
 
+  const onSubmitPass = (values: any) => {
+    // Isi ke form utama (sinkronkan)
+    form.setValue('passphrase', values.passphrase)
+    // Jalankan submit utama
+    onSubmit(form.getValues())
+  }
+
   return (
     <Dialog
       open={open}
@@ -235,7 +285,7 @@ export function UsersActionDialog({
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='sp2d-form'
+              id='sp2d-tte-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
@@ -384,6 +434,7 @@ export function UsersActionDialog({
                     type='button'
                     size='sm'
                     variant='outline'
+                    disabled
                     onClick={() =>
                       append({
                         nm_urusan: '',
@@ -476,7 +527,7 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Nilai Belanja</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Nilai Belanja' />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -490,7 +541,7 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Uraian SPM</FormLabel>
                     <FormControl>
-                      <Textarea {...field} placeholder='Uraian SPM' />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -510,16 +561,70 @@ export function UsersActionDialog({
                   </FormItem>
                 )}
               />
+              <PdfEditorPdfLib />
             </form>
           </Form>
         </div>
 
         <DialogFooter>
-          <Button type='submit' form='sp2d-form'>
-            Simpan
+          <Button
+            type='button'
+            onClick={() => form.setValue('passphrase', 'open')}
+          >
+            Passpharase
           </Button>
         </DialogFooter>
       </DialogContentLarge>
+      {/* === DIALOG PASSPHRASE === */}
+      <Dialog
+        open={showPassDialog}
+        onOpenChange={(v) => {
+          if (!v) form.setValue('passphrase', '')
+        }}
+      >
+        <DialogContent className='sm:max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Masukkan Passphrase</DialogTitle>
+          </DialogHeader>
+
+          <Form {...passForm}>
+            <form
+              onSubmit={passForm.handleSubmit(onSubmitPass)}
+              className='space-y-3'
+            >
+              <FormField
+                control={passForm.control}
+                name='passphrase'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Passphrase</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='password'
+                        placeholder='Ketik passphrase...'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button
+                  variant='outline'
+                  type='button'
+                  onClick={() => form.setValue('passphrase', '')}
+                >
+                  Batal
+                </Button>
+
+                <Button type='submit'>Kirim</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   )
 }

@@ -476,7 +476,7 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Nilai Belanja</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder='Nilai Belanja' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -490,7 +490,7 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Uraian SPM</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea {...field} placeholder='Uraian SPM' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

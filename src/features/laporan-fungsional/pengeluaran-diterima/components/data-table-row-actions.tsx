@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type LaporanFungsional } from '@/api'
-import { Download, Eye, FolderSearch } from 'lucide-react'
+import { Eye, FolderSearch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -38,12 +38,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('lihat')
             }}
           >
-            lihat
+            Lihat
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
@@ -54,7 +54,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <DropdownMenuShortcut>
               <Download size={16} />
             </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {

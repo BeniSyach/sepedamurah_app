@@ -1,18 +1,25 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
+import { type AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type LaporanFungsional } from '@/api'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { usePutLaporanFungsional, type LaporanFungsional } from '@/api'
+import { Check, X } from 'lucide-react'
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
+import { Document, Page, pdfjs } from 'react-pdf'
+import { toast } from 'sonner'
+import { api } from '@/api/common/client'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -20,282 +27,246 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
-    username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
-    email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role is required.'),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true
-      return data.password.length > 0
-    },
-    {
-      message: 'Password is required.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return password.length >= 8
-    },
-    {
-      message: 'Password must be at least 8 characters long.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /[a-z]/.test(password)
-    },
-    {
-      message: 'Password must contain at least one lowercase letter.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /\d/.test(password)
-    },
-    {
-      message: 'Password must contain at least one number.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true
-      return password === confirmPassword
-    },
-    {
-      message: "Passwords don't match.",
-      path: ['confirmPassword'],
-    }
-  )
-type UserForm = z.infer<typeof formSchema>
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-type UserActionDialogProps = {
-  currentRow?: LaporanFungsional
+type LaporanFungsionalPeriksaProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  currentRow: LaporanFungsional
+  onAction?: (action: 'terima' | 'tolak', id: string) => void
 }
 
-export function UsersActionDialog({
-  currentRow,
+const formSchema = z.object({
+  id: z.string().optional(),
+  nama_file: z.string().min(1),
+  nama_file_asli: z.any(),
+  nama_pengirim: z.string().min(1),
+  tanggal_upload: z.string().optional(),
+})
+
+type LaporanFungsionalForm = z.infer<typeof formSchema>
+
+export function PenerimaanPeriksa({
   open,
   onOpenChange,
-}: UserActionDialogProps) {
-  const isEdit = !!currentRow
-  const form = useForm<UserForm>({
+  currentRow,
+  onAction,
+}: LaporanFungsionalPeriksaProps) {
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [numPages, setNumPages] = useState<number>(0)
+  const user = useAuthStore((s) => s.user)
+
+  const { mutateAsync: putLaporanFungsionalAsync } = usePutLaporanFungsional()
+
+  const form = useForm<LaporanFungsionalForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
-      : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+    defaultValues: {
+      id: currentRow?.id || '',
+      nama_file: currentRow?.nama_file || '',
+      nama_file_asli: currentRow?.nama_file_asli || undefined,
+      nama_pengirim: currentRow?.nama_pengirim || user?.name,
+      tanggal_upload: currentRow?.tanggal_upload || '',
+    },
   })
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
+  useEffect(() => {
+    if (!currentRow?.id || !open) return
+    let isMounted = true
+    const fetchPdf = async () => {
+      try {
+        const response = await api.get<Blob>(
+          `/laporan/fungsional/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+            },
+          }
+        )
+
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+        if (isMounted) setFileUrl(url)
+        toast.success('File berhasil diambil!')
+      } catch (err: unknown) {
+        const error = err as AxiosError
+        toast.error(
+          `Gagal mengambil file: ${error.response?.data || error.message || 'Unknown error'}`
+        )
+      }
+    }
+
+    fetchPdf()
+
+    // Cleanup: revoke URL saat modal ditutup
+    return () => {
+      isMounted = false
+      if (fileUrl) URL.revokeObjectURL(fileUrl)
+      setFileUrl(null)
+      setNumPages(0)
+    }
+  }, [currentRow?.id, open])
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages)
   }
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
+  const handleAction = async (action: 'terima' | 'tolak') => {
+    if (!currentRow?.id) return
+    const now = new Date()
+    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+
+    const user = useAuthStore.getState().user
+    if (!user) {
+      toast.error('User belum login.')
+      return
+    }
+
+    try {
+      const formData = new FormData()
+      formData.append('id', currentRow.id)
+      formData.append('id_operator', user.id.toString())
+      formData.append('nama_operator', user.name)
+
+      if (action === 'terima') {
+        formData.append('proses', '2')
+        formData.append('diterima', formatted)
+        formData.append('alasan_tolak', '')
+        formData.append('ditolak', '')
+      } else {
+        const alasan = prompt('Masukkan alasan penolakan:')
+        if (!alasan) return toast.error('Alasan wajib diisi.')
+        formData.append('proses', 'Ditolak')
+        formData.append('alasan_tolak', alasan)
+        formData.append('ditolak', formatted)
+        formData.append('diterima', '')
+      }
+
+      // Kirim ke backend
+      await toast.promise(putLaporanFungsionalAsync(formData), {
+        loading: action === 'terima' ? 'Menerima...' : 'Menolak...',
+        success: () => {
+          onOpenChange(false) // tutup modal
+          onAction?.(action, currentRow.id) // callback ke parent
+          return `Berhasil ${action === 'terima' ? 'Diterima' : 'Ditolak'}!`
+        },
+        error: 'Gagal melakukan aksi.',
+      })
+
+      onAction?.(action, currentRow.id) // callback ke parent
+    } catch (err: unknown) {
+      const error = err as AxiosError
+      toast.error(
+        `Gagal mengambil file: ${error.response?.data || error.message || 'Unknown error'}`
+      )
+    }
+  }
+
+  const fields: Array<'nama_file' | 'nama_pengirim' | 'tanggal_upload'> = [
+    'nama_file',
+    'nama_pengirim',
+    'tanggal_upload',
+  ]
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(state) => {
-        form.reset()
-        onOpenChange(state)
-      }}
-    >
-      <DialogContent className='sm:max-w-lg'>
-        <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
-          <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
-          <Form {...form}>
-            <form
-              id='user-form'
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-4 px-0.5'
-            >
-              <FormField
-                control={form.control}
-                name='firstName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      First Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='John'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john.doe@gmail.com'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='+123456789'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className='flex w-full flex-col gap-4 sm:max-w-5xl'>
+        <div className='flex gap-4'>
+          {/* Form Detail */}
+          <div className='w-1/2 overflow-auto'>
+            <DialogHeader>
+              <DialogTitle>Preview Laporan Fungsional Penerimaan</DialogTitle>
+              <DialogDescription>
+                Melihat detail dan file PDF Laporan Fungsional Penerimaan.
+              </DialogDescription>
+            </DialogHeader>
+
+            <Form {...form}>
+              <div className='space-y-4'>
+                {fields.map((field) => (
+                  <FormField
+                    key={field}
+                    control={form.control}
+                    name={field}
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>
+                          {field === 'tanggal_upload'
+                            ? 'Tanggal Upload'
+                            : field
+                                .replace('_', ' ')
+                                .replace(/\b\w/g, (c) => c.toUpperCase())}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            value={
+                              field === 'tanggal_upload'
+                                ? new Date(
+                                    currentRow[field] || ''
+                                  ).toLocaleDateString()
+                                : currentRow[field] || ''
+                            }
+                            readOnly
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            </Form>
+          </div>
+
+          {/* PDF Preview */}
+          <div className='h-[500px] w-1/2 overflow-auto rounded border'>
+            {fileUrl ? (
+              <Document
+                file={fileUrl}
+                onLoadSuccess={onDocumentLoadSuccess}
+                onLoadError={(err) =>
+                  toast.error(`Gagal memuat PDF: ${err.message}`)
+                }
+                loading={<p className='mt-10 text-center'>Loading PDF...</p>}
+              >
+                {Array.from({ length: numPages }, (_, i) => (
+                  <Page
+                    key={`page_${i + 1}`}
+                    pageNumber={i + 1}
+                    width={600}
+                    renderAnnotationLayer={false} // optional, bisa lebih ringan
+                    renderTextLayer={false} // optional
+                  />
+                ))}
+              </Document>
+            ) : (
+              <p className='mt-10 text-center'>Loading PDF...</p>
+            )}
+          </div>
         </div>
-        <DialogFooter>
-          <Button type='submit' form='user-form'>
-            Simpan Perubahan
+
+        {/* Tombol Terima & Tolak di Footer */}
+        <DialogFooter className='flex justify-end gap-2'>
+          <Button
+            variant='outline'
+            className='flex items-center gap-2'
+            onClick={() => handleAction('terima')}
+          >
+            <Check size={16} /> Terima
+          </Button>
+          <Button
+            variant='destructive'
+            className='flex items-center gap-2'
+            onClick={() => handleAction('tolak')}
+          >
+            <X size={16} /> Tolak
           </Button>
         </DialogFooter>
       </DialogContent>

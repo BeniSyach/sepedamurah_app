@@ -18,10 +18,10 @@ export function usePostBerkasLain() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreateBerkasLainPayload
-    ): Promise<BerkasLain> => {
-      const { data } = await api.post<BerkasLain>('/berkas-lain', payload)
+    mutationFn: async (payload: CreateBerkasLainPayload | FormData) => {
+      const { data } = await api.post<BerkasLain>('/berkas-lain', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       return data
     },
     onSuccess: () => {

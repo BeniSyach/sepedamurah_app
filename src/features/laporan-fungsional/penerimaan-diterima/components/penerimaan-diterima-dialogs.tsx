@@ -1,31 +1,77 @@
-import { UsersActionDialog } from './penerimaan-diterima-action-dialog'
+import { toast } from 'sonner'
+import { api } from '@/api/common/client'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PenerimaanPeriksa } from './penerimaan-diterima-action-dialog'
 import { useRefLaporanFungsional } from './penerimaan-diterima-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanFungsional()
+  // Fungsi download file
+  const handleDownload = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/laporan/fungsional/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+            },
+          }
+        )
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', currentRow.nama_file_asli)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        // Tutup dialog setelah download berhasil
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+      })(),
+      {
+        loading: 'Mengunduh file...',
+        success: 'File berhasil diunduh!',
+        error: 'Gagal mengunduh file.',
+      }
+    )
+  }
+
   return (
     <>
-      <UsersActionDialog
-        key='Fungsional-diterima-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
-      />
-
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`Fungsional-diterima-lihat-${currentRow.id}`}
+          <ConfirmDialog
+            key={`penerimaan-diterima-lihat-${currentRow.id}`}
+            destructive={false}
             open={open === 'lihat'}
             onOpenChange={() => {
               setOpen('lihat')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+              setTimeout(() => setCurrentRow(null), 500)
             }}
-            currentRow={currentRow}
+            handleConfirm={handleDownload}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Download'
           />
 
-          <UsersActionDialog
+          <PenerimaanPeriksa
             key={`Fungsional-diterima-periksa-${currentRow.id}`}
             open={open === 'periksa'}
             onOpenChange={() => {

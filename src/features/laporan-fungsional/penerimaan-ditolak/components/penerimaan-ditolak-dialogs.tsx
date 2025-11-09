@@ -18,7 +18,7 @@ export function UsersDialogs() {
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
 
-        return `Data "${currentRow.jenis_berkas}" berhasil dihapus.`
+        return `Data "${currentRow.nama_file}" berhasil dihapus.`
       },
       error: (err) => {
         return err.data.message
@@ -28,12 +28,6 @@ export function UsersDialogs() {
 
   return (
     <>
-      <UsersActionDialog
-        key='fungsional-tolak-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
-      />
-
       {currentRow && (
         <>
           <UsersActionDialog
@@ -60,11 +54,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
+            title={`Hapus Fungsional Penerimaan Ini: ${currentRow.nama_file} ?`}
             desc={
               <>
                 Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.jenis_berkas}</strong>. <br />
+                <strong>{currentRow.nama_file}</strong>. <br />
                 Tindakan ini tidak dapat dibatalkan.
               </>
             }

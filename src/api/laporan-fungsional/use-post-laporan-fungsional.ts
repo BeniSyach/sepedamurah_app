@@ -33,12 +33,11 @@ export function usePostLaporanFungsional() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreateLaporanFungsionalPayload
-    ): Promise<LaporanFungsional> => {
+    mutationFn: async (payload: CreateLaporanFungsionalPayload | FormData) => {
       const { data } = await api.post<LaporanFungsional>(
         '/laporan/fungsional',
-        payload
+        payload,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       )
       return data
     },

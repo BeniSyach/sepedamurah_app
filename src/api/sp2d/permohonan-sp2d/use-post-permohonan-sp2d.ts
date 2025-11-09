@@ -45,7 +45,10 @@ export function usePostPermohonanSp2d() {
     mutationFn: async (
       payload: CreatePermohonanSp2dPayload
     ): Promise<Sp2dItem> => {
-      const { data } = await api.post<Sp2dItem>('/spd/permohonan-spd', payload)
+      const { data } = await api.post<Sp2dItem>(
+        '/sp2d/permohonan-sp2d',
+        payload
+      )
       return data
     },
     onSuccess: () => {
