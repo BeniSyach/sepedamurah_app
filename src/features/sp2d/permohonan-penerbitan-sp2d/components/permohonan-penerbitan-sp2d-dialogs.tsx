@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PermohonanPenerbitanPeriksaDialog } from './permohonan-penerbitan-periksa-dialog'
 import { UsersActionDialog } from './permohonan-penerbitan-sp2d-action-dialog'
 import { useRefSp2dItem } from './permohonan-penerbitan-sp2d-provider'
 
@@ -79,6 +80,13 @@ export function UsersDialogs() {
       {/* === EDIT & DELETE === */}
       {currentRow && (
         <>
+          <PermohonanPenerbitanPeriksaDialog
+            key={`permohonan-penerbitan-sp2d-periksa-${currentRow.id_sp2d}`}
+            open={open === 'periksa'}
+            onOpenChange={(val) => setOpen(val ? 'periksa' : null)}
+            currentRow={currentRow}
+          />
+
           <UsersActionDialog
             key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
             open={open === 'edit'}

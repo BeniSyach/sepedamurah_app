@@ -36,7 +36,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('edit')
+              setOpen('periksa')
             }}
           >
             Periksa Berkas
