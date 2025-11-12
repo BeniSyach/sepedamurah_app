@@ -195,11 +195,12 @@ export interface SumberDanaItem {
   kd_ref4: string | null
   kd_ref5: string | null
   kd_ref6: string | null
-  nilai: string
+  nilai: number | null
   created_at: string
   updated_at: string
   deleted_at: string | null
   referensi: Referensi | null
+  sisa: number
 }
 
 interface Referensi {

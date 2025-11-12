@@ -1,11 +1,13 @@
 'use client'
 
 import {
+  type CellContext,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { type Pengembalian } from '@/api'
+import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
   TableHeader,
@@ -14,13 +16,68 @@ import {
   TableCell,
   TableHead,
 } from '@/components/ui/table'
-import { PengembalianDanaColumns as columns } from './pengembalian-dana-columns.tsx'
+import { PengembalianDanaColumns as baseColumns } from './pengembalian-dana-columns.tsx'
 
 type Props = {
   data: Pengembalian[]
 }
 
 export function PengembalianDanaTable({ data }: Props) {
+  const handleCetak = (row: Pengembalian) => {
+    const params = new URLSearchParams({
+      nik: row.nik,
+      nama: row.nama,
+      penyetor: row.nama,
+      alamat: row.alamat,
+      rekening: row.nm_rekening || '', // pastikan string
+      keterangan: row.keterangan || '', // pastikan string
+      jumlah: String(row.jml_pengembalian),
+      no_billing: row.no_sts || '', // pastikan string
+    }).toString()
+    const API_URL = import.meta.env.VITE_API_URL
+    const url = `${API_URL}/pengembalian/download?${params}`
+    window.open(url, '_blank')
+  }
+
+  const handleDownload = (row: Pengembalian) => {
+    const params = new URLSearchParams({
+      nik: row.nik,
+      nama: row.nama,
+      penyetor: row.nama,
+      alamat: row.alamat,
+      rekening: row.nm_rekening || '',
+      keterangan: row.keterangan || '',
+      jumlah: String(row.jml_pengembalian),
+      no_billing: row.no_sts || '',
+    }).toString()
+    const API_URL = import.meta.env.VITE_API_URL
+    const url = `${API_URL}/pengembalian/download?${params}`
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `pengembalian_${row.no_sts || 'file'}.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const columns = [
+    ...baseColumns,
+    {
+      header: 'Aksi',
+      accessorKey: 'aksi',
+      cell: (cell: CellContext<Pengembalian, unknown>) => (
+        <div className='flex gap-2'>
+          <Button size='sm' onClick={() => handleCetak(cell.row.original)}>
+            Cetak
+          </Button>
+          <Button size='sm' onClick={() => handleDownload(cell.row.original)}>
+            Unduh PDF
+          </Button>
+        </div>
+      ),
+    },
+  ]
+
   const table = useReactTable({
     data, // semua data langsung
     columns,

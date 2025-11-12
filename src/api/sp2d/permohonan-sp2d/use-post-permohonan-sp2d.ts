@@ -42,12 +42,11 @@ export function usePostPermohonanSp2d() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreatePermohonanSp2dPayload
-    ): Promise<Sp2dItem> => {
+    mutationFn: async (payload: CreatePermohonanSp2dPayload | FormData) => {
       const { data } = await api.post<Sp2dItem>(
         '/sp2d/permohonan-sp2d',
-        payload
+        payload,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       )
       return data
     },

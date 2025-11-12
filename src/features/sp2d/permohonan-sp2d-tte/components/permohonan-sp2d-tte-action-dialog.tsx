@@ -69,6 +69,8 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -118,7 +120,16 @@ const formSchema = z.object({
   kd_opd5: z.string().min(1),
   nilai_belanja: z.string().min(1),
   nama_file: z.string().min(1),
-  nama_file_asli: z.string().min(1),
+  nama_file_asli: z
+    .any()
+    .refine(
+      (val) =>
+        (val instanceof FileList &&
+          val.length > 0 &&
+          val[0].type === 'application/pdf') ||
+        (typeof val === 'string' && val.trim() !== ''),
+      'File harus PDF atau sudah ada file sebelumnya.'
+    ),
   id_user: z.string().min(1),
   nama_user: z.string().min(1),
   agreement: z.string().min(1),
@@ -248,7 +259,23 @@ export function UsersActionDialog({
   const fileRef = form.register('nama_file_asli')
 
   const onSubmit = async (data: FormValues) => {
-    const req = isEdit ? put(data) : post(data)
+    const formData = new FormData()
+    formData.append('id', data.id || '')
+    formData.append('nama_file', data.nama_file)
+    formData.append('kd_opd1', data.kd_opd1)
+    formData.append('kd_opd2', data.kd_opd2)
+    formData.append('kd_opd3', data.kd_opd3)
+    formData.append('kd_opd4', data.kd_opd4)
+    formData.append('kd_opd5', data.kd_opd5)
+
+    // Jika user upload file baru
+    if (
+      data.nama_file_asli instanceof FileList &&
+      data.nama_file_asli.length > 0
+    ) {
+      formData.append('nama_file_asli', data.nama_file_asli[0])
+    }
+    const req = isEdit ? put(formData) : post(formData)
     await toast.promise(req, {
       loading: 'Menyimpan data...',
       success: () => {

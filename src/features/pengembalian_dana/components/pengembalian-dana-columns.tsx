@@ -1,7 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type Pengembalian } from '@/api'
 import { formatRupiah, formatTanggal } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/data-table'
 
 export const PengembalianDanaColumns: ColumnDef<Pengembalian>[] = [
@@ -65,25 +64,5 @@ export const PengembalianDanaColumns: ColumnDef<Pengembalian>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue('status_bayar')}</div>,
     enableSorting: true,
-  },
-  {
-    header: 'Aksi',
-    accessorKey: 'aksi',
-    cell: ({ row }) => (
-      <div className='flex gap-2'>
-        <Button
-          size='sm'
-          onClick={() => console.log('Cetak row', row.original.no_sts)}
-        >
-          Cetak
-        </Button>
-        <Button
-          size='sm'
-          onClick={() => console.log('Lihat PDF row', row.original.no_sts)}
-        >
-          Lihat PDF
-        </Button>
-      </div>
-    ),
   },
 ]

@@ -10,11 +10,18 @@ import {
   type MasterSkpd,
   useGetDatRekening,
   useGetRefSKPD,
+  usePostPengembalian,
 } from '@/api'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -32,8 +39,28 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { LaporanPembayaranModal } from './components/pengembalian-dana-modal'
+
+type PengembalianRes = {
+  nama: string
+  nik: string
+  alamat: string
+  rekening: string
+  jumlah: string
+  keterangan: string
+  tanggal: string
+  link: string
+  link_pdf: string
+  no_billing: string
+  terbilang: string
+}
 
 // 🧩 Schema validasi
 const formSchema = z.object({
@@ -51,7 +78,11 @@ type FormValues = z.infer<typeof formSchema>
 
 export default function PengembalianDanaForm() {
   const [open, setOpen] = useState(false)
+  const [resultData, setResultData] = useState<PengembalianRes | null>(null)
+  const [openResult, setOpenResult] = useState(false)
   const router = useRouter()
+
+  const { mutateAsync: post } = usePostPengembalian()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -81,6 +112,7 @@ export default function PengembalianDanaForm() {
         item.kd_rek4,
         item.kd_rek5,
         item.kd_rek6,
+        item.nm_rekening,
       ]
         .filter(Boolean)
         .join('.')
@@ -110,11 +142,20 @@ export default function PengembalianDanaForm() {
       label: item.nm_opd ?? '0',
     })) ?? []
 
-  const onSubmit = async () => {
-    toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
-      loading: 'Mengirim data...',
-      success: 'Data pengembalian berhasil dikirim!',
-      error: 'Terjadi kesalahan. Coba lagi.',
+  const onSubmit = async (data: FormValues) => {
+    await toast.promise(post(data), {
+      loading: 'Tunggu Sebentar',
+      success: (res) => {
+        if (res) {
+          setResultData({
+            ...res,
+            keterangan: res.keterangan ?? '',
+          })
+          setOpenResult(true)
+          return 'Pengembalian berhasil dikirim!'
+        }
+      },
+      error: 'Gagal melakukan aksi.',
     })
   }
 
@@ -234,6 +275,8 @@ export default function PengembalianDanaForm() {
                         rows={3}
                         placeholder='Alamat lengkap Anda'
                         {...field}
+                        value={field.value || ''} // pastikan tidak undefined
+                        onChange={field.onChange}
                         className='dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
                       />
                     </FormControl>
@@ -273,24 +316,43 @@ export default function PengembalianDanaForm() {
               <FormField
                 control={form.control}
                 name='rekening'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rekening</FormLabel>
-                    <div className='col-span-4'>
-                      <SelectDropdown
-                        defaultValue={String(field.value ?? '')}
-                        onValueChange={(val) => field.onChange(val)}
-                        placeholder='Pilih Rekening'
-                        className='w-full break-words whitespace-normal'
-                        items={itemsRek.map(({ label, value }) => ({
-                          label,
-                          value,
-                        }))}
-                      />
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const selected = itemsRek.find((i) => i.value === field.value)
+
+                  return (
+                    <FormItem>
+                      <FormLabel>Rekening</FormLabel>
+                      <div className='col-span-4'>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className='w-100'>
+                                <SelectDropdown
+                                  defaultValue={String(field.value ?? '')}
+                                  onValueChange={(val) => field.onChange(val)}
+                                  placeholder='Pilih Rekening'
+                                  // ⬇️ tambahkan truncate agar teks di trigger terpotong
+                                  className='w-100 truncate'
+                                  items={itemsRek.map(({ label, value }) => ({
+                                    label,
+                                    value,
+                                  }))}
+                                />
+                              </div>
+                            </TooltipTrigger>
+
+                            {selected?.label && (
+                              <TooltipContent className='z-[9999] max-w-[300px]'>
+                                {selected.label}
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )
+                }}
               />
 
               <FormField
@@ -332,6 +394,8 @@ export default function PengembalianDanaForm() {
                         rows={3}
                         placeholder='Keterangan'
                         {...field}
+                        value={field.value || ''} // pastikan tidak undefined
+                        onChange={field.onChange}
                         className='dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
                       />
                     </FormControl>
@@ -381,6 +445,68 @@ export default function PengembalianDanaForm() {
             onOpenChange={setOpen}
           />
         </div>
+        {/* hasil sukses */}
+        <Dialog open={openResult} onOpenChange={setOpenResult}>
+          <DialogContent className='max-w-lg'>
+            <DialogHeader>
+              <DialogTitle>Data Pengembalian</DialogTitle>
+            </DialogHeader>
+            {resultData && (
+              <div className='space-y-2 text-sm'>
+                <table className='w-full border-collapse'>
+                  <tbody>
+                    <tr>
+                      <td className='w-1/3 font-medium'>Nama Rekening</td>
+                      <td>: {resultData.rekening}</td>
+                    </tr>
+                    <tr>
+                      <td>NIK</td>
+                      <td>: {resultData.nik}</td>
+                    </tr>
+                    <tr>
+                      <td>Atas Nama</td>
+                      <td>: {resultData.nama}</td>
+                    </tr>
+                    <tr>
+                      <td>Jumlah</td>
+                      <td>: {resultData.jumlah}</td>
+                    </tr>
+                    <tr>
+                      <td>Terbilang</td>
+                      <td>: {resultData.terbilang} Rupiah</td>
+                    </tr>
+                    <tr>
+                      <td>Keterangan</td>
+                      <td>: {resultData.keterangan}</td>
+                    </tr>
+                    <tr>
+                      <td>Tanggal</td>
+                      <td>: {resultData.tanggal}</td>
+                    </tr>
+                    <tr>
+                      <td>NO STS</td>
+                      <td>: {resultData.no_billing}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div className='mt-4 flex justify-end gap-2'>
+                  <Button
+                    variant='outline'
+                    onClick={() => window.open(resultData.link, '_blank')}
+                  >
+                    Cetak Dokumen
+                  </Button>
+                  <Button
+                    onClick={() => window.open(resultData.link_pdf, '_blank')}
+                  >
+                    Download PDF
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </motion.div>
   )

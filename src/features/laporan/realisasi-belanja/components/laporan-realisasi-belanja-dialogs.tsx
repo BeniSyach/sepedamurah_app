@@ -1,31 +1,21 @@
-import { UsersActionDialog } from './laporan-realisasi-belanja-action-dialog'
+import { RekapExcelLRABelanja } from './laporan-realisasi-belanja-export-excel-dialog'
+import { RekapPDFLRABelanja } from './laporan-realisasi-belanja-export-pdf-dialog'
 import { useRefPengembalian } from './laporan-realisasi-belanja-provider'
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRefPengembalian()
+  const { open, setOpen } = useRefPengembalian()
   return (
     <>
-      <UsersActionDialog
-        key='pengembalian-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+      <RekapPDFLRABelanja
+        key='LRA-Belanja-pdf'
+        open={open === 'export-pdf'}
+        onOpenChange={() => setOpen('export-pdf')}
       />
-
-      {currentRow && (
-        <>
-          <UsersActionDialog
-            key={`pengembalian-edit-${currentRow.no_sts}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-        </>
-      )}
+      <RekapExcelLRABelanja
+        key='LRA-Belanja-excel'
+        open={open === 'export-excel'}
+        onOpenChange={() => setOpen('export-excel')}
+      />
     </>
   )
 }

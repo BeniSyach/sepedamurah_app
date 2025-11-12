@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { type Sp2dItem } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefSp2dItemDialogType = 'add' | 'edit' | 'delete'
+type RefSp2dItemDialogType = 'lihat' | 'download' | 'tolak' | 'kirim_balik'
 
 type RefSp2dItemContextType = {
   open: RefSp2dItemDialogType | null

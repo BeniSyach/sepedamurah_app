@@ -6,10 +6,10 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { RefRekeningPrimaryButtons } from './components/daftar-belanja-per-skpd-buttons'
-import { UsersDialogs } from './components/daftar-belanja-per-skpd-dialogs'
+import { DaftarBelanjaPerSKPDPrimaryButtons } from './components/daftar-belanja-per-skpd-buttons'
+import { DaftarBelanjaPerSKPDDialogs } from './components/daftar-belanja-per-skpd-dialogs'
 import { DaftarBelanjaSKPDProvider } from './components/daftar-belanja-per-skpd-provider'
-import { PengembalianTable } from './components/daftar-belanja-per-skpd-table'
+import { DaftarBelanjaPerSKPDTable } from './components/daftar-belanja-per-skpd-table'
 
 const route = getRouteApi('/_authenticated/laporan/daftar-belanja-per-skpd')
 
@@ -43,7 +43,7 @@ export function DaftarBelanjaPerSKPD() {
               Data Ini adalah Laporan Daftar Belanja Per SKPD
             </p>
           </div>
-          <RefRekeningPrimaryButtons />
+          <DaftarBelanjaPerSKPDPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {isLoading ? (
@@ -51,7 +51,7 @@ export function DaftarBelanjaPerSKPD() {
           ) : isError ? (
             <p>Failed to load users.</p>
           ) : (
-            <PengembalianTable
+            <DaftarBelanjaPerSKPDTable
               data={data?.data ?? []}
               search={search}
               navigate={navigate}
@@ -60,7 +60,7 @@ export function DaftarBelanjaPerSKPD() {
         </div>
       </Main>
 
-      <UsersDialogs />
+      <DaftarBelanjaPerSKPDDialogs />
     </DaftarBelanjaSKPDProvider>
   )
 }

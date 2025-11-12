@@ -6,15 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   type CeklisKelengkapanDokumen,
   useGetRefCeklisSPM,
-  usePostPermohonanSp2d,
   usePutPermohonanSp2d,
   type Sp2dItem,
-  useGetRefSumberDana,
-  type SumberDana,
   useGetRefJenisSPM,
 } from '@/api'
 import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  type CheckSumberDana,
+  useGetCheckSumberDana,
+} from '@/api/sp2d/check_sd'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -112,7 +113,6 @@ export function UsersActionDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const isEdit = !!currentRow
-  const { mutateAsync: post } = usePostPermohonanSp2d()
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
   // jenis_bekas
@@ -121,9 +121,11 @@ export function UsersActionDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetCheckSumberDana({
+    tahun: new Date().getFullYear().toString(),
+  })
   const itemsSD =
-    dataSD?.data?.map((item: SumberDana) => ({
+    dataSD?.data?.map((item: CheckSumberDana) => ({
       value: [
         item.kd_ref1,
         item.kd_ref2,
@@ -134,7 +136,7 @@ export function UsersActionDialog({
       ]
         .filter(Boolean)
         .join('.'),
-      label: item.nm_ref ?? '',
+      label: item.nm_sumber ?? '',
     })) ?? []
 
   const form = useForm<FormValues>({
@@ -209,7 +211,26 @@ export function UsersActionDialog({
   const fileRef = form.register('nama_file_asli')
 
   const onSubmit = async (data: FormValues) => {
-    const req = isEdit ? put(data) : post(data)
+    const formData = new FormData()
+    formData.append('id', data.id || '')
+    formData.append('nama_file', data.nama_file)
+    formData.append('id_user', data.id_user)
+    formData.append('nama_user', data.nama_user)
+    formData.append('kd_opd1', data.kd_opd1)
+    formData.append('kd_opd2', data.kd_opd2)
+    formData.append('kd_opd3', data.kd_opd3)
+    formData.append('kd_opd4', data.kd_opd4)
+    formData.append('kd_opd5', data.kd_opd5)
+    formData.append('urusan', 'Penerbitan SP2D')
+    formData.append('sp2d_rek', JSON.stringify(data.urusan))
+    formData.append('sumber_dana', JSON.stringify(data.sumber_dana))
+    formData.append('tahun', new Date().getFullYear().toString())
+    formData.append('no_spm', data.no_spm)
+    formData.append('jenis_berkas', data.jenis_berkas)
+    formData.append('nilai_belanja', data.nilai_belanja)
+    formData.append('agreement', data.agreement)
+    formData.append('id_berkas', JSON.stringify(data.id_berkas))
+    const req = put(formData)
     await toast.promise(req, {
       loading: 'Menyimpan data...',
       success: () => {

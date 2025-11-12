@@ -11,9 +11,9 @@ import {
   useGetRefCeklisSPM,
   usePutPermohonanSp2d,
   type Sp2dItem,
+  useGetRefSumberDana,
+  type SumberDana,
   useGetRefJenisSPM,
-  useGetLaporanRealisasiSumberDana,
-  type LaporanRealisasiSumberDana,
 } from '@/api'
 import { Check, CheckIcon, Plus, X } from 'lucide-react'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
@@ -49,6 +49,28 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
 import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -115,7 +137,7 @@ type FormValues = z.infer<typeof formSchema>
 // ============================
 // 🎨 COMPONENT
 // ============================
-export function BerkasMasukPeriksaDialog({
+export function PermohonanDiterimaPeriksaDialog({
   currentRow,
   open,
   onOpenChange,
@@ -137,11 +159,9 @@ export function BerkasMasukPeriksaDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetLaporanRealisasiSumberDana({
-    tahun: new Date().getFullYear().toString(),
-  })
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
   const itemsSD =
-    dataSD?.data?.map((item: LaporanRealisasiSumberDana) => ({
+    dataSD?.data?.map((item: SumberDana) => ({
       value: [
         item.kd_ref1,
         item.kd_ref2,
@@ -152,7 +172,7 @@ export function BerkasMasukPeriksaDialog({
       ]
         .filter(Boolean)
         .join('.'),
-      label: item.nm_sumber ?? '',
+      label: item.nm_ref ?? '',
     })) ?? []
 
   const form = useForm<FormValues>({

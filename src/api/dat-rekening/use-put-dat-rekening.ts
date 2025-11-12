@@ -15,7 +15,7 @@ interface UpdateRekeningPayload {
 /**
  * Hook untuk mengupdate data urusan (PUT)
  */
-export function usePutRefRekening() {
+export function usePutDatRekening() {
   const queryClient = useQueryClient()
 
   return useMutation({

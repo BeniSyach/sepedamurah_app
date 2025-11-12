@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { type Pengembalian } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefPengembalianDialogType = 'add' | 'edit' | 'delete'
+type RefPengembalianDialogType = 'export-pdf' | 'export-excel'
 
 type RefPengembalianContextType = {
   open: RefPengembalianDialogType | null

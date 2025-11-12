@@ -4,7 +4,7 @@ import { formatRupiah } from '@/lib/utils'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { DataTableRowActions } from './data-table-row-actions'
 
-export const ReferensiPengembalianColumns: ColumnDef<DaftarBelanjaSKPD>[] = [
+export const DaftarBelanjaPerSKPDColumns: ColumnDef<DaftarBelanjaSKPD>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',

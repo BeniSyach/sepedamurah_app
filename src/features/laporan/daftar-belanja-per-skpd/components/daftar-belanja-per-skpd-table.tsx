@@ -24,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ReferensiPengembalianColumns as columns } from './daftar-belanja-per-skpd-columns'
+import { DaftarBelanjaPerSKPDColumns as columns } from './daftar-belanja-per-skpd-columns'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
@@ -38,7 +38,11 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
-export function PengembalianTable({ data, search, navigate }: DataTableProps) {
+export function DaftarBelanjaPerSKPDTable({
+  data,
+  search,
+  navigate,
+}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])

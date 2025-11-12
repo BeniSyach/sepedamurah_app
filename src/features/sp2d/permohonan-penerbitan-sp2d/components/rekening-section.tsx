@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useFormContext } from 'react-hook-form'
 import { useGetRefRekeningSp2d } from '@/api'
 import { Minus } from 'lucide-react'
 import { formatRupiahControlled } from '@/lib/utils'
@@ -36,6 +37,7 @@ export function RekeningSection({
   kd_subkeg5,
   kd_subkeg6,
 }: any) {
+  const { setValue } = useFormContext()
   // ✅ Panggil API rekening berdasarkan sub kegiatan yang dipilih
   const { data, isPending, isError } = useGetRefRekeningSp2d({
     page: 1,
@@ -103,10 +105,7 @@ export function RekeningSection({
                         selected.kd_rekening6,
                       ]
                       kdList.forEach((kd, i) => {
-                        control.setValue(
-                          `${basePath}.kd_rekening${i + 1}`,
-                          kd ?? ''
-                        )
+                        setValue(`${basePath}.kd_rekening${i + 1}`, kd ?? '')
                       })
                     }
                   }}

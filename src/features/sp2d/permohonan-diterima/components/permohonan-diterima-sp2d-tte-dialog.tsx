@@ -77,7 +77,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function BerkasMasukKirimTTEDialog({
+export function PermohonanDiterimaKirimTTEDialog({
   currentRow,
   open,
   onOpenChange,

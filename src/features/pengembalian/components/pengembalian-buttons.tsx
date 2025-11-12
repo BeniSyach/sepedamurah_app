@@ -6,13 +6,13 @@ export function RefRekeningPrimaryButtons() {
   const { setOpen } = useRefPengembalian()
   return (
     <div className='flex gap-2'>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
+      <Button className='space-x-1' onClick={() => setOpen('export_excel')}>
         <span>Export Excel</span> <FileSpreadsheet size={18} />
       </Button>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
+      <Button className='space-x-1' onClick={() => setOpen('export_pdf')}>
         <span>Export PDF</span> <FileText size={18} />
       </Button>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
+      <Button className='space-x-1' onClick={() => setOpen('referensi')}>
         <span>Setting Referensi</span> <SlidersHorizontal size={18} />
       </Button>
     </div>

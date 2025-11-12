@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../common/client'
 import type { PaginatedDatRekening } from './types'
 
-interface CreateRekeningPayload {
+interface CreateDatRekeningPayload {
   kd_rek1: string
   kd_rek2: string
   kd_rek3: string
@@ -15,12 +15,12 @@ interface CreateRekeningPayload {
 /**
  * Hook untuk membuat data urusan baru (POST)
  */
-export function usePostRefRekening() {
+export function usePostDatRekening() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (
-      payload: CreateRekeningPayload
+      payload: CreateDatRekeningPayload
     ): Promise<PaginatedDatRekening> => {
       const { data } = await api.post<PaginatedDatRekening>(
         '/dat-rekening',

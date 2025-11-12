@@ -1,31 +1,22 @@
-import { UsersActionDialog } from './laporan-realisasi-sumber-dana-action-dialog'
+import { RekapExcelLRASD } from './laporan-realisasi-sumber-dana-export-excel-dialog'
+import { RekapPDFLRASD } from './laporan-realisasi-sumber-dana-export-pdf-dialog'
 import { useRefPengembalian } from './laporan-realisasi-sumber-dana-provider'
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRefPengembalian()
+  const { open, setOpen } = useRefPengembalian()
   return (
     <>
-      <UsersActionDialog
-        key='pengembalian-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+      <RekapPDFLRASD
+        key='LRASD-pdf'
+        open={open === 'export-pdf'}
+        onOpenChange={() => setOpen('export-pdf')}
       />
 
-      {currentRow && (
-        <>
-          <UsersActionDialog
-            key={`pengembalian-edit-${currentRow.no_sts}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-        </>
-      )}
+      <RekapExcelLRASD
+        key='LRASD-excel'
+        open={open === 'export-excel'}
+        onOpenChange={() => setOpen('export-excel')}
+      />
     </>
   )
 }

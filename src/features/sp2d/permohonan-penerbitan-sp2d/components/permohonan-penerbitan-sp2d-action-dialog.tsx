@@ -1,20 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import { useEffect } from 'react'
 import { z } from 'zod'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   type CeklisKelengkapanDokumen,
   useGetRefCeklisSPM,
   usePostPermohonanSp2d,
   usePutPermohonanSp2d,
   type Sp2dItem,
-  useGetRefSumberDana,
-  type SumberDana,
   useGetRefJenisSPM,
 } from '@/api'
 import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  type CheckSumberDana,
+  useGetCheckSumberDana,
+} from '@/api/sp2d/check_sd'
+import { useAuthStore } from '@/stores/auth-store'
+import { formatRupiah, formatRupiahControlled } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -44,58 +51,141 @@ import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import { UrusanSection } from './urusan-section'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
 const rekeningSchema = z.object({
   nm_rekening: z.string().min(1),
+  kd_rekening1: z.string().min(1),
+  kd_rekening2: z.string().min(1),
+  kd_rekening3: z.string().min(1),
+  kd_rekening4: z.string().min(1),
+  kd_rekening5: z.string().min(1),
+  kd_rekening6: z.string().min(1),
   nilai: z.string().min(1),
 })
 
 const subKegiatanSchema = z.object({
   nm_subkegiatan: z.string().min(1),
+  kd_subkeg1: z.string().min(1),
+  kd_subkeg2: z.string().min(1),
+  kd_subkeg3: z.string().min(1),
+  kd_subkeg4: z.string().min(1),
+  kd_subkeg5: z.string().min(1),
+  kd_subkeg6: z.string().min(1),
   rekening: z.array(rekeningSchema).min(1),
 })
 
 const kegiatanSchema = z.object({
   nm_kegiatan: z.string().min(1),
+  kd_keg1: z.string().min(1),
+  kd_keg2: z.string().min(1),
+  kd_keg3: z.string().min(1),
+  kd_keg4: z.string().min(1),
+  kd_keg5: z.string().min(1),
   subKegiatan: z.array(subKegiatanSchema).min(1),
 })
 
 const programSchema = z.object({
   nm_program: z.string().min(1),
+  kd_prog1: z.string().min(1),
+  kd_prog2: z.string().min(1),
+  kd_prog3: z.string().min(1),
   kegiatan: z.array(kegiatanSchema).min(1),
 })
 
 const bidangSchema = z.object({
   nm_bu: z.string().min(1),
+  kd_bu1: z.string().min(1),
+  kd_bu2: z.string().min(1),
   program: z.array(programSchema).min(1),
 })
 
 const urusanSchema = z.object({
-  nm_urusan: z.string().min(1),
+  kd_urusan: z.string().min(1),
   bidangUrusan: z.array(bidangSchema).min(1),
 })
 
-const formSchema = z.object({
-  id: z.string().optional(),
-  no_spm: z.string().min(1, 'Nomor SPM wajib diisi'),
-  jenis_berkas: z.string().min(1),
-  id_berkas: z.array(z.string().min(1)).nonempty(),
-  kd_opd1: z.string().min(1),
-  kd_opd2: z.string().min(1),
-  kd_opd3: z.string().min(1),
-  kd_opd4: z.string().min(1),
-  kd_opd5: z.string().min(1),
-  nilai_belanja: z.string().min(1),
-  nama_file: z.string().min(1),
-  nama_file_asli: z.string().min(1),
-  id_user: z.string().min(1),
-  nama_user: z.string().min(1),
-  agreement: z.string().min(1),
-  urusan: z.array(urusanSchema).nonempty('Minimal 1 urusan'),
-  sumber_dana: z.array(z.string().min(1)).nonempty('Sumber dana wajib diisi'),
-})
+const formSchema = z
+  .object({
+    id: z.string().optional(),
+    no_spm: z.string().min(1, 'Nomor SPM wajib diisi'),
+    jenis_berkas: z.string().min(1),
+    id_berkas: z.array(z.string().min(1)).nonempty(),
+    kd_opd1: z.string().min(1),
+    kd_opd2: z.string().min(1),
+    kd_opd3: z.string().min(1),
+    kd_opd4: z.string().min(1),
+    kd_opd5: z.string().min(1),
+    nilai_belanja: z.string().min(1),
+    nama_file: z.string().min(1),
+    nama_file_asli: z
+      .any()
+      .refine(
+        (val) =>
+          (val instanceof FileList &&
+            val.length > 0 &&
+            val[0].type === 'application/pdf') ||
+          (typeof val === 'string' && val.trim() !== ''),
+        'File harus PDF atau sudah ada file sebelumnya.'
+      ),
+    id_user: z.string().min(1),
+    nama_user: z.string().min(1),
+    agreement: z.string().min(1),
+    urusan: z.array(urusanSchema).optional(),
+    sumber_dana: z
+      .array(
+        z.object({
+          kd_ref1: z.string().nullable(),
+          kd_ref2: z.string().nullable(),
+          kd_ref3: z.string().nullable(),
+          kd_ref4: z.string().nullable(),
+          kd_ref5: z.string().nullable(),
+          kd_ref6: z.string().nullable(),
+          sisa: z.union([z.string(), z.number()]),
+          nilai: z.union([z.string(), z.number()]),
+        })
+      )
+      .nonempty('Sumber dana wajib diisi'),
+  })
+  .superRefine((data, ctx) => {
+    // jika jenis_berkas bukan 'UP', maka urusan harus diisi minimal 1
+    if (data.jenis_berkas !== 'UP') {
+      if (!data.urusan || data.urusan.length === 0) {
+        ctx.addIssue({
+          path: ['urusan'],
+          code: 'custom', // ✅ pakai string literal
+          message: 'Minimal 1 urusan',
+        })
+      }
+    }
+  })
 
 type FormValues = z.infer<typeof formSchema>
 
@@ -112,6 +202,8 @@ export function UsersActionDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const isEdit = !!currentRow
+  const user = useAuthStore((s) => s.user)
+  const queryClient = useQueryClient()
   const { mutateAsync: post } = usePostPermohonanSp2d()
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
@@ -121,20 +213,22 @@ export function UsersActionDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetCheckSumberDana({
+    tahun: new Date().getFullYear().toString(),
+  })
   const itemsSD =
-    dataSD?.data?.map((item: SumberDana) => ({
-      value: [
-        item.kd_ref1,
-        item.kd_ref2,
-        item.kd_ref3,
-        item.kd_ref4,
-        item.kd_ref5,
-        item.kd_ref6,
-      ]
-        .filter(Boolean)
-        .join('.'),
-      label: item.nm_ref ?? '',
+    dataSD?.data?.map((item: CheckSumberDana) => ({
+      value: {
+        kd_ref1: item.kd_ref1,
+        kd_ref2: item.kd_ref2,
+        kd_ref3: item.kd_ref3,
+        kd_ref4: item.kd_ref4,
+        kd_ref5: item.kd_ref5,
+        kd_ref6: item.kd_ref6,
+        sisa: item.sisa,
+        nm_sumber: item.nm_sumber,
+      },
+      label: `${item.nm_sumber} (Sisa: ${formatRupiah(item.sisa)})`,
     })) ?? []
 
   const form = useForm<FormValues>({
@@ -166,36 +260,91 @@ export function UsersActionDialog({
           urusan: mapRekeningToFormData(currentRow),
 
           sumber_dana:
-            currentRow.sumber_dana?.map(
-              (s) =>
-                `${s.kd_ref1}.${s.kd_ref2}.${s.kd_ref3}.${s.kd_ref4}.${s.kd_ref5}.${s.kd_ref6}`
-            ) ?? [],
+            currentRow.sumber_dana?.map((s) => ({
+              kd_ref1: s.kd_ref1,
+              kd_ref2: s.kd_ref2,
+              kd_ref3: s.kd_ref3,
+              kd_ref4: s.kd_ref4,
+              kd_ref5: s.kd_ref5,
+              kd_ref6: s.kd_ref6,
+              sisa: s.sisa ?? 0,
+              nilai: s.nilai ?? 0,
+            })) ?? [],
         }
       : {
           id: '',
           no_spm: '',
           jenis_berkas: '',
           id_berkas: [],
-          kd_opd1: '',
-          kd_opd2: '',
-          kd_opd3: '',
-          kd_opd4: '',
-          kd_opd5: '',
+          kd_opd1: user?.kd_opd1,
+          kd_opd2: user?.kd_opd2,
+          kd_opd3: user?.kd_opd3,
+          kd_opd4: user?.kd_opd4,
+          kd_opd5: user?.kd_opd5,
           nilai_belanja: '',
           nama_file: '',
-          nama_file_asli: '',
-          id_user: '',
-          nama_user: '',
+          nama_file_asli: undefined,
+          id_user: user?.id.toString() ?? '',
+          nama_user: user?.name,
           agreement: '',
           urusan: [],
           sumber_dana: [],
         },
   })
-
+  const { control, setValue } = form
+  // console.log('form errors', form.formState.errors)
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'urusan',
   })
+
+  const urusan = useWatch({ control, name: 'urusan' })
+
+  // 🔹 Hitung total nilai otomatis
+  useEffect(() => {
+    if (!urusan || urusan.length === 0) return
+
+    let total = 0
+
+    try {
+      urusan.forEach((u) =>
+        u.bidangUrusan?.forEach((b) =>
+          b.program?.forEach((p) =>
+            p.kegiatan?.forEach((k) =>
+              k.subKegiatan?.forEach((s) =>
+                s.rekening?.forEach((r) => {
+                  const val = parseFloat(r.nilai)
+                  if (!isNaN(val)) total += val
+                })
+              )
+            )
+          )
+        )
+      )
+
+      if (total > 0) {
+        setValue('nilai_belanja', total.toString())
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Gagal menghitung total nilai.'
+      toast.error(errorMessage)
+    }
+  }, [urusan, setValue])
+
+  // 🔹 Cek apakah nilai otomatis dari urusan
+  const adaNilaiOtomatis =
+    urusan?.some((u) =>
+      u.bidangUrusan?.some((b) =>
+        b.program?.some((p) =>
+          p.kegiatan?.some((k) =>
+            k.subKegiatan?.some((s) =>
+              s.rekening?.some((r) => r.nilai && r.nilai !== '')
+            )
+          )
+        )
+      )
+    ) ?? false
 
   const jenisBerkasValue = form.watch('jenis_berkas') // ceklis Berkas SPM
   const { data: dataJenisSPM, isLoading: pendingJenisSPM } = useGetRefJenisSPM({
@@ -204,21 +353,90 @@ export function UsersActionDialog({
     search: jenisBerkasValue || '',
   })
 
+  const SelectedjenisBerkasValue = useWatch({ control, name: 'jenis_berkas' })
+
+  useEffect(() => {
+    setValue('id_berkas', [])
+  }, [SelectedjenisBerkasValue, setValue])
+
   const ceklisList = dataJenisSPM?.data || []
 
-  const fileRef = form.register('nama_file_asli')
-
   const onSubmit = async (data: FormValues) => {
-    const req = isEdit ? put(data) : post(data)
+    const formData = new FormData()
+    formData.append('id', data.id || '')
+    formData.append('nama_file', data.nama_file)
+    formData.append('id_user', data.id_user)
+    formData.append('nama_user', data.nama_user)
+    formData.append('kd_opd1', data.kd_opd1)
+    formData.append('kd_opd2', data.kd_opd2)
+    formData.append('kd_opd3', data.kd_opd3)
+    formData.append('kd_opd4', data.kd_opd4)
+    formData.append('kd_opd5', data.kd_opd5)
+    formData.append('urusan', 'Penerbitan SP2D')
+    formData.append('sp2d_rek', JSON.stringify(data.urusan))
+    formData.append('sumber_dana', JSON.stringify(data.sumber_dana))
+    formData.append('tahun', new Date().getFullYear().toString())
+    formData.append('no_spm', data.no_spm)
+    formData.append('jenis_berkas', data.jenis_berkas)
+    formData.append('nilai_belanja', data.nilai_belanja)
+    formData.append('agreement', data.agreement)
+    formData.append('id_berkas', JSON.stringify(data.id_berkas))
+    // Jika user upload file baru
+    if (
+      data.nama_file_asli instanceof FileList &&
+      data.nama_file_asli.length > 0
+    ) {
+      formData.append('nama_file_asli', data.nama_file_asli[0])
+    }
+
+    const req = isEdit ? put(formData) : post(formData)
     await toast.promise(req, {
       loading: 'Menyimpan data...',
       success: () => {
         onOpenChange(false)
+        queryClient.invalidateQueries({
+          queryKey: ['useGetCheckSumberDana'],
+        })
+        form.reset()
         return isEdit ? 'Data berhasil diperbarui!' : 'Data berhasil disimpan!'
       },
       error: 'Gagal menyimpan data.',
     })
   }
+
+  const sumberDana = useWatch({ control: form.control, name: 'sumber_dana' })
+  const nilaiBelanjaRaw = useWatch({
+    control: form.control,
+    name: 'nilai_belanja',
+  })
+  const nilaiBelanja = Number(nilaiBelanjaRaw) || 0
+
+  useEffect(() => {
+    if (!sumberDana?.length || !nilaiBelanja) return
+
+    let sisaBelanja = Number(nilaiBelanja)
+    const updated = sumberDana.map((sd: any) => {
+      const sisa = Number(sd.sisa ?? 0)
+      const alokasi = Math.min(sisaBelanja, sisa)
+      sisaBelanja -= alokasi
+
+      return {
+        ...sd,
+        sisa, // pastikan number
+        nilai: alokasi, // pastikan number
+      }
+    })
+
+    if (sisaBelanja > 0) {
+      toast.warning('Total sisa sumber dana tidak mencukupi nilai belanja!')
+    }
+
+    // hanya update jika ada perubahan sesungguhnya
+    const isDifferent = JSON.stringify(updated) !== JSON.stringify(sumberDana)
+    if (isDifferent) {
+      form.setValue('sumber_dana', updated)
+    }
+  }, [sumberDana, nilaiBelanja])
 
   return (
     <Dialog
@@ -386,21 +604,46 @@ export function UsersActionDialog({
                     variant='outline'
                     onClick={() =>
                       append({
-                        nm_urusan: '',
+                        kd_urusan: '',
                         bidangUrusan: [
                           {
                             nm_bu: '',
+                            kd_bu1: '',
+                            kd_bu2: '',
                             program: [
                               {
                                 nm_program: '',
+                                kd_prog1: '',
+                                kd_prog2: '',
+                                kd_prog3: '',
                                 kegiatan: [
                                   {
                                     nm_kegiatan: '',
+                                    kd_keg1: '',
+                                    kd_keg2: '',
+                                    kd_keg3: '',
+                                    kd_keg4: '',
+                                    kd_keg5: '',
                                     subKegiatan: [
                                       {
                                         nm_subkegiatan: '',
+                                        kd_subkeg1: '',
+                                        kd_subkeg2: '',
+                                        kd_subkeg3: '',
+                                        kd_subkeg4: '',
+                                        kd_subkeg5: '',
+                                        kd_subkeg6: '',
                                         rekening: [
-                                          { nm_rekening: '', nilai: '' },
+                                          {
+                                            nm_rekening: '',
+                                            kd_rekening1: '',
+                                            kd_rekening2: '',
+                                            kd_rekening3: '',
+                                            kd_rekening4: '',
+                                            kd_rekening5: '',
+                                            kd_rekening6: '',
+                                            nilai: '',
+                                          },
                                         ],
                                       },
                                     ],
@@ -429,6 +672,36 @@ export function UsersActionDialog({
 
               <FormField
                 control={form.control}
+                name='nilai_belanja'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nilai Belanja</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type='numeric'
+                        placeholder='Nilai Belanja'
+                        value={formatRupiahControlled(field.value || '')}
+                        onChange={(e) => {
+                          // hanya ambil angka saja (hilangkan non-digit)
+                          const raw = e.target.value.replace(/\D/g, '')
+                          field.onChange(raw)
+                        }}
+                        readOnly={adaNilaiOtomatis} // tidak bisa diedit kalau otomatis
+                        className={
+                          adaNilaiOtomatis
+                            ? 'cursor-not-allowed bg-gray-100'
+                            : ''
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name='sumber_dana'
                 render={({ field }) => (
                   <FormItem>
@@ -441,42 +714,71 @@ export function UsersActionDialog({
                             <CommandEmpty>Tidak ada data</CommandEmpty>
                           )}
                           <CommandGroup>
-                            {itemsSD.map((r) => (
-                              <CommandItem
-                                key={r.value}
-                                onSelect={() => {
-                                  if (!field.value.includes(r.value)) {
-                                    field.onChange([...field.value, r.value])
-                                  } else {
-                                    field.onChange(
-                                      field.value.filter((v) => v !== r.value)
-                                    )
+                            {itemsSD.map((r) => {
+                              const sumberDana = field.value || []
+                              const nilaiBelanja = Number(
+                                form.watch('nilai_belanja') || 0
+                              )
+                              const totalAlokasi = sumberDana.reduce(
+                                (sum: number, sd: any) =>
+                                  sum + Number(sd.nilai || sd.sisa || 0),
+                                0
+                              )
+
+                              const selected = sumberDana.some(
+                                (v: any) =>
+                                  v.kd_ref1 === r.value.kd_ref1 &&
+                                  v.kd_ref2 === r.value.kd_ref2 &&
+                                  v.kd_ref3 === r.value.kd_ref3 &&
+                                  v.kd_ref4 === r.value.kd_ref4 &&
+                                  v.kd_ref5 === r.value.kd_ref5 &&
+                                  v.kd_ref6 === r.value.kd_ref6
+                              )
+
+                              const disabled =
+                                !selected && totalAlokasi >= nilaiBelanja
+
+                              return (
+                                <CommandItem
+                                  key={r.label}
+                                  disabled={disabled}
+                                  onSelect={() => {
+                                    if (selected) {
+                                      // kalau sudah dipilih, hapus dari daftar
+                                      field.onChange(
+                                        sumberDana.filter(
+                                          (v: any) =>
+                                            !(
+                                              v.kd_ref1 === r.value.kd_ref1 &&
+                                              v.kd_ref2 === r.value.kd_ref2 &&
+                                              v.kd_ref3 === r.value.kd_ref3 &&
+                                              v.kd_ref4 === r.value.kd_ref4 &&
+                                              v.kd_ref5 === r.value.kd_ref5 &&
+                                              v.kd_ref6 === r.value.kd_ref6
+                                            )
+                                        )
+                                      )
+                                    } else if (!disabled) {
+                                      // tambahkan hanya kalau belum cukup
+                                      field.onChange([...sumberDana, r.value])
+                                    }
+                                  }}
+                                  className={
+                                    disabled
+                                      ? 'cursor-not-allowed opacity-50'
+                                      : ''
                                   }
-                                }}
-                              >
-                                <span>{r.label}</span>
-                                {field.value.includes(r.value) && (
-                                  <CheckIcon className='ml-auto h-4 w-4' />
-                                )}
-                              </CommandItem>
-                            ))}
+                                >
+                                  <span>{r.label}</span>
+                                  {selected && (
+                                    <CheckIcon className='ml-auto h-4 w-4' />
+                                  )}
+                                </CommandItem>
+                              )
+                            })}
                           </CommandGroup>
                         </CommandList>
                       </Command>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='nilai_belanja'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nilai Belanja</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder='Nilai Belanja' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -500,13 +802,39 @@ export function UsersActionDialog({
               <FormField
                 control={form.control}
                 name='nama_file_asli'
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Upload File</FormLabel>
                     <FormControl>
-                      <Input type='file' {...fileRef} />
+                      <Input
+                        type='file'
+                        accept='application/pdf'
+                        className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
+                        onChange={(e) => field.onChange(e.target.files)}
+                      />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='agreement'
+                render={({ field }) => (
+                  <FormItem className='flex items-start space-y-0 space-x-3'>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value === 'YA'}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked ? 'YA' : '')
+                        }
+                      />
+                    </FormControl>
+                    <FormLabel className='text-sm leading-tight'>
+                      Dengan ini menyatakan bahwa dokumen telah sesuai dengan
+                      ketentuan yang berlaku, terhadap dokumen
+                      pertanggungjawaban disimpan oleh Perangkat Daerah.
+                    </FormLabel>
                   </FormItem>
                 )}
               />

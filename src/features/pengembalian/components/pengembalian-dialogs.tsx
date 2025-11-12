@@ -1,31 +1,22 @@
-import { UsersActionDialog } from './pengembalian-action-dialog'
+import { PengembalianRekapExcel } from './pengembalian-export-excel-dialog'
+import { PengembalianRekapPdf } from './pengembalian-export-pdf-dialog'
 import { useRefPengembalian } from './pengembalian-provider'
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRefPengembalian()
+  const { open, setOpen } = useRefPengembalian()
   return (
     <>
-      <UsersActionDialog
-        key='pengembalian-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+      <PengembalianRekapExcel
+        key='pengembalian-excel'
+        open={open === 'export_excel'}
+        onOpenChange={() => setOpen('export_excel')}
       />
 
-      {currentRow && (
-        <>
-          <UsersActionDialog
-            key={`pengembalian-edit-${currentRow.no_sts}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-        </>
-      )}
+      <PengembalianRekapPdf
+        key='pengembalian-pdf'
+        open={open === 'export_pdf'}
+        onOpenChange={() => setOpen('export_pdf')}
+      />
     </>
   )
 }

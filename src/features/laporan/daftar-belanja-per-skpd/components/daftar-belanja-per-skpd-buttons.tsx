@@ -2,7 +2,7 @@ import { FileSpreadsheet, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRefDaftarBelanjaSKPD } from './daftar-belanja-per-skpd-provider'
 
-export function RefRekeningPrimaryButtons() {
+export function DaftarBelanjaPerSKPDPrimaryButtons() {
   const { setOpen } = useRefDaftarBelanjaSKPD()
   return (
     <div className='flex gap-2'>

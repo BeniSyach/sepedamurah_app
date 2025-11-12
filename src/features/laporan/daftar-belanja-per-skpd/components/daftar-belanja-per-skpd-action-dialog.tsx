@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -15,10 +14,9 @@ import {
   TableCell,
   TableHead,
 } from '@/components/ui/table'
-import { type PengembalianDanaItem } from '@/features/pengembalian_dana/components/pengembalian-dana-table-'
 
 // Contoh data sementara
-const data: PengembalianDanaItem[] = [
+const data = [
   {
     noSts: '001/STS/2025',
     nik: '1234567890123456',
@@ -38,7 +36,7 @@ type UserActionDialogProps = {
 }
 
 export function DetailPerSKPD({ open, onOpenChange }: UserActionDialogProps) {
-  const columns: ColumnDef<PengembalianDanaItem>[] = [
+  const columns = [
     { header: 'Tanggal', accessorKey: 'noSts' },
     { header: 'Sumber Dana', accessorKey: 'tahun' },
     { header: 'Jenis Belanja', accessorKey: 'nik' },

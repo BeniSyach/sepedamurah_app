@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../common/client'
 
-interface DeleteRekeningPayload {
+interface DeleteDatRekeningPayload {
   kd_rek1: string
   kd_rek2: string
   kd_rek3: string
@@ -13,7 +13,7 @@ interface DeleteRekeningPayload {
 /**
  * Hook untuk menghapus data Bidang Urusan (DELETE)
  */
-export function useDeleteRefRekening() {
+export function useDeleteDatRekening() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -24,7 +24,7 @@ export function useDeleteRefRekening() {
       kd_rek4,
       kd_rek5,
       kd_rek6,
-    }: DeleteRekeningPayload): Promise<void> => {
+    }: DeleteDatRekeningPayload): Promise<void> => {
       await api.delete(
         `/dat-rekening/${kd_rek1}/${kd_rek2}/${kd_rek3}/${kd_rek4}/${kd_rek5}/${kd_rek6}`
       )

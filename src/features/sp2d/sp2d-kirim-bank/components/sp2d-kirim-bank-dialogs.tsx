@@ -31,9 +31,9 @@ export function UsersDialogs() {
           <ConfirmDialog
             key={`permohonan-penerbitan-sp2d-delete-${currentRow.id_sp2d}`}
             destructive
-            open={open === 'delete'}
+            open={open === 'lihat'}
             onOpenChange={() => {
-              setOpen('delete')
+              setOpen('lihat')
               setTimeout(() => {
                 setCurrentRow(null)
               }, 500)

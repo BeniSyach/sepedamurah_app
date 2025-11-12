@@ -1,7 +1,7 @@
 import { DetailPerSKPD } from './daftar-belanja-per-skpd-action-dialog'
 import { useRefDaftarBelanjaSKPD } from './daftar-belanja-per-skpd-provider'
 
-export function UsersDialogs() {
+export function DaftarBelanjaPerSKPDDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefDaftarBelanjaSKPD()
   return (
     <>
