@@ -62,6 +62,10 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -337,6 +341,7 @@ export function BerkasMasukPeriksaDialog({
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
+          {/* FORM + DOCUMENT */}
           <div className='flex flex-1 gap-4 overflow-hidden'>
             <div className='flex-1 overflow-y-auto border-r p-4'>
               <Form {...form}>
@@ -344,7 +349,7 @@ export function BerkasMasukPeriksaDialog({
                   control={form.control}
                   name='no_spm'
                   render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1 pb-5'>
                       <FormLabel className='col-span-2 text-end'>
                         No SPM
                       </FormLabel>
@@ -354,6 +359,8 @@ export function BerkasMasukPeriksaDialog({
                           className='col-span-4'
                           autoComplete='off'
                           {...field}
+                          readOnly
+                          disabled
                         />
                       </FormControl>
                       <FormMessage className='col-span-4 col-start-3' />
@@ -384,6 +391,7 @@ export function BerkasMasukPeriksaDialog({
                             onValueChange={field.onChange}
                             value={field.value}
                             className='flex flex-row gap-2'
+                            disabled
                           >
                             {data?.data?.map(
                               (item: CeklisKelengkapanDokumen) => (
@@ -414,7 +422,7 @@ export function BerkasMasukPeriksaDialog({
                     control={form.control}
                     name='id_berkas'
                     render={() => (
-                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1 pb-5'>
                         {/* Label kolom kiri */}
                         <FormLabel className='col-span-2 pt-2 text-end'>
                           Daftar Berkas
@@ -442,6 +450,7 @@ export function BerkasMasukPeriksaDialog({
                                       <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
                                         <FormControl>
                                           <Checkbox
+                                            disabled
                                             checked={value.includes(
                                               String(item.id)
                                             )}
@@ -480,7 +489,7 @@ export function BerkasMasukPeriksaDialog({
                 )}
 
                 {/* === URUSAN SECTION === */}
-                <div className='space-y-3'>
+                <div className='space-y-3 pb-5'>
                   <div className='flex items-center justify-between'>
                     <FormLabel>Urusan & Program</FormLabel>
                     <Button
@@ -535,35 +544,34 @@ export function BerkasMasukPeriksaDialog({
                   control={form.control}
                   name='sumber_dana'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Sumber Dana</FormLabel>
                       <FormControl>
                         <Command className='rounded-md border'>
                           <CommandInput placeholder='Pilih sumber dana...' />
                           <CommandList>
-                            {itemsSD.length === 0 && (
-                              <CommandEmpty>Tidak ada data</CommandEmpty>
+                            {field.value.length === 0 && (
+                              <CommandEmpty>
+                                Tidak ada yang dipilih
+                              </CommandEmpty>
                             )}
                             <CommandGroup>
-                              {itemsSD.map((r) => (
-                                <CommandItem
-                                  key={r.value}
-                                  onSelect={() => {
-                                    if (!field.value.includes(r.value)) {
-                                      field.onChange([...field.value, r.value])
-                                    } else {
+                              {itemsSD
+                                .filter((r) => field.value.includes(r.value))
+                                .map((r) => (
+                                  <CommandItem
+                                    disabled
+                                    key={r.value}
+                                    onSelect={() => {
                                       field.onChange(
                                         field.value.filter((v) => v !== r.value)
                                       )
-                                    }
-                                  }}
-                                >
-                                  <span>{r.label}</span>
-                                  {field.value.includes(r.value) && (
+                                    }}
+                                  >
+                                    <span>{r.label}</span>
                                     <CheckIcon className='ml-auto h-4 w-4' />
-                                  )}
-                                </CommandItem>
-                              ))}
+                                  </CommandItem>
+                                ))}
                             </CommandGroup>
                           </CommandList>
                         </Command>
@@ -577,10 +585,10 @@ export function BerkasMasukPeriksaDialog({
                   control={form.control}
                   name='nilai_belanja'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Nilai Belanja</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -594,7 +602,7 @@ export function BerkasMasukPeriksaDialog({
                     <FormItem>
                       <FormLabel>Uraian SPM</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -602,6 +610,7 @@ export function BerkasMasukPeriksaDialog({
                 />
               </Form>
             </div>
+
             {/* PDF Preview */}
             <div className='flex-1 overflow-auto border-l p-4'>
               {fileUrl ? (
@@ -616,24 +625,24 @@ export function BerkasMasukPeriksaDialog({
               )}
             </div>
           </div>
-        </div>
 
-        <DialogFooter className='flex justify-end gap-2'>
-          <Button
-            variant='outline'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('terima')}
-          >
-            <Check size={16} /> Terima
-          </Button>
-          <Button
-            variant='destructive'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('tolak')}
-          >
-            <X size={16} /> Tolak
-          </Button>
-        </DialogFooter>
+          <DialogFooter className='mt-2 flex justify-end gap-2'>
+            <Button
+              variant='outline'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('terima')}
+            >
+              <Check size={16} /> Terima
+            </Button>
+            <Button
+              variant='destructive'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('tolak')}
+            >
+              <X size={16} /> Tolak
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContentLarge>
     </Dialog>
   )

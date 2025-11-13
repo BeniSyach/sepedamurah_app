@@ -78,6 +78,38 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -298,8 +330,6 @@ export function PermohonanPenerbitanPeriksaDialog({
 
   const ceklisList = dataJenisSPM?.data || []
 
-  const fileRef = form.register('nama_file_asli')
-
   const handleAction = async (action: 'terima' | 'tolak') => {
     if (!currentRow?.id_sp2d) return
     const now = new Date()
@@ -372,7 +402,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                   control={form.control}
                   name='no_spm'
                   render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1 pb-5'>
                       <FormLabel className='col-span-2 text-end'>
                         No SPM
                       </FormLabel>
@@ -382,6 +412,8 @@ export function PermohonanPenerbitanPeriksaDialog({
                           className='col-span-4'
                           autoComplete='off'
                           {...field}
+                          readOnly
+                          disabled
                         />
                       </FormControl>
                       <FormMessage className='col-span-4 col-start-3' />
@@ -412,6 +444,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                             onValueChange={field.onChange}
                             value={field.value}
                             className='flex flex-row gap-2'
+                            disabled
                           >
                             {data?.data?.map(
                               (item: CeklisKelengkapanDokumen) => (
@@ -442,7 +475,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                     control={form.control}
                     name='id_berkas'
                     render={() => (
-                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1 pb-5'>
                         {/* Label kolom kiri */}
                         <FormLabel className='col-span-2 pt-2 text-end'>
                           Daftar Berkas
@@ -470,6 +503,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                                       <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
                                         <FormControl>
                                           <Checkbox
+                                            disabled
                                             checked={value.includes(
                                               String(item.id)
                                             )}
@@ -508,7 +542,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                 )}
 
                 {/* === URUSAN SECTION === */}
-                <div className='space-y-3'>
+                <div className='space-y-3 pb-5'>
                   <div className='flex items-center justify-between'>
                     <FormLabel>Urusan & Program</FormLabel>
                     <Button
@@ -563,35 +597,34 @@ export function PermohonanPenerbitanPeriksaDialog({
                   control={form.control}
                   name='sumber_dana'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Sumber Dana</FormLabel>
                       <FormControl>
                         <Command className='rounded-md border'>
                           <CommandInput placeholder='Pilih sumber dana...' />
                           <CommandList>
-                            {itemsSD.length === 0 && (
-                              <CommandEmpty>Tidak ada data</CommandEmpty>
+                            {field.value.length === 0 && (
+                              <CommandEmpty>
+                                Tidak ada yang dipilih
+                              </CommandEmpty>
                             )}
                             <CommandGroup>
-                              {itemsSD.map((r) => (
-                                <CommandItem
-                                  key={r.value}
-                                  onSelect={() => {
-                                    if (!field.value.includes(r.value)) {
-                                      field.onChange([...field.value, r.value])
-                                    } else {
+                              {itemsSD
+                                .filter((r) => field.value.includes(r.value))
+                                .map((r) => (
+                                  <CommandItem
+                                    disabled
+                                    key={r.value}
+                                    onSelect={() => {
                                       field.onChange(
                                         field.value.filter((v) => v !== r.value)
                                       )
-                                    }
-                                  }}
-                                >
-                                  <span>{r.label}</span>
-                                  {field.value.includes(r.value) && (
+                                    }}
+                                  >
+                                    <span>{r.label}</span>
                                     <CheckIcon className='ml-auto h-4 w-4' />
-                                  )}
-                                </CommandItem>
-                              ))}
+                                  </CommandItem>
+                                ))}
                             </CommandGroup>
                           </CommandList>
                         </Command>
@@ -605,10 +638,10 @@ export function PermohonanPenerbitanPeriksaDialog({
                   control={form.control}
                   name='nilai_belanja'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Nilai Belanja</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -622,21 +655,7 @@ export function PermohonanPenerbitanPeriksaDialog({
                     <FormItem>
                       <FormLabel>Uraian SPM</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='nama_file_asli'
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Upload File</FormLabel>
-                      <FormControl>
-                        <Input type='file' {...fileRef} />
+                        <Textarea {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -13,7 +13,7 @@ export function usePutPermohonanSp2d() {
     mutationFn: async (formData: FormData) => {
       const id_sp2d = formData.get('id_sp2d')
       if (!id_sp2d) throw new Error('ID harus ada')
-      const { data } = await api.put<Sp2dItem>(
+      const { data } = await api.post<Sp2dItem>(
         `/sp2d/permohonan-sp2d/${id_sp2d}`,
         formData,
         {

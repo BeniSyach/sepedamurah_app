@@ -17,7 +17,7 @@ import {
 } from '@/api'
 import { Check, CheckIcon, Plus, X } from 'lucide-react'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { pdfjs } from 'react-pdf'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
@@ -49,6 +49,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
 import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -154,7 +156,6 @@ export function PermohonanDitolakPeriksaDialog({
 }) {
   const isEdit = !!currentRow
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [numPages, setNumPages] = useState<number>(0)
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
   // jenis_bekas
@@ -273,13 +274,8 @@ export function PermohonanDitolakPeriksaDialog({
       isMounted = false
       if (fileUrl) URL.revokeObjectURL(fileUrl)
       setFileUrl(null)
-      setNumPages(0)
     }
   }, [currentRow?.id_sp2d, open])
-
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages)
-  }
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -294,8 +290,6 @@ export function PermohonanDitolakPeriksaDialog({
   })
 
   const ceklisList = dataJenisSPM?.data || []
-
-  const fileRef = form.register('nama_file_asli')
 
   const handleAction = async (action: 'terima' | 'tolak') => {
     if (!currentRow?.id_sp2d) return
@@ -361,6 +355,7 @@ export function PermohonanDitolakPeriksaDialog({
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
+          {/* FORM + DOCUMENT */}
           <div className='flex flex-1 gap-4 overflow-hidden'>
             <div className='flex-1 overflow-y-auto border-r p-4'>
               <Form {...form}>
@@ -368,7 +363,7 @@ export function PermohonanDitolakPeriksaDialog({
                   control={form.control}
                   name='no_spm'
                   render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1 pb-5'>
                       <FormLabel className='col-span-2 text-end'>
                         No SPM
                       </FormLabel>
@@ -378,6 +373,8 @@ export function PermohonanDitolakPeriksaDialog({
                           className='col-span-4'
                           autoComplete='off'
                           {...field}
+                          readOnly
+                          disabled
                         />
                       </FormControl>
                       <FormMessage className='col-span-4 col-start-3' />
@@ -408,6 +405,7 @@ export function PermohonanDitolakPeriksaDialog({
                             onValueChange={field.onChange}
                             value={field.value}
                             className='flex flex-row gap-2'
+                            disabled
                           >
                             {data?.data?.map(
                               (item: CeklisKelengkapanDokumen) => (
@@ -438,7 +436,7 @@ export function PermohonanDitolakPeriksaDialog({
                     control={form.control}
                     name='id_berkas'
                     render={() => (
-                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1 pb-5'>
                         {/* Label kolom kiri */}
                         <FormLabel className='col-span-2 pt-2 text-end'>
                           Daftar Berkas
@@ -466,6 +464,7 @@ export function PermohonanDitolakPeriksaDialog({
                                       <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
                                         <FormControl>
                                           <Checkbox
+                                            disabled
                                             checked={value.includes(
                                               String(item.id)
                                             )}
@@ -504,7 +503,7 @@ export function PermohonanDitolakPeriksaDialog({
                 )}
 
                 {/* === URUSAN SECTION === */}
-                <div className='space-y-3'>
+                <div className='space-y-3 pb-5'>
                   <div className='flex items-center justify-between'>
                     <FormLabel>Urusan & Program</FormLabel>
                     <Button
@@ -559,35 +558,34 @@ export function PermohonanDitolakPeriksaDialog({
                   control={form.control}
                   name='sumber_dana'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Sumber Dana</FormLabel>
                       <FormControl>
                         <Command className='rounded-md border'>
                           <CommandInput placeholder='Pilih sumber dana...' />
                           <CommandList>
-                            {itemsSD.length === 0 && (
-                              <CommandEmpty>Tidak ada data</CommandEmpty>
+                            {field.value.length === 0 && (
+                              <CommandEmpty>
+                                Tidak ada yang dipilih
+                              </CommandEmpty>
                             )}
                             <CommandGroup>
-                              {itemsSD.map((r) => (
-                                <CommandItem
-                                  key={r.value}
-                                  onSelect={() => {
-                                    if (!field.value.includes(r.value)) {
-                                      field.onChange([...field.value, r.value])
-                                    } else {
+                              {itemsSD
+                                .filter((r) => field.value.includes(r.value))
+                                .map((r) => (
+                                  <CommandItem
+                                    disabled
+                                    key={r.value}
+                                    onSelect={() => {
                                       field.onChange(
                                         field.value.filter((v) => v !== r.value)
                                       )
-                                    }
-                                  }}
-                                >
-                                  <span>{r.label}</span>
-                                  {field.value.includes(r.value) && (
+                                    }}
+                                  >
+                                    <span>{r.label}</span>
                                     <CheckIcon className='ml-auto h-4 w-4' />
-                                  )}
-                                </CommandItem>
-                              ))}
+                                  </CommandItem>
+                                ))}
                             </CommandGroup>
                           </CommandList>
                         </Command>
@@ -601,10 +599,10 @@ export function PermohonanDitolakPeriksaDialog({
                   control={form.control}
                   name='nilai_belanja'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='pb-5'>
                       <FormLabel>Nilai Belanja</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -618,76 +616,47 @@ export function PermohonanDitolakPeriksaDialog({
                     <FormItem>
                       <FormLabel>Uraian SPM</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} disabled readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name='nama_file_asli'
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Upload File</FormLabel>
-                      <FormControl>
-                        <Input type='file' {...fileRef} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* PDF Preview */}
-                <div className='flex h-screen items-center justify-center'>
-                  <div className='h-[500px] w-1/2 overflow-auto rounded border'>
-                    {fileUrl ? (
-                      <Document
-                        file={fileUrl}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                        onLoadError={(err) =>
-                          toast.error(`Gagal memuat PDF: ${err.message}`)
-                        }
-                        loading={
-                          <p className='mt-10 text-center'>Loading PDF...</p>
-                        }
-                      >
-                        {Array.from({ length: numPages }, (_, i) => (
-                          <Page
-                            key={`page_${i + 1}`}
-                            pageNumber={i + 1}
-                            width={600}
-                            renderAnnotationLayer={false} // optional, bisa lebih ringan
-                            renderTextLayer={false} // optional
-                          />
-                        ))}
-                      </Document>
-                    ) : (
-                      <p className='mt-10 text-center'>Loading PDF...</p>
-                    )}
-                  </div>
-                </div>
               </Form>
             </div>
-          </div>
-        </div>
 
-        <DialogFooter className='flex justify-end gap-2'>
-          <Button
-            variant='outline'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('terima')}
-          >
-            <Check size={16} /> Terima
-          </Button>
-          <Button
-            variant='destructive'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('tolak')}
-          >
-            <X size={16} /> Tolak
-          </Button>
-        </DialogFooter>
+            {/* PDF Preview */}
+            <div className='flex-1 overflow-auto border-l p-4'>
+              {fileUrl ? (
+                <iframe
+                  src={fileUrl}
+                  className='h-full w-full'
+                  title='PDF Viewer'
+                  frameBorder='0'
+                />
+              ) : (
+                <p className='mt-10 text-center'>Loading PDF...</p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className='mt-2 flex justify-end gap-2'>
+            <Button
+              variant='outline'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('terima')}
+            >
+              <Check size={16} /> Terima
+            </Button>
+            <Button
+              variant='destructive'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('tolak')}
+            >
+              <X size={16} /> Tolak
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContentLarge>
     </Dialog>
   )
