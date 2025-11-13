@@ -24,8 +24,13 @@ export function PermohonanDiterimaSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    menu: 'sp2d_diterima',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_sp2d_terima_operator'
+        : 'sp2d_diterima',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

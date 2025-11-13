@@ -24,8 +24,13 @@ export function Sp2dKirimBank() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    menu: 'sp2d_kirim_bank',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_sp2d_kirim_bank_operator'
+        : 'sp2d_kirim_bank',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

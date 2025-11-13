@@ -24,8 +24,13 @@ export function PermohonanDitolakSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    menu: 'sp2d_ditolak',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_sp2d_tolak_operator'
+        : 'sp2d_ditolak',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (
