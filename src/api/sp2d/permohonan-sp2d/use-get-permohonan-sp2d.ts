@@ -8,6 +8,8 @@ interface UsePermohonanSP2D {
   search?: string
   menu?: string
   user_id?: string | number
+  operator_id?: string | number
+  level_akses?: string
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
@@ -21,6 +23,7 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
           search: params.search ?? '',
           menu: params.menu,
           user_id: params.user_id,
+          level_akses: params.level_akses,
         },
       })
       return data

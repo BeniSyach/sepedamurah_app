@@ -29,15 +29,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected users'
-              title='Delete selected users'
+              aria-label='Hapus Berkas Masuk SP2D'
+              title='Hapus Berkas Masuk SP2D'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected users</span>
+              <span className='sr-only'>Hapus Berkas Masuk SP2D</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected users</p>
+            <p>Hapus Berkas Masuk SP2D</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

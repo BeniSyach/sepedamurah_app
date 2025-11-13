@@ -27,8 +27,13 @@ export function PermohonanPenerbitanSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    menu: 'permohonan_sp2d',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_sp2d_operator'
+        : 'permohonan_sp2d',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (
