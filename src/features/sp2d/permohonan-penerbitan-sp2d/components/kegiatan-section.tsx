@@ -125,16 +125,31 @@ export function KegiatanSection({
                   value={
                     kegiatanOptions.find(
                       (k) =>
-                        k.kd_keg1 ===
-                          (control._formValues?.urusan?.[indexUrusan]
+                        k.value ===
+                        [
+                          control._formValues?.urusan?.[indexUrusan]
                             ?.bidangUrusan?.[indexBidang]?.program?.[
                             indexProgram
-                          ]?.kegiatan?.[indexKegiatan]?.kd_keg1 ?? '') &&
-                        k.kd_keg2 ===
-                          (control._formValues?.urusan?.[indexUrusan]
+                          ]?.kegiatan?.[indexKegiatan]?.kd_keg1,
+                          control._formValues?.urusan?.[indexUrusan]
                             ?.bidangUrusan?.[indexBidang]?.program?.[
                             indexProgram
-                          ]?.kegiatan?.[indexKegiatan]?.kd_keg2 ?? '')
+                          ]?.kegiatan?.[indexKegiatan]?.kd_keg2,
+                          control._formValues?.urusan?.[indexUrusan]
+                            ?.bidangUrusan?.[indexBidang]?.program?.[
+                            indexProgram
+                          ]?.kegiatan?.[indexKegiatan]?.kd_keg3,
+                          control._formValues?.urusan?.[indexUrusan]
+                            ?.bidangUrusan?.[indexBidang]?.program?.[
+                            indexProgram
+                          ]?.kegiatan?.[indexKegiatan]?.kd_keg4,
+                          control._formValues?.urusan?.[indexUrusan]
+                            ?.bidangUrusan?.[indexBidang]?.program?.[
+                            indexProgram
+                          ]?.kegiatan?.[indexKegiatan]?.kd_keg5,
+                        ]
+                          .filter(Boolean)
+                          .join('.')
                     )?.value || ''
                   }
                 >
