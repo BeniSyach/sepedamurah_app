@@ -251,175 +251,182 @@ export function PermohonanDiterimaActionDialog({
         title='Form Permohonan SP2D'
         description='Lengkapi data di bawah ini.'
       >
-        <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
-          <Form {...form}>
-            <form
-              id='sp2d-form'
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-4 px-0.5'
-            >
-              <FormField
-                control={form.control}
-                name='no_spm'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      No SPM
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='No SPM'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
+        <div className='flex h-full flex-col'>
+          <div className='flex flex-1 gap-4 overflow-hidden'>
+            <div className='flex-1 overflow-y-auto border-r p-4'>
+              <Form {...form}>
+                <form
+                  id='sp2d-form'
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='space-y-4 px-0.5'
+                >
+                  <FormField
+                    control={form.control}
+                    name='no_spm'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          No SPM
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='No SPM'
+                            className='col-span-4'
+                            autoComplete='off'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='col-span-4 col-start-3' />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name='jenis_berkas'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
-                    <FormLabel className='col-span-2 pt-2 text-end'>
-                      Jenis SPM
-                    </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name='jenis_berkas'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
+                        <FormLabel className='col-span-2 pt-2 text-end'>
+                          Jenis SPM
+                        </FormLabel>
 
-                    <FormControl className='col-span-4'>
-                      {isLoading ? (
-                        <p className='text-muted-foreground text-sm'>
-                          Memuat data...
-                        </p>
-                      ) : isError ? (
-                        <p className='text-destructive text-sm'>
-                          Gagal memuat data
-                        </p>
-                      ) : (
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          className='flex flex-row gap-2'
-                        >
-                          {data?.data?.map((item: CeklisKelengkapanDokumen) => (
-                            <label
-                              key={item.id}
-                              className='flex items-center gap-2 text-sm'
+                        <FormControl className='col-span-4'>
+                          {isLoading ? (
+                            <p className='text-muted-foreground text-sm'>
+                              Memuat data...
+                            </p>
+                          ) : isError ? (
+                            <p className='text-destructive text-sm'>
+                              Gagal memuat data
+                            </p>
+                          ) : (
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className='flex flex-row gap-2'
                             >
-                              <RadioGroupItem
-                                value={item.kategori}
-                                id={`jenis-${item.id}`}
-                              />
-                              <span>{item.kategori}</span>
-                            </label>
-                          ))}
-                        </RadioGroup>
-                      )}
-                    </FormControl>
+                              {data?.data?.map(
+                                (item: CeklisKelengkapanDokumen) => (
+                                  <label
+                                    key={item.id}
+                                    className='flex items-center gap-2 text-sm'
+                                  >
+                                    <RadioGroupItem
+                                      value={item.kategori}
+                                      id={`jenis-${item.id}`}
+                                    />
+                                    <span>{item.kategori}</span>
+                                  </label>
+                                )
+                              )}
+                            </RadioGroup>
+                          )}
+                        </FormControl>
 
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
+                        <FormMessage className='col-span-4 col-start-3' />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* === LIST CEKLIS BERKAS === */}
-              {jenisBerkasValue && (
-                <FormField
-                  control={form.control}
-                  name='id_berkas'
-                  render={() => (
-                    <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                      {/* Label kolom kiri */}
-                      <FormLabel className='col-span-2 pt-2 text-end'>
-                        Daftar Berkas
-                      </FormLabel>
-                      {/* Isi kolom kanan */}
-                      <div className='col-span-4'>
-                        {pendingJenisSPM ? (
-                          <p className='text-muted-foreground text-sm'>
-                            Memuat daftar berkas...
-                          </p>
-                        ) : ceklisList.length === 0 ? (
-                          <p className='text-muted-foreground text-sm'>
-                            Tidak ada berkas untuk jenis ini.
-                          </p>
-                        ) : (
-                          <div className='grid grid-cols-2 gap-2'>
-                            {ceklisList.map((item) => (
-                              <FormField
-                                key={item.id}
-                                control={form.control}
-                                name='id_berkas'
-                                render={({ field }) => {
-                                  const value = field.value || []
-                                  return (
-                                    <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
-                                      <FormControl>
-                                        <Checkbox
-                                          checked={value.includes(
-                                            String(item.id)
-                                          )}
-                                          onCheckedChange={(checked) => {
-                                            if (checked) {
-                                              field.onChange([
-                                                ...value,
-                                                String(item.id),
-                                              ])
-                                            } else {
-                                              field.onChange(
-                                                value.filter(
-                                                  (v) => v !== String(item.id)
-                                                )
-                                              )
-                                            }
-                                          }}
-                                        />
-                                      </FormControl>
-                                      <FormLabel className='text-sm font-normal'>
-                                        {item.nama_berkas}
-                                      </FormLabel>
-                                    </FormItem>
-                                  )
-                                }}
-                              />
-                            ))}
+                  {/* === LIST CEKLIS BERKAS === */}
+                  {jenisBerkasValue && (
+                    <FormField
+                      control={form.control}
+                      name='id_berkas'
+                      render={() => (
+                        <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                          {/* Label kolom kiri */}
+                          <FormLabel className='col-span-2 pt-2 text-end'>
+                            Daftar Berkas
+                          </FormLabel>
+                          {/* Isi kolom kanan */}
+                          <div className='col-span-4'>
+                            {pendingJenisSPM ? (
+                              <p className='text-muted-foreground text-sm'>
+                                Memuat daftar berkas...
+                              </p>
+                            ) : ceklisList.length === 0 ? (
+                              <p className='text-muted-foreground text-sm'>
+                                Tidak ada berkas untuk jenis ini.
+                              </p>
+                            ) : (
+                              <div className='grid grid-cols-2 gap-2'>
+                                {ceklisList.map((item) => (
+                                  <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name='id_berkas'
+                                    render={({ field }) => {
+                                      const value = field.value || []
+                                      return (
+                                        <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={value.includes(
+                                                String(item.id)
+                                              )}
+                                              onCheckedChange={(checked) => {
+                                                if (checked) {
+                                                  field.onChange([
+                                                    ...value,
+                                                    String(item.id),
+                                                  ])
+                                                } else {
+                                                  field.onChange(
+                                                    value.filter(
+                                                      (v) =>
+                                                        v !== String(item.id)
+                                                    )
+                                                  )
+                                                }
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className='text-sm font-normal'>
+                                            {item.nama_berkas}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      {/* Error message sejajar dengan kolom kanan */}
-                      <FormMessage className='col-span-4 col-start-3' />
-                    </FormItem>
+                          {/* Error message sejajar dengan kolom kanan */}
+                          <FormMessage className='col-span-4 col-start-3' />
+                        </FormItem>
+                      )}
+                    />
                   )}
-                />
-              )}
 
-              {/* === URUSAN SECTION === */}
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between'>
-                  <FormLabel>Urusan & Program</FormLabel>
-                  <Button
-                    type='button'
-                    size='sm'
-                    variant='outline'
-                    onClick={() =>
-                      append({
-                        nm_urusan: '',
-                        bidangUrusan: [
-                          {
-                            nm_bu: '',
-                            program: [
+                  {/* === URUSAN SECTION === */}
+                  <div className='space-y-3'>
+                    <div className='flex items-center justify-between'>
+                      <FormLabel>Urusan & Program</FormLabel>
+                      <Button
+                        type='button'
+                        size='sm'
+                        variant='outline'
+                        onClick={() =>
+                          append({
+                            nm_urusan: '',
+                            bidangUrusan: [
                               {
-                                nm_program: '',
-                                kegiatan: [
+                                nm_bu: '',
+                                program: [
                                   {
-                                    nm_kegiatan: '',
-                                    subKegiatan: [
+                                    nm_program: '',
+                                    kegiatan: [
                                       {
-                                        nm_subkegiatan: '',
-                                        rekening: [
-                                          { nm_rekening: '', nilai: '' },
+                                        nm_kegiatan: '',
+                                        subKegiatan: [
+                                          {
+                                            nm_subkegiatan: '',
+                                            rekening: [
+                                              { nm_rekening: '', nilai: '' },
+                                            ],
+                                          },
                                         ],
                                       },
                                     ],
@@ -427,110 +434,115 @@ export function PermohonanDiterimaActionDialog({
                                 ],
                               },
                             ],
-                          },
-                        ],
-                      })
-                    }
-                  >
-                    <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
-                  </Button>
-                </div>
+                          })
+                        }
+                      >
+                        <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
+                      </Button>
+                    </div>
 
-                {fields.map((f, i) => (
-                  <UrusanSection
-                    key={f.id}
+                    {fields.map((f, i) => (
+                      <UrusanSection
+                        key={f.id}
+                        control={form.control}
+                        indexUrusan={i}
+                        removeUrusan={() => remove(i)}
+                      />
+                    ))}
+                  </div>
+
+                  <FormField
                     control={form.control}
-                    indexUrusan={i}
-                    removeUrusan={() => remove(i)}
+                    name='sumber_dana'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sumber Dana</FormLabel>
+                        <FormControl>
+                          <Command className='rounded-md border'>
+                            <CommandInput placeholder='Pilih sumber dana...' />
+                            <CommandList>
+                              {itemsSD.length === 0 && (
+                                <CommandEmpty>Tidak ada data</CommandEmpty>
+                              )}
+                              <CommandGroup>
+                                {itemsSD.map((r) => (
+                                  <CommandItem
+                                    key={r.value}
+                                    onSelect={() => {
+                                      if (!field.value.includes(r.value)) {
+                                        field.onChange([
+                                          ...field.value,
+                                          r.value,
+                                        ])
+                                      } else {
+                                        field.onChange(
+                                          field.value.filter(
+                                            (v) => v !== r.value
+                                          )
+                                        )
+                                      }
+                                    }}
+                                  >
+                                    <span>{r.label}</span>
+                                    {field.value.includes(r.value) && (
+                                      <CheckIcon className='ml-auto h-4 w-4' />
+                                    )}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                ))}
-              </div>
 
-              <FormField
-                control={form.control}
-                name='sumber_dana'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sumber Dana</FormLabel>
-                    <FormControl>
-                      <Command className='rounded-md border'>
-                        <CommandInput placeholder='Pilih sumber dana...' />
-                        <CommandList>
-                          {itemsSD.length === 0 && (
-                            <CommandEmpty>Tidak ada data</CommandEmpty>
-                          )}
-                          <CommandGroup>
-                            {itemsSD.map((r) => (
-                              <CommandItem
-                                key={r.value}
-                                onSelect={() => {
-                                  if (!field.value.includes(r.value)) {
-                                    field.onChange([...field.value, r.value])
-                                  } else {
-                                    field.onChange(
-                                      field.value.filter((v) => v !== r.value)
-                                    )
-                                  }
-                                }}
-                              >
-                                <span>{r.label}</span>
-                                {field.value.includes(r.value) && (
-                                  <CheckIcon className='ml-auto h-4 w-4' />
-                                )}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name='nilai_belanja'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nilai Belanja</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder='Nilai Belanja' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name='nilai_belanja'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nilai Belanja</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder='Nilai Belanja' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name='nama_file'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Uraian SPM</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} placeholder='Uraian SPM' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name='nama_file'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Uraian SPM</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} placeholder='Uraian SPM' />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='nama_file_asli'
-                render={() => (
-                  <FormItem>
-                    <FormLabel>Upload File</FormLabel>
-                    <FormControl>
-                      <Input type='file' {...fileRef} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
+                  <FormField
+                    control={form.control}
+                    name='nama_file_asli'
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Upload File</FormLabel>
+                        <FormControl>
+                          <Input type='file' {...fileRef} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+            </div>
+          </div>
         </div>
 
         <DialogFooter>

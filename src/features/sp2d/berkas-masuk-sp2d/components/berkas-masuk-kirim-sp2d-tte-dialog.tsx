@@ -45,6 +45,8 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 const formSchema = z.object({
   id: z.string().optional(),
   keterangan: z.string().min(1),
@@ -280,156 +282,165 @@ export function BerkasMasukKirimTTEDialog({
         title='Form Permohonan SP2D'
         description='Lengkapi data di bawah ini.'
       >
-        <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
-          <Form {...form}>
-            <form
-              id='berkas-masuk-kirim-sp2d-form'
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-4 px-0.5'
-            >
-              <FormField
-                control={form.control}
-                name='tanggal_upload'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Tanggal SP2D
-                    </FormLabel>
-                    <DatePicker
-                      selected={field.value}
-                      onSelect={field.onChange}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='skpd'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>SKPD</FormLabel>
-                    <div className='col-span-4'>
-                      <SelectDropdown
-                        defaultValue={String(field.value ?? '')}
-                        onValueChange={(val) => field.onChange(val)}
-                        placeholder='Pilih SKPD'
-                        className='w-full break-words whitespace-normal'
-                        items={itemsSKPD.map(({ label, value }) => ({
-                          label,
-                          value,
-                        }))}
-                        disabled
-                      />
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='kuasa_bud'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Kuasa BUD
-                    </FormLabel>
-                    <div className='col-span-4'>
-                      <SelectDropdown
-                        defaultValue={String(field.value ?? '')}
-                        onValueChange={(val) => {
-                          field.onChange(val)
-
-                          const selected = itemsKuasaBUD.find(
-                            (x) => x.value === val
-                          )
-
-                          if (selected) {
-                            form.setValue('id_penandatangan', selected.id_user)
-                          } else {
-                            form.setValue('id_penandatangan', '')
-                          }
-                        }}
-                        placeholder='Pilih Kuasa BUD'
-                        className='w-full break-words whitespace-normal'
-                        items={itemsKuasaBUD.map(({ label, value }) => ({
-                          label,
-                          value,
-                        }))}
-                        disabled
-                      />
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='keterangan'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Uraian SPM
-                    </FormLabel>
-                    <div className='col-span-4 flex flex-col'>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          placeholder='Uraian SPM'
-                          disabled
+        <div className='flex h-full flex-col'>
+          <div className='flex flex-1 gap-4 overflow-hidden'>
+            <div className='flex-1 overflow-y-auto border-r p-4'>
+              <Form {...form}>
+                <form
+                  id='berkas-masuk-kirim-sp2d-form'
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='space-y-4 px-0.5'
+                >
+                  <FormField
+                    control={form.control}
+                    name='tanggal_upload'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          Tanggal SP2D
+                        </FormLabel>
+                        <DatePicker
+                          selected={field.value}
+                          onSelect={field.onChange}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='no_sp2d'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      No SP2D
-                    </FormLabel>
-                    <div className='col-span-4 flex flex-col'>
-                      <FormControl>
-                        <Input {...field} placeholder='No SP2D' />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='nama_file_asli'
-                render={() => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
-                    {/* Label di sisi kiri */}
-                    <FormLabel className='col-span-2 text-end'>
-                      Upload File
-                    </FormLabel>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='skpd'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          SKPD
+                        </FormLabel>
+                        <div className='col-span-4'>
+                          <SelectDropdown
+                            defaultValue={String(field.value ?? '')}
+                            onValueChange={(val) => field.onChange(val)}
+                            placeholder='Pilih SKPD'
+                            className='w-full break-words whitespace-normal'
+                            items={itemsSKPD.map(({ label, value }) => ({
+                              label,
+                              value,
+                            }))}
+                            disabled
+                          />
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='kuasa_bud'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          Kuasa BUD
+                        </FormLabel>
+                        <div className='col-span-4'>
+                          <SelectDropdown
+                            defaultValue={String(field.value ?? '')}
+                            onValueChange={(val) => {
+                              field.onChange(val)
 
-                    {/* Input file */}
-                    <div className='col-span-4 flex flex-col'>
-                      <FormControl>
-                        <Input
-                          type='file'
-                          {...fileRef}
-                          className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
-                        />
-                      </FormControl>
+                              const selected = itemsKuasaBUD.find(
+                                (x) => x.value === val
+                              )
 
-                      {/* Pesan error di bawah input */}
-                      <FormMessage className='mt-1 text-xs text-red-500' />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
+                              if (selected) {
+                                form.setValue(
+                                  'id_penandatangan',
+                                  selected.id_user
+                                )
+                              } else {
+                                form.setValue('id_penandatangan', '')
+                              }
+                            }}
+                            placeholder='Pilih Kuasa BUD'
+                            className='w-full break-words whitespace-normal'
+                            items={itemsKuasaBUD.map(({ label, value }) => ({
+                              label,
+                              value,
+                            }))}
+                            disabled
+                          />
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='keterangan'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          Uraian SPM
+                        </FormLabel>
+                        <div className='col-span-4 flex flex-col'>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder='Uraian SPM'
+                              disabled
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='no_sp2d'
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
+                        <FormLabel className='col-span-2 text-end'>
+                          No SP2D
+                        </FormLabel>
+                        <div className='col-span-4 flex flex-col'>
+                          <FormControl>
+                            <Input {...field} placeholder='No SP2D' />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='nama_file_asli'
+                    render={() => (
+                      <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
+                        {/* Label di sisi kiri */}
+                        <FormLabel className='col-span-2 text-end'>
+                          Upload File
+                        </FormLabel>
+
+                        {/* Input file */}
+                        <div className='col-span-4 flex flex-col'>
+                          <FormControl>
+                            <Input
+                              type='file'
+                              {...fileRef}
+                              className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
+                            />
+                          </FormControl>
+
+                          {/* Pesan error di bawah input */}
+                          <FormMessage className='mt-1 text-xs text-red-500' />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+            </div>
+          </div>
         </div>
 
         <DialogFooter>
