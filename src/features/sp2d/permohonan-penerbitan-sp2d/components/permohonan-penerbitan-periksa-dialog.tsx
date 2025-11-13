@@ -17,7 +17,7 @@ import {
 } from '@/api'
 import { Check, CheckIcon, Plus, X } from 'lucide-react'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { pdfjs } from 'react-pdf'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
@@ -49,6 +49,28 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
 import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -130,7 +152,7 @@ export function PermohonanPenerbitanPeriksaDialog({
 }) {
   const isEdit = !!currentRow
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [numPages, setNumPages] = useState<number>(0)
+  // const [numPages, setNumPages] = useState<number>(0)
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
   // jenis_bekas
@@ -214,7 +236,10 @@ export function PermohonanPenerbitanPeriksaDialog({
 
   useEffect(() => {
     if (!currentRow?.id_sp2d || !open) return
+
     let isMounted = true
+    let pdfUrl: string | null = null
+
     const fetchPdf = async () => {
       try {
         const response = await api.get<Blob>(
@@ -226,16 +251,17 @@ export function PermohonanPenerbitanPeriksaDialog({
               Pragma: 'no-cache',
               Expires: '0',
             },
-            params: {
-              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
-            },
+            params: { t: Date.now() }, // bypass cache
           }
         )
 
         const blob = new Blob([response.data], { type: 'application/pdf' })
-        const url = URL.createObjectURL(blob)
-        if (isMounted) setFileUrl(url)
-        toast.success('File berhasil diambil!')
+        pdfUrl = URL.createObjectURL(blob)
+
+        if (isMounted) {
+          setFileUrl(pdfUrl)
+          toast.success('File berhasil diambil!')
+        }
       } catch (err: unknown) {
         const error = err as AxiosError
         toast.error(
@@ -246,18 +272,17 @@ export function PermohonanPenerbitanPeriksaDialog({
 
     fetchPdf()
 
-    // Cleanup: revoke URL saat modal ditutup
     return () => {
       isMounted = false
-      if (fileUrl) URL.revokeObjectURL(fileUrl)
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl) // revoke URL lokal
       setFileUrl(null)
-      setNumPages(0)
+      // setNumPages(0);
     }
   }, [currentRow?.id_sp2d, open])
 
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages)
-  }
+  // const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+  //   setNumPages(numPages)
+  // }
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -338,169 +363,178 @@ export function PermohonanPenerbitanPeriksaDialog({
         title='Form Permohonan SP2D'
         description='Lengkapi data di bawah ini.'
       >
-        <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
-          <Form {...form}>
-            <FormField
-              control={form.control}
-              name='no_spm'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>No SPM</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='No SPM'
-                      className='col-span-4'
-                      autoComplete='off'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className='col-span-4 col-start-3' />
-                </FormItem>
-              )}
-            />
+        <div className='flex h-full flex-col'>
+          {/* FORM + DOCUMENT */}
+          <div className='flex flex-1 gap-4 overflow-hidden'>
+            <div className='flex-1 overflow-y-auto border-r p-4'>
+              <Form {...form}>
+                <FormField
+                  control={form.control}
+                  name='no_spm'
+                  render={({ field }) => (
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                      <FormLabel className='col-span-2 text-end'>
+                        No SPM
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='No SPM'
+                          className='col-span-4'
+                          autoComplete='off'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name='jenis_berkas'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
-                  <FormLabel className='col-span-2 pt-2 text-end'>
-                    Jenis SPM
-                  </FormLabel>
+                <FormField
+                  control={form.control}
+                  name='jenis_berkas'
+                  render={({ field }) => (
+                    <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
+                      <FormLabel className='col-span-2 pt-2 text-end'>
+                        Jenis SPM
+                      </FormLabel>
 
-                  <FormControl className='col-span-4'>
-                    {isLoading ? (
-                      <p className='text-muted-foreground text-sm'>
-                        Memuat data...
-                      </p>
-                    ) : isError ? (
-                      <p className='text-destructive text-sm'>
-                        Gagal memuat data
-                      </p>
-                    ) : (
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className='flex flex-row gap-2'
-                      >
-                        {data?.data?.map((item: CeklisKelengkapanDokumen) => (
-                          <label
-                            key={item.id}
-                            className='flex items-center gap-2 text-sm'
+                      <FormControl className='col-span-4'>
+                        {isLoading ? (
+                          <p className='text-muted-foreground text-sm'>
+                            Memuat data...
+                          </p>
+                        ) : isError ? (
+                          <p className='text-destructive text-sm'>
+                            Gagal memuat data
+                          </p>
+                        ) : (
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className='flex flex-row gap-2'
                           >
-                            <RadioGroupItem
-                              value={item.kategori}
-                              id={`jenis-${item.id}`}
-                            />
-                            <span>{item.kategori}</span>
-                          </label>
-                        ))}
-                      </RadioGroup>
-                    )}
-                  </FormControl>
+                            {data?.data?.map(
+                              (item: CeklisKelengkapanDokumen) => (
+                                <label
+                                  key={item.id}
+                                  className='flex items-center gap-2 text-sm'
+                                >
+                                  <RadioGroupItem
+                                    value={item.kategori}
+                                    id={`jenis-${item.id}`}
+                                  />
+                                  <span>{item.kategori}</span>
+                                </label>
+                              )
+                            )}
+                          </RadioGroup>
+                        )}
+                      </FormControl>
 
-                  <FormMessage className='col-span-4 col-start-3' />
-                </FormItem>
-              )}
-            />
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )}
+                />
 
-            {/* === LIST CEKLIS BERKAS === */}
-            {jenisBerkasValue && (
-              <FormField
-                control={form.control}
-                name='id_berkas'
-                render={() => (
-                  <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                    {/* Label kolom kiri */}
-                    <FormLabel className='col-span-2 pt-2 text-end'>
-                      Daftar Berkas
-                    </FormLabel>
-                    {/* Isi kolom kanan */}
-                    <div className='col-span-4'>
-                      {pendingJenisSPM ? (
-                        <p className='text-muted-foreground text-sm'>
-                          Memuat daftar berkas...
-                        </p>
-                      ) : ceklisList.length === 0 ? (
-                        <p className='text-muted-foreground text-sm'>
-                          Tidak ada berkas untuk jenis ini.
-                        </p>
-                      ) : (
-                        <div className='grid grid-cols-2 gap-2'>
-                          {ceklisList.map((item) => (
-                            <FormField
-                              key={item.id}
-                              control={form.control}
-                              name='id_berkas'
-                              render={({ field }) => {
-                                const value = field.value || []
-                                return (
-                                  <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={value.includes(
-                                          String(item.id)
-                                        )}
-                                        onCheckedChange={(checked) => {
-                                          if (checked) {
-                                            field.onChange([
-                                              ...value,
-                                              String(item.id),
-                                            ])
-                                          } else {
-                                            field.onChange(
-                                              value.filter(
-                                                (v) => v !== String(item.id)
-                                              )
-                                            )
-                                          }
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormLabel className='text-sm font-normal'>
-                                      {item.nama_berkas}
-                                    </FormLabel>
-                                  </FormItem>
-                                )
-                              }}
-                            />
-                          ))}
+                {/* === LIST CEKLIS BERKAS === */}
+                {jenisBerkasValue && (
+                  <FormField
+                    control={form.control}
+                    name='id_berkas'
+                    render={() => (
+                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                        {/* Label kolom kiri */}
+                        <FormLabel className='col-span-2 pt-2 text-end'>
+                          Daftar Berkas
+                        </FormLabel>
+                        {/* Isi kolom kanan */}
+                        <div className='col-span-4'>
+                          {pendingJenisSPM ? (
+                            <p className='text-muted-foreground text-sm'>
+                              Memuat daftar berkas...
+                            </p>
+                          ) : ceklisList.length === 0 ? (
+                            <p className='text-muted-foreground text-sm'>
+                              Tidak ada berkas untuk jenis ini.
+                            </p>
+                          ) : (
+                            <div className='grid grid-cols-2 gap-2'>
+                              {ceklisList.map((item) => (
+                                <FormField
+                                  key={item.id}
+                                  control={form.control}
+                                  name='id_berkas'
+                                  render={({ field }) => {
+                                    const value = field.value || []
+                                    return (
+                                      <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
+                                        <FormControl>
+                                          <Checkbox
+                                            checked={value.includes(
+                                              String(item.id)
+                                            )}
+                                            onCheckedChange={(checked) => {
+                                              if (checked) {
+                                                field.onChange([
+                                                  ...value,
+                                                  String(item.id),
+                                                ])
+                                              } else {
+                                                field.onChange(
+                                                  value.filter(
+                                                    (v) => v !== String(item.id)
+                                                  )
+                                                )
+                                              }
+                                            }}
+                                          />
+                                        </FormControl>
+                                        <FormLabel className='text-sm font-normal'>
+                                          {item.nama_berkas}
+                                        </FormLabel>
+                                      </FormItem>
+                                    )
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    {/* Error message sejajar dengan kolom kanan */}
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
+                        {/* Error message sejajar dengan kolom kanan */}
+                        <FormMessage className='col-span-4 col-start-3' />
+                      </FormItem>
+                    )}
+                  />
                 )}
-              />
-            )}
 
-            {/* === URUSAN SECTION === */}
-            <div className='space-y-3'>
-              <div className='flex items-center justify-between'>
-                <FormLabel>Urusan & Program</FormLabel>
-                <Button
-                  type='button'
-                  size='sm'
-                  variant='outline'
-                  disabled
-                  onClick={() =>
-                    append({
-                      nm_urusan: '',
-                      bidangUrusan: [
-                        {
-                          nm_bu: '',
-                          program: [
+                {/* === URUSAN SECTION === */}
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between'>
+                    <FormLabel>Urusan & Program</FormLabel>
+                    <Button
+                      type='button'
+                      size='sm'
+                      variant='outline'
+                      disabled
+                      onClick={() =>
+                        append({
+                          nm_urusan: '',
+                          bidangUrusan: [
                             {
-                              nm_program: '',
-                              kegiatan: [
+                              nm_bu: '',
+                              program: [
                                 {
-                                  nm_kegiatan: '',
-                                  subKegiatan: [
+                                  nm_program: '',
+                                  kegiatan: [
                                     {
-                                      nm_subkegiatan: '',
-                                      rekening: [
-                                        { nm_rekening: '', nilai: '' },
+                                      nm_kegiatan: '',
+                                      subKegiatan: [
+                                        {
+                                          nm_subkegiatan: '',
+                                          rekening: [
+                                            { nm_rekening: '', nilai: '' },
+                                          ],
+                                        },
                                       ],
                                     },
                                   ],
@@ -508,156 +542,141 @@ export function PermohonanPenerbitanPeriksaDialog({
                               ],
                             },
                           ],
-                        },
-                      ],
-                    })
-                  }
-                >
-                  <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
-                </Button>
-              </div>
+                        })
+                      }
+                    >
+                      <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
+                    </Button>
+                  </div>
 
-              {fields.map((f, i) => (
-                <UrusanSection
-                  key={f.id}
+                  {fields.map((f, i) => (
+                    <UrusanSection
+                      key={f.id}
+                      control={form.control}
+                      indexUrusan={i}
+                      removeUrusan={() => remove(i)}
+                    />
+                  ))}
+                </div>
+
+                <FormField
                   control={form.control}
-                  indexUrusan={i}
-                  removeUrusan={() => remove(i)}
+                  name='sumber_dana'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sumber Dana</FormLabel>
+                      <FormControl>
+                        <Command className='rounded-md border'>
+                          <CommandInput placeholder='Pilih sumber dana...' />
+                          <CommandList>
+                            {itemsSD.length === 0 && (
+                              <CommandEmpty>Tidak ada data</CommandEmpty>
+                            )}
+                            <CommandGroup>
+                              {itemsSD.map((r) => (
+                                <CommandItem
+                                  key={r.value}
+                                  onSelect={() => {
+                                    if (!field.value.includes(r.value)) {
+                                      field.onChange([...field.value, r.value])
+                                    } else {
+                                      field.onChange(
+                                        field.value.filter((v) => v !== r.value)
+                                      )
+                                    }
+                                  }}
+                                >
+                                  <span>{r.label}</span>
+                                  {field.value.includes(r.value) && (
+                                    <CheckIcon className='ml-auto h-4 w-4' />
+                                  )}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              ))}
+
+                <FormField
+                  control={form.control}
+                  name='nilai_belanja'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nilai Belanja</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='nama_file'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Uraian SPM</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='nama_file_asli'
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Upload File</FormLabel>
+                      <FormControl>
+                        <Input type='file' {...fileRef} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Form>
             </div>
 
-            <FormField
-              control={form.control}
-              name='sumber_dana'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sumber Dana</FormLabel>
-                  <FormControl>
-                    <Command className='rounded-md border'>
-                      <CommandInput placeholder='Pilih sumber dana...' />
-                      <CommandList>
-                        {itemsSD.length === 0 && (
-                          <CommandEmpty>Tidak ada data</CommandEmpty>
-                        )}
-                        <CommandGroup>
-                          {itemsSD.map((r) => (
-                            <CommandItem
-                              key={r.value}
-                              onSelect={() => {
-                                if (!field.value.includes(r.value)) {
-                                  field.onChange([...field.value, r.value])
-                                } else {
-                                  field.onChange(
-                                    field.value.filter((v) => v !== r.value)
-                                  )
-                                }
-                              }}
-                            >
-                              <span>{r.label}</span>
-                              {field.value.includes(r.value) && (
-                                <CheckIcon className='ml-auto h-4 w-4' />
-                              )}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='nilai_belanja'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nilai Belanja</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='nama_file'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Uraian SPM</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='nama_file_asli'
-              render={() => (
-                <FormItem>
-                  <FormLabel>Upload File</FormLabel>
-                  <FormControl>
-                    <Input type='file' {...fileRef} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             {/* PDF Preview */}
-            <div className='flex h-screen items-center justify-center'>
-              <div className='h-[500px] w-1/2 overflow-auto rounded border'>
-                {fileUrl ? (
-                  <Document
-                    file={fileUrl}
-                    onLoadSuccess={onDocumentLoadSuccess}
-                    onLoadError={(err) =>
-                      toast.error(`Gagal memuat PDF: ${err.message}`)
-                    }
-                    loading={
-                      <p className='mt-10 text-center'>Loading PDF...</p>
-                    }
-                  >
-                    {Array.from({ length: numPages }, (_, i) => (
-                      <Page
-                        key={`page_${i + 1}`}
-                        pageNumber={i + 1}
-                        width={600}
-                        renderAnnotationLayer={false} // optional, bisa lebih ringan
-                        renderTextLayer={false} // optional
-                      />
-                    ))}
-                  </Document>
-                ) : (
-                  <p className='mt-10 text-center'>Loading PDF...</p>
-                )}
-              </div>
+            <div className='flex-1 overflow-auto border-l p-4'>
+              {fileUrl ? (
+                <iframe
+                  src={fileUrl}
+                  className='h-full w-full'
+                  title='PDF Viewer'
+                  frameBorder='0'
+                />
+              ) : (
+                <p className='mt-10 text-center'>Loading PDF...</p>
+              )}
             </div>
-          </Form>
-        </div>
+          </div>
 
-        <DialogFooter className='flex justify-end gap-2'>
-          <Button
-            variant='outline'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('terima')}
-          >
-            <Check size={16} /> Terima
-          </Button>
-          <Button
-            variant='destructive'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('tolak')}
-          >
-            <X size={16} /> Tolak
-          </Button>
-        </DialogFooter>
+          <DialogFooter className='mt-2 flex justify-end gap-2'>
+            <Button
+              variant='outline'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('terima')}
+            >
+              <Check size={16} /> Terima
+            </Button>
+            <Button
+              variant='destructive'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('tolak')}
+            >
+              <X size={16} /> Tolak
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContentLarge>
     </Dialog>
   )

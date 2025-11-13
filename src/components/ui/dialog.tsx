@@ -98,10 +98,7 @@ export function DialogContentLarge({
       <DialogPrimitive.Content
         {...props}
         className={cn(
-          // Posisi tengah + ukuran besar tapi tidak full
-          'bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[90vh] w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border shadow-xl duration-200',
-          // Animasi halus Radix
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          'bg-background fixed inset-0 z-50 flex flex-col',
           className
         )}
       >
@@ -123,7 +120,7 @@ export function DialogContentLarge({
         </div>
 
         {/* Konten scrollable */}
-        <div className='overflow-y-auto p-6'>{children}</div>
+        <div className='flex-1 overflow-y-auto p-6'>{children}</div>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   )

@@ -21,7 +21,7 @@ import {
   useGetCheckSumberDana,
 } from '@/api/sp2d/check_sd'
 import { useAuthStore } from '@/stores/auth-store'
-import { formatRupiah, formatRupiahControlled } from '@/lib/utils'
+import { formatRupiahControlled } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -50,6 +50,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import { UrusanSection } from './urusan-section'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -228,7 +232,7 @@ export function UsersActionDialog({
         sisa: item.sisa,
         nm_sumber: item.nm_sumber,
       },
-      label: `${item.nm_sumber} (Sisa: ${formatRupiah(item.sisa)})`,
+      label: `${item.nm_sumber}`,
     })) ?? []
 
   const form = useForm<FormValues>({
