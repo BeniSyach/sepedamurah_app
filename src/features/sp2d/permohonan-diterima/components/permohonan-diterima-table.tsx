@@ -5,11 +5,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { Sp2dItem } from '@/api'
@@ -55,8 +51,8 @@ export function BerkasMasukSP2DTable({
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -64,9 +60,11 @@ export function BerkasMasukSP2DTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'nama_file', searchKey: 'nama_file', type: 'string' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'nama_file', // URL menjadi &filter=...
+      trim: true,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -78,25 +76,21 @@ export function BerkasMasukSP2DTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
+    manualFiltering: true, // penting bila API-filtered
     state: {
       sorting,
       pagination,
+      globalFilter,
       rowSelection,
-      columnFilters,
       columnVisibility,
     },
-    enableRowSelection: true,
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -105,11 +99,7 @@ export function BerkasMasukSP2DTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari SP2D...'
-        searchKey='nama_file'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari SP2D...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>
