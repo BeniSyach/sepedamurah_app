@@ -80,6 +80,7 @@ export function BerkasMasukSP2DTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
+    manualFiltering: true,
     state: {
       sorting,
       pagination,
@@ -107,11 +108,7 @@ export function BerkasMasukSP2DTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari SP2D...'
-        searchKey='nama_file'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari SP2D...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>
