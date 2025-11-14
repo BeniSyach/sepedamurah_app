@@ -64,10 +64,11 @@ export function BerkasMasukSP2DTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'nama_file', searchKey: 'nama_file', type: 'string' },
-      { columnId: 'no_spm', searchKey: 'nama_file', type: 'string' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'nama_file', // URL menjadi &filter=...
+      trim: true,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
