@@ -70,6 +70,12 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -299,9 +305,6 @@ export function BerkasMasukPeriksaDialog({
 
       if (action === 'terima') {
         formData.append('proses', '1')
-        formData.append('diterima', formatted)
-        formData.append('alasan_tolak', '')
-        formData.append('ditolak', '')
       } else {
         const alasan = prompt('Masukkan alasan penolakan:')
         if (!alasan) return toast.error('Alasan wajib diisi.')
