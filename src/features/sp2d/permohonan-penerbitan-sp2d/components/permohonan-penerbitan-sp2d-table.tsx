@@ -55,8 +55,8 @@ export function BerkasMasukSP2DTable({
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -80,26 +80,21 @@ export function BerkasMasukSP2DTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
-    manualFiltering: true,
+    manualFiltering: true, // penting bila API-filtered
     state: {
       sorting,
       pagination,
+      globalFilter,
       rowSelection,
-      columnFilters,
       columnVisibility,
     },
-    enableRowSelection: true,
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
