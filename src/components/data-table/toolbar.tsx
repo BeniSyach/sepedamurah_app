@@ -18,6 +18,7 @@ type DataTableToolbarProps<TData> = {
       icon?: React.ComponentType<{ className?: string }>
     }[]
   }[]
+  extraControls?: React.ReactNode // <--- opsional
 }
 
 export function DataTableToolbar<TData>({
@@ -25,6 +26,7 @@ export function DataTableToolbar<TData>({
   searchPlaceholder = 'Filter...',
   searchKey,
   filters = [],
+  extraControls,
 }: DataTableToolbarProps<TData>) {
   const isFiltered =
     table.getState().columnFilters.length > 0 || table.getState().globalFilter
@@ -51,6 +53,11 @@ export function DataTableToolbar<TData>({
             className='h-8 w-[150px] lg:w-[250px]'
           />
         )}
+        {/* Extra controls (opsional, misal RangeDatePicker) */}
+        {extraControls && (
+          <div className='flex items-center gap-2'>{extraControls}</div>
+        )}
+
         <div className='flex gap-x-2'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)

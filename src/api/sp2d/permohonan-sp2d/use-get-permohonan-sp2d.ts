@@ -10,6 +10,8 @@ interface UsePermohonanSP2D {
   user_id?: string | number
   operator_id?: string | number
   level_akses?: string
+  date_from: string | undefined
+  date_to: string | undefined
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
@@ -24,11 +26,11 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
           menu: params.menu,
           user_id: params.user_id,
           level_akses: params.level_akses,
+          date_from: params.date_from,
+          date_to: params.date_to,
         },
       })
       return data
     },
-    placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 60 * 5, // 5 menit cache
   })
 }

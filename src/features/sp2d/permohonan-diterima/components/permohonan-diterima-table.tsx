@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { Sp2dItem } from '@/api'
+import { type DateRange } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -20,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import RangeDatePicker from '@/components/form-date-range'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiSp2dItemColumns as columns } from './permohonan-diterima-columns'
 
@@ -38,6 +40,8 @@ type DataTableProps = {
   }
   search: Record<string, unknown>
   navigate: NavigateFn
+  dateRange?: { from?: Date; to?: Date }
+  onDateRangeChange?: (range: { from?: Date; to?: Date }) => void
 }
 
 export function BerkasMasukSP2DTable({
@@ -45,6 +49,8 @@ export function BerkasMasukSP2DTable({
   meta,
   search,
   navigate,
+  dateRange,
+  onDateRangeChange,
 }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -99,7 +105,25 @@ export function BerkasMasukSP2DTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar table={table} searchPlaceholder='Cari SP2D...' />
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder='Cari SP2D...'
+        extraControls={
+          <RangeDatePicker
+            value={{
+              from: dateRange?.from ?? new Date(),
+              to: dateRange?.to,
+            }}
+            onChange={(range) =>
+              onDateRangeChange?.({
+                from: range?.from ?? new Date(),
+                to: range?.to,
+              })
+            }
+            placeholder='Filter tanggal'
+          />
+        }
+      />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>
