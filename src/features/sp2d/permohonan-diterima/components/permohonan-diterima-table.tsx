@@ -9,7 +9,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { Sp2dItem } from '@/api'
-import { type DateRange } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
