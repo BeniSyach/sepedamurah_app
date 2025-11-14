@@ -21,8 +21,5 @@ export function useGetCheckSumberDana(params: UseCheckSumberDana) {
       )
       return data
     },
-    placeholderData: (previousData) => previousData,
-    refetchOnMount: true, // ✅ refetch setiap mount
-    refetchOnWindowFocus: true, // ✅ refetch saat tab aktif lagi
   })
 }
