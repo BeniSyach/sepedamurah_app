@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PermohonanPenerbitanPeriksaDialog } from './permohonan-penerbitan-periksa-dialog'
-import { UsersActionDialog } from './permohonan-penerbitan-sp2d-action-dialog'
+import { PermohonanPenerbitanSP2DActionDialog } from './permohonan-penerbitan-sp2d-action-dialog'
 import { useRefSp2dItem } from './permohonan-penerbitan-sp2d-provider'
 
 export function UsersDialogs() {
@@ -71,7 +71,7 @@ export function UsersDialogs() {
       </AlertDialog>
 
       {/* === ADD === */}
-      <UsersActionDialog
+      <PermohonanPenerbitanSP2DActionDialog
         key='permohonan-penerbitan-sp2d-add'
         open={open === 'add'}
         edit='add'
@@ -88,7 +88,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersActionDialog
+          <PermohonanPenerbitanSP2DActionDialog
             key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
             open={open === 'edit'}
             edit='edit'

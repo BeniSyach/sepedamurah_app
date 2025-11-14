@@ -93,6 +93,10 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -208,7 +212,7 @@ type FormValues = z.infer<typeof formSchema>
 // ============================
 // 🎨 COMPONENT
 // ============================
-export function UsersActionDialog({
+export function PermohonanPenerbitanSP2DActionDialog({
   currentRow,
   open,
   edit,

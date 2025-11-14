@@ -127,12 +127,12 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ tanggal_upload
   {
-    accessorKey: 'tanggal_upload',
+    accessorKey: 'diterima',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Tanggal & waktu Terima' />
     ),
     cell: ({ row }) => (
-      <div>{formatTanggaldanJam(row.getValue('tanggal_upload'))}</div>
+      <div>{formatTanggaldanJam(row.getValue('diterima'))}</div>
     ),
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },

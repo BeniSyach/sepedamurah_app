@@ -4,7 +4,7 @@ import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { BerkasMasukKirimTTEDialog } from './berkas-masuk-kirim-sp2d-tte-dialog'
 import { BerkasMasukPeriksaDialog } from './berkas-masuk-periksa-dialog'
-import { UsersActionDialog } from './berkas-masuk-sp2d-action-dialog'
+import { BerkasMasukSP2DActionDialog } from './berkas-masuk-sp2d-action-dialog'
 import { useRefSp2dItem } from './berkas-masuk-sp2d-provider'
 
 export function UsersDialogs() {
@@ -96,7 +96,7 @@ export function UsersDialogs() {
             }}
             currentRow={currentRow}
           />
-          <UsersActionDialog
+          <BerkasMasukSP2DActionDialog
             key={`berkas-masuk-sp2d-edit-${currentRow.id_sp2d}`}
             open={open === 'edit'}
             onOpenChange={() => {

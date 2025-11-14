@@ -103,7 +103,7 @@ type FormValues = z.infer<typeof formSchema>
 // ============================
 // 🎨 COMPONENT
 // ============================
-export function UsersActionDialog({
+export function BerkasMasukSP2DActionDialog({
   currentRow,
   open,
   onOpenChange,
