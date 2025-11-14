@@ -74,6 +74,7 @@ export function UsersDialogs() {
       <UsersActionDialog
         key='permohonan-penerbitan-sp2d-add'
         open={open === 'add'}
+        edit='add'
         onOpenChange={(val) => setOpen(val ? 'add' : null)}
       />
 

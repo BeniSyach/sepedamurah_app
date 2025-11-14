@@ -430,29 +430,30 @@ export function UsersActionDialog({
   const nilaiBelanja = Number(nilaiBelanjaRaw) || 0
 
   useEffect(() => {
-    if (edit == 'edit') return
+    if (!sumberDana?.length || !nilaiBelanja) return
+    if (edit == 'edit' || edit == 'add') {
+      let sisaBelanja = Number(nilaiBelanja)
+      const updated = sumberDana.map((sd: any) => {
+        const sisa = Number(sd.sisa ?? 0)
+        const alokasi = Math.min(sisaBelanja, sisa)
+        sisaBelanja -= alokasi
 
-    let sisaBelanja = Number(nilaiBelanja)
-    const updated = sumberDana.map((sd: any) => {
-      const sisa = Number(sd.sisa ?? 0)
-      const alokasi = Math.min(sisaBelanja, sisa)
-      sisaBelanja -= alokasi
+        return {
+          ...sd,
+          sisa, // pastikan number
+          nilai: alokasi, // pastikan number
+        }
+      })
 
-      return {
-        ...sd,
-        sisa, // pastikan number
-        nilai: alokasi, // pastikan number
+      if (sisaBelanja > 0) {
+        toast.warning('Total sisa sumber dana tidak mencukupi nilai belanja!')
       }
-    })
 
-    if (sisaBelanja > 0) {
-      toast.warning('Total sisa sumber dana tidak mencukupi nilai belanja!')
-    }
-
-    // hanya update jika ada perubahan sesungguhnya
-    const isDifferent = JSON.stringify(updated) !== JSON.stringify(sumberDana)
-    if (isDifferent) {
-      form.setValue('sumber_dana', updated)
+      // hanya update jika ada perubahan sesungguhnya
+      const isDifferent = JSON.stringify(updated) !== JSON.stringify(sumberDana)
+      if (isDifferent) {
+        form.setValue('sumber_dana', updated)
+      }
     }
   }, [sumberDana, nilaiBelanja])
 
