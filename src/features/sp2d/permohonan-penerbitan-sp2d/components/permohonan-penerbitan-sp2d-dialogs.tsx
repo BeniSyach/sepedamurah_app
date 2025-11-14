@@ -18,7 +18,7 @@ import { useRefSp2dItem } from './permohonan-penerbitan-sp2d-provider'
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
-
+  const levelAkses = localStorage.getItem('user_role')
   const [showClosedDialog, setShowClosedDialog] = useState(false)
 
   const isAfterClosingTime = () => {
@@ -81,13 +81,14 @@ export function UsersDialogs() {
       {/* === EDIT & DELETE === */}
       {currentRow && (
         <>
-          <PermohonanPenerbitanPeriksaDialog
-            key={`permohonan-penerbitan-sp2d-periksa-${currentRow.id_sp2d}`}
-            open={open === 'periksa'}
-            onOpenChange={(val) => setOpen(val ? 'periksa' : null)}
-            currentRow={currentRow}
-          />
-
+          {levelAkses !== 'Bendahara' && (
+            <PermohonanPenerbitanPeriksaDialog
+              key={`permohonan-penerbitan-sp2d-periksa-${currentRow.id_sp2d}`}
+              open={open === 'periksa'}
+              onOpenChange={(val) => setOpen(val ? 'periksa' : null)}
+              currentRow={currentRow}
+            />
+          )}
           <PermohonanPenerbitanSP2DActionDialog
             key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
             open={open === 'edit'}

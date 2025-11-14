@@ -114,6 +114,8 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -351,7 +353,7 @@ export function PermohonanPenerbitanPeriksaDialog({
       formData.append('nama_operator', user.name)
 
       if (action === 'terima') {
-        formData.append('proses', '1')
+        formData.append('proses', '2')
         formData.append('diterima', formatted)
         formData.append('alasan_tolak', '')
         formData.append('ditolak', '')

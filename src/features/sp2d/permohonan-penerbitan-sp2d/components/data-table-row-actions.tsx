@@ -73,9 +73,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('delete')
+              setOpen('download')
             }}
-            className='text-red-500!'
           >
             Download
             <DropdownMenuShortcut>

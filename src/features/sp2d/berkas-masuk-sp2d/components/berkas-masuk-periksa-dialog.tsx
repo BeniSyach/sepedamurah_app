@@ -66,6 +66,10 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -139,6 +143,7 @@ export function BerkasMasukPeriksaDialog({
   onAction?: (action: 'terima' | 'tolak', id: string) => void
 }) {
   const isEdit = !!currentRow
+  const user = useAuthStore((s) => s.user)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
@@ -282,7 +287,6 @@ export function BerkasMasukPeriksaDialog({
     const now = new Date()
     const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
 
-    const user = useAuthStore.getState().user
     if (!user) {
       toast.error('User belum login.')
       return
@@ -291,8 +295,7 @@ export function BerkasMasukPeriksaDialog({
     try {
       const formData = new FormData()
       formData.append('id_sp2d', currentRow.id_sp2d)
-      formData.append('id_operator', user.id.toString())
-      formData.append('nama_operator', user.name)
+      formData.append('supervisor_proses', user.id.toString())
 
       if (action === 'terima') {
         formData.append('proses', '1')

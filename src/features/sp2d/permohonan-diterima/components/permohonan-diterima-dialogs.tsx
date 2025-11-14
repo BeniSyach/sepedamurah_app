@@ -10,7 +10,7 @@ import { PermohonanDiterimaKirimTTEDialog } from './permohonan-diterima-sp2d-tte
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
-
+  const levelAkses = localStorage.getItem('user_role')
   const handleDelete = async () => {
     if (!currentRow) return
     const deletePromise = mutateAsync({ id: currentRow.id_sp2d })
@@ -91,31 +91,32 @@ export function UsersDialogs() {
             }}
             currentRow={currentRow}
           />
-
-          <PermohonanDiterimaKirimTTEDialog
-            key={`berkas-masuk-sp2d-TTE-${currentRow.id_sp2d}`}
-            open={open === 'kirimsp2d'}
-            onOpenChange={() => {
-              setOpen('kirimsp2d')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-
-          <PermohonanDiterimaPeriksaDialog
-            key={`berkas-masuk-sp2d-periksa-${currentRow.id_sp2d}`}
-            open={open === 'periksa'}
-            onOpenChange={() => {
-              setOpen('periksa')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-
+          {levelAkses !== 'Bendahara' && (
+            <PermohonanDiterimaKirimTTEDialog
+              key={`berkas-masuk-sp2d-TTE-${currentRow.id_sp2d}`}
+              open={open === 'kirimsp2d'}
+              onOpenChange={() => {
+                setOpen('kirimsp2d')
+                setTimeout(() => {
+                  setCurrentRow(null)
+                }, 500)
+              }}
+              currentRow={currentRow}
+            />
+          )}
+          {levelAkses !== 'Bendahara' && (
+            <PermohonanDiterimaPeriksaDialog
+              key={`berkas-masuk-sp2d-periksa-${currentRow.id_sp2d}`}
+              open={open === 'periksa'}
+              onOpenChange={() => {
+                setOpen('periksa')
+                setTimeout(() => {
+                  setCurrentRow(null)
+                }, 500)
+              }}
+              currentRow={currentRow}
+            />
+          )}
           <ConfirmDialog
             key={`permohonan-sp2d-delete-${currentRow.id_sp2d}`}
             destructive
