@@ -91,6 +91,8 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -209,10 +211,12 @@ type FormValues = z.infer<typeof formSchema>
 export function UsersActionDialog({
   currentRow,
   open,
+  edit,
   onOpenChange,
 }: {
   currentRow?: Sp2dItem
   open: boolean
+  edit: string
   onOpenChange: (open: boolean) => void
 }) {
   const isEdit = !!currentRow
@@ -426,7 +430,7 @@ export function UsersActionDialog({
   const nilaiBelanja = Number(nilaiBelanjaRaw) || 0
 
   useEffect(() => {
-    if (!sumberDana?.length || !nilaiBelanja) return
+    if (edit == 'edit') return
 
     let sisaBelanja = Number(nilaiBelanja)
     const updated = sumberDana.map((sd: any) => {

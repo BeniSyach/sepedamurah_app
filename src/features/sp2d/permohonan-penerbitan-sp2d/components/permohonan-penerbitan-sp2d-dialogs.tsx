@@ -90,6 +90,7 @@ export function UsersDialogs() {
           <UsersActionDialog
             key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
             open={open === 'edit'}
+            edit='edit'
             onOpenChange={(val) => setOpen(val ? 'edit' : null)}
             currentRow={currentRow}
           />

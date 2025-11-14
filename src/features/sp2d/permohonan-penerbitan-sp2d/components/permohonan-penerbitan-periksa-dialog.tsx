@@ -110,6 +110,10 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -292,7 +296,6 @@ export function PermohonanPenerbitanPeriksaDialog({
 
         if (isMounted) {
           setFileUrl(pdfUrl)
-          toast.success('File berhasil diambil!')
         }
       } catch (err: unknown) {
         const error = err as AxiosError
