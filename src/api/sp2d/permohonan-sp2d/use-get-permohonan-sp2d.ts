@@ -10,8 +10,8 @@ interface UsePermohonanSP2D {
   user_id?: string | number
   operator_id?: string | number
   level_akses?: string
-  date_from: string | undefined
-  date_to: string | undefined
+  date_from?: string | undefined
+  date_to?: string | undefined
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
