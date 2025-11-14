@@ -62,7 +62,7 @@ export function BerkasMasukSP2DTable({
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: {
       enabled: true,
-      key: 'nama_file', // URL menjadi &filter=...
+      key: 'nama_file',
       trim: true,
     },
   })
@@ -76,7 +76,6 @@ export function BerkasMasukSP2DTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
-    manualFiltering: true, // penting bila API-filtered
     state: {
       sorting,
       pagination,

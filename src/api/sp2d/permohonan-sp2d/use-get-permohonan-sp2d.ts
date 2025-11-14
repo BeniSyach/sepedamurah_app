@@ -32,5 +32,7 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
       })
       return data
     },
+    placeholderData: (previousData) => previousData,
+    staleTime: 1000 * 60 * 5, // 5 menit cache
   })
 }
