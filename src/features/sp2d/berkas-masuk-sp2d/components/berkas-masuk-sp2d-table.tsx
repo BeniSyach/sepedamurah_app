@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
+import { startOfMonth, endOfMonth } from 'date-fns'
 import {
   type SortingState,
   type VisibilityState,
@@ -109,13 +110,13 @@ export function BerkasMasukSP2DTable({
         extraControls={
           <RangeDatePicker
             value={{
-              from: dateRange?.from ?? new Date(),
-              to: dateRange?.to,
+              from: dateRange?.from ?? startOfMonth(new Date()),
+              to: dateRange?.to ?? endOfMonth(new Date()),
             }}
             onChange={(range) =>
               onDateRangeChange?.({
-                from: range?.from ?? new Date(),
-                to: range?.to,
+                from: range?.from ?? startOfMonth(new Date()),
+                to: range?.to ?? endOfMonth(new Date()),
               })
             }
             placeholder='Filter tanggal'

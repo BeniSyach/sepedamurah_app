@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { format } from 'date-fns'
+import { startOfMonth, endOfMonth, format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetPermohonanSP2D } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
@@ -15,6 +15,10 @@ import { BerkasMasukSP2DTable } from './components/permohonan-diterima-table'
 
 const route = getRouteApi('/_authenticated/dokumen/sp2d/permohonan-diterima')
 
+// Hitung awal & akhir bulan sekarang
+const defaultFrom = startOfMonth(new Date())
+const defaultTo = endOfMonth(new Date())
+
 export function PermohonanDiterimaSP2D() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
@@ -22,15 +26,17 @@ export function PermohonanDiterimaSP2D() {
   const userRole = localStorage.getItem('user_role')
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
 
+  // Gunakan dateRange jika ada, jika tidak fallback ke default
+  const finalFrom = dateRange?.from ?? defaultFrom
+  const finalTo = dateRange?.to ?? defaultTo
+
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    date_from: dateRange?.from
-      ? format(dateRange.from, 'yyyy-MM-dd')
-      : undefined,
-    date_to: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+    date_from: format(finalFrom, 'yyyy-MM-dd'),
+    date_to: format(finalTo, 'yyyy-MM-dd'),
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_sp2d_terima_operator'

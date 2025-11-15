@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
+import { startOfMonth, endOfMonth } from 'date-fns'
 import {
   type SortingState,
   type VisibilityState,
@@ -20,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import RangeDatePicker from '@/components/form-date-range'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiSp2dItemColumns as columns } from './permohonan-ditolak-columns'
 
@@ -38,6 +40,8 @@ type DataTableProps = {
   }
   search: Record<string, unknown>
   navigate: NavigateFn
+  dateRange?: { from?: Date; to?: Date }
+  onDateRangeChange?: (range: { from?: Date; to?: Date }) => void
 }
 
 export function BerkasMasukSP2DTable({
@@ -45,6 +49,8 @@ export function BerkasMasukSP2DTable({
   meta,
   search,
   navigate,
+  dateRange,
+  onDateRangeChange,
 }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -101,7 +107,22 @@ export function BerkasMasukSP2DTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Cari SP2D Ditolak...'
+        searchPlaceholder='Cari...'
+        extraControls={
+          <RangeDatePicker
+            value={{
+              from: dateRange?.from ?? startOfMonth(new Date()),
+              to: dateRange?.to ?? endOfMonth(new Date()),
+            }}
+            onChange={(range) =>
+              onDateRangeChange?.({
+                from: range?.from ?? startOfMonth(new Date()),
+                to: range?.to ?? endOfMonth(new Date()),
+              })
+            }
+            placeholder='Filter tanggal'
+          />
+        }
       />
 
       <div className='overflow-hidden rounded-md border'>
