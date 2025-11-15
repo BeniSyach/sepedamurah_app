@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetPermohonanSP2D } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
@@ -18,12 +20,17 @@ export function BerkasMasukSP2D() {
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role')
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetPermohonanSP2D({
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
+    date_from: dateRange?.from
+      ? format(dateRange.from, 'yyyy-MM-dd')
+      : undefined,
+    date_to: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
     menu: 'berkas_masuk_sp2d',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
@@ -62,6 +69,8 @@ export function BerkasMasukSP2D() {
               meta={data?.meta}
               search={search}
               navigate={navigate}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
             />
           )}
         </div>

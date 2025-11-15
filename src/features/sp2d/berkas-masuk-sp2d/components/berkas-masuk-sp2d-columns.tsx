@@ -149,8 +149,9 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       const ditolak = row.original?.ditolak
       const alasanTolak = row.original?.alasan_tolak
 
-      let color = 'bg-yellow-100 text-yellow-800'
-      let text = 'Berkas sedang diproses'
+      // 🔥 background ungu tapi tidak putih
+      let color = 'bg-purple-300 text-purple-900'
+      let text = 'Berkas terkirim'
 
       if (ditolak) {
         color = 'bg-red-100 text-red-800'

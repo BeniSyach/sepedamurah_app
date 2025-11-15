@@ -20,6 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import RangeDatePicker from '@/components/form-date-range'
 import { ReferensiSp2dItemColumns as columns } from './berkas-masuk-sp2d-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
@@ -38,6 +39,8 @@ type DataTableProps = {
   }
   search: Record<string, unknown>
   navigate: NavigateFn
+  dateRange?: { from?: Date; to?: Date }
+  onDateRangeChange?: (range: { from?: Date; to?: Date }) => void
 }
 
 export function BerkasMasukSP2DTable({
@@ -45,6 +48,8 @@ export function BerkasMasukSP2DTable({
   meta,
   search,
   navigate,
+  dateRange,
+  onDateRangeChange,
 }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -100,7 +105,22 @@ export function BerkasMasukSP2DTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Cari Berkas Masuk SP2D...'
+        searchPlaceholder='Cari...'
+        extraControls={
+          <RangeDatePicker
+            value={{
+              from: dateRange?.from ?? new Date(),
+              to: dateRange?.to,
+            }}
+            onChange={(range) =>
+              onDateRangeChange?.({
+                from: range?.from ?? new Date(),
+                to: range?.to,
+              })
+            }
+            placeholder='Filter tanggal'
+          />
+        }
       />
 
       <div className='overflow-hidden rounded-md border'>

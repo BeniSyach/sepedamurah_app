@@ -138,12 +138,22 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       <DataTableColumnHeader column={column} title='Status' />
     ),
     cell: ({ row }) => {
+      const proses = row.original?.proses
       const diterima = row.original?.diterima
       const ditolak = row.original?.ditolak
       const alasanTolak = row.original?.alasan_tolak
 
-      let color = 'bg-yellow-100 text-yellow-800'
-      let text = 'Berkas sedang diproses'
+      let color = 'bg-gray-100 text-gray-800'
+      let text = 'Status tidak diketahui'
+
+      // urutan pengecekan
+      if (proses === null) {
+        color = 'bg-blue-100 text-blue-800'
+        text = 'Berkas terkirim'
+      } else if (proses === '1') {
+        color = 'bg-yellow-100 text-yellow-800'
+        text = 'Berkas sedang diproses'
+      }
 
       if (ditolak) {
         color = 'bg-red-100 text-red-800'

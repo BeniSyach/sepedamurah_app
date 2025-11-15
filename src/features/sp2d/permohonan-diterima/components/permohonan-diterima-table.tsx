@@ -106,7 +106,7 @@ export function BerkasMasukSP2DTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Cari SP2D...'
+        searchPlaceholder='Cari...'
         extraControls={
           <RangeDatePicker
             value={{

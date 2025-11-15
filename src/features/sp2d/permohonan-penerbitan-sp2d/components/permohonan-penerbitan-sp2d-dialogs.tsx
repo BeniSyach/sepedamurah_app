@@ -89,31 +89,38 @@ export function UsersDialogs() {
               currentRow={currentRow}
             />
           )}
-          <PermohonanPenerbitanSP2DActionDialog
-            key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
-            open={open === 'edit'}
-            edit='edit'
-            onOpenChange={(val) => setOpen(val ? 'edit' : null)}
-            currentRow={currentRow}
-          />
 
-          <ConfirmDialog
-            key={`permohonan-penerbitan-sp2d-delete-${currentRow.id_sp2d}`}
-            destructive
-            open={open === 'delete'}
-            onOpenChange={(val) => setOpen(val ? 'delete' : null)}
-            handleConfirm={handleDelete}
-            className='max-w-md'
-            title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
-            desc={
-              <>
-                Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.jenis_berkas}</strong>. <br />
-                Tindakan ini tidak dapat dibatalkan.
-              </>
-            }
-            confirmText='Delete'
-          />
+          {/* Hide EDIT if proses === 1 */}
+          {currentRow.proses !== '1' && (
+            <PermohonanPenerbitanSP2DActionDialog
+              key={`permohonan-penerbitan-sp2d-edit-${currentRow.id_sp2d}`}
+              open={open === 'edit'}
+              edit='edit'
+              onOpenChange={(val) => setOpen(val ? 'edit' : null)}
+              currentRow={currentRow}
+            />
+          )}
+
+          {/* Hide DELETE if proses === 1 */}
+          {currentRow.proses !== '1' && (
+            <ConfirmDialog
+              key={`permohonan-penerbitan-sp2d-delete-${currentRow.id_sp2d}`}
+              destructive
+              open={open === 'delete'}
+              onOpenChange={(val) => setOpen(val ? 'delete' : null)}
+              handleConfirm={handleDelete}
+              className='max-w-md'
+              title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
+              desc={
+                <>
+                  Kamu akan menghapus data dengan nama{' '}
+                  <strong>{currentRow.jenis_berkas}</strong>. <br />
+                  Tindakan ini tidak dapat dibatalkan.
+                </>
+              }
+              confirmText='Delete'
+            />
+          )}
         </>
       )}
     </>
