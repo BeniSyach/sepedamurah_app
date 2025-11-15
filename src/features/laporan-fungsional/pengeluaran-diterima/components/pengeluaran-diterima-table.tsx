@@ -179,6 +179,8 @@ export function BerkasMasukPenerimaanTable({
         totalRows={totalRows}
         currentPage={currentPage}
         pageSize={meta?.per_page ?? pagination.pageSize}
+        search={search} // 🔥 WAJIB
+        navigate={navigate} // 🔥 WAJIB
       />
     </div>
   )

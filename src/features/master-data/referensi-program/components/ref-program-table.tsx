@@ -171,6 +171,8 @@ export function RefProgramTable({
         totalRows={totalRows}
         currentPage={currentPage}
         pageSize={meta?.per_page ?? pagination.pageSize}
+        search={search} // 🔥 WAJIB
+        navigate={navigate} // 🔥 WAJIB
       />
       <DataTableBulkActions table={table} />
     </div>

@@ -6,6 +6,7 @@ import {
 } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
 import { cn, getPageNumbers } from '@/lib/utils'
+import { type NavigateFn } from '@/hooks/use-table-url-state'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -20,6 +21,8 @@ type DataTablePaginationProps<TData> = {
   totalRows?: number
   currentPage?: number
   pageSize?: number
+  navigate: NavigateFn
+  search: Record<string, unknown>
 }
 
 export function DataTablePagination<TData>({
@@ -27,6 +30,8 @@ export function DataTablePagination<TData>({
   totalRows = 0,
   currentPage = table.getState().pagination.pageIndex + 1,
   pageSize = table.getState().pagination.pageSize,
+  navigate,
+  search,
 }: DataTablePaginationProps<TData>) {
   const totalPages = Math.max(Math.ceil(totalRows / pageSize), 1)
   const pageNumbers = getPageNumbers(currentPage, totalPages)
@@ -51,16 +56,26 @@ export function DataTablePagination<TData>({
           <Select
             value={`${pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value))
-              // reset ke page 1 saat ubah page size
+              const newSize = Number(value)
+
+              table.setPageSize(newSize)
               table.setPageIndex(0)
+
+              // UPDATE URL → parent akan re-fetch API
+              navigate({
+                search: {
+                  ...search,
+                  page: 1,
+                  pageSize: newSize, // <-- KUNCI UTAMA
+                },
+              })
             }}
           >
             <SelectTrigger className='h-8 w-[70px]'>
               <SelectValue placeholder={`${pageSize}`} />
             </SelectTrigger>
             <SelectContent side='top'>
-              {[10, 20, 30, 40, 50].map((size) => (
+              {[10, 20, 30, 40, 50, 100].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
                 </SelectItem>

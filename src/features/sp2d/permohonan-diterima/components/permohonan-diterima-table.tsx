@@ -192,7 +192,9 @@ export function BerkasMasukSP2DTable({
         table={table}
         totalRows={totalRows}
         currentPage={currentPage}
-        pageSize={meta?.per_page ?? pagination.pageSize}
+        pageSize={meta?.per_page ?? table.getState().pagination.pageSize}
+        search={search} // 🔥 WAJIB
+        navigate={navigate} // 🔥 WAJIB
       />
 
       <DataTableBulkActions table={table} />
