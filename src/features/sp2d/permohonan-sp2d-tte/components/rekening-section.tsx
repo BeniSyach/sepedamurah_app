@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Minus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { formatRupiah } from '@/lib/utils'
 import {
   FormField,
   FormItem,
@@ -17,17 +16,15 @@ export function RekeningSection({
   indexKegiatan,
   indexSub,
   indexRek,
-  removeRekening,
 }: any) {
   return (
-    <div className='mt-2 ml-20 grid grid-cols-2 gap-2 border-l pl-4'>
+    <div className='mt-2'>
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening.${indexRek}.nm_rekening`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>Nama Rekening</FormLabel>
-
             <FormControl>
               <Input {...field} disabled placeholder='Contoh: Belanja Barang' />
             </FormControl>
@@ -40,21 +37,24 @@ export function RekeningSection({
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening.${indexRek}.nilai`}
         render={({ field }) => (
           <FormItem>
-            <div className='flex items-center justify-between'>
+            <div className='mt-2 flex items-center justify-between'>
               <FormLabel>Nilai</FormLabel>
-              <Button
-                disabled
-                type='button'
-                size='icon'
-                variant='destructive'
-                onClick={removeRekening}
-                className='h-5 w-5'
-              >
-                <Minus className='h-4 w-4' />
-              </Button>
             </div>
             <FormControl>
-              <Input {...field} disabled type='number' placeholder='0' />
+              <Input
+                {...field}
+                readOnly
+                placeholder='0'
+                className='font-semibold'
+                value={formatRupiah(field.value ?? '')}
+                onChange={(e) => {
+                  // Ambil angka asli tanpa format
+                  const raw = e.target.value.replace(/[^0-9]/g, '')
+
+                  // Set angka mentah ke form
+                  field.onChange(raw)
+                }}
+              />
             </FormControl>
           </FormItem>
         )}

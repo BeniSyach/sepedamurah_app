@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFieldArray } from 'react-hook-form'
-import { Minus, Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
   FormField,
   FormItem,
@@ -16,15 +14,14 @@ export function ProgramSection({
   indexUrusan,
   indexBidang,
   indexProgram,
-  removeProgram,
 }: any) {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan`,
   })
 
   return (
-    <div className='mt-3 ml-8 space-y-3 border-l pl-4'>
+    <div className='mt-2'>
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.nm_program`}
@@ -32,16 +29,6 @@ export function ProgramSection({
           <FormItem>
             <div className='flex items-center justify-between'>
               <FormLabel>Nama Program</FormLabel>
-              <Button
-                type='button'
-                size='icon'
-                variant='destructive'
-                className='h-5 w-5'
-                disabled
-                onClick={removeProgram}
-              >
-                <Minus className='h-4 w-4' />
-              </Button>
             </div>
             <FormControl>
               <Input
@@ -65,16 +52,6 @@ export function ProgramSection({
           removeKegiatan={() => remove(ki)}
         />
       ))}
-
-      <Button
-        disabled
-        type='button'
-        size='sm'
-        variant='outline'
-        onClick={() => append({ nm_kegiatan: '', subKegiatan: [] })}
-      >
-        <Plus className='mr-2 h-4 w-4' /> Tambah Kegiatan
-      </Button>
     </div>
   )
 }

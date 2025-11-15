@@ -21,6 +21,7 @@ import { pdfjs } from 'react-pdf'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
+import { formatRupiah } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -49,70 +50,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
 import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -401,26 +338,27 @@ export function PermohonanPenerbitanPeriksaDialog({
         <div className='flex h-full flex-col'>
           {/* FORM + DOCUMENT */}
           <div className='flex flex-1 gap-4 overflow-hidden'>
-            <div className='flex-1 overflow-y-auto border-r p-4'>
+            <div className='flex-1 overflow-y-auto border-r p-3'>
               <Form {...form}>
                 <FormField
                   control={form.control}
                   name='no_spm'
                   render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1 pb-5'>
-                      <FormLabel className='col-span-2 text-end'>
+                    <FormItem className='grid grid-cols-5 items-center gap-x-2 gap-y-0 pb-3'>
+                      <FormLabel className='col-span-1 text-end'>
                         No SPM
                       </FormLabel>
-                      <FormControl>
+
+                      <FormControl className='col-span-4'>
                         <Input
                           placeholder='No SPM'
-                          className='col-span-4'
                           autoComplete='off'
                           {...field}
                           readOnly
                           disabled
                         />
                       </FormControl>
+
                       <FormMessage className='col-span-4 col-start-3' />
                     </FormItem>
                   )}
@@ -430,8 +368,8 @@ export function PermohonanPenerbitanPeriksaDialog({
                   control={form.control}
                   name='jenis_berkas'
                   render={({ field }) => (
-                    <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
-                      <FormLabel className='col-span-2 pt-2 text-end'>
+                    <FormItem className='grid grid-cols-5 items-center gap-x-2 gap-y-0 pb-3'>
+                      <FormLabel className='col-span-1 pt-2 text-end'>
                         Jenis SPM
                       </FormLabel>
 
@@ -480,9 +418,9 @@ export function PermohonanPenerbitanPeriksaDialog({
                     control={form.control}
                     name='id_berkas'
                     render={() => (
-                      <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1 pb-5'>
+                      <FormItem className='grid grid-cols-5 items-start gap-x-2 gap-y-0 pb-3'>
                         {/* Label kolom kiri */}
-                        <FormLabel className='col-span-2 pt-2 text-end'>
+                        <FormLabel className='col-span-1 pt-2 text-end'>
                           Daftar Berkas
                         </FormLabel>
                         {/* Isi kolom kanan */}
@@ -606,7 +544,10 @@ export function PermohonanPenerbitanPeriksaDialog({
                       <FormLabel>Sumber Dana</FormLabel>
                       <FormControl>
                         <Command className='rounded-md border'>
-                          <CommandInput placeholder='Pilih sumber dana...' />
+                          <CommandInput
+                            disabled
+                            placeholder='Pilih sumber dana...'
+                          />
                           <CommandList>
                             {field.value.length === 0 && (
                               <CommandEmpty>
@@ -646,7 +587,20 @@ export function PermohonanPenerbitanPeriksaDialog({
                     <FormItem className='pb-5'>
                       <FormLabel>Nilai Belanja</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled readOnly />
+                        <Input
+                          {...field}
+                          readOnly
+                          placeholder='0'
+                          className='font-semibold'
+                          value={formatRupiah(field.value ?? '')}
+                          onChange={(e) => {
+                            // Ambil angka asli tanpa format
+                            const raw = e.target.value.replace(/[^0-9]/g, '')
+
+                            // Set angka mentah ke form
+                            field.onChange(raw)
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -670,7 +624,7 @@ export function PermohonanPenerbitanPeriksaDialog({
             </div>
 
             {/* PDF Preview */}
-            <div className='flex-1 overflow-auto border-l p-4'>
+            <div className='flex-1 overflow-auto border-l p-10'>
               {fileUrl ? (
                 <iframe
                   src={fileUrl}

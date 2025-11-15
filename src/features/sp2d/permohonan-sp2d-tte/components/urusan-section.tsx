@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
-import { ChevronDown, Minus, Plus } from 'lucide-react'
+import { ChevronDown, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Collapsible,
@@ -26,11 +26,9 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: `urusan.${indexUrusan}.bidangUrusan`,
   })
@@ -93,16 +91,6 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
             removeBidang={() => remove(bi)}
           />
         ))}
-
-        <Button
-          type='button'
-          disabled
-          size='sm'
-          variant='outline'
-          onClick={() => append({ nm_bu: '', program: [] })}
-        >
-          <Plus className='mr-2 h-4 w-4' /> Tambah Bidang Urusan
-        </Button>
       </CollapsibleContent>
     </Collapsible>
   )
