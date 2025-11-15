@@ -118,8 +118,11 @@ export function UsersActionDialog({
   })
 
   const onSubmit = async (data: UserForm) => {
-    const [kd_ref1, kd_ref2, kd_ref3, kd_ref4, kd_ref5, kd_ref6, nm_ref] =
+    const [kd_ref1, kd_ref2, kd_ref3, kd_ref4, kd_ref5, kd_ref6] =
       data.sumber_dana.split('.')
+
+    const selectedItem = itemsSD.find((x) => x.value === data.sumber_dana)
+    const nm_sumber = selectedItem?.label ?? ''
 
     const payload = {
       ...data,
@@ -129,7 +132,7 @@ export function UsersActionDialog({
       kd_ref4,
       kd_ref5,
       kd_ref6,
-      nm_sumber: nm_ref,
+      nm_sumber,
     }
     const requestPromise = isEdit
       ? putRealisasiTransferSumberDanaAsync(payload)

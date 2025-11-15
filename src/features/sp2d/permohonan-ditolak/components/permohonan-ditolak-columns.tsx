@@ -155,7 +155,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       }
 
       return (
-        <div className='ps-3'>
+        <div className='w-40 ps-3'>
           <div
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-center text-xs font-medium ${color}`}
           >
@@ -164,7 +164,6 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
         </div>
       )
     },
-
     enableSorting: true,
   },
 

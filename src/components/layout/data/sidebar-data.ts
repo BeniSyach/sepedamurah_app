@@ -398,37 +398,6 @@ export const sidebarData: SidebarData = {
       title: 'Laporan Fungsional',
       items: [
         {
-          id: 'pengeluaran',
-          title: 'Pengeluaran',
-          icon: ArrowUpCircle,
-          items: [
-            {
-              id: 'berkas-masuk-pengeluaran',
-              title: 'Berkas Masuk Pengeluaran',
-              url: '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran',
-              icon: UserCog,
-            },
-            {
-              id: 'pengeluaran-menu',
-              title: 'Pengeluaran',
-              url: '/dokumen/laporan-fungsional/pengeluaran',
-              icon: ArrowUpCircle,
-            },
-            {
-              id: 'pengeluaran-diterima',
-              title: 'Pengeluaran - Diterima',
-              url: '/dokumen/laporan-fungsional/pengeluaran-diterima',
-              icon: CheckCircle2,
-            },
-            {
-              id: 'pengeluaran-ditolak',
-              title: 'Pengeluaran - Ditolak',
-              url: '/dokumen/laporan-fungsional/pengeluaran-ditolak',
-              icon: XCircle,
-            },
-          ],
-        },
-        {
           id: 'penerimaan',
           title: 'Penerimaan',
           icon: ArrowDownCircle,
@@ -455,6 +424,37 @@ export const sidebarData: SidebarData = {
               id: 'penerimaan-ditolak',
               title: 'Penerimaan - Ditolak',
               url: '/dokumen/laporan-fungsional/penerimaan-ditolak',
+              icon: XCircle,
+            },
+          ],
+        },
+        {
+          id: 'pengeluaran',
+          title: 'Pengeluaran',
+          icon: ArrowUpCircle,
+          items: [
+            {
+              id: 'berkas-masuk-pengeluaran',
+              title: 'Berkas Masuk Pengeluaran',
+              url: '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran',
+              icon: UserCog,
+            },
+            {
+              id: 'pengeluaran-menu',
+              title: 'Pengeluaran',
+              url: '/dokumen/laporan-fungsional/pengeluaran',
+              icon: ArrowUpCircle,
+            },
+            {
+              id: 'pengeluaran-diterima',
+              title: 'Pengeluaran - Diterima',
+              url: '/dokumen/laporan-fungsional/pengeluaran-diterima',
+              icon: CheckCircle2,
+            },
+            {
+              id: 'pengeluaran-ditolak',
+              title: 'Pengeluaran - Ditolak',
+              url: '/dokumen/laporan-fungsional/pengeluaran-ditolak',
               icon: XCircle,
             },
           ],
