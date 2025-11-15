@@ -1,51 +1,49 @@
 import React, { useState } from 'react'
-import { type RealisasiTransferSumberDana } from '@/api'
+import { type RekapSumberDanaItem } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefRealisasiTransferSumberDanaDialogType = 'add' | 'edit' | 'delete'
+type RefRekapSumberDanaItemDialogType = 'add' | 'edit' | 'delete' | 'detail'
 
-type RefRealisasiTransferSumberDanaContextType = {
-  open: RefRealisasiTransferSumberDanaDialogType | null
-  setOpen: (str: RefRealisasiTransferSumberDanaDialogType | null) => void
-  currentRow: RealisasiTransferSumberDana | null
+type RefRekapSumberDanaItemContextType = {
+  open: RefRekapSumberDanaItemDialogType | null
+  setOpen: (str: RefRekapSumberDanaItemDialogType | null) => void
+  currentRow: RekapSumberDanaItem | null
   setCurrentRow: React.Dispatch<
-    React.SetStateAction<RealisasiTransferSumberDana | null>
+    React.SetStateAction<RekapSumberDanaItem | null>
   >
 }
 
-const RefRealisasiTransferSumberDanaContext =
-  React.createContext<RefRealisasiTransferSumberDanaContextType | null>(null)
+const RefRekapSumberDanaItemContext =
+  React.createContext<RefRekapSumberDanaItemContextType | null>(null)
 
-export function RealisasiTransferSumberDanaProvider({
+export function RekapSumberDanaItemProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const [open, setOpen] =
-    useDialogState<RefRealisasiTransferSumberDanaDialogType>(null)
-  const [currentRow, setCurrentRow] =
-    useState<RealisasiTransferSumberDana | null>(null)
+  const [open, setOpen] = useDialogState<RefRekapSumberDanaItemDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<RekapSumberDanaItem | null>(null)
 
   return (
-    <RefRealisasiTransferSumberDanaContext
+    <RefRekapSumberDanaItemContext
       value={{ open, setOpen, currentRow, setCurrentRow }}
     >
       {children}
-    </RefRealisasiTransferSumberDanaContext>
+    </RefRekapSumberDanaItemContext>
   )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useRefRealisasiTransferSumberDana = () => {
-  const refRealisasiTransferSumberDanaContext = React.useContext(
-    RefRealisasiTransferSumberDanaContext
+export const useRefRekapSumberDanaItem = () => {
+  const refRekapSumberDanaItemContext = React.useContext(
+    RefRekapSumberDanaItemContext
   )
 
-  if (!refRealisasiTransferSumberDanaContext) {
+  if (!refRekapSumberDanaItemContext) {
     throw new Error(
-      'useRefRealisasiTransferSumberDana has to be used within <RefRealisasiTransferSumberDanaContext>'
+      'useRefRekapSumberDanaItem has to be used within <RefRekapSumberDanaItemContext>'
     )
   }
 
-  return refRealisasiTransferSumberDanaContext
+  return refRekapSumberDanaItemContext
 }

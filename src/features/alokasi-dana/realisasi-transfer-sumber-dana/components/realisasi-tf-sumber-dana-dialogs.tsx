@@ -1,31 +1,31 @@
-import { useDeleteRealisasiTransferSumberDana } from '@/api'
-import { toast } from 'sonner'
-import { ConfirmDialog } from '@/components/confirm-dialog'
+import { useState } from 'react'
+import { useGetRealisasiTransferSumberSumberDana } from '@/api'
+import { AlertDialogHeader } from '@/components/ui/alert-dialog'
+import { Dialog, DialogContentLarge, DialogTitle } from '@/components/ui/dialog'
+import { RealisasiTransferSumberDanaTable } from '../detail-transfer-sd/components/detail-transfer-sd-table'
 import { UsersActionDialog } from './realisasi-tf-sumber-dana-action-dialog'
-import { useRefRealisasiTransferSumberDana } from './realisasi-tf-sumber-dana-provider'
+import { useRefRekapSumberDanaItem } from './realisasi-tf-sumber-dana-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } =
-    useRefRealisasiTransferSumberDana()
-  const { mutateAsync } = useDeleteRealisasiTransferSumberDana()
+export function UsersDialogs({ tahun }: { tahun: string | number }) {
+  const { open, setOpen, currentRow } = useRefRekapSumberDanaItem()
+  const [detailPage, setDetailPage] = useState(1)
+  const [detailPageSize, setDetailPageSize] = useState(10)
+  const [detailSearch, setDetailSearch] = useState('')
+  // 🔥 GET API DETAIL
+  const { data, isLoading, isError } = useGetRealisasiTransferSumberSumberDana({
+    page: detailPage,
+    perPage: detailPageSize,
+    search: detailSearch,
+    tahun: tahun,
+    kd_ref1: currentRow?.kd_ref1,
+    kd_ref2: currentRow?.kd_ref2,
+    kd_ref3: currentRow?.kd_ref3,
+    kd_ref4: currentRow?.kd_ref4,
+    kd_ref5: currentRow?.kd_ref5,
+    kd_ref6: currentRow?.kd_ref6,
+    enabled: open === 'detail', // fetch hanya ketika dialog dibuka
+  })
 
-  const handleDelete = async () => {
-    if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.id })
-
-    await toast.promise(deletePromise, {
-      loading: 'Menghapus data...',
-      success: () => {
-        setOpen(null)
-        setTimeout(() => setCurrentRow(null), 500)
-
-        return `Data "${currentRow.nm_sumber}" berhasil dihapus.`
-      },
-      error: (err) => {
-        return err.data.message
-      },
-    })
-  }
   return (
     <>
       <UsersActionDialog
@@ -36,40 +36,39 @@ export function UsersDialogs() {
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`realisasi-tf-sd-edit-${currentRow.id}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
+          {/* Dialog untuk TABEL DETAIL */}
+          <Dialog
+            open={open === 'detail'}
+            onOpenChange={(state) => setOpen(state ? 'detail' : null)}
+          >
+            <DialogContentLarge>
+              <AlertDialogHeader>
+                <DialogTitle className='py-2'>
+                  Detail Realisasi Transfer
+                </DialogTitle>
+              </AlertDialogHeader>
 
-          <ConfirmDialog
-            key={`realisasi-tf-sda-delete-${currentRow.id}`}
-            destructive
-            open={open === 'delete'}
-            onOpenChange={() => {
-              setOpen('delete')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            handleConfirm={handleDelete}
-            className='max-w-md'
-            title={`Hapus Pagu Sumber Dana Ini: ${currentRow.nm_sumber} ?`}
-            desc={
-              <>
-                Kamu akan menghapus data dengan nama{' '}
-                <strong>{currentRow.nm_sumber}</strong>. <br />
-                Tindakan ini tidak dapat dibatalkan.
-              </>
-            }
-            confirmText='Delete'
-          />
+              {/* LOADING */}
+              {isLoading && <p>Loading...</p>}
+
+              {/* ERROR */}
+              {isError && <p>Gagal memuat data</p>}
+
+              {/* TABEL DETAIL */}
+              {data && (
+                <RealisasiTransferSumberDanaTable
+                  data={data.data ?? []}
+                  meta={data.meta}
+                  search={detailSearch}
+                  onSearchChange={setDetailSearch}
+                  page={detailPage}
+                  pageSize={detailPageSize}
+                  onPageChange={setDetailPage}
+                  onPageSizeChange={setDetailPageSize}
+                />
+              )}
+            </DialogContentLarge>
+          </Dialog>
         </>
       )}
     </>

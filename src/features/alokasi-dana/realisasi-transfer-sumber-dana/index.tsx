@@ -1,5 +1,6 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
-import { useGetRealisasiTransferSumberDana } from '@/api'
+import { useGetRekapRealisasiTransferSumberDana } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -8,8 +9,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { RefRekeningPrimaryButtons } from './components/realisasi-tf-sumber-dana-buttons'
 import { UsersDialogs } from './components/realisasi-tf-sumber-dana-dialogs'
-import { RealisasiTransferSumberDanaProvider } from './components/realisasi-tf-sumber-dana-provider'
-import { RealisasiTransferSumberDanaTable } from './components/realisasi-tf-sumber-dana-table'
+import { RekapSumberDanaItemProvider } from './components/realisasi-tf-sumber-dana-provider'
+import { RekapTransferSumberDanaTable } from './components/realisasi-tf-sumber-dana-table'
 
 const route = getRouteApi(
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -18,16 +19,15 @@ const route = getRouteApi(
 export function RealisasiTransferSumberDana() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
   // 🔥 Ambil data langsung dari Laravel API
-  const { data, isLoading, isError } = useGetRealisasiTransferSumberDana({
-    page: search.page,
-    perPage: search.pageSize,
+  const { data, isLoading, isError } = useGetRekapRealisasiTransferSumberDana({
+    tahun: tahunFilter,
     search: search.search,
   })
 
   return (
-    <RealisasiTransferSumberDanaProvider>
+    <RekapSumberDanaItemProvider>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -41,10 +41,10 @@ export function RealisasiTransferSumberDana() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Realisasi Transfer Sumber Dana
+              Rekap Realisasi Transfer Sumber Dana
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Realisasi Transfer Sumber Dana
+              Data Ini adalah Rekap Realisasi Transfer Sumber Dana
             </p>
           </div>
           <RefRekeningPrimaryButtons />
@@ -56,9 +56,8 @@ export function RealisasiTransferSumberDana() {
           ) : isError ? (
             <p>Failed to load users.</p>
           ) : (
-            <RealisasiTransferSumberDanaTable
+            <RekapTransferSumberDanaTable
               data={data?.data ?? []}
-              meta={data?.meta}
               search={search}
               navigate={navigate}
             />
@@ -66,7 +65,7 @@ export function RealisasiTransferSumberDana() {
         </div>
       </Main>
 
-      <UsersDialogs />
-    </RealisasiTransferSumberDanaProvider>
+      <UsersDialogs tahun={tahunFilter} />
+    </RekapSumberDanaItemProvider>
   )
 }

@@ -2,34 +2,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../common/client'
 import type { RealisasiTransferSumberDana } from './types'
 
-interface CreateRealisasiTransferSumberDanaPayload {
-  kd_ref1: string
-  kd_ref2: string
-  kd_ref3: string
-  kd_ref4: string
-  kd_ref5: string
-  kd_ref6: string
-  nm_sumber: string
-  tgl_diterima: Date
-  tahun: string
-  jumlah_sumber: string
-  keterangan?: string
-  keterangan_2?: string | null
-}
-
 /**
- * Hook untuk membuat data urusan baru (POST)
+ * Hook untuk sinkronisasi data Realisasi Transfer Sumber Dana
  */
-export function usePostRealisasiTransferSumberDana() {
+export function useSyncRealisasiTransferSumberDanaPajak() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (
-      payload: CreateRealisasiTransferSumberDanaPayload
-    ): Promise<RealisasiTransferSumberDana> => {
+    mutationFn: async (): Promise<RealisasiTransferSumberDana> => {
+      // POST tanpa payload
       const { data } = await api.post<RealisasiTransferSumberDana>(
-        '/alokasi-dana/realisasi-transfer-sumber-dana',
-        payload
+        '/alokasi-dana/sinkron-sumber-dana-pajak'
       )
       return data
     },

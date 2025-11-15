@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type RekapSumberDanaItem } from '@/api'
+import { type RealisasiTransferSumberDana } from '@/api'
 import { Trash2, UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,14 +11,14 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRefRekapSumberDanaItem } from './realisasi-tf-sumber-dana-provider'
+import { useRefRealisasiTransferSumberDana } from './detail-tf-sumber-dana-provider'
 
 type DataTableRowActionsProps = {
-  row: Row<RekapSumberDanaItem>
+  row: Row<RealisasiTransferSumberDana>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useRefRekapSumberDanaItem()
+  const { setOpen, setCurrentRow } = useRefRealisasiTransferSumberDana()
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,10 +35,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('detail')
+              setOpen('edit')
             }}
           >
-            Detail
+            Edit
             <DropdownMenuShortcut>
               <UserPen size={16} />
             </DropdownMenuShortcut>

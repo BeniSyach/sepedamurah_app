@@ -22,6 +22,9 @@ export function useDeleteRealisasiTransferSumberDana() {
       queryClient.invalidateQueries({
         queryKey: ['useGetRealisasiTransferSumberDana'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetRekapRealisasiTransferSumberDana'],
+      })
     },
     onError: (error) => {
       return error

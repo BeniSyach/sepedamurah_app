@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
-  type SortingState,
-  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import type { RealisasiTransferSumberDana } from '@/api'
-import { cn } from '@/lib/utils'
-import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import type { RekapSumberDanaItem } from '@/api'
+import { toast } from 'sonner'
+import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
+import { type NavigateFn } from '@/hooks/use-table-url-state'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -23,77 +29,52 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { DataTableToolbar } from '@/components/data-table'
 import { DataTableBulkActions } from './data-table-bulk-actions'
-import { ReferensiRealisasiTransferSumberDanaColumns as columns } from './realisasi-tf-sumber-dana-columns'
-
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData, TValue> {
-    className?: string
-  }
-}
+import { ReferensiRekapSumberDanaItemColumns as columns } from './realisasi-tf-sumber-dana-columns'
 
 type DataTableProps = {
-  data: RealisasiTransferSumberDana[]
-  meta?: {
-    current_page: number
-    per_page: number
-    total: number
-  }
+  data: RekapSumberDanaItem[]
   search: Record<string, unknown>
   navigate: NavigateFn
 }
 
-export function RealisasiTransferSumberDanaTable({
+export function RekapTransferSumberDanaTable({
   data,
-  meta,
   search,
   navigate,
 }: DataTableProps) {
+  // Tahun diambil dari URL, default tahun sekarang
+  const currentYear = new Date().getFullYear()
+  const tahunFilter = Number(search.tahun ?? currentYear)
+  const { mutateAsync } = useSyncRealisasiTransferSumberDanaPajak()
+  // List tahun 3 tahun sebelum & 3 tahun sesudah
+  const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
+
+  // Update tahun → update URL → parent fetch ulang
+  function changeTahun(value: number) {
+    navigate({
+      search: {
+        ...search, // bawakan parameter lama
+        tahun: value,
+      },
+    })
+  }
+
+  // table config
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [sorting, setSorting] = useState<SortingState>([])
-
-  const {
-    columnFilters,
-    onColumnFiltersChange,
-    pagination,
-    onPaginationChange,
-    ensurePageInRange,
-  } = useTableUrlState({
-    search,
-    navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
-    ],
-  })
-
-  const totalRows = meta?.total ?? data.length
-  const totalPages = meta ? Math.ceil(meta.total / meta.per_page) : 1
-  const currentPage = meta?.current_page ?? pagination.pageIndex + 1
+  const [columnVisibility, setColumnVisibility] = useState({})
 
   const table = useReactTable({
     data,
     columns,
-    pageCount: totalPages,
-    manualPagination: true,
     state: {
-      sorting,
-      pagination,
       rowSelection,
-      columnFilters,
       columnVisibility,
     },
     enableRowSelection: true,
-    onPaginationChange,
-    onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -101,33 +82,61 @@ export function RealisasiTransferSumberDanaTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  useEffect(() => {
-    ensurePageInRange(totalPages)
-  }, [totalPages, ensurePageInRange])
+  const handleExportSumberDanaPajak = async () => {
+    await toast.promise(
+      mutateAsync(), // memanggil hook mutation tanpa payload
+      {
+        loading: 'Sinkronisasi sedang berjalan...',
+        success: () => 'Sinkronisasi berhasil!',
+        error: (err) => `Sinkronisasi gagal: ${err.message || err}`,
+      }
+    )
+  }
 
   return (
-    <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
+    <div className='space-y-4'>
       <DataTableToolbar
         table={table}
         searchPlaceholder='Cari Realisasi Transfer Sumber Dana...'
-        searchKey='nm_rekening'
-        filters={[]}
+        searchKey='nm_sumber'
+        extraControls={
+          <div className='flex items-center space-x-2'>
+            {/* Dropdown Tahun */}
+            <Select
+              value={String(tahunFilter)}
+              onValueChange={(v) => changeTahun(Number(v))}
+            >
+              <SelectTrigger className='w-[140px]'>
+                <SelectValue placeholder='Tahun' />
+              </SelectTrigger>
+              <SelectContent>
+                {tahunOptions.map((th) => (
+                  <SelectItem key={th} value={String(th)}>
+                    Tahun {th}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Tombol Export */}
+            <Button
+              className='rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700'
+              onClick={handleExportSumberDanaPajak} // fungsi export
+            >
+              sinkron Sumber Dana Pajak
+            </Button>
+          </div>
+        }
       />
 
+      {/* table */}
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className='group/row'>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    className={cn(
-                      'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                      header.column.columnDef.meta?.className ?? ''
-                    )}
-                  >
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -141,29 +150,21 @@ export function RealisasiTransferSumberDanaTable({
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className='group/row'
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                        cell.column.columnDef.meta?.className ?? ''
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            {table.getRowModel().rows.length ? (
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <TableRow>
                 <TableCell
@@ -177,15 +178,6 @@ export function RealisasiTransferSumberDanaTable({
           </TableBody>
         </Table>
       </div>
-
-      <DataTablePagination
-        table={table}
-        totalRows={totalRows}
-        currentPage={currentPage}
-        pageSize={meta?.per_page ?? pagination.pageSize}
-        search={search} // 🔥 WAJIB
-        navigate={navigate} // 🔥 WAJIB
-      />
 
       <DataTableBulkActions table={table} />
     </div>

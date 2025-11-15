@@ -1,112 +1,129 @@
+import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
-import { type RealisasiTransferSumberDana } from '@/api'
-import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DataTableColumnHeader } from '@/components/data-table'
+import { type RekapSumberDanaItem } from '@/api'
+import { formatRupiah } from '@/lib/utils'
 import { DataTableRowActions } from './data-table-row-actions'
 
-export const ReferensiRealisasiTransferSumberDanaColumns: ColumnDef<RealisasiTransferSumberDana>[] =
+// Mapping bulan → key sesuai schema dari backend
+const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
+  1: 'total_jan',
+  2: 'total_feb',
+  3: 'total_mar',
+  4: 'total_apr',
+  5: 'total_may',
+  6: 'total_jun',
+  7: 'total_jul',
+  8: 'total_aug',
+  9: 'total_sep',
+  10: 'total_oct',
+  11: 'total_nov',
+  12: 'total_dec',
+}
+
+const currentMonth = Number(format(new Date(), 'M'))
+
+export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>[] =
   [
-    // ✅ Checkbox selector
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-          className='translate-y-[2px]'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-          className='translate-y-[2px]'
-        />
-      ),
+      id: 'no',
+      header: () => <div>No</div>,
+      cell: ({ row }) => <div>{row.index + 1}</div>,
       enableSorting: false,
       enableHiding: false,
-      meta: {
-        className: cn('sticky start-0 z-10 rounded-tl-[inherit] bg-background'),
+    },
+    {
+      accessorKey: 'nm_sumber',
+      header: 'Nama Sumber Dana',
+      footer: () => <strong>Total</strong>,
+    },
+
+    // ================================================
+    // 👉 s.d Bulan Lalu
+    // ================================================
+    {
+      id: 'sd_bulan_lalu',
+      header: `s.d Bulan Lalu`,
+      cell: ({ row }) => {
+        const data = row.original
+        let total = 0
+
+        for (let i = 1; i < currentMonth; i++) {
+          const key = monthKeyMap[i]
+          total += Number(data[key] ?? 0)
+        }
+
+        return <div>{formatRupiah(total)}</div>
+      },
+      footer: ({ table }) => {
+        const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
+          const item = row.original
+          let subtotal = 0
+          for (let i = 1; i < currentMonth; i++) {
+            const key = monthKeyMap[i]
+            subtotal += Number(item[key] ?? 0)
+          }
+          return sum + subtotal
+        }, 0)
+
+        return <strong>{formatRupiah(total)}</strong>
       },
     },
 
-    // ✅ nm_sumber
+    // ================================================
+    // 👉 Bulan Ini
+    // ================================================
     {
-      accessorKey: 'nm_sumber',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Nama Sumber Dana' />
-      ),
-      cell: ({ row }) => <div>{row.getValue('nm_sumber')}</div>,
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
+      id: 'bulan_ini',
+      header: `Bulan ini`,
+      cell: ({ row }) => {
+        const data = row.original
+        const key = monthKeyMap[currentMonth]
+        const value = data[key] ?? 0
+
+        return <div>{formatRupiah(value)}</div>
+      },
+      footer: ({ table }) => {
+        const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
+          const item = row.original
+          const key = monthKeyMap[currentMonth]
+          return sum + Number(item[key] ?? 0)
+        }, 0)
+
+        return <strong>{formatRupiah(total)}</strong>
+      },
     },
 
-    // ✅ tgl_diterima
+    // ================================================
+    // 👉 s.d Bulan Ini
+    // ================================================
     {
-      accessorKey: 'tgl_diterima',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Tanggal Diterima' />
-      ),
-      cell: ({ row }) => (
-        <div>{formatTanggal(row.getValue('tgl_diterima'))}</div>
-      ),
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
+      id: 'sd_bulan_ini',
+      header: `s.d Bulan Ini`,
+      cell: ({ row }) => {
+        const data = row.original
+        let total = 0
+
+        for (let i = 1; i <= currentMonth; i++) {
+          const key = monthKeyMap[i]
+          total += Number(data[key] ?? 0)
+        }
+
+        return <div>{formatRupiah(total)}</div>
+      },
+      footer: ({ table }) => {
+        const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
+          const item = row.original
+          let subtotal = 0
+          for (let i = 1; i <= currentMonth; i++) {
+            const key = monthKeyMap[i]
+            subtotal += Number(item[key] ?? 0)
+          }
+          return sum + subtotal
+        }, 0)
+
+        return <strong>{formatRupiah(total)}</strong>
+      },
     },
-
-    // ✅ tahun
-    {
-      accessorKey: 'tahun',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Tahun' />
-      ),
-      cell: ({ row }) => <div>{row.getValue('tahun')}</div>,
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
-    },
-
-    // ✅ jumlah
-    {
-      accessorKey: 'jumlah_sumber',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Jumlah' />
-      ),
-      cell: ({ row }) => (
-        <div>{formatRupiah(row.getValue('jumlah_sumber'))}</div>
-      ),
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
-    },
-
-    // // ✅ keterangan
-    // {
-    //   accessorKey: 'keterangan',
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title='keterangan' />
-    //   ),
-    //   cell: ({ row }) => <div>{row.getValue('keterangan')}</div>,
-    //   enableSorting: true,
-    //   meta: { className: 'min-w-[160px]' },
-    // },
-
-    // ✅ keterangan_2
-    {
-      accessorKey: 'keterangan_2',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Keterangan' />
-      ),
-      cell: ({ row }) => <div>{row.getValue('keterangan_2')}</div>,
-      enableSorting: true,
-      meta: { className: 'min-w-[160px]' },
-    },
-
-    // ✅ Aksi
     {
       id: 'actions',
       cell: DataTableRowActions,
