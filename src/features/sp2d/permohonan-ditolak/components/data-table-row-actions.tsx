@@ -20,6 +20,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefSp2dItem()
+  const levelAkses = localStorage.getItem('user_role')
   return (
     <>
       <DropdownMenu modal={false}>
@@ -33,17 +34,19 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa
-            <DropdownMenuShortcut>
-              <UserPen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('periksa')
+              }}
+            >
+              Periksa
+              <DropdownMenuShortcut>
+                <UserPen size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {

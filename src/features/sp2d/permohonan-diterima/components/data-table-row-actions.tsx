@@ -20,6 +20,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefSp2dItem()
+  const levelAkses = localStorage.getItem('user_role')
   return (
     <>
       <DropdownMenu modal={false}>
@@ -32,55 +33,64 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <span className='sr-only'>Open menu</span>
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('kirimsp2d')
-            }}
-          >
-            Kirim SP2D
-            <DropdownMenuShortcut>
-              <Send size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('kirimsp2d')
+              }}
+            >
+              Kirim SP2D
+              <DropdownMenuShortcut>
+                <Send size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa Berkas
-            <DropdownMenuShortcut>
-              <FileSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('periksa')
+              }}
+            >
+              Periksa Berkas
+              <DropdownMenuShortcut>
+                <FileSearch size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <UserPen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('edit')
+              }}
+            >
+              Edit
+              <DropdownMenuShortcut>
+                <UserPen size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='text-red-500!'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('delete')
+              }}
+              className='text-red-500!'
+            >
+              Delete
+              <DropdownMenuShortcut>
+                <Trash2 size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

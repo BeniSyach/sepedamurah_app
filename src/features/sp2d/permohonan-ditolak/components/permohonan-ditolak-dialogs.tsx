@@ -8,7 +8,7 @@ import { useRefSp2dItem } from './permohonan-ditolak-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
-
+  const levelAkses = localStorage.getItem('user_role')
   const { mutateAsync } = useDeletePermohonanSP2D()
 
   const handleDelete = async () => {
@@ -90,19 +90,19 @@ export function UsersDialogs() {
             }}
             currentRow={currentRow}
           />
-
-          <PermohonanDitolakPeriksaDialog
-            key={`berkas-masuk-sp2d-periksa-${currentRow.id_sp2d}`}
-            open={open === 'periksa'}
-            onOpenChange={() => {
-              setOpen('periksa')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-
+          {levelAkses !== 'Bendahara' && (
+            <PermohonanDitolakPeriksaDialog
+              key={`berkas-masuk-sp2d-periksa-${currentRow.id_sp2d}`}
+              open={open === 'periksa'}
+              onOpenChange={() => {
+                setOpen('periksa')
+                setTimeout(() => {
+                  setCurrentRow(null)
+                }, 500)
+              }}
+              currentRow={currentRow}
+            />
+          )}
           <ConfirmDialog
             key={`sp2d-tolak-delete-${currentRow.id_sp2d}`}
             destructive

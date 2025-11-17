@@ -120,7 +120,7 @@ export function RekapTransferSumberDanaTable({
 
             {/* Tombol Export */}
             <Button
-              className='rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700'
+              className='rounded-xl bg-blue-600 px-3 py-1 text-white hover:bg-blue-700'
               onClick={handleExportSumberDanaPajak} // fungsi export
             >
               sinkron Sumber Dana Pajak

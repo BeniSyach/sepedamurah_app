@@ -58,7 +58,7 @@ export function UsersDialogs() {
         link.click()
         link.remove()
 
-        // Tutup dialog setelah download berhasil
+        // Tutup dialog setelah download berhasil x
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
       })(),
