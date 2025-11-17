@@ -69,7 +69,7 @@ export function BerkasMasukSP2DTable({
     globalFilter: {
       enabled: true,
       key: 'nama_file',
-      trim: true,
+      trim: false,
     },
   })
 
