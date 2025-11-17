@@ -54,6 +54,8 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 const formSchema = z.object({
   id: z.string().optional(),
   keterangan: z.string().min(1),
@@ -222,24 +224,21 @@ export function PermohonanDiterimaKirimTTEDialog({
       formData.append('nama_file_asli', data.nama_file_asli[0])
     }
 
-    await toast.promise(
-      (async () => {
-        post(formData)
-        // 3️⃣ Tutup modal dan reset form
-        onOpenChange(false)
+    // Kirim ke backend
+    await toast.promise(post(formData), {
+      loading: 'Menyimpan perubahan...',
+      success: () => {
+        onOpenChange(false) // tutup modal
         form.reset()
-      })(),
-      {
-        loading: 'Menyimpan perubahan...',
-        success: 'Data Permohonan SP2D berhasil ditambahkan!',
-        error: (err) => {
-          const message =
-            err?.response?.data?.message ||
-            'Terjadi kesalahan saat menyimpan data.'
-          return message
-        },
-      }
-    )
+        return 'Data Permohonan SP2D berhasil ditambahkan!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
   }
 
   useEffect(() => {
