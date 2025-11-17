@@ -6,13 +6,9 @@ export function usePutTerimaFungsionalMulti() {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const { data } = await api.post(
-        '/laporan-fungsional/terima-multi',
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      )
+      const { data } = await api.post('/laporan/terima-multi', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       return data
     },
 

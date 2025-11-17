@@ -6,13 +6,9 @@ export function usePutTolakFungsionalMulti() {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const { data } = await api.post(
-        '/laporan-fungsional/tolak-multi',
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      )
+      const { data } = await api.post('/laporan/tolak-multi', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       return data
     },
 
