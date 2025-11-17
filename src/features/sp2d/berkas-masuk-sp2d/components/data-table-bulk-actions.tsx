@@ -30,8 +30,8 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowTerimaConfirm(true)}
               className='size-8'
-              aria-label='Hapus Berkas Masuk SP2D'
-              title='Hapus Berkas Masuk SP2D'
+              aria-label='Terima Berkas Masuk SP2D'
+              title='Terima Berkas Masuk SP2D'
             >
               <Check />
               <span className='sr-only'>Terima SP2D</span>
@@ -48,8 +48,8 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowTolakConfirm(true)}
               className='size-8'
-              aria-label='Hapus Berkas Masuk SP2D'
-              title='Hapus Berkas Masuk SP2D'
+              aria-label='Tolak Berkas Masuk SP2D'
+              title='Tolak Berkas Masuk SP2D'
             >
               <X />
               <span className='sr-only'>Tolak SP2D</span>

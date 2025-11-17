@@ -27,8 +27,13 @@ export function PenerimaanDiterimaLaporanFungsional() {
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Penerimaan',
-    menu: 'fungsional_penerimaan_diterima',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'operator_penerimaan_diterima'
+        : 'fungsional_penerimaan_diterima',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

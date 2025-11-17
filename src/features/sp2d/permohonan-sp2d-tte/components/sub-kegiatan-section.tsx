@@ -27,20 +27,29 @@ export function SubKegiatanSection({
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.nm_subkegiatan`}
-        render={({ field }) => (
-          <FormItem>
-            <div className='flex items-center justify-between'>
-              <FormLabel>Nama Sub Kegiatan</FormLabel>
-            </div>
-            <FormControl>
-              <Input
-                {...field}
-                disabled
-                placeholder='Contoh: Sub Kegiatan Patroli Malam'
-              />
-            </FormControl>
-          </FormItem>
-        )}
+        render={({ field }) => {
+          const kd =
+            control._formValues.urusan[indexUrusan]?.bidangUrusan?.[indexBidang]
+              .program?.[indexProgram].kegiatan?.[indexKegiatan].subKegiatan?.[
+              indexSub
+            ].kd_subkegiatan || ''
+          const nm = field.value || ''
+          return (
+            <FormItem>
+              <div className='flex items-center justify-between'>
+                <FormLabel>Nama Sub Kegiatan</FormLabel>
+              </div>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled
+                  value={`${kd} - ${nm}`}
+                  placeholder='Contoh: Sub Kegiatan Patroli Malam'
+                />
+              </FormControl>
+            </FormItem>
+          )
+        }}
       />
 
       {fields.map((rek, ri) => (

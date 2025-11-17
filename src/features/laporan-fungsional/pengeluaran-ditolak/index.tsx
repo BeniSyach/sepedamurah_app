@@ -27,8 +27,13 @@ export function PengeluaranDitolakLaporanFungsional() {
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Pengeluaran',
-    menu: 'fungsional_pengeluaran_ditolak',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'operator_pengeluaran_ditolak'
+        : 'fungsional_pengeluaran_ditolak',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

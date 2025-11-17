@@ -22,14 +22,27 @@ export function RekeningSection({
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.subKegiatan.${indexSub}.rekening.${indexRek}.nm_rekening`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nama Rekening</FormLabel>
-            <FormControl>
-              <Input {...field} disabled placeholder='Contoh: Belanja Barang' />
-            </FormControl>
-          </FormItem>
-        )}
+        render={({ field }) => {
+          const kd =
+            control._formValues.urusan[indexUrusan]?.bidangUrusan?.[indexBidang]
+              .program?.[indexProgram].kegiatan?.[indexKegiatan].subKegiatan?.[
+              indexSub
+            ].rekening?.[indexRek].kd_rekening || ''
+          const nm = field.value || ''
+          return (
+            <FormItem>
+              <FormLabel>Nama Rekening</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled
+                  value={`${kd} - ${nm}`}
+                  placeholder='Contoh: Belanja Barang'
+                />
+              </FormControl>
+            </FormItem>
+          )
+        }}
       />
 
       <FormField

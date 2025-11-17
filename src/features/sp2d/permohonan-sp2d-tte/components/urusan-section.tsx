@@ -26,6 +26,22 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
   const { fields, remove } = useFieldArray({
@@ -67,19 +83,25 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
         <FormField
           control={control}
           name={`urusan.${indexUrusan}.nm_urusan`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nama Urusan</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  disabled
-                  placeholder='Contoh: Urusan Pemerintahan Umum'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const kd = control._formValues.urusan[indexUrusan]?.kd_urusan || ''
+            const nm = field.value || ''
+
+            return (
+              <FormItem>
+                <FormLabel>Urusan</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    disabled
+                    value={`${kd}-  ${nm}`}
+                    placeholder='Contoh: 01 - Urusan Pemerintahan Umum'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
         />
 
         {fields.map((bu, bi) => (

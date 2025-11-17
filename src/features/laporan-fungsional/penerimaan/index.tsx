@@ -28,8 +28,10 @@ export function PenerimaanLaporanFungsional() {
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Penerimaan',
-    menu: 'penerimaan',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu: userRole === 'Operator SKPKD' ? 'operator_penerimaan' : 'penerimaan',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

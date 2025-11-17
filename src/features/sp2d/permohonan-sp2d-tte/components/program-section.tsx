@@ -25,20 +25,27 @@ export function ProgramSection({
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.nm_program`}
-        render={({ field }) => (
-          <FormItem>
-            <div className='flex items-center justify-between'>
-              <FormLabel>Nama Program</FormLabel>
-            </div>
-            <FormControl>
-              <Input
-                {...field}
-                disabled
-                placeholder='Contoh: Program Ketentraman Umum'
-              />
-            </FormControl>
-          </FormItem>
-        )}
+        render={({ field }) => {
+          const kd =
+            control._formValues.urusan[indexUrusan]?.bidangUrusan?.[indexBidang]
+              .program?.[indexProgram].kd_program || ''
+          const nm = field.value || ''
+          return (
+            <FormItem>
+              <div className='flex items-center justify-between'>
+                <FormLabel>Program</FormLabel>
+              </div>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled
+                  value={`${kd} - ${nm}`}
+                  placeholder='Contoh: Program Ketentraman Umum'
+                />
+              </FormControl>
+            </FormItem>
+          )
+        }}
       />
 
       {fields.map((keg, ki) => (

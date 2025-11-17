@@ -133,12 +133,9 @@ export function PenerimaanPeriksa({
     try {
       const formData = new FormData()
       formData.append('id', currentRow.id)
-      formData.append('id_operator', user.id.toString())
-      formData.append('nama_operator', user.name)
 
       if (action === 'terima') {
-        formData.append('proses', '2')
-        formData.append('diterima', formatted)
+        formData.append('proses', '1')
         formData.append('alasan_tolak', '')
         formData.append('ditolak', '')
       } else {

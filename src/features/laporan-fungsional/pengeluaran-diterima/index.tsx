@@ -27,8 +27,13 @@ export function PengeluaranDiterimaLaporanFungsional() {
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Pengeluaran',
-    menu: 'fungsional_pengeluaran_diterima',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'operator_pengeluaran_diterima'
+        : 'fungsional_pengeluaran_diterima',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

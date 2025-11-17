@@ -24,20 +24,27 @@ export function BidangUrusanSection({
       <FormField
         control={control}
         name={`urusan.${indexUrusan}.bidangUrusan.${indexBidang}.nm_bu`}
-        render={({ field }) => (
-          <FormItem>
-            <div className='flex items-center justify-between'>
-              <FormLabel className='font-medium'>Nama Bidang Urusan</FormLabel>
-            </div>
-            <FormControl>
-              <Input
-                {...field}
-                disabled
-                placeholder='Contoh: Bidang Ketentraman dan Ketertiban'
-              />
-            </FormControl>
-          </FormItem>
-        )}
+        render={({ field }) => {
+          const kd =
+            control._formValues.urusan[indexUrusan]?.bidangUrusan?.[indexBidang]
+              .kd_bu || ''
+          const nm = field.value || ''
+          return (
+            <FormItem>
+              <div className='flex items-center justify-between'>
+                <FormLabel className='font-medium'>Bidang Urusan</FormLabel>
+              </div>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled
+                  value={`${kd} - ${nm}`}
+                  placeholder='Contoh: Bidang Ketentraman dan Ketertiban'
+                />
+              </FormControl>
+            </FormItem>
+          )
+        }}
       />
 
       {fields.map((prog, pi) => (

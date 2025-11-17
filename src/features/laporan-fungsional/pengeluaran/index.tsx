@@ -28,8 +28,11 @@ export function PengeluaranLaporanFungsional() {
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Pengeluaran',
-    menu: 'pengeluaran',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    menu:
+      userRole === 'Operator SKPKD' ? 'operator_pengeluaran' : 'pengeluaran',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (
