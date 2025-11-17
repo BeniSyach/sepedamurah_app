@@ -12,7 +12,6 @@ import {
   usePostSp2dKirim,
   useGetAksesKuasaBUD,
   type AksesKuasaBud,
-  usePutPermohonanSp2d,
 } from '@/api'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -34,6 +33,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { DatePicker } from '@/components/date-picker'
 import { SelectDropdown } from '@/components/select-dropdown'
+
+/* eslint-disable react-hooks/exhaustive-deps */
+
+/* eslint-disable react-hooks/exhaustive-deps */
+
+/* eslint-disable react-hooks/exhaustive-deps */
+
+/* eslint-disable react-hooks/exhaustive-deps */
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -90,7 +97,6 @@ export function PermohonanDiterimaKirimTTEDialog({
 }) {
   const user = useAuthStore((s) => s.user)
   const { mutateAsync: post } = usePostSp2dKirim()
-  const { mutateAsync: put } = usePutPermohonanSp2d()
 
   const { data: dataSKPD } = useGetRefSKPD({
     page: 1,
@@ -177,8 +183,6 @@ export function PermohonanDiterimaKirimTTEDialog({
   const fileRef = form.register('nama_file_asli')
 
   const onSubmit = async (data: FormValues) => {
-    const now = new Date()
-    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
     const formData = new FormData()
     formData.append(
       'tahun',
@@ -221,19 +225,6 @@ export function PermohonanDiterimaKirimTTEDialog({
     await toast.promise(
       (async () => {
         post(formData)
-        // 2️⃣ Setelah berhasil, update status SPD
-        const formData1 = new FormData()
-        formData1.append('id', data.id_berkas ?? '')
-        formData1.append('diterima', formatted)
-        formData1.append('id_operator', data.id_operator ?? '')
-        formData1.append('nama_operator', data.nama_operator ?? '')
-        formData1.append('supervisor_proses', user?.id.toString() ?? '')
-        formData1.append('ditolak', '')
-        formData1.append('alasan_tolak', '')
-        formData1.append('proses', '2')
-
-        await put(formData1)
-
         // 3️⃣ Tutup modal dan reset form
         onOpenChange(false)
         form.reset()
