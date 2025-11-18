@@ -25,6 +25,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -39,6 +40,22 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
+const bulanOptions = [
+  { value: 1, label: 'Januari' },
+  { value: 2, label: 'Februari' },
+  { value: 3, label: 'Maret' },
+  { value: 4, label: 'April' },
+  { value: 5, label: 'Mei' },
+  { value: 6, label: 'Juni' },
+  { value: 7, label: 'Juli' },
+  { value: 8, label: 'Agustus' },
+  { value: 9, label: 'September' },
+  { value: 10, label: 'Oktober' },
+  { value: 11, label: 'November' },
+  { value: 12, label: 'Desember' },
+]
+const currentMonth = new Date().getMonth() + 1
+
 export function RekapTransferSumberDanaTable({
   data,
   search,
@@ -50,7 +67,7 @@ export function RekapTransferSumberDanaTable({
   const { mutateAsync } = useSyncRealisasiTransferSumberDanaPajak()
   // List tahun 3 tahun sebelum & 3 tahun sesudah
   const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
-
+  const bulanFilter = Number(search.bulan ?? currentMonth)
   // Update tahun → update URL → parent fetch ulang
   function changeTahun(value: number) {
     navigate({
@@ -61,13 +78,22 @@ export function RekapTransferSumberDanaTable({
     })
   }
 
+  function changeBulan(value: number) {
+    navigate({
+      search: {
+        ...search,
+        bulan: value,
+      },
+    })
+  }
+
   // table config
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState({})
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(bulanFilter),
     state: {
       rowSelection,
       columnVisibility,
@@ -101,7 +127,21 @@ export function RekapTransferSumberDanaTable({
         searchKey='nm_sumber'
         extraControls={
           <div className='flex items-center space-x-2'>
-            {/* Dropdown Tahun */}
+            <Select
+              value={String(bulanFilter)}
+              onValueChange={(v) => changeBulan(Number(v))}
+            >
+              <SelectTrigger className='w-[160px]'>
+                <SelectValue placeholder='Bulan' />
+              </SelectTrigger>
+              <SelectContent>
+                {bulanOptions.map((bln) => (
+                  <SelectItem key={bln.value} value={String(bln.value)}>
+                    {bln.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Select
               value={String(tahunFilter)}
               onValueChange={(v) => changeTahun(Number(v))}
@@ -176,6 +216,27 @@ export function RekapTransferSumberDanaTable({
               </TableRow>
             )}
           </TableBody>
+          <TableFooter>
+            {table.getFooterGroups().map((footerGroup) => (
+              <TableRow key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <TableCell
+                    key={header.id}
+                    className={
+                      header.column.id === 'no' ? 'ps-3 font-semibold' : 'ps-3'
+                    }
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableFooter>
         </Table>
       </div>
 

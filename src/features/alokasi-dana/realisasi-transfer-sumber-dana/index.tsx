@@ -15,14 +15,16 @@ import { RekapTransferSumberDanaTable } from './components/realisasi-tf-sumber-d
 const route = getRouteApi(
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 )
-
+const currentMonth = new Date().getMonth() + 1
 export function RealisasiTransferSumberDana() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
+  const bulanFilter = Number(search.bulan ?? currentMonth)
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetRekapRealisasiTransferSumberDana({
     tahun: tahunFilter,
+    bulan: bulanFilter,
     search: search.search,
   })
 

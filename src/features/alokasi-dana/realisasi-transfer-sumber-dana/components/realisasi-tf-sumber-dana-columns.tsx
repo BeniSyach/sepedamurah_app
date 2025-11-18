@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type RekapSumberDanaItem } from '@/api'
 import { formatRupiah } from '@/lib/utils'
@@ -20,10 +19,10 @@ const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
   12: 'total_dec',
 }
 
-const currentMonth = Number(format(new Date(), 'M'))
-
-export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>[] =
-  [
+export function ReferensiRekapSumberDanaItemColumns(
+  bulanFilter: number
+): ColumnDef<RekapSumberDanaItem>[] {
+  return [
     {
       id: 'no',
       header: () => <div>No</div>,
@@ -37,9 +36,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
       footer: () => <strong>Total</strong>,
     },
 
-    // ================================================
-    // 👉 s.d Bulan Lalu
-    // ================================================
+    // ------------ s.d Bulan Lalu ------------
     {
       id: 'sd_bulan_lalu',
       header: `s.d Bulan Lalu`,
@@ -47,7 +44,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
         const data = row.original
         let total = 0
 
-        for (let i = 1; i < currentMonth; i++) {
+        for (let i = 1; i < bulanFilter; i++) {
           const key = monthKeyMap[i]
           total += Number(data[key] ?? 0)
         }
@@ -58,7 +55,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
           const item = row.original
           let subtotal = 0
-          for (let i = 1; i < currentMonth; i++) {
+          for (let i = 1; i < bulanFilter; i++) {
             const key = monthKeyMap[i]
             subtotal += Number(item[key] ?? 0)
           }
@@ -69,23 +66,19 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
       },
     },
 
-    // ================================================
-    // 👉 Bulan Ini
-    // ================================================
+    // ------------ Bulan Ini ------------
     {
       id: 'bulan_ini',
-      header: `Bulan ini`,
+      header: `Bulan Ini`,
       cell: ({ row }) => {
         const data = row.original
-        const key = monthKeyMap[currentMonth]
-        const value = data[key] ?? 0
-
-        return <div>{formatRupiah(value)}</div>
+        const key = monthKeyMap[bulanFilter]
+        return <div>{formatRupiah(Number(data[key] ?? 0))}</div>
       },
       footer: ({ table }) => {
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
           const item = row.original
-          const key = monthKeyMap[currentMonth]
+          const key = monthKeyMap[bulanFilter]
           return sum + Number(item[key] ?? 0)
         }, 0)
 
@@ -93,9 +86,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
       },
     },
 
-    // ================================================
-    // 👉 s.d Bulan Ini
-    // ================================================
+    // ------------ s.d Bulan Ini ------------
     {
       id: 'sd_bulan_ini',
       header: `s.d Bulan Ini`,
@@ -103,7 +94,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
         const data = row.original
         let total = 0
 
-        for (let i = 1; i <= currentMonth; i++) {
+        for (let i = 1; i <= bulanFilter; i++) {
           const key = monthKeyMap[i]
           total += Number(data[key] ?? 0)
         }
@@ -114,7 +105,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
           const item = row.original
           let subtotal = 0
-          for (let i = 1; i <= currentMonth; i++) {
+          for (let i = 1; i <= bulanFilter; i++) {
             const key = monthKeyMap[i]
             subtotal += Number(item[key] ?? 0)
           }
@@ -124,6 +115,7 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
         return <strong>{formatRupiah(total)}</strong>
       },
     },
+
     {
       id: 'actions',
       cell: DataTableRowActions,
@@ -131,3 +123,4 @@ export const ReferensiRekapSumberDanaItemColumns: ColumnDef<RekapSumberDanaItem>
       enableHiding: false,
     },
   ]
+}

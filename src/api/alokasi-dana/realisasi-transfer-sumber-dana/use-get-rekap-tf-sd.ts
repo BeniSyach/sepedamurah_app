@@ -5,6 +5,7 @@ import type { RekapSumberDanaResponse } from './types'
 interface UseRekapRealisasiTransferSumberDana {
   search?: string
   tahun?: string | number
+  bulan?: string | number
 }
 
 export function useGetRekapRealisasiTransferSumberDana(
@@ -19,6 +20,7 @@ export function useGetRekapRealisasiTransferSumberDana(
           params: {
             search: params.search ?? '',
             tahun: params.tahun ?? '',
+            bulan: params.bulan ?? '',
           },
         }
       )
