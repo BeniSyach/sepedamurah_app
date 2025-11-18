@@ -69,7 +69,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-
+            </>
+          )}
+          {levelAkses !== 'Bendahara' && (
+            <>
               <DropdownMenuItem
                 onClick={() => {
                   setCurrentRow(row.original)
@@ -86,7 +89,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-
           {/* DOWNLOAD selalu muncul */}
           <DropdownMenuItem
             onClick={() => {

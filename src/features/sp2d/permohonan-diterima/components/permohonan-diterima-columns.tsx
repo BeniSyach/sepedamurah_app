@@ -46,6 +46,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
+    footer: () => <div className='font-bold'>Total</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -114,13 +115,23 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
     meta: { className: 'min-w-[160px]' },
   },
 
-  // ✅ tanggal_upload
   {
     accessorKey: 'nilai_belanja',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='nilai_belanja' />
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('nilai_belanja'))}</div>,
+    footer: ({ table }) => {
+      const rows = table.getRowModel().rows
+
+      // hitung total nilai_belanja pada halaman aktif
+      const total = rows.reduce((sum, row) => {
+        const value = Number(row.getValue('nilai_belanja')) || 0
+        return sum + value
+      }, 0)
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
     enableSorting: true,
     meta: { className: 'min-w-[160px]' },
   },
