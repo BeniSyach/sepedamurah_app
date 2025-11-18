@@ -1,1 +1,1 @@
-export * from './use-put-terima-berkas-masuk'
+export * from './use-hapus-multi-sp2d'
