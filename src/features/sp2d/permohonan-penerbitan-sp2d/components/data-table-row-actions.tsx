@@ -71,24 +71,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-          {levelAkses !== 'Bendahara' && (
-            <>
-              <DropdownMenuItem
-                onClick={() => {
-                  setCurrentRow(row.original)
-                  setOpen('delete')
-                }}
-                className='text-red-500'
-              >
-                Delete
-                <DropdownMenuShortcut>
-                  <Trash2 size={16} />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
+          <>
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('delete')
+              }}
+              className='text-red-500'
+            >
+              Delete
+              <DropdownMenuShortcut>
+                <Trash2 size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
-            </>
-          )}
+            <DropdownMenuSeparator />
+          </>
           {/* DOWNLOAD selalu muncul */}
           <DropdownMenuItem
             onClick={() => {

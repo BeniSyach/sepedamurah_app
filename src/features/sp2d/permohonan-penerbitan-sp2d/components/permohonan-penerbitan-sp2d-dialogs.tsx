@@ -102,25 +102,25 @@ export function UsersDialogs() {
           )}
 
           {/* Hide DELETE if proses === 1 */}
-          {currentRow.proses !== '1' && (
-            <ConfirmDialog
-              key={`permohonan-penerbitan-sp2d-delete-${currentRow.id_sp2d}`}
-              destructive
-              open={open === 'delete'}
-              onOpenChange={(val) => setOpen(val ? 'delete' : null)}
-              handleConfirm={handleDelete}
-              className='max-w-md'
-              title={`Hapus Akses Kuasa BUD Ini: ${currentRow.jenis_berkas} ?`}
-              desc={
-                <>
-                  Kamu akan menghapus data dengan nama{' '}
-                  <strong>{currentRow.jenis_berkas}</strong>. <br />
-                  Tindakan ini tidak dapat dibatalkan.
-                </>
-              }
-              confirmText='Delete'
-            />
-          )}
+          {/* {currentRow.proses !== '1' && ( */}
+          <ConfirmDialog
+            key={`permohonan-penerbitan-sp2d-delete-${currentRow.id_sp2d}`}
+            destructive
+            open={open === 'delete'}
+            onOpenChange={(val) => setOpen(val ? 'delete' : null)}
+            handleConfirm={handleDelete}
+            className='max-w-md'
+            title={`Hapus SP2D ini: ${currentRow.nama_file} ?`}
+            desc={
+              <>
+                Kamu akan menghapus data dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>. <br />
+                Tindakan ini tidak dapat dibatalkan.
+              </>
+            }
+            confirmText='Delete'
+          />
+          {/* )} */}
         </>
       )}
     </>
