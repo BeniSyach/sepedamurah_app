@@ -54,6 +54,12 @@ type UserActionDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
+function toLocalISOString(date: Date) {
+  const tzOffset = date.getTimezoneOffset() * 60000 // offset dalam ms
+  const localTime = new Date(date.getTime() - tzOffset)
+  return localTime.toISOString().slice(0, 23) + 'Z' // biar tetap bentuk ISO
+}
+
 export function UsersActionDialog({
   currentRow,
   open,
@@ -126,6 +132,7 @@ export function UsersActionDialog({
 
     const payload = {
       ...data,
+      tgl_diterima: toLocalISOString(data.tgl_diterima),
       kd_ref1,
       kd_ref2,
       kd_ref3,
