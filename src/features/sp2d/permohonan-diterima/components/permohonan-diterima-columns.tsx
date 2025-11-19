@@ -149,6 +149,23 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
     meta: { className: 'min-w-[160px]' },
   },
 
+  {
+    accessorKey: 'sp2dkirim',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Kuasa BUD' />
+    ),
+    cell: ({ row }) => {
+      const sp2dkirim = row.original.sp2dkirim
+
+      // jika ada data
+      const namaOperator = sp2dkirim?.[0]?.nama_operator ?? '-'
+
+      return <div>{namaOperator}</div>
+    },
+    enableSorting: false,
+    meta: { className: 'min-w-[180px]' },
+  },
+
   // ✅ status
   {
     accessorKey: 'status',

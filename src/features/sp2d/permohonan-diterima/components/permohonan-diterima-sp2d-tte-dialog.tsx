@@ -56,6 +56,12 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
+/* eslint-disable react-hooks/exhaustive-deps */
+
+/* eslint-disable react-hooks/exhaustive-deps */
+
 const formSchema = z.object({
   id: z.string().optional(),
   keterangan: z.string().min(1),
@@ -204,7 +210,7 @@ export function PermohonanDiterimaKirimTTEDialog({
     formData.append('id_berkas', data.id_berkas ?? '')
     formData.append('id_penerima', data.id_penerima ?? '')
     formData.append('nama_penerima', data.nama_penerima ?? '')
-    formData.append('id_operator', data.id_operator ?? '')
+    formData.append('id_operator', data.id_penandatangan ?? '')
     formData.append('nama_operator', data.nama_operator ?? '')
     formData.append('kd_opd1', data.kd_opd1 ?? '')
     formData.append('kd_opd2', data.kd_opd2 ?? '')
@@ -213,7 +219,6 @@ export function PermohonanDiterimaKirimTTEDialog({
     formData.append('kd_opd5', data.kd_opd5 ?? '')
     formData.append('namafile', data.no_sp2d ?? '')
     formData.append('keterangan', data.keterangan ?? '')
-    formData.append('id_penandatangan', data.id_operator ?? '')
     formData.append('status', '0')
 
     // ✅ Jika user upload file baru
@@ -257,6 +262,7 @@ export function PermohonanDiterimaKirimTTEDialog({
     if (selected) {
       form.setValue('id_penandatangan', selected.id_user)
       form.setValue('kuasa_bud', currentValue)
+      form.setValue('nama_operator', selected.name)
     }
   }, [itemsKuasaBUD, currentRow, form])
 
