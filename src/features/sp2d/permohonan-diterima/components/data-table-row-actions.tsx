@@ -20,6 +20,9 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefSp2dItem()
+  const sudahDikirim =
+    row.original.sp2dkirim && row.original.sp2dkirim.length > 0
+
   const levelAkses = localStorage.getItem('user_role')
   return (
     <>
@@ -35,34 +38,41 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align='end' className='w-[160px]'>
-          {levelAkses !== 'Bendahara' && (
-            <DropdownMenuItem
-              onClick={() => {
-                setCurrentRow(row.original)
-                setOpen('kirimsp2d')
-              }}
-            >
-              Kirim SP2D
-              <DropdownMenuShortcut>
-                <Send size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && !sudahDikirim && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('kirimsp2d')
+                }}
+              >
+                Kirim SP2D
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           )}
-          <DropdownMenuSeparator />
-          {levelAkses !== 'Bendahara' && (
-            <DropdownMenuItem
-              onClick={() => {
-                setCurrentRow(row.original)
-                setOpen('periksa')
-              }}
-            >
-              Periksa Berkas
-              <DropdownMenuShortcut>
-                <FileSearch size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
+
+          {levelAkses !== 'Bendahara' && !sudahDikirim && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa Berkas
+                <DropdownMenuShortcut>
+                  <FileSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           )}
-          <DropdownMenuSeparator />
+
           {levelAkses !== 'Bendahara' && (
             <DropdownMenuItem
               onClick={() => {
