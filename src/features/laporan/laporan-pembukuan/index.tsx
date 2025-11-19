@@ -446,7 +446,7 @@ export function LaporanPembukuan() {
     isError: errorSD,
   } = useGetRefSumberDana({
     page: 1,
-    perPage: 100,
+    perPage: 1000,
   })
   const sumberDanaList = dataSD?.data || []
 

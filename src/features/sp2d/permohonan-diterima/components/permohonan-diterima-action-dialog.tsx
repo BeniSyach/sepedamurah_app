@@ -121,7 +121,7 @@ export function PermohonanDiterimaActionDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [

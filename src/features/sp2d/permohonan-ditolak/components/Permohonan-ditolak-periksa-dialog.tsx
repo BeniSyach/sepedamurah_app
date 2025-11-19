@@ -53,6 +53,8 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -135,7 +137,7 @@ export function PermohonanDitolakPeriksaDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [

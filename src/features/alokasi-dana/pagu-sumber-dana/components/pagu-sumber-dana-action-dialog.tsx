@@ -80,7 +80,7 @@ export function UsersActionDialog({
   const { mutateAsync: postPaguSumberDanaAsync } = usePostPaguSumberDana()
   const { mutateAsync: putPaguSumberDanaAsync } = usePutPaguSumberDana()
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [

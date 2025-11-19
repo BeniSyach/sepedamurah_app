@@ -66,7 +66,7 @@ export function UsersActionDialog({
   const { mutateAsync: putRealisasiTransferSumberDanaAsync } =
     usePutRealisasiTransferSumberDana()
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 100 })
+  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [
