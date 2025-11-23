@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../common/client'
 
 interface DeleteRealisasiTransferSumberDanaPayload {
-  id: string
+  id: number
 }
 
 /**
