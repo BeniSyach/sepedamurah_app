@@ -63,9 +63,9 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
 
   // ✅ nama Suber Dana
   {
-    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
+    accessorKey: 'sumber_dana.nm_ref', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='Sumber Dana' />
     ),
     cell: ({ row }) => {
       const sumber_dana = row.original.sumber_dana

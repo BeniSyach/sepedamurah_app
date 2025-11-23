@@ -35,6 +35,7 @@ import { DatePicker } from '@/components/date-picker'
 import { SelectDropdown } from '@/components/select-dropdown'
 
 const formSchema = z.object({
+  id: z.number().optional(),
   sumber_dana: z.string().min(1, 'Sumber Dana wajib dipilih.'),
   tahun: z.string().regex(/^\d{4}$/, 'Tahun harus berupa 4 digit angka.'),
   tgl_diterima: z.date('tanggal Diterima Harus Ada.'),
@@ -93,6 +94,7 @@ export function UsersActionDialog({
     defaultValues:
       isEdit && currentRow
         ? {
+            id: currentRow.id,
             sumber_dana: [
               currentRow.kd_ref1,
               currentRow.kd_ref2,
@@ -188,7 +190,7 @@ export function UsersActionDialog({
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='detail-sumber-dana-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
@@ -283,7 +285,7 @@ export function UsersActionDialog({
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='detail-sumber-dana-form'>
             Simpan Perubahan
           </Button>
         </DialogFooter>

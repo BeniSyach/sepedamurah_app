@@ -19,7 +19,7 @@ export function useSyncRealisasiTransferSumberDanaPajak() {
     onSuccess: () => {
       // Refresh daftar urusan setelah berhasil menambah
       queryClient.invalidateQueries({
-        queryKey: ['useGetRealisasiTransferSumberDana'],
+        queryKey: ['useGetRealisasiTransferSumberSumberDana'],
       })
       queryClient.invalidateQueries({
         queryKey: ['useGetRekapRealisasiTransferSumberDana'],

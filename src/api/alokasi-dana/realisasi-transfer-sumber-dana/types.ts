@@ -1,7 +1,7 @@
 import type { PaginationLinks, PaginationMeta } from '@/api/users'
 
 export interface RealisasiTransferSumberDana {
-  id: string
+  id: number
   kd_ref1: string
   kd_ref2: string
   kd_ref3: string

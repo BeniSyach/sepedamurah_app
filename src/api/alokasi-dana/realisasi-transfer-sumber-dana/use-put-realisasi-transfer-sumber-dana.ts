@@ -3,7 +3,7 @@ import { api } from '../../common/client'
 import type { RealisasiTransferSumberDana } from './types'
 
 interface UpdateRealisasiTransferSumberDanaPayload {
-  id?: string
+  id?: number
   kd_ref1: string
   kd_ref2: string
   kd_ref3: string
@@ -38,7 +38,7 @@ export function usePutRealisasiTransferSumberDana() {
     onSuccess: () => {
       // Refresh cache daftar urusan setelah update
       queryClient.invalidateQueries({
-        queryKey: ['useGetRealisasiTransferSumberDana'],
+        queryKey: ['useGetRealisasiTransferSumberSumberDana'],
       })
       queryClient.invalidateQueries({
         queryKey: ['useGetRekapRealisasiTransferSumberDana'],

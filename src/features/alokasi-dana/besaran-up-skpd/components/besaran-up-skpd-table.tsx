@@ -50,8 +50,8 @@ export function UpSKPDTable({ data, meta, search, navigate }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -59,11 +59,11 @@ export function UpSKPDTable({ data, meta, search, navigate }: DataTableProps) {
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'search',
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -79,21 +79,16 @@ export function UpSKPDTable({ data, meta, search, navigate }: DataTableProps) {
       sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -102,12 +97,7 @@ export function UpSKPDTable({ data, meta, search, navigate }: DataTableProps) {
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari Pagu UP SKPD...'
-        searchKey='pagu'
-        filters={[]}
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>
