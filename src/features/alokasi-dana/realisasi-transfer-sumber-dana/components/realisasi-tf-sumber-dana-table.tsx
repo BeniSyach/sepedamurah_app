@@ -135,20 +135,16 @@ export function RekapTransferSumberDanaTable({
   }
 
   // Fungsi untuk memeriksa apakah ada nilai negatif di dalam baris
-  function hasNegativeValue(
+  function getTotalForRow(
     row: RekapSumberDanaItem,
     bulanFilter: number
-  ): boolean {
-    let isNegative = false
-    // Periksa untuk setiap bulan yang sudah difilter
+  ): number {
+    let total = 0
     for (let i = 1; i <= bulanFilter; i++) {
-      const key = monthKeyMap[i] // Gunakan key dari monthKeyMap
-      if (row[key] && Number(row[key]) < 0) {
-        isNegative = true
-        break
-      }
+      const key = monthKeyMap[i]
+      total += Number(row[key] ?? 0)
     }
-    return isNegative
+    return total
   }
 
   return (
@@ -226,7 +222,8 @@ export function RekapTransferSumberDanaTable({
               <>
                 {table.getRowModel().rows.map((row) => {
                   // Cek apakah baris ini memiliki nilai negatif
-                  const isNegative = hasNegativeValue(row.original, bulanFilter)
+                  const total = getTotalForRow(row.original, bulanFilter)
+                  const isNegative = total < 0
 
                   return (
                     <TableRow
