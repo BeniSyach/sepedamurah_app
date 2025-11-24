@@ -55,6 +55,22 @@ const bulanOptions = [
 ]
 const currentMonth = new Date().getMonth() + 1
 
+// Mapping bulan → key sesuai schema dari backend
+const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
+  1: 'total_jan',
+  2: 'total_feb',
+  3: 'total_mar',
+  4: 'total_apr',
+  5: 'total_may',
+  6: 'total_jun',
+  7: 'total_jul',
+  8: 'total_aug',
+  9: 'total_sep',
+  10: 'total_oct',
+  11: 'total_nov',
+  12: 'total_dec',
+}
+
 export function RekapTransferSumberDanaTable({
   data,
   search,
@@ -124,10 +140,9 @@ export function RekapTransferSumberDanaTable({
     bulanFilter: number
   ): boolean {
     let isNegative = false
+    // Periksa untuk setiap bulan yang sudah difilter
     for (let i = 1; i <= bulanFilter; i++) {
-      // Gunakan key dengan format yang sesuai
-      const key =
-        `total_${new Date(0).toLocaleString('default', { month: 'short' }).toLowerCase()}${i}` as keyof RekapSumberDanaItem
+      const key = monthKeyMap[i] // Gunakan key dari monthKeyMap
       if (row[key] && Number(row[key]) < 0) {
         isNegative = true
         break
