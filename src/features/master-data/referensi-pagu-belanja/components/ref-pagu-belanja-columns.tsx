@@ -127,7 +127,7 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     enableSorting: true,
   },
 
-  // ✅ nama rekening
+  // ✅ rekening
   {
     accessorKey: 'rekening.nm_rekening', // ganti key untuk akses nama SKPD
     header: ({ column }) => (

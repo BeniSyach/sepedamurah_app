@@ -31,7 +31,7 @@ const formSchema = z.object({
   kd_rekening4: z.string().min(1, 'Kode Rekening Ke - 4 Harus Ada.'),
   kd_rekening5: z.string().min(1, 'Kode Rekening Ke - 5 Harus Ada.'),
   kd_rekening6: z.string().min(1, 'Kode Rekening Ke - 6 Harus Ada.'),
-  nm_rekening: z.string().min(1, 'Nama Rekening Harus Ada.'),
+  nm_rekening: z.string().min(1, 'Rekening Harus Ada.'),
 })
 type RekeningForm = z.infer<typeof formSchema>
 
@@ -241,11 +241,11 @@ export function RekeningsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Nama Rekening
+                      Rekening
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Ketik Nama Rekening'
+                        placeholder='Ketik Rekening'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}

@@ -28,7 +28,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
@@ -50,6 +49,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { UrusanSection } from '../../permohonan-sp2d-tte/components/urusan-section'
 import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekeningToFormData'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -536,10 +537,6 @@ export function PermohonanDiterimaPeriksaDialog({
                       <FormLabel>Sumber Dana</FormLabel>
                       <FormControl>
                         <Command className='rounded-md border'>
-                          <CommandInput
-                            disabled
-                            placeholder='Pilih sumber dana...'
-                          />
                           <CommandList>
                             {field.value.length === 0 && (
                               <CommandEmpty>

@@ -456,7 +456,7 @@ export default function PengembalianDanaForm() {
                 <table className='w-full border-collapse'>
                   <tbody>
                     <tr>
-                      <td className='w-1/3 font-medium'>Nama Rekening</td>
+                      <td className='w-1/3 font-medium'>Rekening</td>
                       <td>: {resultData.rekening}</td>
                     </tr>
                     <tr>

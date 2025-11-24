@@ -37,7 +37,7 @@ export function SubKegiatanSection({
           return (
             <FormItem>
               <div className='flex items-center justify-between'>
-                <FormLabel>Nama Sub Kegiatan</FormLabel>
+                <FormLabel>Sub Kegiatan</FormLabel>
               </div>
               <FormControl>
                 <Input

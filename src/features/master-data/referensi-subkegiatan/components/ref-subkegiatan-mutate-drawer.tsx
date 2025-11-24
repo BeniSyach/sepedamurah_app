@@ -40,7 +40,7 @@ const formSchema = z.object({
   kd_subkeg4: z.string().min(1, 'Kode Sub Kegiatan Ke - 4 Harus Ada.'),
   kd_subkeg5: z.string().min(1, 'Kode Sub Kegiatan Ke - 5 Harus Ada.'),
   kd_subkeg6: z.string().min(1, 'Kode Sub Kegiatan Ke - 6 Harus Ada.'),
-  nm_subkegiatan: z.string().min(1, 'Nama Sub Kegiatan Harus Ada.'),
+  nm_subkegiatan: z.string().min(1, 'Sub Kegiatan Harus Ada.'),
 })
 type SubKegiatanForm = z.infer<typeof formSchema>
 
@@ -221,7 +221,7 @@ export function SubKegiatansMutateDrawer({
                 <FormItem>
                   <FormLabel>Kode Sub Kegiatan</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Ketik Nama Sub Kegiatan' />
+                    <Input {...field} placeholder='Ketik Sub Kegiatan' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

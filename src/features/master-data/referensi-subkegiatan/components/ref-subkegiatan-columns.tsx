@@ -72,7 +72,7 @@ export const refSubKegiatanColummns: ColumnDef<SubKegiatan>[] = [
   {
     accessorKey: 'nm_subkegiatan',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama Sub Kegiatan' />
+      <DataTableColumnHeader column={column} title='Sub Kegiatan' />
     ),
     cell: ({ row }) => <div>{row.getValue('nm_subkegiatan')}</div>,
     enableSorting: true,

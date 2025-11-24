@@ -85,7 +85,7 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Cari Nama Rekening...'
+        searchPlaceholder='Cari...'
         searchKey='nama'
         filters={[]}
       />

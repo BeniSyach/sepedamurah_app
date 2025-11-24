@@ -31,7 +31,7 @@ export function RekeningSection({
           const nm = field.value || ''
           return (
             <FormItem>
-              <FormLabel>Nama Rekening</FormLabel>
+              <FormLabel>Rekening</FormLabel>
               <FormControl>
                 <Input
                   {...field}

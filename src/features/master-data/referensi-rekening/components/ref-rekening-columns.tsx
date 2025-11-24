@@ -77,7 +77,7 @@ export const ReferensiRekeningColumns: ColumnDef<Rekening>[] = [
   {
     accessorKey: 'nm_rekening',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama Rekening' />
+      <DataTableColumnHeader column={column} title='Rekening' />
     ),
     cell: ({ row }) => <div>{row.getValue('nm_rekening')}</div>,
     enableSorting: true,
