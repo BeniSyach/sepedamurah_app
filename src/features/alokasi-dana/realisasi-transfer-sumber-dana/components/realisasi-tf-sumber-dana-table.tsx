@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
 import {
   flexRender,
@@ -119,6 +118,24 @@ export function RekapTransferSumberDanaTable({
     )
   }
 
+  // Fungsi untuk memeriksa apakah ada nilai negatif di dalam baris
+  function hasNegativeValue(
+    row: RekapSumberDanaItem,
+    bulanFilter: number
+  ): boolean {
+    let isNegative = false
+    for (let i = 1; i <= bulanFilter; i++) {
+      // Gunakan key dengan format yang sesuai
+      const key =
+        `total_${new Date(0).toLocaleString('default', { month: 'short' }).toLowerCase()}${i}` as keyof RekapSumberDanaItem
+      if (row[key] && Number(row[key]) < 0) {
+        isNegative = true
+        break
+      }
+    }
+    return isNegative
+  }
+
   return (
     <div className='space-y-4'>
       <DataTableToolbar
@@ -192,18 +209,26 @@ export function RekapTransferSumberDanaTable({
           <TableBody>
             {table.getRowModel().rows.length ? (
               <>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                {table.getRowModel().rows.map((row) => {
+                  // Cek apakah baris ini memiliki nilai negatif
+                  const isNegative = hasNegativeValue(row.original, bulanFilter)
+
+                  return (
+                    <TableRow
+                      key={row.id}
+                      className={isNegative ? 'bg-red-500 text-white' : ''}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )
+                })}
               </>
             ) : (
               <TableRow>
@@ -216,6 +241,7 @@ export function RekapTransferSumberDanaTable({
               </TableRow>
             )}
           </TableBody>
+
           <TableFooter>
             {table.getFooterGroups().map((footerGroup) => (
               <TableRow key={footerGroup.id}>

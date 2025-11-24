@@ -9,7 +9,7 @@ import { type Urusan } from '../ref-urusan'
 
 export interface PaguBelanja {
   id_pb: string
-  tahun_rek: string | null
+  tahun_rek?: string
   kd_urusan: string
   urusan: Urusan
   kd_prog1: string
@@ -49,8 +49,8 @@ export interface PaguBelanja {
   kd_bu1: string
   kd_bu2: string
   bu: BidangUrusan
-  kd_relasi: string | null
-  kd_berapax: string | null
+  kd_relasi?: string
+  kd_berapax?: string
   created_at: string
   updated_at: string
 }

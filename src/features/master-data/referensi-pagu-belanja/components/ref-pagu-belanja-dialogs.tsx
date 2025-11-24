@@ -1,4 +1,4 @@
-import { UsersActionDialog } from './ref-pagu-belanja-action-dialog'
+import { PaguBelanjaActionDialog } from './ref-pagu-belanja-action-dialog'
 import { RefPaguBelanjasDeleteDialog } from './ref-pagu-belanja-delete-dialog'
 import { TasksImportDialog } from './ref-pagu-belanja-import-dialog'
 import { useRefPaguBelanja } from './ref-pagu-belanja-provider'
@@ -7,7 +7,7 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefPaguBelanja()
   return (
     <>
-      <UsersActionDialog
+      <PaguBelanjaActionDialog
         key='pagu-belanja-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
@@ -21,7 +21,7 @@ export function UsersDialogs() {
 
       {currentRow && (
         <>
-          <UsersActionDialog
+          <PaguBelanjaActionDialog
             key={`pagu-belanja-edit-${currentRow.id_pb}`}
             open={open === 'edit'}
             onOpenChange={() => {

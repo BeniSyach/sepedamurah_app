@@ -1,4 +1,4 @@
-import { Download } from 'lucide-react'
+import { Download, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRefPaguBelanja } from './ref-pagu-belanja-provider'
 
@@ -13,9 +13,9 @@ export function RefRekeningPrimaryButtons() {
       >
         <span>Import</span> <Download size={18} />
       </Button>
-      {/* <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambah Pagu Belanja</span> <UserPlus size={18} />
-      </Button> */}
+      <Button className='space-x-1' onClick={() => setOpen('add')}>
+        <span>Tambah Pagu Belanja</span> <Plus size={18} />
+      </Button>
     </div>
   )
 }
