@@ -4,6 +4,7 @@ import type { LaporanRealisasiSumberDanaResponse } from './types'
 
 interface UseLaporanRealisasiSumberDana {
   tahun?: number | string
+  search?: string
 }
 
 export function useGetLaporanRealisasiSumberDana(
@@ -17,6 +18,7 @@ export function useGetLaporanRealisasiSumberDana(
         {
           params: {
             tahun: params.tahun ?? 2025,
+            search: params.search ?? '',
             _t: Date.now(),
           },
         }

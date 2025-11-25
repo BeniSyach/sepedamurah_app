@@ -4,6 +4,7 @@ import { RealisasiSumberDana } from '@/features/laporan/realisasi-sumber-dana'
 
 const LaporanRealiasaiSumberDanaSearchSchema = z.object({
   tahun: z.string().optional().catch(''),
+  search: z.string().optional().catch(''),
 })
 
 export const Route = createFileRoute(

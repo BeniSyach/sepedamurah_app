@@ -20,6 +20,7 @@ export function RealisasiSumberDana() {
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetLaporanRealisasiSumberDana({
     tahun: search.tahun,
+    search: search.search,
   })
 
   return (
