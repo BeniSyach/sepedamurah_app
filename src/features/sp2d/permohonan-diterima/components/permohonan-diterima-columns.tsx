@@ -38,8 +38,10 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
@@ -47,44 +49,40 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       return <div>{number}</div>
     },
     footer: () => <div className='font-bold'>Total</div>,
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
   },
 
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
       return <div>{skpd?.nm_opd ?? '-'}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ no_spm
   {
     accessorKey: 'no_spm',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='no_spm' />
+      <DataTableColumnHeader column={column} title='No SPM' />
     ),
     cell: ({ row }) => <div>{row.getValue('no_spm')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ jenis_berkas
   {
     accessorKey: 'jenis_berkas',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jenis_berkas' />
+      <DataTableColumnHeader column={column} title='Jenis Berkas' />
     ),
     cell: ({ row }) => <div>{row.getValue('jenis_berkas')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   {
@@ -101,7 +99,6 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       return <div>{names.join(', ')}</div>
     },
     enableSorting: false, // bisa diubah jika mau sorting custom
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama_file
@@ -112,13 +109,12 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue('nama_file')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   {
     accessorKey: 'nilai_belanja',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nilai_belanja' />
+      <DataTableColumnHeader column={column} title='Nilai Belanja' />
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('nilai_belanja'))}</div>,
     footer: ({ table }) => {
@@ -133,7 +129,6 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       return <div className='font-bold'>{formatRupiah(total)}</div>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ tanggal_upload
@@ -146,7 +141,6 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       <div>{formatTanggaldanJam(row.getValue('diterima'))}</div>
     ),
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   {
@@ -162,8 +156,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
       return <div>{namaOperator}</div>
     },
-    enableSorting: false,
-    meta: { className: 'min-w-[180px]' },
+    enableSorting: true,
   },
 
   // ✅ status
@@ -191,7 +184,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
       return <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
     },
     enableSorting: true,
-    meta: { className: 'min-w-[220px]' },
+    meta: { className: 'min-w-[100px]' },
   },
 
   // ✅ Aksi

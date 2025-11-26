@@ -1,6 +1,7 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type SumberDana } from '@/api'
 import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { DataTableRowActions } from './data-table-row-actions'
@@ -79,6 +80,28 @@ export const ReferensiSumberDanaColumns: ColumnDef<SumberDana>[] = [
       <DataTableColumnHeader column={column} title='Nama Sumber Dana' />
     ),
     cell: ({ row }) => <div>{row.getValue('nm_ref')}</div>,
+    enableSorting: true,
+  },
+
+  {
+    accessorKey: 'status',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Status' />
+    ),
+    cell: ({ row }) => {
+      const status = row.getValue('status')
+
+      return (
+        <Badge
+          className={cn(
+            'px-3 py-1',
+            status === 1 ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+          )}
+        >
+          {status === 1 ? 'Aktif' : 'Tidak Aktif'}
+        </Badge>
+      )
+    },
     enableSorting: true,
   },
 

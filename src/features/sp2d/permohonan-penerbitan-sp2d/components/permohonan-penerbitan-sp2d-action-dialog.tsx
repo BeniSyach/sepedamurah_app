@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm, useFieldArray, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,6 +22,16 @@ import {
 } from '@/api/sp2d/check_sd'
 import { useAuthStore } from '@/stores/auth-store'
 import { formatRupiahControlled } from '@/lib/utils'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -50,46 +60,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import { UrusanSection } from './urusan-section'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -226,6 +196,9 @@ export function PermohonanPenerbitanSP2DActionDialog({
   const isEdit = !!currentRow
   const user = useAuthStore((s) => s.user)
   const queryClient = useQueryClient()
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const [hasConfirmedBerkas, setHasConfirmedBerkas] = useState(false)
+
   const { mutateAsync: post } = usePostPermohonanSp2d()
   const { mutateAsync: put } = usePutPermohonanSp2d()
 
@@ -630,59 +603,18 @@ export function PermohonanPenerbitanSP2DActionDialog({
                         type='button'
                         size='sm'
                         variant='outline'
-                        onClick={() =>
+                        onClick={() => {
+                          if (!hasConfirmedBerkas) {
+                            setOpenConfirm(true) // buka modal dulu
+                            return
+                          }
+
+                          // Sudah konfirmasi → langsung append
                           append({
                             kd_urusan: '',
-                            bidangUrusan: [
-                              {
-                                nm_bu: '',
-                                kd_bu1: '',
-                                kd_bu2: '',
-                                program: [
-                                  {
-                                    nm_program: '',
-                                    kd_prog1: '',
-                                    kd_prog2: '',
-                                    kd_prog3: '',
-                                    kegiatan: [
-                                      {
-                                        nm_kegiatan: '',
-                                        kd_keg1: '',
-                                        kd_keg2: '',
-                                        kd_keg3: '',
-                                        kd_keg4: '',
-                                        kd_keg5: '',
-                                        subKegiatan: [
-                                          {
-                                            nm_subkegiatan: '',
-                                            kd_subkeg1: '',
-                                            kd_subkeg2: '',
-                                            kd_subkeg3: '',
-                                            kd_subkeg4: '',
-                                            kd_subkeg5: '',
-                                            kd_subkeg6: '',
-                                            rekening: [
-                                              {
-                                                nm_rekening: '',
-                                                kd_rekening1: '',
-                                                kd_rekening2: '',
-                                                kd_rekening3: '',
-                                                kd_rekening4: '',
-                                                kd_rekening5: '',
-                                                kd_rekening6: '',
-                                                nilai: '',
-                                              },
-                                            ],
-                                          },
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                            ],
+                            bidangUrusan: [],
                           })
-                        }
+                        }}
                       >
                         <Plus className='mr-1 h-4 w-4' /> Tambah Urusan
                       </Button>
@@ -886,6 +818,44 @@ export function PermohonanPenerbitanSP2DActionDialog({
           </Button>
         </DialogFooter>
       </DialogContentLarge>
+      <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah daftar berkas yang Anda ceklis sudah sesuai?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                //  ❌ TIDAK → kosongkan id_berkas
+                form.setValue('id_berkas', [])
+              }}
+            >
+              Tidak
+            </AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={() => {
+                //  ✅ YA → set flag agar next click tidak tanya lagi
+                setHasConfirmedBerkas(true)
+
+                // lakukan append urusan baru
+                append({
+                  kd_urusan: '',
+                  bidangUrusan: [],
+                })
+
+                setOpenConfirm(false)
+              }}
+            >
+              Ya, sesuai
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

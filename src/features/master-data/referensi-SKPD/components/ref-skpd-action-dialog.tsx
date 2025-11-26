@@ -28,11 +28,11 @@ import { SelectDropdown } from '@/components/select-dropdown'
 const status = [
   {
     value: '1',
-    label: 'Aktif',
+    label: 'Ada Penerimaan',
   },
   {
     value: '0',
-    label: 'Tidak Aktif',
+    label: 'Tidak Ada Penerimaan',
   },
 ]
 
@@ -66,15 +66,28 @@ export function SKPDsActionDialog({
 
   const form = useForm<SKPDForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      kd_opd1: '',
-      kd_opd2: '',
-      kd_opd3: '',
-      kd_opd4: '',
-      kd_opd5: '',
-      nm_opd: '',
-      status_penerimaan: '',
-    },
+    defaultValues: currentRow
+      ? {
+          kd_opd1: String(currentRow.kd_opd1 ?? ''),
+          kd_opd2: String(currentRow.kd_opd2 ?? ''),
+          kd_opd3: String(currentRow.kd_opd3 ?? ''),
+          kd_opd4: String(currentRow.kd_opd4 ?? ''),
+          kd_opd5: String(currentRow.kd_opd5 ?? ''),
+          nm_opd: String(currentRow.nm_opd ?? ''),
+          status_penerimaan:
+            currentRow.status_penerimaan !== undefined
+              ? String(currentRow.status_penerimaan)
+              : '',
+        }
+      : {
+          kd_opd1: '',
+          kd_opd2: '',
+          kd_opd3: '',
+          kd_opd4: '',
+          kd_opd5: '',
+          nm_opd: '',
+          status_penerimaan: '',
+        },
   })
 
   const onSubmit = async (data: SKPDForm) => {

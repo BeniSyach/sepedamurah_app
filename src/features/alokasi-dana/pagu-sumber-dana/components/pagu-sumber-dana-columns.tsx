@@ -37,16 +37,18 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
+    footer: () => <strong>Total</strong>,
   },
 
   // ✅ Tanggal
@@ -82,6 +84,13 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('pagu'))}</div>,
     enableSorting: true,
+    footer: ({ table }) => {
+      const total = table
+        .getFilteredRowModel()
+        .rows.reduce((sum, row) => sum + Number(row.getValue('pagu') ?? 0), 0)
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
 
   // ✅ jumlah_silpa
@@ -92,6 +101,16 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('jumlah_silpa'))}</div>,
     enableSorting: true,
+    footer: ({ table }) => {
+      const total = table
+        .getFilteredRowModel()
+        .rows.reduce(
+          (sum, row) => sum + Number(row.getValue('jumlah_silpa') ?? 0),
+          0
+        )
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
   // ✅ Aksi
   {

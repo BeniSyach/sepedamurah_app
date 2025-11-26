@@ -37,23 +37,25 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
+    footer: () => <div className='font-bold'>Total</div>,
   },
 
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='Bendahara SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
@@ -64,21 +66,27 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ no_spm
   {
-    accessorKey: 'no_spm',
+    accessorKey: 'namafile_sp2dkirim',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='no_spm' />
+      <DataTableColumnHeader column={column} title='No SP2D' />
     ),
-    cell: ({ row }) => <div>{row.getValue('no_spm')}</div>,
-    enableSorting: true,
+    accessorFn: (row) => row.sp2dkirim?.[0]?.namafile ?? '-',
+    cell: ({ row }) => {
+      const file = row.original.sp2dkirim?.[0]?.namafile ?? '-'
+      return <div>{file}</div>
+    },
+    enableSorting: true, // sorting string nested? lebih aman disable
   },
 
-  // ✅ jenis_berkas
+  // ✅ tanggal_upload
   {
-    accessorKey: 'jenis_berkas',
+    accessorKey: 'diterima',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jenis_berkas' />
+      <DataTableColumnHeader column={column} title='Tanggal & waktu Terima' />
     ),
-    cell: ({ row }) => <div>{row.getValue('jenis_berkas')}</div>,
+    cell: ({ row }) => (
+      <div>{formatTanggaldanJam(row.getValue('diterima'))}</div>
+    ),
     enableSorting: true,
   },
 
@@ -95,76 +103,28 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
       return <div>{names.join(', ')}</div>
     },
-    enableSorting: false, // bisa diubah jika mau sorting custom
-  },
-
-  // ✅ nama_file
-  {
-    accessorKey: 'nama_file',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Uraian Keperluan' />
-    ),
-    cell: ({ row }) => <div>{row.getValue('nama_file')}</div>,
-    enableSorting: true,
+    enableSorting: true, // bisa diubah jika mau sorting custom
   },
 
   // ✅ tanggal_upload
   {
     accessorKey: 'nilai_belanja',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nilai_belanja' />
+      <DataTableColumnHeader column={column} title='Nilai Belanja' />
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('nilai_belanja'))}</div>,
     enableSorting: true,
-  },
+    footer: ({ table }) => {
+      const rows = table.getRowModel().rows
 
-  // ✅ tanggal_upload
-  {
-    accessorKey: 'tanggal_upload',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Tanggal & waktu Terima' />
-    ),
-    cell: ({ row }) => (
-      <div>{formatTanggaldanJam(row.getValue('tanggal_upload'))}</div>
-    ),
-    enableSorting: true,
-  },
+      // hitung total nilai_belanja pada halaman aktif
+      const total = rows.reduce((sum, row) => {
+        const value = Number(row.getValue('nilai_belanja')) || 0
+        return sum + value
+      }, 0)
 
-  // ✅ status
-  {
-    accessorKey: 'status',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
-    ),
-    cell: ({ row }) => {
-      const diterima = row.original?.diterima
-      const ditolak = row.original?.ditolak
-      const alasanTolak = row.original?.alasan_tolak
-
-      let color =
-        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
-      let text = 'Berkas sedang diproses'
-
-      if (ditolak) {
-        color = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-        text = `Berkas ditolak${alasanTolak ? `: ${alasanTolak}` : ''}`
-      } else if (diterima) {
-        color =
-          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
-        text = 'Berkas telah diverifikasi'
-      }
-
-      return (
-        <div className='ps-3'>
-          <div
-            className={`inline-flex max-w-[300px] items-center rounded-full px-5 py-0.5 text-xs font-medium break-words ${color} `}
-          >
-            {text}
-          </div>
-        </div>
-      )
+      return <div className='font-bold'>{formatRupiah(total)}</div>
     },
-    enableSorting: true,
   },
 
   // ✅ Aksi

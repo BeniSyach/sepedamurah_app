@@ -74,8 +74,8 @@ export function LaporanPembayaranModal({
       <DialogContentLarge
         title='Cek Laporan Pembayaran'
         description='Apabila terdapat kesalahan pada data yang belum dibayarkan, dan
-            ingin dilakukan perubahan atau penghapusan data dapat menghubungi
-            Sdr. Arfan Saragih : 0813-7577-4567'
+            ingin dilakukan perubahan atau pembaruan data dapat menghubungi
+            pegawai yang berwenang'
       >
         <Form {...form}>
           <form

@@ -38,23 +38,25 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
+    footer: () => <div className='font-bold'>Total</div>,
   },
 
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
@@ -67,7 +69,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'no_spm',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='no_spm' />
+      <DataTableColumnHeader column={column} title='No SPM' />
     ),
     cell: ({ row }) => <div>{row.getValue('no_spm')}</div>,
     enableSorting: true,
@@ -77,7 +79,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'jenis_berkas',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='jenis_berkas' />
+      <DataTableColumnHeader column={column} title='Jenis Berkas' />
     ),
     cell: ({ row }) => <div>{row.getValue('jenis_berkas')}</div>,
     enableSorting: true,
@@ -113,10 +115,21 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
   {
     accessorKey: 'nilai_belanja',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nilai_belanja' />
+      <DataTableColumnHeader column={column} title='Nilai Belanja' />
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('nilai_belanja'))}</div>,
     enableSorting: true,
+    // 🔥 FOOTER untuk total
+    footer: ({ table }) => {
+      const total = table
+        .getFilteredRowModel()
+        .rows.reduce(
+          (sum, row) => sum + Number(row.getValue('nilai_belanja') ?? 0),
+          0
+        )
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
 
   // ✅ tanggal_upload

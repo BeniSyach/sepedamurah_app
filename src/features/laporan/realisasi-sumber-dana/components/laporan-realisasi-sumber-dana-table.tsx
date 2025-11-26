@@ -110,11 +110,7 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
                 return (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                    className={cn(
-                      'group/row',
-                      isMinus && 'bg-red-500 text-white'
-                    )}
+                    className={isMinus ? 'bg-red-500 text-white' : ''}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

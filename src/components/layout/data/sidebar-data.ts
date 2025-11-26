@@ -56,7 +56,7 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'sepeda murah',
+      name: 'SEPEDAMURAH',
       logo: Command,
       plan: 'Sistem Elektronik Perbendaharaan Digital Mudah Ramah dan Humanis',
     },

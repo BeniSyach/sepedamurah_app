@@ -19,7 +19,7 @@ export function SignIn() {
           <CardTitle className='text-lg tracking-tight'>Masuk</CardTitle>
           <CardDescription>
             Masukkan NIP dan Password Anda untuk <br />
-            Masuk Ke Akun sepeda murah
+            Masuk Ke Akun SEPEDAMURAH
           </CardDescription>
         </CardHeader>
         <CardContent>

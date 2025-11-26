@@ -37,23 +37,25 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
+    footer: () => <strong>Total</strong>,
   },
 
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
@@ -66,7 +68,7 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
   {
     accessorKey: 'tahun',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='tahun' />
+      <DataTableColumnHeader column={column} title='Tahun' />
     ),
     cell: ({ row }) => <div>{row.getValue('tahun')}</div>,
     enableSorting: true,
@@ -80,6 +82,13 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('pagu'))}</div>,
     enableSorting: true,
+    footer: ({ table }) => {
+      const total = table
+        .getFilteredRowModel()
+        .rows.reduce((sum, row) => sum + Number(row.getValue('pagu') ?? 0), 0)
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
 
   // ✅ up_kkpd
@@ -90,9 +99,19 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
     ),
     cell: ({ row }) => <div>{formatRupiah(row.getValue('up_kkpd'))}</div>,
     enableSorting: true,
+    footer: ({ table }) => {
+      const total = table
+        .getFilteredRowModel()
+        .rows.reduce(
+          (sum, row) => sum + Number(row.getValue('up_kkpd') ?? 0),
+          0
+        )
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
   {
-    id: 'total', // karena ini hasil hitungan, bukan field dari API
+    accessorKey: 'total', // karena ini hasil hitungan, bukan field dari API
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Total UP' />
     ),
@@ -103,7 +122,16 @@ export const ReferensiUpSkpdColumns: ColumnDef<UpSkpd>[] = [
 
       return <div>{formatRupiah(total)}</div>
     },
-    enableSorting: false, // tidak bisa sorting karena bukan kolom asli
+    enableSorting: true, // tidak bisa sorting karena bukan kolom asli
+    footer: ({ table }) => {
+      const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
+        const pagu = Number(row.getValue('pagu')) || 0
+        const upKkpd = Number(row.getValue('up_kkpd')) || 0
+        return sum + (pagu + upKkpd)
+      }, 0)
+
+      return <div className='font-bold'>{formatRupiah(total)}</div>
+    },
   },
 
   // ✅ Aksi

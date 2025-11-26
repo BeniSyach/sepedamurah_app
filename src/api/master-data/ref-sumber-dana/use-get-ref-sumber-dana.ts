@@ -6,6 +6,7 @@ interface UseRefSumberDana {
   page?: number
   perPage?: number
   search?: string
+  status?: string
 }
 
 export function useGetRefSumberDana(params: UseRefSumberDana) {
@@ -19,6 +20,7 @@ export function useGetRefSumberDana(params: UseRefSumberDana) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            status: params.status ?? '',
           },
         }
       )

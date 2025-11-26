@@ -77,7 +77,7 @@ export function CompanyProfile() {
           {/* <div className='absolute inset-0 rounded-2xl bg-white/30 backdrop-blur-[2px] dark:bg-black/40'></div> */}
           <motion.img
             src='/images/sepeda-murah.png'
-            alt='Sepeda Murah'
+            alt='SEPEDAMURAH'
             className='w-full rounded-2xl brightness-105 contrast-110'
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
@@ -161,13 +161,13 @@ export function CompanyProfile() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 1 }}
         >
-          <p className='inline-block rounded-lg bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-md backdrop-blur-md dark:bg-white/10 dark:text-white'>
+          {/* <p className='inline-block rounded-lg bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-md backdrop-blur-md dark:bg-white/10 dark:text-white'>
             💬 Help Desk:{' '}
             <span className='font-semibold text-sky-700 dark:text-sky-300'>
               0813-7577-4567
             </span>{' '}
             (Arfan Saragih)
-          </p>
+          </p> */}
         </motion.div>
       </div>
     </div>

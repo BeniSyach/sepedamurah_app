@@ -50,7 +50,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 
 const jenis_laporan = [
   { label: 'LRA Sumber Dana', value: 'lra_sd' },
-  { label: 'Rincian Saldo Buku Besar', value: 'r_saldo_buku_besar' },
+  { label: 'Rincian Akun Rekening Belanja', value: 'r_saldo_buku_besar' },
   {
     label: 'Laporan Realisasi Anggaran Per Priode',
     value: 'lra_anggaran_per_priode',
