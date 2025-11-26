@@ -53,7 +53,6 @@ export function UsersDialogs() {
         <>
           <ConfirmDialog
             key={`spd-ditandatangani-bud-download-${currentRow.id}`}
-            destructive
             open={open === 'download'}
             onOpenChange={() => {
               setOpen('download')
@@ -72,7 +71,7 @@ export function UsersDialogs() {
             }
             confirmText='Download'
           />
-          <ConfirmDialog
+          {/* <ConfirmDialog
             key={`spd-ditandatangani-bud-download-${currentRow.id}`}
             destructive
             open={open === 'cekTTE'}
@@ -92,7 +91,7 @@ export function UsersDialogs() {
               </>
             }
             confirmText='Download'
-          />
+          /> */}
         </>
       )}
     </>

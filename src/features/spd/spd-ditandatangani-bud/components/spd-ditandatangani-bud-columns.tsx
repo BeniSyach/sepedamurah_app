@@ -39,23 +39,24 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
 
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
   },
 
   // ✅ nama SKPD
   {
     accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd
@@ -68,7 +69,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
   {
     accessorKey: 'nama_penerima',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nama_penerima' />
+      <DataTableColumnHeader column={column} title='Nama Penerima' />
     ),
     cell: ({ row }) => <div>{row.getValue('nama_penerima')}</div>,
     enableSorting: true,
@@ -129,7 +130,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
 
   // ✅ jam_upload
   {
-    id: 'jam_upload', // gunakan id, karena accessorKey-nya sama
+    accessorKey: 'jam_upload', // gunakan id, karena accessorKey-nya sama
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Jam Upload' />
     ),
@@ -142,7 +143,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
 
       return <span>{jam}</span>
     },
-    enableSorting: false, // bisa diset true kalau mau
+    enableSorting: true, // bisa diset true kalau mau
   },
 
   // ✅ Aksi

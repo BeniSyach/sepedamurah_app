@@ -8,27 +8,27 @@ import { DataTableRowActions } from './data-table-row-actions'
 export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
-    id: 'no',
-    header: () => <div className='w-12 text-center'>No</div>,
+    accessorKey: 'no',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='No' />
+    ),
     cell: ({ row, table }) => {
       const pageIndex = table.getState().pagination.pageIndex
       const pageSize = table.getState().pagination.pageSize
       const number = pageIndex * pageSize + row.index + 1
       return <div className='w-12 text-center'>{number}</div>
     },
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
   },
 
   // ✅ nama_pengirim
   {
     accessorKey: 'nama_pengirim',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nama_pengirim' />
+      <DataTableColumnHeader column={column} title='Nama Pengirim' />
     ),
     cell: ({ row }) => <div>{row.getValue('nama_pengirim')}</div>,
     enableSorting: true,
-    meta: { className: 'min-w-[160px]' },
   },
 
   // ✅ nama_operator
@@ -86,7 +86,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
 
   // ✅ jam_upload
   {
-    id: 'jam_upload', // gunakan id, karena accessorKey-nya sama
+    accessorKey: 'jam_upload', // gunakan id, karena accessorKey-nya sama
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Jam Upload' />
     ),
@@ -99,7 +99,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
 
       return <span>{jam}</span>
     },
-    enableSorting: false, // bisa diset true kalau mau
+    enableSorting: true, // bisa diset true kalau mau
   },
 
   // ✅ status
