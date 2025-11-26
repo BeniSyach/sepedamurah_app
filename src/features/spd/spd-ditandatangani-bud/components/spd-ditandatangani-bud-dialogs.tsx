@@ -13,7 +13,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/spd/permohonan-spd/download/${currentRow.id}`,
+          `/spd/spd-terkirim/downloadSPDTTE/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
