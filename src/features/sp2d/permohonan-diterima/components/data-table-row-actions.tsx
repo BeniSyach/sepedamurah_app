@@ -56,7 +56,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </>
           )}
 
-          {levelAkses !== 'Bendahara' && !sudahDikirim && (
+          {levelAkses !== 'Bendahara' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
