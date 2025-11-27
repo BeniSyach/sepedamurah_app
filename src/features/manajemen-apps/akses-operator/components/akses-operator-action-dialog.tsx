@@ -79,7 +79,7 @@ export function AksesOperatorsActionDialog({
     isError: isErrorSKPD,
   } = useGetRefSKPD({
     page: 1,
-    perPage: 100, // ambil banyak biar bisa isi select
+    perPage: 1000, // ambil banyak biar bisa isi select
   })
 
   // Ambil data dari response

@@ -1,4 +1,5 @@
 import { format, isValid, parse, parseISO } from 'date-fns'
+import { type AksesOperator } from '@/api'
 import { type ClassValue, clsx } from 'clsx'
 import { id } from 'date-fns/locale'
 import QRCode from 'qrcode'
@@ -215,4 +216,58 @@ export async function createQRCodeWithLogo(
   ctx.drawImage(logo, x, y, logoSize, logoSize)
 
   return canvas.toDataURL('image/png')
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function groupAksesOperator(data: AksesOperator[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const grouped: Record<string, any> = {}
+
+  data.forEach((item) => {
+    const userId = item.user?.id
+    const userName = item.user?.name ?? '-'
+
+    // Jika operator belum pernah ditambahkan → buat baru
+    if (!grouped[userId]) {
+      grouped[userId] = {
+        operator_id: userId,
+        name: userName,
+        akses: [], // berisi semua AksesOperator tanpa dikurangi
+      }
+    }
+
+    // Cegah duplicate berdasarkan id akses_operator
+    if (!grouped[userId].akses.some((x: AksesOperator) => x.id === item.id)) {
+      grouped[userId].akses.push(item) // ← SIMPAN FULL DATA
+    }
+  })
+
+  return Object.values(grouped)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function groupAksesKuasaBud(data: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const grouped: Record<string, any> = {}
+
+  data.forEach((item) => {
+    const userId = item.user?.id
+    const userName = item.user?.name ?? '-'
+
+    // Jika operator belum pernah ditambahkan → buat baru
+    if (!grouped[userId]) {
+      grouped[userId] = {
+        id_kbud: userId,
+        name: userName,
+        akses: [], // berisi semua AksesOperator tanpa dikurangi
+      }
+    }
+
+    // Cegah duplicate berdasarkan id akses_operator
+    if (!grouped[userId].akses.some((x: AksesOperator) => x.id === item.id)) {
+      grouped[userId].akses.push(item) // ← SIMPAN FULL DATA
+    }
+  })
+
+  return Object.values(grouped)
 }

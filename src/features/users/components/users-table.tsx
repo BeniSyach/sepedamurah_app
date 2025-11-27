@@ -5,11 +5,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { Users } from '@/api'
@@ -50,8 +46,8 @@ export function UsersTable({ data, meta, search, navigate }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -59,7 +55,11 @@ export function UsersTable({ data, meta, search, navigate }: DataTableProps) {
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [{ columnId: 'name', searchKey: 'name', type: 'string' }],
+    globalFilter: {
+      enabled: true,
+      key: 'name', // URL menjadi &filter=...
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -75,21 +75,16 @@ export function UsersTable({ data, meta, search, navigate }: DataTableProps) {
       sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -98,11 +93,7 @@ export function UsersTable({ data, meta, search, navigate }: DataTableProps) {
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari User...'
-        searchKey='name'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>

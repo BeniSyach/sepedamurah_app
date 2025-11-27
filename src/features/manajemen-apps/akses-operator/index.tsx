@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetAksesOperator } from '@/api'
+import { groupAksesOperator } from '@/lib/utils'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -7,6 +8,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { RefRekeningPrimaryButtons } from './components/akses-operator-buttons'
+import { ReferensiAksesOperatorColumns } from './components/akses-operator-columns'
 import { UsersDialogs } from './components/akses-operator-dialogs'
 import { AksesOperatorProvider } from './components/akses-operator-provider'
 import { AksesOperatorTable } from './components/akses-operator-table'
@@ -15,7 +17,6 @@ const route = getRouteApi('/_authenticated/manajemen-apps/akses-operator')
 
 export function AksesOperator() {
   const search = route.useSearch()
-  const navigate = route.useNavigate()
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetAksesOperator({
@@ -23,6 +24,8 @@ export function AksesOperator() {
     perPage: search.pageSize,
     search: search.search,
   })
+
+  const finalData = groupAksesOperator(data?.data ?? [])
 
   return (
     <AksesOperatorProvider>
@@ -55,10 +58,8 @@ export function AksesOperator() {
             <p>Failed to load users.</p>
           ) : (
             <AksesOperatorTable
-              data={data?.data ?? []}
-              meta={data?.meta}
-              search={search}
-              navigate={navigate}
+              columns={ReferensiAksesOperatorColumns}
+              data={finalData}
             />
           )}
         </div>

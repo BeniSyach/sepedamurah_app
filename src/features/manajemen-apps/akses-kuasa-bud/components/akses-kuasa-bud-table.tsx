@@ -1,131 +1,39 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react'
+'use client'
+
 import {
-  type SortingState,
-  type VisibilityState,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import type { AksesKuasaBud } from '@/api'
-import { cn } from '@/lib/utils'
-import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { ReferensiAksesKuasaBudColumns as columns } from './akses-kuasa-bud-columns'
-import { DataTableBulkActions } from './data-table-bulk-actions'
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData, TValue> {
-    className?: string
-  }
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
 }
 
-type DataTableProps = {
-  data: AksesKuasaBud[]
-  meta?: {
-    current_page: number
-    per_page: number
-    total: number
-  }
-  search: Record<string, unknown>
-  navigate: NavigateFn
-}
-
-export function AksesKuasaBUDTable({
+export function AksesKuasaBUDTable<TData, TValue>({
+  columns,
   data,
-  meta,
-  search,
-  navigate,
-}: DataTableProps) {
-  const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [sorting, setSorting] = useState<SortingState>([])
-
-  const {
-    columnFilters,
-    onColumnFiltersChange,
-    pagination,
-    onPaginationChange,
-    ensurePageInRange,
-  } = useTableUrlState({
-    search,
-    navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
-    ],
-  })
-
-  const totalRows = meta?.total ?? data.length
-  const totalPages = meta ? Math.ceil(meta.total / meta.per_page) : 1
-  const currentPage = meta?.current_page ?? pagination.pageIndex + 1
-
+}: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
-    pageCount: totalPages,
-    manualPagination: true,
-    state: {
-      sorting,
-      pagination,
-      rowSelection,
-      columnFilters,
-      columnVisibility,
-    },
-    enableRowSelection: true,
-    onPaginationChange,
-    onColumnFiltersChange,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  useEffect(() => {
-    ensurePageInRange(totalPages)
-  }, [totalPages, ensurePageInRange])
-
   return (
-    <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari Akses Kuasa BUD...'
-        searchKey='id_kbud'
-      />
-
-      <div className='overflow-hidden rounded-md border'>
-        <Table>
-          <TableHeader>
+    <div className='space-y-4'>
+      {/* TABLE CONTAINER */}
+      <div className='rounded-md border'>
+        <table className='w-full'>
+          <thead className='bg-muted/50'>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className='group/row'>
+              <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead
+                  <th
                     key={header.id}
-                    colSpan={header.colSpan}
-                    className={cn(
-                      'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                      header.column.columnDef.meta?.className ?? ''
-                    )}
+                    className='border-b p-3 text-left font-semibold'
                   >
                     {header.isPlaceholder
                       ? null
@@ -133,60 +41,39 @@ export function AksesKuasaBUDTable({
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                  </TableHead>
+                  </th>
                 ))}
-              </TableRow>
+              </tr>
             ))}
-          </TableHeader>
+          </thead>
 
-          <TableBody>
+          <tbody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className='group/row'
-                >
+                <tr key={row.id} className='hover:bg-muted/20 border-b'>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                        cell.column.columnDef.meta?.className ?? ''
-                      )}
-                    >
+                    <td key={cell.id} className='p-3 align-top'>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                    </TableCell>
+                    </td>
                   ))}
-                </TableRow>
+                </tr>
               ))
             ) : (
-              <TableRow>
-                <TableCell
+              <tr>
+                <td
                   colSpan={columns.length}
-                  className='text-muted-foreground h-24 text-center'
+                  className='h-24 text-center text-sm'
                 >
-                  No results.
-                </TableCell>
-              </TableRow>
+                  Tidak ada data.
+                </td>
+              </tr>
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
-
-      <DataTablePagination
-        table={table}
-        totalRows={totalRows}
-        currentPage={currentPage}
-        pageSize={meta?.per_page ?? pagination.pageSize}
-        search={search} // 🔥 WAJIB
-        navigate={navigate} // 🔥 WAJIB
-      />
-
-      <DataTableBulkActions table={table} />
     </div>
   )
 }

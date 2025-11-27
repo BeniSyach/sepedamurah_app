@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetAksesKuasaBUD } from '@/api'
+import { groupAksesKuasaBud } from '@/lib/utils'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -7,6 +8,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { RefRekeningPrimaryButtons } from './components/akses-kuasa-bud-buttons'
+import { ReferensiAksesKuasaBudColumns } from './components/akses-kuasa-bud-columns'
 import { UsersDialogs } from './components/akses-kuasa-bud-dialogs'
 import { AksesKuasaBudProvider } from './components/akses-kuasa-bud-provider'
 import { AksesKuasaBUDTable } from './components/akses-kuasa-bud-table'
@@ -15,7 +17,6 @@ const route = getRouteApi('/_authenticated/manajemen-apps/akses-kuasa-bud')
 
 export function AksesKuasaBUD() {
   const search = route.useSearch()
-  const navigate = route.useNavigate()
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetAksesKuasaBUD({
@@ -23,6 +24,8 @@ export function AksesKuasaBUD() {
     perPage: search.pageSize,
     search: search.search,
   })
+
+  const groupedData = groupAksesKuasaBud(data?.data ?? [])
 
   return (
     <AksesKuasaBudProvider>
@@ -55,10 +58,8 @@ export function AksesKuasaBUD() {
             <p>Failed to load users.</p>
           ) : (
             <AksesKuasaBUDTable
-              data={data?.data ?? []}
-              meta={data?.meta}
-              search={search}
-              navigate={navigate}
+              columns={ReferensiAksesKuasaBudColumns}
+              data={groupedData}
             />
           )}
         </div>
