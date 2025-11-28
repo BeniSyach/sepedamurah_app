@@ -6,6 +6,7 @@ interface UseRefSKPD {
   page?: number
   perPage?: number
   search?: string
+  hidden?: string
 }
 
 export function useGetRefSKPD(params: UseRefSKPD) {
@@ -19,6 +20,7 @@ export function useGetRefSKPD(params: UseRefSKPD) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            hidden: params.hidden ?? '',
           },
         }
       )

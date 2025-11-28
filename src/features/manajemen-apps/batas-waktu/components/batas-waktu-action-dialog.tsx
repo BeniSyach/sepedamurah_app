@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import { CaretSortIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   type MasterSkpd,
@@ -10,8 +11,18 @@ import {
   usePostBatasWaktu,
   usePutBatasWaktu,
 } from '@/api'
+import { CheckIcon } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Dialog,
   DialogContent,
@@ -29,6 +40,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { SelectDropdown } from '@/components/select-dropdown'
 
 const hariItems = [
@@ -73,13 +89,10 @@ export function BatasWaktusActionDialog({
   const { mutateAsync: postBatasWaktuAsync } = usePostBatasWaktu()
   const { mutateAsync: putBatasWaktuAsync } = usePutBatasWaktu()
 
-  const {
-    data: dataSKPD,
-    isLoading: isLoadingSKPD,
-    isError: isErrorSKPD,
-  } = useGetRefSKPD({
+  const { data: dataSKPD, isError: isErrorSKPD } = useGetRefSKPD({
     page: 1,
     perPage: 100, // ambil banyak biar bisa isi select
+    hidden: '0',
   })
 
   // Ambil data dari response
@@ -188,45 +201,118 @@ export function BatasWaktusActionDialog({
               <FormField
                 control={form.control}
                 name='kd_opd1'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Pilih SKPD
-                    </FormLabel>
+                render={({ field }) => {
+                  const currentValue = [
+                    form.getValues('kd_opd1'),
+                    form.getValues('kd_opd2'),
+                    form.getValues('kd_opd3'),
+                    form.getValues('kd_opd4'),
+                    form.getValues('kd_opd5'),
+                  ]
+                    .filter(Boolean)
+                    .join('-')
 
-                    <SelectDropdown
-                      // 💡 Gunakan gabungan kode SKPD sebagai default value
-                      defaultValue={
-                        [
-                          form.getValues('kd_opd1'),
-                          form.getValues('kd_opd2'),
-                          form.getValues('kd_opd3'),
-                          form.getValues('kd_opd4'),
-                          form.getValues('kd_opd5'),
-                        ]
-                          .filter(Boolean)
-                          .join('-') || undefined
-                      }
-                      onValueChange={(value) => {
-                        const parts = value.split('-')
-                        form.setValue('kd_opd1', parts[0] ?? '')
-                        form.setValue('kd_opd2', parts[1] ?? '')
-                        form.setValue('kd_opd3', parts[2] ?? '')
-                        form.setValue('kd_opd4', parts[3] ?? '')
-                        form.setValue('kd_opd5', parts[4] ?? '')
-                        field.onChange(parts[0])
-                      }}
-                      placeholder='Pilih SKPD'
-                      className='col-span-4 w-full'
-                      isPending={isLoadingSKPD}
-                      items={safeItemsSKPD}
-                      disabled={isErrorSKPD}
-                    />
+                  const selectedLabel =
+                    safeItemsSKPD.find((i) => i.value === currentValue)
+                      ?.label || 'Pilih SKPD'
 
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
+                  return (
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                      {/* Label */}
+                      <FormLabel className='col-span-2 text-end'>
+                        SKPD
+                      </FormLabel>
+
+                      {/* ComboBox */}
+                      <div className='col-span-4'>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant='outline'
+                                role='combobox'
+                                className={cn(
+                                  'min-h-[2.5rem] w-full justify-between text-left break-words whitespace-normal',
+                                  !field.value && 'text-muted-foreground'
+                                )}
+                              >
+                                <div className='flex-1 text-left'>
+                                  {selectedLabel}
+                                </div>
+                                <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+
+                          <PopoverContent
+                            align='start'
+                            className='w-[var(--radix-popover-trigger-width)] p-0'
+                          >
+                            <Command className='max-h-[300px] overflow-y-auto'>
+                              <CommandInput placeholder='Cari SKPD...' />
+                              <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+
+                              <CommandGroup>
+                                <CommandList>
+                                  {safeItemsSKPD.map((opd) => {
+                                    const parts = opd.value.split('-')
+                                    const isSelected =
+                                      opd.value === currentValue
+
+                                    return (
+                                      <CommandItem
+                                        key={opd.value}
+                                        value={opd.label}
+                                        onSelect={() => {
+                                          form.setValue(
+                                            'kd_opd1',
+                                            parts[0] ?? ''
+                                          )
+                                          form.setValue(
+                                            'kd_opd2',
+                                            parts[1] ?? ''
+                                          )
+                                          form.setValue(
+                                            'kd_opd3',
+                                            parts[2] ?? ''
+                                          )
+                                          form.setValue(
+                                            'kd_opd4',
+                                            parts[3] ?? ''
+                                          )
+                                          form.setValue(
+                                            'kd_opd5',
+                                            parts[4] ?? ''
+                                          )
+                                          field.onChange(parts[0])
+                                        }}
+                                      >
+                                        <CheckIcon
+                                          className={cn(
+                                            'size-4',
+                                            isSelected
+                                              ? 'opacity-100'
+                                              : 'opacity-0'
+                                          )}
+                                        />
+                                        {opd.label}
+                                      </CommandItem>
+                                    )
+                                  })}
+                                </CommandList>
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      {/* Form error */}
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )
+                }}
               />
+
               <FormField
                 control={form.control}
                 name='hari'
