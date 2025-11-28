@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import { CaretSortIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   type SumberDana,
@@ -10,9 +11,18 @@ import {
   usePutRealisasiTransferSumberDana,
   type RealisasiTransferSumberDana,
 } from '@/api'
+import { CheckIcon } from 'lucide-react'
 import { toast } from 'sonner'
-import { formatRupiahControlled } from '@/lib/utils'
+import { cn, formatRupiahControlled } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Dialog,
   DialogContent,
@@ -30,18 +40,21 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { DatePicker } from '@/components/date-picker'
-import { SelectDropdown } from '@/components/select-dropdown'
 
 const formSchema = z.object({
-  id: z.number().optional(),
   sumber_dana: z.string().min(1, 'Sumber Dana wajib dipilih.'),
   tahun: z.string().regex(/^\d{4}$/, 'Tahun harus berupa 4 digit angka.'),
   tgl_diterima: z.date('tanggal Diterima Harus Ada.'),
   jumlah_sumber: z
     .string()
-    .regex(/^\d+$/, 'Jumlah Sumber harus berupa angka dalam bentuk string.'),
+    .regex(/^-?\d+$/, 'Jumlah Sumber harus berupa angka (boleh minus).'),
   keterangan: z.string().optional(),
   keterangan_2: z.string().optional(),
   isEdit: z.boolean().optional(),
@@ -73,7 +86,11 @@ export function UsersActionDialog({
   const { mutateAsync: putRealisasiTransferSumberDanaAsync } =
     usePutRealisasiTransferSumberDana()
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
+  const { data: dataSD } = useGetRefSumberDana({
+    page: 1,
+    perPage: 1000,
+    status: '1',
+  })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [
@@ -94,7 +111,6 @@ export function UsersActionDialog({
     defaultValues:
       isEdit && currentRow
         ? {
-            id: currentRow.id,
             sumber_dana: [
               currentRow.kd_ref1,
               currentRow.kd_ref2,
@@ -190,7 +206,7 @@ export function UsersActionDialog({
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='detail-sumber-dana-form'
+              id='user-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
@@ -199,34 +215,84 @@ export function UsersActionDialog({
                 name='sumber_dana'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
+                    <FormLabel className='col-span-2 mt-2 text-end'>
                       Sumber Dana
                     </FormLabel>
 
                     <div className='col-span-4'>
-                      <SelectDropdown
-                        defaultValue={String(field.value ?? '')}
-                        onValueChange={(val) => field.onChange(val)}
-                        placeholder='Pilih Sumber Dana'
-                        className='w-full break-words whitespace-normal'
-                        items={itemsSD.map(({ label, value }) => ({
-                          label,
-                          value,
-                        }))}
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant='outline'
+                              role='combobox'
+                              className={cn(
+                                'min-h-[2.5rem] w-full justify-between text-left',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              <span className='line-clamp-2'>
+                                {field.value
+                                  ? itemsSD.find(
+                                      (sd) => sd.value === field.value
+                                    )?.label
+                                  : 'Pilih Sumber Dana'}
+                              </span>
+                              <CaretSortIcon className='ms-2 h-4 w-4 opacity-50' />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
 
-                      <FormMessage className='col-span-4 col-start-3 mt-1 text-sm text-red-500' />
+                        <PopoverContent
+                          align='start'
+                          className='w-[var(--radix-popover-trigger-width)] p-0'
+                        >
+                          <Command>
+                            <CommandInput placeholder='Cari sumber dana...' />
+                            <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+
+                            {/* Fix scroll hanya di CommandList saja */}
+                            <CommandList className='max-h-60 overflow-y-auto'>
+                              <CommandGroup>
+                                {itemsSD.map((item) => (
+                                  <CommandItem
+                                    key={item.value}
+                                    value={item.label}
+                                    onSelect={() => {
+                                      form.setValue('sumber_dana', item.value)
+                                      document.body.click() // ⬅️ AUTO CLOSE POPOVER
+                                    }}
+                                  >
+                                    <CheckIcon
+                                      className={cn(
+                                        'me-2 h-4 w-4',
+                                        item.value === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    {item.label}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+
+                      <FormMessage className='mt-1 text-sm text-red-500' />
                     </div>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='tgl_diterima'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Tanggal Surat
+                      Tanggal
                     </FormLabel>
                     <DatePicker
                       selected={field.value}
@@ -242,18 +308,31 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Jumlah Dana masuk
+                      Jumlah Dana Masuk
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Jumlah Dana masuk'
+                        placeholder='Jumlah Dana Masuk'
                         className='col-span-4'
                         type='text'
                         inputMode='numeric'
-                        value={formatRupiahControlled(field.value || '')}
+                        value={
+                          field.value === '' || field.value === '-'
+                            ? field.value // jangan format
+                            : field.value.startsWith('-')
+                              ? '-' +
+                                formatRupiahControlled(field.value.slice(1))
+                              : formatRupiahControlled(field.value)
+                        }
                         onChange={(e) => {
-                          // Hapus semua karakter selain angka
-                          const raw = e.target.value.replace(/\D/g, '')
+                          let raw = e.target.value
+
+                          // Buang semua selain angka dan minus
+                          raw = raw.replace(/[^0-9-]/g, '')
+
+                          // Minus hanya boleh di depan
+                          raw = raw.replace(/(?!^)-/g, '')
+
                           field.onChange(raw)
                         }}
                       />
@@ -262,6 +341,7 @@ export function UsersActionDialog({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='keterangan_2'
@@ -285,7 +365,7 @@ export function UsersActionDialog({
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='detail-sumber-dana-form'>
+          <Button type='submit' form='user-form'>
             Simpan Perubahan
           </Button>
         </DialogFooter>
