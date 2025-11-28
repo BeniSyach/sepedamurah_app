@@ -56,6 +56,9 @@ export function BerkasMasukSP2DTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
+  const userRole = localStorage.getItem('user_role') ?? ''
+  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
+  const isNoDefaultRole = noDefaultDateRoles.includes(userRole ?? '')
 
   const {
     globalFilter,
@@ -111,13 +114,17 @@ export function BerkasMasukSP2DTable({
         extraControls={
           <RangeDatePicker
             value={{
-              from: dateRange?.from ?? startOfMonth(new Date()),
-              to: dateRange?.to ?? endOfMonth(new Date()),
+              from: isNoDefaultRole
+                ? (dateRange?.from ?? undefined) // bebas
+                : (dateRange?.from ?? startOfMonth(new Date())),
+              to: isNoDefaultRole
+                ? (dateRange?.to ?? undefined) // bebas
+                : (dateRange?.to ?? endOfMonth(new Date())),
             }}
             onChange={(range) =>
               onDateRangeChange?.({
-                from: range?.from ?? startOfMonth(new Date()),
-                to: range?.to ?? endOfMonth(new Date()),
+                from: range?.from ?? undefined,
+                to: range?.to ?? undefined,
               })
             }
             placeholder='Filter tanggal'
