@@ -35,6 +35,8 @@ export function PermohonanDitolakSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
+    sort_by: search.sort_by || 'ditolak',
+    sort_dir: search.sort_dir || 'desc',
     date_from: format(finalFrom, 'yyyy-MM-dd'),
     date_to: format(finalTo, 'yyyy-MM-dd'),
     menu:

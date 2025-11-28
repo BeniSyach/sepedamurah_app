@@ -63,9 +63,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
 
   // ✅ nama SKPD
   {
-    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const skpd = row.original.skpd

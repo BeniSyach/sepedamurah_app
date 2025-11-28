@@ -48,7 +48,7 @@ export const DaftarBelanjaPerSKPDColumns: ColumnDef<DaftarBelanjaSKPD>[] = [
   {
     accessorKey: 'nm_opd',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama SKPD' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => <div>{row.getValue('nm_opd')}</div>,
     enableSorting: true,

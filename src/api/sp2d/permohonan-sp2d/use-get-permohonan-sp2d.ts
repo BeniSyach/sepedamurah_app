@@ -12,6 +12,8 @@ interface UsePermohonanSP2D {
   level_akses?: string
   date_from?: string | undefined
   date_to?: string | undefined
+  sort_by?: string | undefined
+  sort_dir?: string | undefined
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
@@ -28,6 +30,8 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
           level_akses: params.level_akses,
           date_from: params.date_from,
           date_to: params.date_to,
+          sort_by: params.sort_by,
+          sort_dir: params.sort_dir,
         },
       })
       return data

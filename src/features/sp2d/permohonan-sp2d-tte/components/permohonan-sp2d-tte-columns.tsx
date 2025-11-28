@@ -53,7 +53,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ nama SKPD
   {
-    accessorKey: 'skpd.nm_opd', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_opd', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Bendahara SKPD' />
     ),
