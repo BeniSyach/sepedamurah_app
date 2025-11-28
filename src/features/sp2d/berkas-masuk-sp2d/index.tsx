@@ -45,7 +45,8 @@ export function BerkasMasukSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-
+    sort_by: search.sort_by || 'diterima',
+    sort_dir: search.sort_dir || 'desc',
     menu: 'berkas_masuk_sp2d',
 
     ...(shouldSendDate && {

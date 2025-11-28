@@ -48,7 +48,8 @@ export function PermohonanPenerbitanSP2D() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-
+    sort_by: search.sort_by || 'diterima',
+    sort_dir: search.sort_dir || 'desc',
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_sp2d_operator'
