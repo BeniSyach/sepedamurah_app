@@ -32,14 +32,19 @@ export function usePutUsers() {
       let payload: FormData
 
       if (input instanceof FormData) {
-        // langsung pakai FormData jika sudah dikirim
         payload = input
       } else {
-        // convert object biasa ke FormData
         payload = new FormData()
+
         Object.entries(input).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            payload.append(key, value as string | Blob)
+          if (value === undefined || value === null) return
+
+          // === FIX: handle role array ===
+          if (Array.isArray(value)) {
+            value.forEach((v) => payload.append(`${key}[]`, v))
+          } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            payload.append(key, value as any)
           }
         })
       }
@@ -47,7 +52,7 @@ export function usePutUsers() {
       const id = input instanceof FormData ? payload.get('id') : input.id
       if (!id) throw new Error('ID harus ada')
 
-      const { data } = await api.put<Users>(`/users/${id}`, payload, {
+      const { data } = await api.post<Users>(`/users/${id}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
         params: { _method: 'PUT' },
       })
@@ -56,9 +61,6 @@ export function usePutUsers() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: (error) => {
-      return error
     },
   })
 }

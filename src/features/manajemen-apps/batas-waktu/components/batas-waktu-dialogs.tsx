@@ -1,5 +1,6 @@
 import { useDeleteBatasWaktu } from '@/api'
 import { toast } from 'sonner'
+import { useResetBatasWaktu } from '@/api/management-app/batas-waktu/use-reset-batas-waktu'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { BatasWaktusActionDialog } from './batas-waktu-action-dialog'
 import { useRefBatasWaktu } from './batas-waktu-provider'
@@ -8,6 +9,7 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefBatasWaktu()
 
   const { mutateAsync } = useDeleteBatasWaktu()
+  const { mutateAsync: resetWaktu } = useResetBatasWaktu()
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -27,12 +29,43 @@ export function UsersDialogs() {
     })
   }
 
+  const handleReset = async () => {
+    const resetPromise = resetWaktu()
+
+    await toast.promise(resetPromise, {
+      loading: 'Reset data...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `Batas Waktu SKPD berhasil direset.`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
+
   return (
     <>
       <BatasWaktusActionDialog
         key='batas-waktu-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
+      />
+
+      <ConfirmDialog
+        key={`batas-waktu-reset`}
+        destructive
+        open={open === 'reset'}
+        onOpenChange={() => {
+          setOpen('reset')
+        }}
+        handleConfirm={handleReset}
+        className='max-w-md'
+        title={`reset batas Waktu ?`}
+        desc={<>Kamu akan Reset batas Waktu SKPD</>}
+        confirmText='Reset'
       />
 
       {currentRow && (

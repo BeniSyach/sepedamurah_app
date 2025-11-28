@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useDeletePermohonanSP2D } from '@/api'
+import { useDeletePermohonanSP2D, useGetBatasWaktu } from '@/api'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,24 +16,91 @@ import { PermohonanPenerbitanPeriksaDialog } from './permohonan-penerbitan-perik
 import { PermohonanPenerbitanSP2DActionDialog } from './permohonan-penerbitan-sp2d-action-dialog'
 import { useRefSp2dItem } from './permohonan-penerbitan-sp2d-provider'
 
+const today = new Date()
+const hariInggris = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
+const hariIni = hariInggris[today.getDay()]
+
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
   const levelAkses = localStorage.getItem('user_role')
+  const user = useAuthStore((s) => s.user)
   const [showClosedDialog, setShowClosedDialog] = useState(false)
+  const [closedReason, setClosedReason] = useState('')
+  const { data: dataBatasWaktu } = useGetBatasWaktu({
+    kd_opd1: user?.kd_opd1,
+    kd_opd2: user?.kd_opd2,
+    kd_opd3: user?.kd_opd3,
+    kd_opd4: user?.kd_opd4,
+    kd_opd5: user?.kd_opd5,
+    search: hariIni,
+  })
 
-  const isAfterClosingTime = () => {
+  const isServiceClosed = () => {
+    if (!dataBatasWaktu || !dataBatasWaktu.data?.length) {
+      return { closed: false, reason: '' }
+    }
+
     const now = new Date()
-    return now.getHours() >= 24
+    const [hours, minutes] = [now.getHours(), now.getMinutes()]
+
+    const item = dataBatasWaktu.data[0] // ambil jadwal hari ini
+    const parseTime = (time: string) => {
+      const [h, m] = time.split(':').map(Number)
+      return h * 60 + m // konversi ke menit
+    }
+
+    const nowMinutes = hours * 60 + minutes
+    const mulai = parseTime(item.waktu_awal)
+    const akhir = parseTime(item.waktu_akhir)
+    const istirahatAwal = parseTime(item.istirahat_awal)
+    const istirahatAkhir = parseTime(item.istirahat_akhir)
+
+    if (nowMinutes < mulai) {
+      return {
+        closed: true,
+        reason: `Belum buka. Jam buka pukul ${item.waktu_awal}`,
+      }
+    }
+    if (nowMinutes >= istirahatAwal && nowMinutes <= istirahatAkhir) {
+      return {
+        closed: true,
+        reason: `Sedang istirahat pukul ${item.istirahat_awal} - ${item.istirahat_akhir}`,
+      }
+    }
+    if (nowMinutes > akhir) {
+      return {
+        closed: true,
+        reason: `Pelayanan sudah tutup pukul ${item.waktu_akhir}`,
+      }
+    }
+
+    return { closed: false, reason: '' }
   }
 
   // 🧠 Deteksi ketika user membuka form add/edit
   useEffect(() => {
-    if ((open === 'add' || open === 'edit') && isAfterClosingTime()) {
-      setShowClosedDialog(true)
-      setOpen(null) // jangan tampilkan form
+    // Berlaku hanya untuk Bendahara
+    if (levelAkses !== 'Bendahara') return
+
+    // Jika open = add atau edit
+    if (open === 'add' || open === 'edit') {
+      const status = isServiceClosed()
+      if (status.closed) {
+        setShowClosedDialog(true)
+        setClosedReason(status.reason)
+        setOpen(null) // Jangan tampilkan form
+      }
     }
-  }, [open, setOpen])
+  }, [open, levelAkses, dataBatasWaktu])
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -57,9 +125,7 @@ export function UsersDialogs() {
           <AlertDialogHeader>
             <AlertDialogTitle>Pelayanan Ditutup</AlertDialogTitle>
             <AlertDialogDescription>
-              Maaf, pelayanan sudah ditutup untuk hari ini.
-              <br />
-              Silakan kembali besok sebelum pukul <strong>16:00</strong>.
+              {closedReason || 'Maaf, pelayanan sudah ditutup untuk hari ini.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

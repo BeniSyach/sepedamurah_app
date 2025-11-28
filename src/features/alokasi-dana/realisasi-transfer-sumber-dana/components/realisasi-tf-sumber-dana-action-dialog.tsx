@@ -54,7 +54,7 @@ const formSchema = z.object({
   tgl_diterima: z.date('tanggal Diterima Harus Ada.'),
   jumlah_sumber: z
     .string()
-    .regex(/^\d+$/, 'Jumlah Sumber harus berupa angka dalam bentuk string.'),
+    .regex(/^-?\d+$/, 'Jumlah Sumber harus berupa angka (boleh minus).'),
   keterangan: z.string().optional(),
   keterangan_2: z.string().optional(),
   isEdit: z.boolean().optional(),
@@ -308,18 +308,31 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Jumlah Dana masuk
+                      Jumlah Dana Masuk
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Jumlah Dana masuk'
+                        placeholder='Jumlah Dana Masuk'
                         className='col-span-4'
                         type='text'
                         inputMode='numeric'
-                        value={formatRupiahControlled(field.value || '')}
+                        value={
+                          field.value === '' || field.value === '-'
+                            ? field.value // jangan format
+                            : field.value.startsWith('-')
+                              ? '-' +
+                                formatRupiahControlled(field.value.slice(1))
+                              : formatRupiahControlled(field.value)
+                        }
                         onChange={(e) => {
-                          // Hapus semua karakter selain angka
-                          const raw = e.target.value.replace(/\D/g, '')
+                          let raw = e.target.value
+
+                          // Buang semua selain angka dan minus
+                          raw = raw.replace(/[^0-9-]/g, '')
+
+                          // Minus hanya boleh di depan
+                          raw = raw.replace(/(?!^)-/g, '')
+
                           field.onChange(raw)
                         }}
                       />
@@ -328,6 +341,7 @@ export function UsersActionDialog({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='keterangan_2'

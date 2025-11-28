@@ -83,12 +83,23 @@ export function formatRupiah(value: unknown, withPrefix = true): string {
 }
 
 export function formatRupiahControlled(value: string | number): string {
-  const number = Number(String(value).replace(/\D/g, '')) || 0
-  return new Intl.NumberFormat('id-ID', {
+  const str = String(value)
+
+  // cek apakah ada minus di depan
+  const isNegative = str.startsWith('-')
+
+  // ambil hanya digit (0-9)
+  const number = Number(str.replace(/[^0-9]/g, '')) || 0
+
+  // format angka
+  const formatted = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0,
   }).format(number)
+
+  // kalau minus, tambahkan kembali "-" di depan
+  return isNegative ? '-' + formatted : formatted
 }
 
 /**

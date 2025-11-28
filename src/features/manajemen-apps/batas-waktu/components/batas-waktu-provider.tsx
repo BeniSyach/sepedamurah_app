@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { type BatasWaktu } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefBatasWaktuDialogType = 'add' | 'edit' | 'delete'
+type RefBatasWaktuDialogType = 'add' | 'edit' | 'delete' | 'reset'
 
 type RefBatasWaktuContextType = {
   open: RefBatasWaktuDialogType | null
