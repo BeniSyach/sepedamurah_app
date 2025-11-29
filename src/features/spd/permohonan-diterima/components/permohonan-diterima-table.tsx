@@ -5,11 +5,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { PermohonanSpd } from '@/api'
@@ -54,8 +50,8 @@ export function PermohonanDiterimaSPDTable({
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -63,9 +59,11 @@ export function PermohonanDiterimaSPDTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'nama_pengirim', searchKey: 'nama_pengirim', type: 'string' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'nama_pengirim',
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -77,25 +75,37 @@ export function PermohonanDiterimaSPDTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
+    manualFiltering: true,
+    manualSorting: true, // ⬅️ penting!
     state: {
       sorting,
       pagination,
+      globalFilter,
       rowSelection,
-      columnFilters,
       columnVisibility,
     },
-    enableRowSelection: true,
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
+    },
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -104,11 +114,7 @@ export function PermohonanDiterimaSPDTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari SPD yg diterima...'
-        searchKey='nama_pengirim'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>

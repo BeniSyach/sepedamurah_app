@@ -68,7 +68,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
   {
     accessorKey: 'nama_penerima',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nama_penerima' />
+      <DataTableColumnHeader column={column} title='Nama Penerima' />
     ),
     cell: ({ row }) => <div>{row.getValue('nama_penerima')}</div>,
     enableSorting: true,

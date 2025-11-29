@@ -24,8 +24,15 @@ export function PermohonanDitolakSPD() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_pengirim,
-    menu: 'spd_ditolak',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    sort_by: search.sort_by || 'ditolak',
+    sort_dir: search.sort_dir || 'desc',
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_spd_tolak_operator'
+        : 'spd_ditolak',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (

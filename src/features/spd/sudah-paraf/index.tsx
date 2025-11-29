@@ -17,7 +17,6 @@ export function SudahParafSPD() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
-  const userRole = localStorage.getItem('user_role')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetSPDTerkirim({
@@ -25,7 +24,7 @@ export function SudahParafSPD() {
     perPage: search.pageSize,
     search: search.nama_pengirim,
     menu: 'spd_sudah_paraf',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    user_id: user?.id,
   })
 
   return (

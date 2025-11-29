@@ -17,14 +17,13 @@ export function BelumParafSPD() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
-  const userRole = localStorage.getItem('user_role')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetSPDTerkirim({
     page: search.page,
     perPage: search.pageSize,
     menu: 'spd_belum_paraf',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    user_id: user?.id,
   })
 
   return (

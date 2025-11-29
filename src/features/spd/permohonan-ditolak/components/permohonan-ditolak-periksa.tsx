@@ -137,14 +137,14 @@ export function PermohonanSPDDitolakPeriksa({
       formData.append('nama_operator', user.name)
 
       if (action === 'terima') {
-        formData.append('proses', 'Diterima')
+        formData.append('proses', '2')
         formData.append('diterima', formatted)
         formData.append('alasan_tolak', '')
         formData.append('ditolak', '')
       } else {
         const alasan = prompt('Masukkan alasan penolakan:')
         if (!alasan) return toast.error('Alasan wajib diisi.')
-        formData.append('proses', 'Ditolak')
+        formData.append('proses', '0')
         formData.append('alasan_tolak', alasan)
         formData.append('ditolak', formatted)
         formData.append('diterima', '')

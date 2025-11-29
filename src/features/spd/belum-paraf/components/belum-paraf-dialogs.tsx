@@ -48,7 +48,7 @@ export function UsersDialogs() {
     formData.append('nama_operator', user.name ?? '')
     const alasan = prompt('Masukkan alasan penolakan:')
     if (!alasan) return toast.error('Alasan wajib diisi.')
-    formData.append('proses', 'Ditolak')
+    formData.append('proses', '0')
     formData.append('alasan_tolak', alasan)
     formData.append('ditolak', formatted)
     formData.append('diterima', '')

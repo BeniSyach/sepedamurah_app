@@ -24,6 +24,8 @@ export function BerkasMasukSPD() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_pengirim,
+    sort_by: search.sort_by || 'tanggal_upload',
+    sort_dir: search.sort_dir || 'desc',
     menu: 'berkas_masuk_spd',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

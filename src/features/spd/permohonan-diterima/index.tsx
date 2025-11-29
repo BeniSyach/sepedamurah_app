@@ -25,8 +25,15 @@ export function PermohonanDiterimaSPD() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_pengirim,
-    menu: 'spd_diterima',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    sort_by: search.sort_by || 'diterima',
+    sort_dir: search.sort_dir || 'desc',
+    menu:
+      userRole === 'Operator SKPKD'
+        ? 'permohonan_spd_terima_operator'
+        : 'spd_diterima',
+    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+      ? { user_id: user?.id }
+      : {}),
   })
 
   return (
