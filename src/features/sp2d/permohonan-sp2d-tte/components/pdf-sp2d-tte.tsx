@@ -1,4 +1,5 @@
-import { useState, createRef } from 'react'
+// import { useState, createRef } from 'react'
+import { createRef, useState } from 'react'
 import { PDFDocument } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import Draggable, { type DraggableData } from 'react-draggable'
@@ -67,7 +68,11 @@ export default function PdfEditorPdfLib() {
       },
     ])
   }
-
+  const handleDrag = (id: number, data: DraggableData) => {
+    setElements((prev) =>
+      prev.map((el) => (el.id === id ? { ...el, x: data.x, y: data.y } : el))
+    )
+  }
   // Update posisi setelah drag
   const handleDragStop = (id: number, data: DraggableData) => {
     setElements((prev) =>
@@ -158,12 +163,19 @@ export default function PdfEditorPdfLib() {
                 key={el.id}
                 nodeRef={el.nodeRef}
                 bounds='parent'
-                defaultPosition={{ x: el.x, y: el.y }}
+                position={{ x: el.x, y: el.y }}
+                onDrag={(_e, data) => handleDrag(el.id, data)}
                 onStop={(_e, data) => handleDragStop(el.id, data)}
               >
                 <div
                   ref={el.nodeRef}
-                  style={{ position: 'absolute', cursor: 'grab' }}
+                  style={{
+                    position: 'absolute',
+                    width: el.width,
+                    height: el.height,
+                    cursor: 'grab',
+                    userSelect: 'none',
+                  }}
                 >
                   <img
                     src={el.src}
@@ -171,7 +183,7 @@ export default function PdfEditorPdfLib() {
                     style={{
                       width: el.width,
                       height: el.height,
-                      userSelect: 'none',
+                      display: 'block',
                     }}
                     draggable={false}
                   />
