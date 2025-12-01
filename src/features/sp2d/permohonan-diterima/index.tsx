@@ -23,30 +23,47 @@ export function PermohonanDiterimaSP2D() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
-  const userRole = localStorage.getItem('user_role')
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
-
+  const hasUserSelectedDate = Boolean(dateRange.from && dateRange.to)
   // Gunakan dateRange jika ada, jika tidak fallback ke default
   const finalFrom = dateRange?.from ?? defaultFrom
   const finalTo = dateRange?.to ?? defaultTo
 
   // 🔥 Ambil data langsung dari Laravel API
-  const { data, isLoading, isError } = useGetPermohonanSP2D({
+  const userRole = localStorage.getItem('user_role') ?? ''
+
+  // cek apakah role tidak punya default tanggal
+  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
+  const isNoDefaultRole = noDefaultDateRoles.includes(userRole)
+
+  // hanya kirim tanggal jika dia:
+  // - BUKAN role noDefaultDateRoles (punya default tanggal)
+  // - ATAU role noDefault tapi user SUDAH memilih tanggal
+  const shouldSendDate = !isNoDefaultRole || hasUserSelectedDate
+
+  const params = {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
     sort_by: search.sort_by || 'diterima',
     sort_dir: search.sort_dir || 'desc',
-    date_from: format(finalFrom, 'yyyy-MM-dd'),
-    date_to: format(finalTo, 'yyyy-MM-dd'),
+
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_sp2d_terima_operator'
         : 'sp2d_diterima',
+    ...(shouldSendDate && {
+      date_from: format(finalFrom, 'yyyy-MM-dd'),
+      date_to: format(finalTo, 'yyyy-MM-dd'),
+    }),
+
     ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
       ? { user_id: user?.id }
       : {}),
-  })
+  }
+
+  // 🔥 Ambil data langsung dari Laravel API
+  const { data, isLoading, isError } = useGetPermohonanSP2D(params)
 
   return (
     <Sp2dItemProvider>

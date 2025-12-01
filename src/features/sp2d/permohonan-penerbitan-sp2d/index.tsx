@@ -27,7 +27,7 @@ export function PermohonanPenerbitanSP2D() {
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
-
+  const hasUserSelectedDate = Boolean(dateRange.from && dateRange.to)
   // Gunakan dateRange jika ada, jika tidak fallback ke default
   const finalFrom = dateRange?.from ?? defaultFrom
   const finalTo = dateRange?.to ?? defaultTo
@@ -42,14 +42,14 @@ export function PermohonanPenerbitanSP2D() {
   // hanya kirim tanggal jika dia:
   // - BUKAN role noDefaultDateRoles (punya default tanggal)
   // - ATAU role noDefault tapi user SUDAH memilih tanggal
-  const shouldSendDate = !isNoDefaultRole || (finalFrom && finalTo)
+  const shouldSendDate = !isNoDefaultRole || hasUserSelectedDate
 
   const params = {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    sort_by: search.sort_by,
-    sort_dir: search.sort_dir,
+    sort_by: search.sort_by ?? 'tanggal_upload',
+    sort_dir: search.sort_dir ?? 'asc',
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_sp2d_operator'
