@@ -28,6 +28,9 @@ export function usePutLaporanFungsional() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanFungsional'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['cekUploadFungsional'],
+      })
     },
     onError: (err) => {
       return err

@@ -144,7 +144,7 @@ export function PenerimaanPeriksa({
       } else {
         const alasan = prompt('Masukkan alasan penolakan:')
         if (!alasan) return toast.error('Alasan wajib diisi.')
-        formData.append('proses', 'Ditolak')
+        formData.append('proses', '0')
         formData.append('alasan_tolak', alasan)
         formData.append('ditolak', formatted)
         formData.append('diterima', '')

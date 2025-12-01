@@ -132,53 +132,15 @@ export default function PdfEditorPdfLib() {
 
   return (
     <div className='flex flex-col items-center gap-3'>
-      <div className='mb-3 flex gap-2'>
-        <a
-          onClick={addBarcode}
-          className='cursor-pointer rounded bg-blue-500 px-3 py-1 text-white'
-        >
-          + Barcode
-        </a>
-        <a
-          onClick={addVisual}
-          className='cursor-pointer rounded bg-green-500 px-3 py-1 text-white'
-        >
-          + Visual
-        </a>
-        <a
-          onClick={() => pageNumber > 1 && setPageNumber((p) => p - 1)}
-          className={`rounded px-3 py-1 text-white ${
-            pageNumber <= 1
-              ? 'cursor-not-allowed bg-gray-300'
-              : 'cursor-pointer bg-gray-400'
-          }`}
-        >
-          ← Prev
-        </a>
-        <a
-          onClick={() =>
-            pageNumber < (numPages || 1) && setPageNumber((p) => p + 1)
-          }
-          className={`rounded px-3 py-1 text-white ${
-            pageNumber >= (numPages || 1)
-              ? 'cursor-not-allowed bg-gray-300'
-              : 'cursor-pointer bg-gray-400'
-          }`}
-        >
-          Next →
-        </a>
-        <a
-          onClick={exportToPDF}
-          className='cursor-pointer rounded bg-red-500 px-3 py-1 text-white'
-        >
-          💾 Export PDF
-        </a>
-      </div>
-
       {/* PDF Viewer */}
       <div
         id='pdf-container'
-        style={{ position: 'relative', border: '1px solid #ddd' }}
+        style={{
+          position: 'relative',
+          border: '1px solid #ddd',
+          width: 'fit-content',
+          height: 'fit-content',
+        }}
       >
         <Document
           file={pdfUrl}
@@ -222,6 +184,48 @@ export default function PdfEditorPdfLib() {
       <p className='text-sm text-gray-500'>
         Halaman {pageNumber} dari {numPages || '-'}
       </p>
+      <div className='mb-3 flex gap-2'>
+        <a
+          onClick={addBarcode}
+          className='cursor-pointer rounded bg-blue-500 px-3 py-1 text-white'
+        >
+          + Barcode
+        </a>
+        <a
+          onClick={addVisual}
+          className='cursor-pointer rounded bg-green-500 px-3 py-1 text-white'
+        >
+          + Visual
+        </a>
+        <a
+          onClick={() => pageNumber > 1 && setPageNumber((p) => p - 1)}
+          className={`rounded px-3 py-1 text-white ${
+            pageNumber <= 1
+              ? 'cursor-not-allowed bg-gray-300'
+              : 'cursor-pointer bg-gray-400'
+          }`}
+        >
+          ← Prev
+        </a>
+        <a
+          onClick={() =>
+            pageNumber < (numPages || 1) && setPageNumber((p) => p + 1)
+          }
+          className={`rounded px-3 py-1 text-white ${
+            pageNumber >= (numPages || 1)
+              ? 'cursor-not-allowed bg-gray-300'
+              : 'cursor-pointer bg-gray-400'
+          }`}
+        >
+          Next →
+        </a>
+        <a
+          onClick={exportToPDF}
+          className='cursor-pointer rounded bg-red-500 px-3 py-1 text-white'
+        >
+          💾 Export PDF
+        </a>
+      </div>
     </div>
   )
 }

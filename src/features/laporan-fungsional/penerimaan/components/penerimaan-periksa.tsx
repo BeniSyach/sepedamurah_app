@@ -8,18 +8,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { usePutLaporanFungsional, type LaporanFungsional } from '@/api'
 import { Check, X } from 'lucide-react'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { pdfjs } from 'react-pdf'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
   DialogFooter,
+  DialogContentLarge,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -56,7 +53,6 @@ export function PenerimaanPeriksa({
   onAction,
 }: LaporanFungsionalPeriksaProps) {
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [numPages, setNumPages] = useState<number>(0)
   const user = useAuthStore((s) => s.user)
 
   const { mutateAsync: putLaporanFungsionalAsync } = usePutLaporanFungsional()
@@ -111,13 +107,8 @@ export function PenerimaanPeriksa({
       isMounted = false
       if (fileUrl) URL.revokeObjectURL(fileUrl)
       setFileUrl(null)
-      setNumPages(0)
     }
   }, [currentRow?.id, open])
-
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages)
-  }
 
   const handleAction = async (action: 'terima' | 'tolak') => {
     if (!currentRow?.id) return
@@ -144,6 +135,7 @@ export function PenerimaanPeriksa({
       } else {
         const alasan = prompt('Masukkan alasan penolakan:')
         if (!alasan) return toast.error('Alasan wajib diisi.')
+        formData.append('proses', '0')
         formData.append('alasan_tolak', alasan)
         formData.append('ditolak', formatted)
         formData.append('diterima', '')
@@ -177,98 +169,84 @@ export function PenerimaanPeriksa({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='flex w-full flex-col gap-4 sm:max-w-5xl'>
-        <div className='flex gap-4'>
-          {/* Form Detail */}
-          <div className='w-1/2 overflow-auto'>
-            <DialogHeader>
-              <DialogTitle>Preview Laporan Fungsional Penerimaan</DialogTitle>
-              <DialogDescription>
-                Melihat detail dan file PDF Laporan Fungsional Penerimaan.
-              </DialogDescription>
-            </DialogHeader>
+      <DialogContentLarge
+        title='Periksa Berkas Fungsional'
+        description='Lengkapi data di bawah ini.'
+      >
+        <div className='flex h-full flex-col'>
+          {/* FORM + DOCUMENT */}
+          <div className='flex flex-1 gap-4 overflow-hidden'>
+            <div className='flex-[0.5] overflow-y-auto border-r p-3'>
+              <Form {...form}>
+                <div className='space-y-4'>
+                  {fields.map((field) => (
+                    <FormField
+                      key={field}
+                      control={form.control}
+                      name={field}
+                      render={() => (
+                        <FormItem>
+                          <FormLabel>
+                            {field === 'tanggal_upload'
+                              ? 'Tanggal Upload'
+                              : field
+                                  .replace('_', ' ')
+                                  .replace(/\b\w/g, (c) => c.toUpperCase())}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              value={
+                                field === 'tanggal_upload'
+                                  ? new Date(
+                                      currentRow[field] || ''
+                                    ).toLocaleDateString()
+                                  : currentRow[field] || ''
+                              }
+                              readOnly
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
+              </Form>
+            </div>
 
-            <Form {...form}>
-              <div className='space-y-4'>
-                {fields.map((field) => (
-                  <FormField
-                    key={field}
-                    control={form.control}
-                    name={field}
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>
-                          {field === 'tanggal_upload'
-                            ? 'Tanggal Upload'
-                            : field
-                                .replace('_', ' ')
-                                .replace(/\b\w/g, (c) => c.toUpperCase())}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            value={
-                              field === 'tanggal_upload'
-                                ? new Date(
-                                    currentRow[field] || ''
-                                  ).toLocaleDateString()
-                                : currentRow[field] || ''
-                            }
-                            readOnly
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-            </Form>
+            {/* PDF Preview */}
+            <div className='flex-1 overflow-auto border-l'>
+              {fileUrl ? (
+                <iframe
+                  src={fileUrl}
+                  className='h-full w-full'
+                  title='PDF Viewer'
+                  frameBorder='0'
+                />
+              ) : (
+                <p className='mt-10 text-center'>Loading PDF...</p>
+              )}
+            </div>
           </div>
 
-          {/* PDF Preview */}
-          <div className='h-[500px] w-1/2 overflow-auto rounded border'>
-            {fileUrl ? (
-              <Document
-                file={fileUrl}
-                onLoadSuccess={onDocumentLoadSuccess}
-                onLoadError={(err) =>
-                  toast.error(`Gagal memuat PDF: ${err.message}`)
-                }
-                loading={<p className='mt-10 text-center'>Loading PDF...</p>}
-              >
-                {Array.from({ length: numPages }, (_, i) => (
-                  <Page
-                    key={`page_${i + 1}`}
-                    pageNumber={i + 1}
-                    width={600}
-                    renderAnnotationLayer={false} // optional, bisa lebih ringan
-                    renderTextLayer={false} // optional
-                  />
-                ))}
-              </Document>
-            ) : (
-              <p className='mt-10 text-center'>Loading PDF...</p>
-            )}
-          </div>
+          {/* Tombol Terima & Tolak di Footer */}
+          <DialogFooter className='mt-2 flex justify-end gap-2'>
+            <Button
+              variant='outline'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('terima')}
+            >
+              <Check size={16} /> Terima
+            </Button>
+            <Button
+              variant='destructive'
+              className='flex items-center gap-2'
+              onClick={() => handleAction('tolak')}
+            >
+              <X size={16} /> Tolak
+            </Button>
+          </DialogFooter>
         </div>
-
-        {/* Tombol Terima & Tolak di Footer */}
-        <DialogFooter className='flex justify-end gap-2'>
-          <Button
-            variant='outline'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('terima')}
-          >
-            <Check size={16} /> Terima
-          </Button>
-          <Button
-            variant='destructive'
-            className='flex items-center gap-2'
-            onClick={() => handleAction('tolak')}
-          >
-            <X size={16} /> Tolak
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+      </DialogContentLarge>
     </Dialog>
   )
 }

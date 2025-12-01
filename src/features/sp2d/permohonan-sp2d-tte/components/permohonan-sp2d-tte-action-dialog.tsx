@@ -16,13 +16,13 @@ import {
 } from '@/api'
 import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
+import { formatRupiah } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
@@ -48,6 +48,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import PdfEditorPdfLib from './pdf-sp2d-tte'
 import { UrusanSection } from './urusan-section'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -260,8 +266,6 @@ export function UsersActionDialog({
 
   const ceklisList = dataJenisSPM?.data || []
 
-  const fileRef = form.register('nama_file_asli')
-
   const onSubmit = async (data: FormValues) => {
     const formData = new FormData()
     formData.append('id', data.id || '')
@@ -310,8 +314,9 @@ export function UsersActionDialog({
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
+          {/* FORM + DOCUMENT */}
           <div className='flex flex-1 gap-4 overflow-hidden'>
-            <div className='flex-1 overflow-y-auto border-r p-4'>
+            <div className='flex-1 overflow-y-auto border-r p-3'>
               <Form {...form}>
                 <form
                   id='sp2d-tte-form'
@@ -322,18 +327,21 @@ export function UsersActionDialog({
                     control={form.control}
                     name='no_spm'
                     render={({ field }) => (
-                      <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                        <FormLabel className='col-span-2 text-end'>
+                      <FormItem className='grid grid-cols-5 items-center gap-x-2 gap-y-0 pb-3'>
+                        <FormLabel className='col-span-1 text-end'>
                           No SPM
                         </FormLabel>
-                        <FormControl>
+
+                        <FormControl className='col-span-4'>
                           <Input
                             placeholder='No SPM'
-                            className='col-span-4'
                             autoComplete='off'
                             {...field}
+                            readOnly
+                            disabled
                           />
                         </FormControl>
+
                         <FormMessage className='col-span-4 col-start-3' />
                       </FormItem>
                     )}
@@ -343,8 +351,8 @@ export function UsersActionDialog({
                     control={form.control}
                     name='jenis_berkas'
                     render={({ field }) => (
-                      <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
-                        <FormLabel className='col-span-2 pt-2 text-end'>
+                      <FormItem className='grid grid-cols-5 items-center gap-x-2 gap-y-0 pb-3'>
+                        <FormLabel className='col-span-1 pt-2 text-end'>
                           Jenis SPM
                         </FormLabel>
 
@@ -362,6 +370,7 @@ export function UsersActionDialog({
                               onValueChange={field.onChange}
                               value={field.value}
                               className='flex flex-row gap-2'
+                              disabled
                             >
                               {data?.data?.map(
                                 (item: CeklisKelengkapanDokumen) => (
@@ -392,9 +401,9 @@ export function UsersActionDialog({
                       control={form.control}
                       name='id_berkas'
                       render={() => (
-                        <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                        <FormItem className='grid grid-cols-5 items-start gap-x-2 gap-y-0 pb-3'>
                           {/* Label kolom kiri */}
-                          <FormLabel className='col-span-2 pt-2 text-end'>
+                          <FormLabel className='col-span-1 pt-2 text-end'>
                             Daftar Berkas
                           </FormLabel>
                           {/* Isi kolom kanan */}
@@ -420,6 +429,7 @@ export function UsersActionDialog({
                                         <FormItem className='flex flex-row items-center space-y-0 space-x-2'>
                                           <FormControl>
                                             <Checkbox
+                                              disabled
                                               checked={value.includes(
                                                 String(item.id)
                                               )}
@@ -459,7 +469,7 @@ export function UsersActionDialog({
                   )}
 
                   {/* === URUSAN SECTION === */}
-                  <div className='space-y-3'>
+                  <div className='space-y-3 pb-5'>
                     <div className='flex items-center justify-between'>
                       <FormLabel>Urusan & Program</FormLabel>
                       <Button
@@ -514,40 +524,39 @@ export function UsersActionDialog({
                     control={form.control}
                     name='sumber_dana'
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className='pb-5'>
                         <FormLabel>Sumber Dana</FormLabel>
                         <FormControl>
                           <Command className='rounded-md border'>
-                            <CommandInput placeholder='Pilih sumber dana...' />
+                            {/* <CommandInput
+                            disabled
+                            placeholder='Pilih sumber dana...'
+                          /> */}
                             <CommandList>
-                              {itemsSD.length === 0 && (
-                                <CommandEmpty>Tidak ada data</CommandEmpty>
+                              {field.value.length === 0 && (
+                                <CommandEmpty>
+                                  Tidak ada yang dipilih
+                                </CommandEmpty>
                               )}
                               <CommandGroup>
-                                {itemsSD.map((r) => (
-                                  <CommandItem
-                                    key={r.value}
-                                    onSelect={() => {
-                                      if (!field.value.includes(r.value)) {
-                                        field.onChange([
-                                          ...field.value,
-                                          r.value,
-                                        ])
-                                      } else {
+                                {itemsSD
+                                  .filter((r) => field.value.includes(r.value))
+                                  .map((r) => (
+                                    <CommandItem
+                                      disabled
+                                      key={r.value}
+                                      onSelect={() => {
                                         field.onChange(
                                           field.value.filter(
                                             (v) => v !== r.value
                                           )
                                         )
-                                      }
-                                    }}
-                                  >
-                                    <span>{r.label}</span>
-                                    {field.value.includes(r.value) && (
+                                      }}
+                                    >
+                                      <span>{r.label}</span>
                                       <CheckIcon className='ml-auto h-4 w-4' />
-                                    )}
-                                  </CommandItem>
-                                ))}
+                                    </CommandItem>
+                                  ))}
                               </CommandGroup>
                             </CommandList>
                           </Command>
@@ -561,10 +570,23 @@ export function UsersActionDialog({
                     control={form.control}
                     name='nilai_belanja'
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className='pb-5'>
                         <FormLabel>Nilai Belanja</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input
+                            {...field}
+                            readOnly
+                            placeholder='0'
+                            className='font-semibold'
+                            value={formatRupiah(field.value ?? '')}
+                            onChange={(e) => {
+                              // Ambil angka asli tanpa format
+                              const raw = e.target.value.replace(/[^0-9]/g, '')
+
+                              // Set angka mentah ke form
+                              field.onChange(raw)
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -578,41 +600,28 @@ export function UsersActionDialog({
                       <FormItem>
                         <FormLabel>Uraian SPM</FormLabel>
                         <FormControl>
-                          <Textarea {...field} />
+                          <Textarea {...field} disabled readOnly />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  <FormField
-                    control={form.control}
-                    name='nama_file_asli'
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Upload File</FormLabel>
-                        <FormControl>
-                          <Input type='file' {...fileRef} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <PdfEditorPdfLib />
                 </form>
               </Form>
             </div>
+            <div className='flex-1 overflow-auto border-l p-10'>
+              <PdfEditorPdfLib />
+            </div>
           </div>
+          <DialogFooter>
+            <Button
+              type='button'
+              onClick={() => form.setValue('passphrase', 'open')}
+            >
+              Passpharase
+            </Button>
+          </DialogFooter>
         </div>
-
-        <DialogFooter>
-          <Button
-            type='button'
-            onClick={() => form.setValue('passphrase', 'open')}
-          >
-            Passpharase
-          </Button>
-        </DialogFooter>
       </DialogContentLarge>
       {/* === DIALOG PASSPHRASE === */}
       <Dialog

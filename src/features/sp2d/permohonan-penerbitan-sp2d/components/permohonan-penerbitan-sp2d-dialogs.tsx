@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useDeletePermohonanSP2D, useGetBatasWaktu } from '@/api'
+import {
+  useCekUploadFungsional,
+  useDeletePermohonanSP2D,
+  useGetBatasWaktu,
+} from '@/api'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import {
@@ -27,12 +31,15 @@ const hariInggris = [
   'Saturday',
 ]
 const hariIni = hariInggris[today.getDay()]
+const currentYear = today.getFullYear()
+const currentMonth = today.getMonth() + 1
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
   const levelAkses = localStorage.getItem('user_role')
   const user = useAuthStore((s) => s.user)
+  // console.log('data user', user?.skpd.status_penerimaan)
   const [showClosedDialog, setShowClosedDialog] = useState(false)
   const [closedReason, setClosedReason] = useState('')
   const { data: dataBatasWaktu } = useGetBatasWaktu({
@@ -43,19 +50,41 @@ export function UsersDialogs() {
     kd_opd5: user?.kd_opd5,
     search: hariIni,
   })
+  const { data: cekUpload } = useCekUploadFungsional({
+    tahun: currentYear,
+    bulan: currentMonth,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
+    status: user?.skpd.status_penerimaan ?? '0', // 0 atau 1
+  })
 
   const isServiceClosed = () => {
+    const today = new Date().getDay() // 0 = Minggu, 6 = Sabtu
+
+    // Jika tidak ada jadwal & hari Sabtu/Minggu => CLOSED
     if (!dataBatasWaktu || !dataBatasWaktu.data?.length) {
-      return { closed: false, reason: '' }
+      if (today === 0 || today === 6) {
+        return {
+          closed: true,
+          reason: 'Pelayanan tidak tersedia pada hari Sabtu dan Minggu.',
+        }
+      }
+
+      // Hari biasa tapi jadwal tidak ditemukan
+      return { closed: true, reason: 'Jadwal pelayanan tidak ditemukan.' }
     }
 
+    // --- logic existing di bawah ---
     const now = new Date()
     const [hours, minutes] = [now.getHours(), now.getMinutes()]
 
-    const item = dataBatasWaktu.data[0] // ambil jadwal hari ini
+    const item = dataBatasWaktu.data[0]
     const parseTime = (time: string) => {
       const [h, m] = time.split(':').map(Number)
-      return h * 60 + m // konversi ke menit
+      return h * 60 + m
     }
 
     const nowMinutes = hours * 60 + minutes
@@ -86,6 +115,46 @@ export function UsersDialogs() {
     return { closed: false, reason: '' }
   }
 
+  // Fungsi cek upload (sesuai dengan response backend)
+  const isUploadNotAllowed = () => {
+    if (!cekUpload) return { blocked: false, reason: '' }
+
+    // Jika tidak wajib upload → tidak blokir
+    if (!cekUpload.wajib) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Cek bulan-bulan yang belum upload
+    if (cekUpload.bulan_kurang && cekUpload.bulan_kurang.length > 0) {
+      const listBulan = cekUpload.bulan_kurang
+        .map((b) => `Bulan ${b}`)
+        .join(', ')
+
+      return {
+        blocked: true,
+        reason: `Masih ada laporan fungsional yang belum diupload pada: ${listBulan}.`,
+      }
+    }
+
+    // Jika wajib dan belum upload bulan ini
+    if (!cekUpload.pengeluaran) {
+      return {
+        blocked: true,
+        reason: 'Anda belum upload laporan fungsional (Pengeluaran) bulan ini.',
+      }
+    }
+
+    // Jika status 1 → Penerimaan juga wajib
+    if (user?.skpd.status_penerimaan == '1' && !cekUpload.penerimaan) {
+      return {
+        blocked: true,
+        reason: 'Anda belum upload laporan fungsional (Penerimaan) bulan ini.',
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
   // 🧠 Deteksi ketika user membuka form add/edit
   useEffect(() => {
     // Berlaku hanya untuk Bendahara
@@ -99,8 +168,16 @@ export function UsersDialogs() {
         setClosedReason(status.reason)
         setOpen(null) // Jangan tampilkan form
       }
+      // 2. CEK STATUS UPLOAD
+      const statusUpload = isUploadNotAllowed()
+      if (statusUpload.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusUpload.reason)
+        setOpen(null)
+        return
+      }
     }
-  }, [open, levelAkses, dataBatasWaktu])
+  }, [open, levelAkses, dataBatasWaktu, cekUpload])
 
   const handleDelete = async () => {
     if (!currentRow) return
