@@ -67,6 +67,7 @@ import { Route as AuthenticatedDokumenBerkasLainRouteImport } from './routes/_au
 import { Route as AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaPaguSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/pagu-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaBesaranUpSkpdRouteImport } from './routes/_authenticated/alokasi-dana/besaran-up-skpd'
+import { Route as authVerifyTteIdRouteImport } from './routes/(auth)/verify-tte/$id'
 import { Route as AuthenticatedDokumenSpdSudahParafRouteImport } from './routes/_authenticated/dokumen/spd/sudah-paraf'
 import { Route as AuthenticatedDokumenSpdSpdDitandatanganiBudRouteImport } from './routes/_authenticated/dokumen/spd/spd-ditandatangani-bud'
 import { Route as AuthenticatedDokumenSpdPermohonanSpdBudTteRouteImport } from './routes/_authenticated/dokumen/spd/permohonan-spd-bud-tte'
@@ -424,6 +425,11 @@ const AuthenticatedAlokasiDanaBesaranUpSkpdRoute =
     path: '/alokasi-dana/besaran-up-skpd',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const authVerifyTteIdRoute = authVerifyTteIdRouteImport.update({
+  id: '/(auth)/verify-tte/$id',
+  path: '/verify-tte/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDokumenSpdSudahParafRoute =
   AuthenticatedDokumenSpdSudahParafRouteImport.update({
     id: '/dokumen/spd/sudah-paraf',
@@ -580,6 +586,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
+  '/verify-tte/$id': typeof authVerifyTteIdRoute
   '/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -660,6 +667,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
+  '/verify-tte/$id': typeof authVerifyTteIdRoute
   '/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -744,6 +752,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(pengembalian_dana)/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
+  '/(auth)/verify-tte/$id': typeof authVerifyTteIdRoute
   '/_authenticated/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/_authenticated/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -828,6 +837,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/pengembalian_dana'
+    | '/verify-tte/$id'
     | '/alokasi-dana/besaran-up-skpd'
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -908,6 +918,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/pengembalian_dana'
+    | '/verify-tte/$id'
     | '/alokasi-dana/besaran-up-skpd'
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -991,6 +1002,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(pengembalian_dana)/pengembalian_dana'
+    | '/(auth)/verify-tte/$id'
     | '/_authenticated/alokasi-dana/besaran-up-skpd'
     | '/_authenticated/alokasi-dana/pagu-sumber-dana'
     | '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -1073,6 +1085,7 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   pengembalian_danaPengembalian_danaRoute: typeof pengembalian_danaPengembalian_danaRoute
+  authVerifyTteIdRoute: typeof authVerifyTteIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1483,6 +1496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAlokasiDanaBesaranUpSkpdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/(auth)/verify-tte/$id': {
+      id: '/(auth)/verify-tte/$id'
+      path: '/verify-tte/$id'
+      fullPath: '/verify-tte/$id'
+      preLoaderRoute: typeof authVerifyTteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dokumen/spd/sudah-paraf': {
       id: '/_authenticated/dokumen/spd/sudah-paraf'
       path: '/dokumen/spd/sudah-paraf'
@@ -1879,6 +1899,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors503Route: errors503Route,
   pengembalian_danaPengembalian_danaRoute:
     pengembalian_danaPengembalian_danaRoute,
+  authVerifyTteIdRoute: authVerifyTteIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

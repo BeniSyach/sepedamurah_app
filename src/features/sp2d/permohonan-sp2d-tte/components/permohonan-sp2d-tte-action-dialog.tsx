@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   type CeklisKelengkapanDokumen,
   useGetRefCeklisSPM,
-  usePostPermohonanSp2d,
-  usePutPermohonanSp2d,
   type Sp2dItem,
   useGetRefSumberDana,
   type SumberDana,
@@ -16,6 +15,7 @@ import {
 } from '@/api'
 import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
+import { useSignSp2dKirim } from '@/api/sp2d/sign-sp2d'
 import { formatRupiah } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -48,6 +48,32 @@ import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import PdfEditorPdfLib from './pdf-sp2d-tte'
 import { UrusanSection } from './urusan-section'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -163,8 +189,15 @@ export function UsersActionDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const isEdit = !!currentRow
-  const { mutateAsync: post } = usePostPermohonanSp2d()
-  const { mutateAsync: put } = usePutPermohonanSp2d()
+  const { mutateAsync: post } = useSignSp2dKirim()
+  // generatePdf selalu async
+  const [generatePdf, setGeneratePdf] = useState<() => Promise<void>>(
+    async () => {}
+  )
+
+  const handleSave = async () => {
+    await generatePdf()
+  }
 
   // jenis_bekas
   const { data, isLoading, isError } = useGetRefCeklisSPM({
@@ -209,7 +242,7 @@ export function UsersActionDialog({
           kd_opd5: currentRow.kd_opd5 ?? '',
           nilai_belanja: currentRow.nilai_belanja ?? '',
           nama_file: currentRow.nama_file ?? '',
-          nama_file_asli: currentRow.nama_file_asli ?? '',
+          nama_file_asli: '',
           id_user: currentRow.id_user ?? '',
           nama_user: currentRow.nama_user ?? '',
           agreement: currentRow.agreement ?? '',
@@ -267,37 +300,36 @@ export function UsersActionDialog({
   const ceklisList = dataJenisSPM?.data || []
 
   const onSubmit = async (data: FormValues) => {
-    const formData = new FormData()
-    formData.append('id', data.id || '')
-    formData.append('nama_file', data.nama_file)
-    formData.append('kd_opd1', data.kd_opd1)
-    formData.append('kd_opd2', data.kd_opd2)
-    formData.append('kd_opd3', data.kd_opd3)
-    formData.append('kd_opd4', data.kd_opd4)
-    formData.append('kd_opd5', data.kd_opd5)
-
-    // Jika user upload file baru
-    if (
-      data.nama_file_asli instanceof FileList &&
-      data.nama_file_asli.length > 0
-    ) {
-      formData.append('nama_file_asli', data.nama_file_asli[0])
+    if (!data.nama_file_asli) {
+      toast.error('Silakan export PDF terlebih dahulu')
+      return
     }
-    const req = isEdit ? put(formData) : post(formData)
+
+    const payload = {
+      id_sp2d: data.id ?? '', // FIX → tidak pernah undefined
+      nama_file: data.nama_file ?? '', // FIX → tidak pernah undefined
+      passphrase: data.passphrase ?? '', // FIX → tidak pernah undefined
+      tampilan: 'invisible',
+      file: data.nama_file_asli,
+    }
+
+    const req = post(payload)
     await toast.promise(req, {
-      loading: 'Menyimpan data...',
+      loading: 'Mengirim & menandatangani PDF...',
       success: () => {
         onOpenChange(false)
-        return isEdit ? 'Data berhasil diperbarui!' : 'Data berhasil disimpan!'
+        return 'PDF berhasil ditandatangani!'
       },
-      error: 'Gagal menyimpan data.',
+      error: (err) => {
+        return err.response.data.detail.error
+      },
     })
   }
 
-  const onSubmitPass = (values: any) => {
-    // Isi ke form utama (sinkronkan)
+  const onSubmitPass = async (values: any) => {
+    await handleSave() // 🚀 Generate PDF dulu
+
     form.setValue('passphrase', values.passphrase)
-    // Jalankan submit utama
     onSubmit(form.getValues())
   }
 
@@ -610,7 +642,13 @@ export function UsersActionDialog({
               </Form>
             </div>
             <div className='flex-1 overflow-auto border-l p-10'>
-              <PdfEditorPdfLib />
+              <PdfEditorPdfLib
+                currentRow={currentRow}
+                onExport={(file) => {
+                  form.setValue('nama_file_asli', file) // ← simpan ke form
+                }}
+                onSaveTrigger={(fn) => setGeneratePdf(() => fn)}
+              />
             </div>
           </div>
           <DialogFooter>

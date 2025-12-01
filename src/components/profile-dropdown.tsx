@@ -30,7 +30,7 @@ export function ProfileDropdown() {
                 src={
                   !user?.image || user.image === 'default.jpg'
                     ? '/images/default.png'
-                    : `${ASSET_URL}${user.image}`
+                    : `${ASSET_URL}public-file/profile/${user.image}`
                 }
                 alt='Foto Profil'
               />

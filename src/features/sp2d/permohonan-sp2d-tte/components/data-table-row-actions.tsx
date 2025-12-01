@@ -48,7 +48,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('delete')
+              setOpen('tolak')
             }}
             className='text-red-500!'
           >
@@ -61,9 +61,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('delete')
+              setOpen('lihat')
             }}
-            className='text-red-500!'
           >
             Lihat
             <DropdownMenuShortcut>

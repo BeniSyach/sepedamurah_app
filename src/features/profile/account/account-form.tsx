@@ -58,12 +58,12 @@ export function AccountForm() {
   const { mutateAsync: putUsersAsync } = usePutUsers()
   const [fotoPreview, setFotoPreview] = useState<string>(
     user?.image
-      ? `${import.meta.env.VITE_ASSET_URL}${user.image}`
+      ? `${import.meta.env.VITE_ASSET_URL}public-file/profile/${user.image}`
       : 'https://placehold.co/80x80'
   )
   const [ttePreview, setTtePreview] = useState<string>(
     user?.visualisasi_tte
-      ? `${import.meta.env.VITE_ASSET_URL}${user.visualisasi_tte}`
+      ? `${import.meta.env.VITE_ASSET_URL}public-file/visualisasi_tte/${user.visualisasi_tte}`
       : 'https://placehold.co/80x80'
   )
 

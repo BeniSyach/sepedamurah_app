@@ -42,7 +42,7 @@ export function NavUser({ userData }: NavUserProps) {
                     src={
                       !userData?.image || userData.image === 'default.jpg'
                         ? '/images/default.png'
-                        : `${ASSET_URL}${userData.image}`
+                        : `${ASSET_URL}public-file/profile/${userData.image}`
                     }
                     alt='Foto Profil'
                   />
@@ -71,7 +71,7 @@ export function NavUser({ userData }: NavUserProps) {
                       src={
                         !userData?.image || userData.image === 'default.jpg'
                           ? '/images/default.png'
-                          : `${ASSET_URL}${userData.image}`
+                          : `${ASSET_URL}public-file/profile/${userData.image}`
                       }
                       alt='Foto Profil'
                     />

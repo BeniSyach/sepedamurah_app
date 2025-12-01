@@ -1,11 +1,13 @@
 // import { useState, createRef } from 'react'
-import { createRef, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
+import { type Sp2dItem } from '@/api'
 import { PDFDocument } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import Draggable, { type DraggableData } from 'react-draggable'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
+import { useAuthStore } from '@/stores/auth-store'
 import { createQRCodeWithLogo } from '@/lib/utils'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
@@ -22,18 +24,28 @@ type ElementItem = {
   nodeRef?: React.RefObject<HTMLDivElement | null>
 }
 
-export default function PdfEditorPdfLib() {
-  const [pdfUrl] = useState('http://localhost:5173/pdf/contoh.pdf')
+export default function PdfEditorPdfLib({
+  currentRow,
+  onExport,
+  onSaveTrigger,
+}: {
+  currentRow?: Sp2dItem
+  onExport?: (file: File) => void
+  onSaveTrigger?: (fn: () => Promise<void>) => void
+}) {
+  const ASSET_URL = import.meta.env.VITE_ASSET_URL
+  const user = useAuthStore((s) => s.user)
+  const [pdfUrl] = useState(
+    `${ASSET_URL}public-file/${currentRow?.sp2dkirim[0].nama_file_asli}`
+  )
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [elements, setElements] = useState<ElementItem[]>([])
 
   // Tambah QR/barcode
   const addBarcode = async () => {
-    const qr = await createQRCodeWithLogo(
-      `SP2D-TTE-${Date.now()}`,
-      'http://localhost:5173/images/logo-sepeda-murah.png'
-    )
+    const link = `${window.location.origin}/verify-tte/${currentRow?.sp2dkirim[0].id}`
+    const qr = await createQRCodeWithLogo(link, '/images/logo_pemkab.png')
     setElements((prev) => [
       ...prev,
       {
@@ -52,7 +64,7 @@ export default function PdfEditorPdfLib() {
 
   // Tambah logo/image
   const addVisual = () => {
-    const imgUrl = 'http://localhost:5173/images/logo-sepeda-murah.png'
+    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
     setElements((prev) => [
       ...prev,
       {
@@ -128,12 +140,26 @@ export default function PdfEditorPdfLib() {
     }
 
     const pdfBytes = await pdfDoc.save()
-    const blob = new Blob([Uint8Array.from(pdfBytes)], {
-      type: 'application/pdf',
-    })
-    const url = URL.createObjectURL(blob)
-    window.open(url, '_blank')
+    // const blob = new Blob([Uint8Array.from(pdfBytes)], {
+    //   type: 'application/pdf',
+    // })
+    const file = new File(
+      [Uint8Array.from(pdfBytes)],
+      `${currentRow?.nama_file || 'edited'}.pdf`,
+      { type: 'application/pdf' }
+    )
+    if (onExport) onExport(file)
+    // const url = URL.createObjectURL(blob)
+    // window.open(url, '_blank')
   }
+
+  const saveAndExport = async () => {
+    await exportToPDF()
+  }
+
+  useEffect(() => {
+    if (onSaveTrigger) onSaveTrigger(saveAndExport)
+  }, [])
 
   return (
     <div className='flex flex-col items-center gap-3'>
