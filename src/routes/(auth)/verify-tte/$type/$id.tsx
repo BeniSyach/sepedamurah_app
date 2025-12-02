@@ -8,17 +8,17 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export const Route = createFileRoute('/(auth)/verify-tte/$id')({
+export const Route = createFileRoute('/(auth)/verify-tte/$type/$id')({
   component: VerifyPage,
 })
 
 function VerifyPage() {
-  const { id } = Route.useParams()
+  const { type, id } = Route.useParams()
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['verify-tte', id],
+    queryKey: ['verify-tte', type, id],
     queryFn: async () => {
-      const res = await api.get(`/verify-tte/${id}`)
+      const res = await api.get(`/verify-tte-${type}/${id}`)
       return res.data
     },
   })
@@ -26,7 +26,14 @@ function VerifyPage() {
   if (isLoading) return <LoadingSkeleton />
   if (isError) return <ErrorMessage />
 
-  const sp2d = data?.data
+  const raw = data?.data || {}
+  const normalized = {
+    no_sp2d:
+      raw.no_sp2d ?? raw.file_asli ?? raw.nama_file ?? raw.nama_dokumen ?? '-',
+    nama_penandatangan: raw.penandatangan ?? '-',
+    tgl_tte: raw.tgl_tte ?? raw.tanggal_tte ?? '-',
+    status: raw.status ?? (raw.status_tte === 'TTE Selesai' ? 1 : 0),
+  }
 
   return (
     <div className='flex min-h-screen w-full justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-10'>
@@ -46,10 +53,10 @@ function VerifyPage() {
             >
               <ShieldCheck className='mb-4 h-14 w-14 text-blue-700' />
               <CardTitle className='text-4xl font-extrabold tracking-tight text-gray-800'>
-                Verifikasi TTE SP2D
+                Verifikasi TTE {type.toUpperCase()}
               </CardTitle>
               <p className='mt-2 text-lg text-gray-600'>
-                Pemeriksaan keaslian Tanda Tangan Elektronik Dokumen SP2D
+                Pemeriksaan keaslian Tanda Tangan Elektronik Dokumen
               </p>
             </motion.div>
           </CardHeader>
@@ -62,7 +69,7 @@ function VerifyPage() {
               transition={{ delay: 0.3 }}
               className='mb-10 flex justify-center'
             >
-              {sp2d?.status == 1 ? (
+              {normalized?.status == 1 ? (
                 <Badge className='flex items-center gap-3 rounded-full bg-green-600 px-6 py-3 text-lg text-white shadow-lg'>
                   <CheckCircle className='h-6 w-6' /> TTE Valid
                 </Badge>
@@ -82,27 +89,29 @@ function VerifyPage() {
             >
               <InfoItem
                 icon={<FileText className='h-7 w-7 text-blue-700' />}
-                label='Nomor SP2D'
-                value={sp2d?.no_sp2d || '-'}
+                label='Nomor Dokumen / File'
+                value={normalized?.no_sp2d || '-'}
               />
 
               <InfoItem
                 icon={<User className='h-7 w-7 text-indigo-700' />}
                 label='Nama Penandatangan'
-                value={sp2d?.nama_penandatangan || '-'}
+                value={normalized?.nama_penandatangan || '-'}
               />
 
               <InfoItem
                 icon={<CheckCircle className='h-7 w-7 text-green-700' />}
                 label='Tanggal TTE'
-                value={sp2d?.tgl_tte || '-'}
+                value={normalized?.tgl_tte || '-'}
               />
 
               <InfoItem
                 icon={<ShieldCheck className='h-7 w-7 text-gray-700' />}
                 label='Status'
                 value={
-                  sp2d?.status == 1 ? 'Dokumen Asli & Valid' : 'Tidak Valid'
+                  normalized?.status == 1
+                    ? 'Dokumen Asli & Valid'
+                    : 'Tidak Valid'
                 }
               />
             </motion.div>

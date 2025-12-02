@@ -67,7 +67,6 @@ import { Route as AuthenticatedDokumenBerkasLainRouteImport } from './routes/_au
 import { Route as AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaPaguSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/pagu-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaBesaranUpSkpdRouteImport } from './routes/_authenticated/alokasi-dana/besaran-up-skpd'
-import { Route as authVerifyTteIdRouteImport } from './routes/(auth)/verify-tte/$id'
 import { Route as AuthenticatedDokumenSpdSudahParafRouteImport } from './routes/_authenticated/dokumen/spd/sudah-paraf'
 import { Route as AuthenticatedDokumenSpdSpdDitandatanganiBudRouteImport } from './routes/_authenticated/dokumen/spd/spd-ditandatangani-bud'
 import { Route as AuthenticatedDokumenSpdPermohonanSpdBudTteRouteImport } from './routes/_authenticated/dokumen/spd/permohonan-spd-bud-tte'
@@ -91,6 +90,7 @@ import { Route as AuthenticatedDokumenLaporanFungsionalPenerimaanDiterimaRouteIm
 import { Route as AuthenticatedDokumenLaporanFungsionalPenerimaanRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/penerimaan'
 import { Route as AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
 import { Route as AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
+import { Route as authVerifyTteTypeIdRouteImport } from './routes/(auth)/verify-tte/$type/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -425,11 +425,6 @@ const AuthenticatedAlokasiDanaBesaranUpSkpdRoute =
     path: '/alokasi-dana/besaran-up-skpd',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const authVerifyTteIdRoute = authVerifyTteIdRouteImport.update({
-  id: '/(auth)/verify-tte/$id',
-  path: '/verify-tte/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedDokumenSpdSudahParafRoute =
   AuthenticatedDokumenSpdSudahParafRouteImport.update({
     id: '/dokumen/spd/sudah-paraf',
@@ -570,6 +565,11 @@ const AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute =
     path: '/dokumen/laporan-fungsional/berkas-masuk-penerimaan',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const authVerifyTteTypeIdRoute = authVerifyTteTypeIdRouteImport.update({
+  id: '/(auth)/verify-tte/$type/$id',
+  path: '/verify-tte/$type/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -586,7 +586,6 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
-  '/verify-tte/$id': typeof authVerifyTteIdRoute
   '/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -630,6 +629,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
   '/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -667,7 +667,6 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
-  '/verify-tte/$id': typeof authVerifyTteIdRoute
   '/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -711,6 +710,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
   '/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -752,7 +752,6 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(pengembalian_dana)/pengembalian_dana': typeof pengembalian_danaPengembalian_danaRoute
-  '/(auth)/verify-tte/$id': typeof authVerifyTteIdRoute
   '/_authenticated/alokasi-dana/besaran-up-skpd': typeof AuthenticatedAlokasiDanaBesaranUpSkpdRoute
   '/_authenticated/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
@@ -796,6 +795,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/(auth)/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
   '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/_authenticated/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -837,7 +837,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/pengembalian_dana'
-    | '/verify-tte/$id'
     | '/alokasi-dana/besaran-up-skpd'
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -881,6 +880,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/verify-tte/$type/$id'
     | '/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/dokumen/laporan-fungsional/penerimaan'
@@ -918,7 +918,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/pengembalian_dana'
-    | '/verify-tte/$id'
     | '/alokasi-dana/besaran-up-skpd'
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -962,6 +961,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/verify-tte/$type/$id'
     | '/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/dokumen/laporan-fungsional/penerimaan'
@@ -1002,7 +1002,6 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(pengembalian_dana)/pengembalian_dana'
-    | '/(auth)/verify-tte/$id'
     | '/_authenticated/alokasi-dana/besaran-up-skpd'
     | '/_authenticated/alokasi-dana/pagu-sumber-dana'
     | '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
@@ -1046,6 +1045,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/(auth)/verify-tte/$type/$id'
     | '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/_authenticated/dokumen/laporan-fungsional/penerimaan'
@@ -1085,7 +1085,7 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   pengembalian_danaPengembalian_danaRoute: typeof pengembalian_danaPengembalian_danaRoute
-  authVerifyTteIdRoute: typeof authVerifyTteIdRoute
+  authVerifyTteTypeIdRoute: typeof authVerifyTteTypeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1496,13 +1496,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAlokasiDanaBesaranUpSkpdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/(auth)/verify-tte/$id': {
-      id: '/(auth)/verify-tte/$id'
-      path: '/verify-tte/$id'
-      fullPath: '/verify-tte/$id'
-      preLoaderRoute: typeof authVerifyTteIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/dokumen/spd/sudah-paraf': {
       id: '/_authenticated/dokumen/spd/sudah-paraf'
       path: '/dokumen/spd/sudah-paraf'
@@ -1663,6 +1656,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
       preLoaderRoute: typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/(auth)/verify-tte/$type/$id': {
+      id: '/(auth)/verify-tte/$type/$id'
+      path: '/verify-tte/$type/$id'
+      fullPath: '/verify-tte/$type/$id'
+      preLoaderRoute: typeof authVerifyTteTypeIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -1899,7 +1899,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors503Route: errors503Route,
   pengembalian_danaPengembalian_danaRoute:
     pengembalian_danaPengembalian_danaRoute,
-  authVerifyTteIdRoute: authVerifyTteIdRoute,
+  authVerifyTteTypeIdRoute: authVerifyTteTypeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

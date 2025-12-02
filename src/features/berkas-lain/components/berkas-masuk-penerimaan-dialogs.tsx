@@ -2,6 +2,7 @@ import { useDeleteBerkasLain } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { BerkasLainTTE } from './berkas-lain-tte-action'
 import { UsersActionDialog } from './berkas-masuk-penerimaan-action-dialog'
 import { useRefBerkasLain } from './berkas-masuk-penerimaan-provider'
 
@@ -124,6 +125,18 @@ export function UsersDialogs() {
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
+          />
+
+          <BerkasLainTTE
+            key={`berkas-lain-TTE-berkas-${currentRow.id}`}
+            open={open === 'TTEBerkas'}
+            onOpenChange={() => {
+              setOpen('TTEBerkas')
               setTimeout(() => {
                 setCurrentRow(null)
               }, 500)
