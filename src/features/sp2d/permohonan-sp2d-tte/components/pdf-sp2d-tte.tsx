@@ -110,6 +110,7 @@ export default function PdfEditorPdfLib({
       const scaleX = pdfWidth / rect.width
       const scaleY = pdfHeight / rect.height
 
+      // --- Load image bytes ---
       let imgBytes: Uint8Array
       if (el.src.startsWith('data:image')) {
         const base64 = el.src.split(',')[1]
@@ -118,19 +119,21 @@ export default function PdfEditorPdfLib({
         imgBytes = new Uint8Array(await (await fetch(el.src)).arrayBuffer())
       }
 
-      let embedded
+      // --- Try PNG first then JPG ---
+      let embeddedImage
       try {
-        embedded = await pdfDoc.embedPng(imgBytes)
+        embeddedImage = await pdfDoc.embedPng(imgBytes)
       } catch {
-        embedded = await pdfDoc.embedJpg(imgBytes)
+        embeddedImage = await pdfDoc.embedJpg(imgBytes)
       }
 
+      // --- Translate canvas coords to PDF coords ---
       const X = el.x * scaleX
       const Y = pdfHeight - (el.y + el.height) * scaleY
       const W = el.width * scaleX
       const H = el.height * scaleY
 
-      page.drawImage(embedded, {
+      page.drawImage(embeddedImage, {
         x: X,
         y: Y,
         width: W,
@@ -138,9 +141,17 @@ export default function PdfEditorPdfLib({
       })
     }
 
+    // --- Save PDF as Uint8Array ---
     const finalBytes = await pdfDoc.save()
+
+    // --- FIX: Convert Uint8Array to ArrayBuffer for Blob ---
+    const arrayBuffer = finalBytes.buffer.slice(
+      finalBytes.byteOffset,
+      finalBytes.byteOffset + finalBytes.byteLength
+    )
+
     const file = new File(
-      [new Blob([finalBytes], { type: 'application/pdf' })],
+      [arrayBuffer],
       `${currentRow?.nama_file || 'edited'}.pdf`,
       { type: 'application/pdf' }
     )
