@@ -149,19 +149,14 @@ export default function PdfEditorPdfLib({
 
     // --- Save PDF as Uint8Array ---
     const finalBytes = await pdfDoc.save()
-
-    // --- FIX: Convert Uint8Array to ArrayBuffer for Blob ---
-    const arrayBuffer = finalBytes.buffer.slice(
-      finalBytes.byteOffset,
-      finalBytes.byteOffset + finalBytes.byteLength
-    )
+    // FIX — selalu hasilkan ArrayBuffer murni
+    const arrayBuffer = new Uint8Array(finalBytes).buffer
 
     const file = new File(
       [arrayBuffer],
       `${currentRow?.nama_dokumen || 'edited'}.pdf`,
       { type: 'application/pdf' }
     )
-
     onExport?.(file)
   }, [elements, pdfUrl, currentRow])
 
