@@ -56,7 +56,7 @@ export default function PdfEditorPdfLib({
   }
   // Tambah QR/barcode
   const addBarcode = async () => {
-    const link = `${window.location.origin}/verify-tte-sp2d/${currentRow?.sp2dkirim[0].id}`
+    const link = `${window.location.origin}/verify-tte/sp2d/${currentRow?.sp2dkirim[0].id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
 
     setElements((prev) => [
@@ -76,7 +76,7 @@ export default function PdfEditorPdfLib({
 
   // Tambah logo/image
   const addVisual = () => {
-    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/sp2d/${user?.visualisasi_tte}`
+    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
 
     setElements((prev) => [
       ...prev,
@@ -94,23 +94,21 @@ export default function PdfEditorPdfLib({
   }
 
   const exportToPDF = useCallback(async () => {
-    const container = document.getElementById('pdf-container')
-    if (!container) return
-
-    const rect = container.getBoundingClientRect()
     const existingPdfBytes = await fetch(pdfUrl).then((r) => r.arrayBuffer())
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     const pages = pdfDoc.getPages()
 
     for (const el of elements) {
       const page = pages[el.page - 1]
+
       const pdfWidth = page.getWidth()
       const pdfHeight = page.getHeight()
 
-      const scaleX = pdfWidth / rect.width
-      const scaleY = pdfHeight / rect.height
+      // 🎯 PENTING — Gunakan ukuran asli PDF
+      const scaleX = pdfWidth / canvasSize.width
+      const scaleY = pdfHeight / canvasSize.height
 
-      // --- Load image bytes ---
+      // Load image
       let imgBytes: Uint8Array
       if (el.src.startsWith('data:image')) {
         const base64 = el.src.split(',')[1]
@@ -119,7 +117,6 @@ export default function PdfEditorPdfLib({
         imgBytes = new Uint8Array(await (await fetch(el.src)).arrayBuffer())
       }
 
-      // --- Try PNG first then JPG ---
       let embeddedImage
       try {
         embeddedImage = await pdfDoc.embedPng(imgBytes)
@@ -127,7 +124,7 @@ export default function PdfEditorPdfLib({
         embeddedImage = await pdfDoc.embedJpg(imgBytes)
       }
 
-      // --- Translate canvas coords to PDF coords ---
+      // 🎯 KONVERSI KOORDINAT PRESISI
       const X = el.x * scaleX
       const Y = pdfHeight - (el.y + el.height) * scaleY
       const W = el.width * scaleX
@@ -141,18 +138,15 @@ export default function PdfEditorPdfLib({
       })
     }
 
-    // --- Save PDF as Uint8Array ---
     const finalBytes = await pdfDoc.save()
-    // FIX — selalu hasilkan ArrayBuffer murni
     const arrayBuffer = new Uint8Array(finalBytes).buffer
 
-    const file = new File(
-      [arrayBuffer],
-      `${currentRow?.nama_file || 'edited'}.pdf`,
-      { type: 'application/pdf' }
-    )
+    const file = new File([arrayBuffer], `${currentRow?.nama_file}.pdf`, {
+      type: 'application/pdf',
+    })
+
     onExport?.(file)
-  }, [elements, pdfUrl, currentRow])
+  }, [elements, pdfUrl, currentRow, canvasSize])
 
   // Parent menerima fungsi EXPORT versi terbaru
   useEffect(() => {
