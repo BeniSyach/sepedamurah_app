@@ -91,7 +91,6 @@ export function PenerimaanPeriksa({
         const blob = new Blob([response.data], { type: 'application/pdf' })
         const url = URL.createObjectURL(blob)
         if (isMounted) setFileUrl(url)
-        toast.success('File berhasil diambil!')
       } catch (err: unknown) {
         const error = err as AxiosError
         toast.error(

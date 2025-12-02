@@ -24,6 +24,8 @@ export function PermohonanSp2dTTE() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
+    sort_by: search.sort_by ?? 'tanggal_upload',
+    sort_dir: search.sort_dir ?? 'asc',
     menu: 'sp2d_tte',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

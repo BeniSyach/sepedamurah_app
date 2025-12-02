@@ -107,6 +107,43 @@ export function UsersDialogs() {
     )
   }
 
+  // Fungsi lihat file TTE
+  const handleLihatTTE = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/sp2d/sp2d-kirim/downloadTTE/${currentRow.sp2dkirim[0].id}`,
+          {
+            responseType: 'blob',
+            params: { t: Date.now() },
+          }
+        )
+
+        // Tentukan MIME type sesuai file
+        let mimeType = 'application/pdf' // default PDF
+        if (currentRow.sp2dkirim[0].file_tte?.endsWith('.docx'))
+          mimeType =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else if (currentRow.sp2dkirim[0].file_tte?.endsWith('.doc'))
+          mimeType = 'application/msword'
+
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: mimeType })
+        )
+        window.open(url, '_blank')
+
+        setTimeout(() => window.URL.revokeObjectURL(url), 5000)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
+
   return (
     <>
       <PermohonanDiterimaActionDialog
@@ -211,6 +248,25 @@ export function UsersDialogs() {
               <>
                 Kamu akan Lihat file dengan nama{' '}
                 <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Lihat'
+          />
+          <ConfirmDialog
+            key={`sp2d-terima-lihat-tte-${currentRow.id_sp2d}`}
+            destructive={false}
+            open={open === 'downloadTTE'}
+            onOpenChange={() => {
+              setOpen('downloadTTE')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleLihatTTE}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan Lihat file yang sudah ditandatangani secara Elektronik
+                dengan nama <strong>{currentRow.nama_file}</strong>.
               </>
             }
             confirmText='Lihat'

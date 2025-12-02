@@ -29,7 +29,7 @@ export function UsersDialogs() {
   }
 
   // Fungsi download file
-  const handleDownload = async () => {
+  const handlePreview = async () => {
     if (!currentRow) return
 
     await toast.promise(
@@ -44,27 +44,25 @@ export function UsersDialogs() {
               Expires: '0',
             },
             params: {
-              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+              t: Date.now(),
             },
           }
         )
 
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', currentRow.nama_file_asli)
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
+        const fileBlob = new Blob([response.data], { type: response.data.type })
+        const fileUrl = window.URL.createObjectURL(fileBlob)
 
-        // Tutup dialog setelah download berhasil
+        // 🔥 BUKA TAB BARU (TIDAK DOWNLOAD)
+        window.open(fileUrl, '_blank', 'noopener,noreferrer')
+
+        // Tutup dialog
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
       })(),
       {
-        loading: 'Mengunduh file...',
-        success: 'File berhasil diunduh!',
-        error: 'Gagal mengunduh file.',
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
       }
     )
   }
@@ -175,7 +173,7 @@ export function UsersDialogs() {
               setOpen('lihat')
               setTimeout(() => setCurrentRow(null), 500)
             }}
-            handleConfirm={handleDownload}
+            handleConfirm={handlePreview}
             className='max-w-md'
             title={`Unduh File: ${currentRow.nama_dokumen}`}
             desc={
@@ -184,7 +182,7 @@ export function UsersDialogs() {
                 <strong>{currentRow.nama_dokumen}</strong>.
               </>
             }
-            confirmText='Download'
+            confirmText='Lihat'
           />
 
           <ConfirmDialog

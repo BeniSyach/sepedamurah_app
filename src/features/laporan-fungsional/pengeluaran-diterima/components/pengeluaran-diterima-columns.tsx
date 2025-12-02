@@ -66,7 +66,7 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
 
     // ✅ Berkas Bulan
     {
-      accessorKey: 'Berkas Bulan',
+      accessorKey: 'tanggal_upload',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Bulan' />
       ),
@@ -86,7 +86,7 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
 
     // ✅ Jam Upload
     {
-      accessorKey: 'Jam Upload',
+      accessorKey: 'tanggal_upload',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Jam Upload' />
       ),
@@ -128,7 +128,7 @@ export const ReferensiLaporanFungsionalColumns: ColumnDef<LaporanFungsional>[] =
 
         return <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
       },
-      enableSorting: true,
+      enableSorting: false,
     },
 
     // ✅ Aksi

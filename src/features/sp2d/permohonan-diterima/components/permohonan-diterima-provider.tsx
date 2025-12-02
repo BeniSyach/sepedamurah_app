@@ -10,6 +10,7 @@ type RefSp2dItemDialogType =
   | 'periksa'
   | 'download'
   | 'lihat'
+  | 'downloadTTE'
 
 type RefSp2dItemContextType = {
   open: RefSp2dItemDialogType | null

@@ -58,6 +58,8 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -234,7 +236,6 @@ export function PermohonanDiterimaPeriksaDialog({
         const blob = new Blob([response.data], { type: 'application/pdf' })
         const url = URL.createObjectURL(blob)
         if (isMounted) setFileUrl(url)
-        toast.success('File berhasil diambil!')
       } catch (err: unknown) {
         const error = err as AxiosError
         toast.error(

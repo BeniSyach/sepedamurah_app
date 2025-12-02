@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useCallback, useState } from 'react'
 import { type BerkasLain } from '@/api'
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, rgb } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
@@ -44,12 +44,12 @@ export default function PdfEditorPdfLib({
   const [elements, setElements] = useState<ElementItem[]>([])
 
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
-
+  const PDF_SCALE = 1.35
   // ============================
   // GET ORIGINAL PDF SIZE
   // ============================
   const handlePageLoad = (page: any) => {
-    const viewport = page.getViewport({ scale: 1 })
+    const viewport = page.getViewport({ scale: PDF_SCALE })
     setCanvasSize({
       width: viewport.width,
       height: viewport.height,
@@ -63,6 +63,9 @@ export default function PdfEditorPdfLib({
     const link = `${window.location.origin}/verify-tte/berkaslain/${currentRow?.id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
 
+    const defaultWidth = 90
+    const defaultHeight = 90
+
     setElements((prev) => [
       ...prev,
       {
@@ -70,16 +73,22 @@ export default function PdfEditorPdfLib({
         type: 'barcode',
         src: qr,
         page: pageNumber,
+
+        // ⬇⬇ MUNCUL di FOOTER
         x: 40,
-        y: 40,
-        width: 90,
-        height: 90,
+        y: canvasSize.height - (defaultHeight + 20),
+
+        width: defaultWidth,
+        height: defaultHeight,
       },
     ])
   }
 
   const addVisual = () => {
     const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
+
+    const defaultWidth = 90
+    const defaultHeight = 90
 
     setElements((prev) => [
       ...prev,
@@ -88,10 +97,13 @@ export default function PdfEditorPdfLib({
         type: 'image',
         src: imgUrl,
         page: pageNumber,
-        x: 40,
-        y: 40,
-        width: 90,
-        height: 90,
+
+        // ⬇⬇ MUNCUL di FOOTER
+        x: 140,
+        y: canvasSize.height - (defaultHeight + 20),
+
+        width: defaultWidth,
+        height: defaultHeight,
       },
     ])
   }
@@ -104,17 +116,59 @@ export default function PdfEditorPdfLib({
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     const pages = pdfDoc.getPages()
 
+    // ===============================
+    // FOOTER TEXT (3 baris)
+    // ===============================
+    const footerText1 = '- UU ITE No 11 Tahun 2008 Pasal 5 ayat 1'
+    const footerText2 =
+      '"Informasi Elektronik dan/atau Dokumen Elektronik dan/atau hasil cetaknya merupakan alat bukti sah."'
+    const footerText3 =
+      '- Dokumen ini telah ditandatangani secara elektronik menggunakan sertifikat elektronik yang diterbitkan BsrE.'
+
+    // Font PDF
+    const font = await pdfDoc.embedFont('Helvetica')
+
+    // Loop halaman PDF
+    pages.forEach((page) => {
+      const margin = 40
+      const fontSize = 9
+
+      page.drawText(footerText1, {
+        x: margin,
+        y: 40,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      })
+
+      page.drawText(footerText2, {
+        x: margin,
+        y: 27,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      })
+
+      page.drawText(footerText3, {
+        x: margin,
+        y: 14,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      })
+    })
+
+    // ===============================
+    // RENDER ELEMENT (barcode + image)
+    // ===============================
     for (const el of elements) {
       const page = pages[el.page - 1]
-
       const pdfWidth = page.getWidth()
       const pdfHeight = page.getHeight()
 
-      // 🎯 PENTING — Gunakan ukuran asli PDF
       const scaleX = pdfWidth / canvasSize.width
       const scaleY = pdfHeight / canvasSize.height
 
-      // Load image
       let imgBytes: Uint8Array
       if (el.src.startsWith('data:image')) {
         const base64 = el.src.split(',')[1]
@@ -130,7 +184,6 @@ export default function PdfEditorPdfLib({
         embeddedImage = await pdfDoc.embedJpg(imgBytes)
       }
 
-      // 🎯 KONVERSI KOORDINAT PRESISI
       const X = el.x * scaleX
       const Y = pdfHeight - (el.y + el.height) * scaleY
       const W = el.width * scaleX
@@ -179,6 +232,7 @@ export default function PdfEditorPdfLib({
         >
           <Page
             pageNumber={pageNumber}
+            scale={PDF_SCALE}
             onLoadSuccess={handlePageLoad}
             className='pdf-page'
             canvasRef={(ref) => {

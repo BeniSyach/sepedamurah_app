@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type BerkasLain } from '@/api'
-import { Eye, Trash2, Pen, FolderCheck } from 'lucide-react'
+import { Eye, Trash2, Pen, FolderCheck, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -20,6 +20,9 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefBerkasLain()
+  const sudahDiTte =
+    row.original.file_sdh_tte && row.original.file_sdh_tte.trim() !== ''
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -39,7 +42,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('lihat')
             }}
           >
-            lihat
+            Lihat Berkas
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>
@@ -81,18 +84,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <Trash2 size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('berkasTTE')
-            }}
-          >
-            Download Berkas TTE
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {sudahDiTte && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('berkasTTE')
+                }}
+              >
+                Download Berkas TTE
+                <DropdownMenuShortcut>
+                  <Download size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

@@ -67,6 +67,8 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -407,6 +409,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
   const nilaiBelanja = Number(nilaiBelanjaRaw) || 0
 
   useEffect(() => {
+    if (!open) return
     if (!sumberDana?.length || !nilaiBelanja) return
     if (edit == 'edit' || edit == 'add') {
       let sisaBelanja = Number(nilaiBelanja)

@@ -2,6 +2,7 @@ import { useDeleteLaporanFungsional } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PenerimaanTTEBerkas } from '../../penerimaan/components/penerimaan-tte-action'
 import { UsersActionDialog } from './pengeluaran-action-dialog'
 import { PengeluaranPeriksa } from './pengeluaran-periksa'
 import { useRefLaporanFungsional } from './pengeluaran-provider'
@@ -20,7 +21,7 @@ export function UsersDialogs() {
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
 
-        return `Data "${currentRow.nama_file}" berhasil dihapus.`
+        return `Data "${currentRow.jenis_berkas}" berhasil dihapus.`
       },
       error: (err) => {
         return err.data.message
@@ -65,6 +66,45 @@ export function UsersDialogs() {
         loading: 'Mengunduh file...',
         success: 'File berhasil diunduh!',
         error: 'Gagal mengunduh file.',
+      }
+    )
+  }
+
+  // Fungsi preview file di tab baru
+  const handlePreview = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/laporan/fungsional/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // bypass cache
+            },
+          }
+        )
+
+        const fileBlob = new Blob([response.data], { type: response.data.type })
+        const fileUrl = window.URL.createObjectURL(fileBlob)
+
+        // Buka file di tab baru
+        window.open(fileUrl, '_blank', 'noopener,noreferrer')
+
+        // Tutup dialog
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
       }
     )
   }
@@ -132,6 +172,18 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
+          <PenerimaanTTEBerkas
+            key={`laporan-fungsional-penerimaan-TTE-Berkas-${currentRow.id}`}
+            open={open === 'TTEBerkas'}
+            onOpenChange={() => {
+              setOpen('TTEBerkas')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
+          />
+
           <UsersActionDialog
             key={`akses-kuasa-bud-edit-${currentRow.id}`}
             open={open === 'edit'}
@@ -168,7 +220,27 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`permohonan-spd-downloadBerkas-${currentRow.id}`}
+            key={`fungsional-pengeluaran-lihat-${currentRow.id}`}
+            destructive={false}
+            open={open === 'lihat'}
+            onOpenChange={() => {
+              setOpen('lihat')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handlePreview}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Lihat'
+          />
+
+          <ConfirmDialog
+            key={`fungsional-pengeluaran-downloadBerkas-${currentRow.id}`}
             destructive={false}
             open={open === 'downloadBerkas'}
             onOpenChange={() => {
@@ -188,7 +260,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`permohonan-spd-downloadBerkasTTE-${currentRow.id}`}
+            key={`fungsional-pengeluaran-downloadBerkasTTE-${currentRow.id}`}
             destructive={false}
             open={open === 'downloadBerkasTTE'}
             onOpenChange={() => {

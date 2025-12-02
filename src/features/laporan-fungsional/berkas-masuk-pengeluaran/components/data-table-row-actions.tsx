@@ -36,25 +36,24 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('lihat')
+              setOpen('periksa')
             }}
           >
-            lihat
+            Periksa Berkas
             <DropdownMenuShortcut>
-              <Eye size={16} />
+              <FolderSearch2 size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('periksa')
+              setOpen('lihat')
             }}
-            className='text-red-500!'
           >
-            periksa berkas
+            Lihat
             <DropdownMenuShortcut>
-              <FolderSearch2 size={16} />
+              <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

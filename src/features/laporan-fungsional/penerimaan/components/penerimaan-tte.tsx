@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { useState, createRef } from 'react'
 import { useEffect, useCallback, useState } from 'react'
-import { type Sp2dItem } from '@/api'
+import { type LaporanFungsional } from '@/api'
 import { PDFDocument, rgb } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import { Document, Page, pdfjs } from 'react-pdf'
@@ -29,23 +28,25 @@ export default function PdfEditorPdfLib({
   onExport,
   onSaveTrigger,
 }: {
-  currentRow?: Sp2dItem
+  currentRow?: LaporanFungsional
   onExport?: (file: File) => void
   onSaveTrigger?: (fn: () => Promise<void>) => void
 }) {
   const ASSET_URL = import.meta.env.VITE_ASSET_URL
   const user = useAuthStore((s) => s.user)
+
   const [pdfUrl] = useState(
-    `${ASSET_URL}public-file/${currentRow?.sp2dkirim[0].nama_file_asli}`
+    `${ASSET_URL}public-file/${currentRow?.nama_file_asli}`
   )
+
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [elements, setElements] = useState<ElementItem[]>([])
 
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
-  const PDF_SCALE = 1.1
+  const PDF_SCALE = 1
   // ============================
-  // FIX: Ambil ukuran asli PDF
+  // GET ORIGINAL PDF SIZE
   // ============================
   const handlePageLoad = (page: any) => {
     const viewport = page.getViewport({ scale: PDF_SCALE })
@@ -54,9 +55,12 @@ export default function PdfEditorPdfLib({
       height: viewport.height,
     })
   }
-  // Tambah QR/barcode
+
+  // ============================
+  // ADD ELEMENT
+  // ============================
   const addBarcode = async () => {
-    const link = `${window.location.origin}/verify-tte/sp2d/${currentRow?.sp2dkirim[0].id}`
+    const link = `${window.location.origin}/verify-tte/fungsional/${currentRow?.id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
 
     const defaultWidth = 90
@@ -80,7 +84,6 @@ export default function PdfEditorPdfLib({
     ])
   }
 
-  // Tambah logo/image
   const addVisual = () => {
     const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
 
@@ -105,6 +108,9 @@ export default function PdfEditorPdfLib({
     ])
   }
 
+  // ============================
+  // EXPORT PDF — FIXED !!!
+  // ============================
   const exportToPDF = useCallback(async () => {
     const existingPdfBytes = await fetch(pdfUrl).then((r) => r.arrayBuffer())
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -205,8 +211,12 @@ export default function PdfEditorPdfLib({
   useEffect(() => {
     if (onSaveTrigger) onSaveTrigger(exportToPDF)
   }, [exportToPDF])
+
+  // ============================
+  // RENDER
+  // ============================
   return (
-    <div className='flex flex-col items-center gap-3'>
+    <div className='flex flex-col items-center gap-4'>
       <div
         id='pdf-container'
         style={{
@@ -236,6 +246,7 @@ export default function PdfEditorPdfLib({
           />
         </Document>
 
+        {/* Draggable Elements */}
         {elements
           .filter((el) => el.page === pageNumber)
           .map((el) => (
@@ -251,13 +262,7 @@ export default function PdfEditorPdfLib({
                   )
                 )
               }}
-              onResizeStop={(
-                _e: any,
-                _direction: any,
-                ref: HTMLElement,
-                _delta: { width: number; height: number },
-                pos: { x: number; y: number }
-              ) => {
+              onResizeStop={(_e, _d, ref, _delta, pos) => {
                 setElements((prev) =>
                   prev.map((x) =>
                     x.id === el.id

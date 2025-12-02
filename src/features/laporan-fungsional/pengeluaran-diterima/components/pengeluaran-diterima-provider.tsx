@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import { type LaporanFungsional } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefLaporanFungsionalDialogType = 'lihat' | 'download' | 'periksa' | 'add'
+type RefLaporanFungsionalDialogType =
+  | 'lihat'
+  | 'download'
+  | 'periksa'
+  | 'add'
+  | 'downloadBerkasTTE'
 
 type RefLaporanFungsionalContextType = {
   open: RefLaporanFungsionalDialogType | null

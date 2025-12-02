@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type Sp2dItem } from '@/api'
+import { type Sp2dData, type Sp2dItem } from '@/api'
 import { Download, Eye, FileSearch, Send, Trash2, UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,7 +22,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefSp2dItem()
   const sudahDikirim =
     row.original.sp2dkirim && row.original.sp2dkirim.length > 0
-
+  const sudahDiTte = sudahDikirim
+    ? row.original.sp2dkirim.filter(
+        (item: Sp2dData) => item.tte !== null && item.tte.trim() !== ''
+      )
+    : []
   const levelAkses = localStorage.getItem('user_role')
   return (
     <>
@@ -127,6 +131,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <Download size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
+          {sudahDiTte.length > 0 && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('downloadTTE')
+                }}
+              >
+                Download Berkas TTE
+                <DropdownMenuShortcut>
+                  <Download size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

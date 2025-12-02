@@ -66,7 +66,7 @@ export const ReferensiSp2dItemColumns: ColumnDef<Sp2dItem>[] = [
 
   // ✅ no_spm
   {
-    accessorKey: 'namafile_sp2dkirim',
+    accessorKey: 'namafile',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='No SP2D' />
     ),

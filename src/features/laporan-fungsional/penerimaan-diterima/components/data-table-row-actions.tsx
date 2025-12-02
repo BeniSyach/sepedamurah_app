@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type LaporanFungsional } from '@/api'
-import { Eye, FolderSearch } from 'lucide-react'
+import { Download, DownloadCloudIcon, Eye, FolderSearch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,6 +19,9 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefLaporanFungsional()
+  const sudahDiTteLaporanFungsional = (item: LaporanFungsional): boolean => {
+    return item.berkas_tte !== '' && item.berkas_tte != null
+  }
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,38 +38,55 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
+              setOpen('periksa')
+            }}
+          >
+            Periksa
+            <DropdownMenuShortcut>
+              <FolderSearch size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
               setOpen('lihat')
             }}
           >
-            lihat
+            Lihat
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          {/* <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
               setOpen('download')
             }}
           >
-            download
+            Download
             <DropdownMenuShortcut>
               <Download size={16} />
             </DropdownMenuShortcut>
-          </DropdownMenuItem> */}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            periksa
-            <DropdownMenuShortcut>
-              <FolderSearch size={16} />
-            </DropdownMenuShortcut>
           </DropdownMenuItem>
+
+          {sudahDiTteLaporanFungsional(row.original) && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('downloadBerkasTTE')
+                }}
+              >
+                Download Berkas TTE
+                <DropdownMenuShortcut>
+                  <DownloadCloudIcon size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
