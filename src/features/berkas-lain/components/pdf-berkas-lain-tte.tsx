@@ -44,7 +44,7 @@ export default function PdfEditorPdfLib({
 
   // Tambah QR/barcode
   const addBarcode = async () => {
-    const link = `${window.location.origin}/verify-tte/${currentRow?.id}`
+    const link = `${window.location.origin}/verify-tte-berkaslain/${currentRow?.id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo_pemkab.png')
     setElements((prev) => [
       ...prev,
