@@ -76,7 +76,7 @@ export default function PdfEditorPdfLib({
 
   // Tambah logo/image
   const addVisual = () => {
-    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
+    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/sp2d/${user?.visualisasi_tte}`
 
     setElements((prev) => [
       ...prev,
