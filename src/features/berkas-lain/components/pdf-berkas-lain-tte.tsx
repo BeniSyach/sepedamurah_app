@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { type BerkasLain } from '@/api'
 import { PDFDocument } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
@@ -46,7 +46,7 @@ export default function PdfEditorPdfLib({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
   // ============================
-  // FIX: Ambil ukuran asli PDF
+  // GET ORIGINAL PDF SIZE
   // ============================
   const handlePageLoad = (page: any) => {
     const viewport = page.getViewport({ scale: 1 })
@@ -56,9 +56,9 @@ export default function PdfEditorPdfLib({
     })
   }
 
-  // =======================
-  //     ADD ELEMENT
-  // =======================
+  // ============================
+  // ADD ELEMENT
+  // ============================
   const addBarcode = async () => {
     const link = `${window.location.origin}/verify-tte-berkaslain/${currentRow?.id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
@@ -96,15 +96,14 @@ export default function PdfEditorPdfLib({
     ])
   }
 
-  // =======================
-  //        EXPORT
-  // =======================
-  const exportToPDF = async () => {
+  // ============================
+  // EXPORT PDF — FIXED !!!
+  // ============================
+  const exportToPDF = useCallback(async () => {
     const container = document.getElementById('pdf-container')
     if (!container) return
 
     const rect = container.getBoundingClientRect()
-
     const existingPdfBytes = await fetch(pdfUrl).then((r) => r.arrayBuffer())
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     const pages = pdfDoc.getPages()
@@ -147,25 +146,22 @@ export default function PdfEditorPdfLib({
 
     const finalBytes = await pdfDoc.save()
     const file = new File(
-      [Uint8Array.from(finalBytes)],
+      [new Blob([finalBytes], { type: 'application/pdf' })],
       `${currentRow?.nama_dokumen || 'edited'}.pdf`,
       { type: 'application/pdf' }
     )
-    // const blob = new Blob([Uint8Array.from(finalBytes)], {
-    //   type: 'application/pdf',
-    // })
-    // const url = URL.createObjectURL(blob)
-    // window.open(url, '_blank')
-    onExport?.(file)
-  }
 
+    onExport?.(file)
+  }, [elements, pdfUrl, currentRow])
+
+  // Parent menerima fungsi EXPORT versi terbaru
   useEffect(() => {
     if (onSaveTrigger) onSaveTrigger(exportToPDF)
-  }, [])
+  }, [exportToPDF])
 
-  // =======================
-  //        RENDER
-  // =======================
+  // ============================
+  // RENDER
+  // ============================
   return (
     <div className='flex flex-col items-center gap-4'>
       <div
@@ -196,6 +192,7 @@ export default function PdfEditorPdfLib({
           />
         </Document>
 
+        {/* Draggable Elements */}
         {elements
           .filter((el) => el.page === pageNumber)
           .map((el) => (

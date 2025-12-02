@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useState, createRef } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { type Sp2dItem } from '@/api'
 import { PDFDocument } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
@@ -93,15 +93,11 @@ export default function PdfEditorPdfLib({
     ])
   }
 
-  // =======================
-  //        EXPORT
-  // =======================
-  const exportToPDF = async () => {
+  const exportToPDF = useCallback(async () => {
     const container = document.getElementById('pdf-container')
     if (!container) return
 
     const rect = container.getBoundingClientRect()
-
     const existingPdfBytes = await fetch(pdfUrl).then((r) => r.arrayBuffer())
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     const pages = pdfDoc.getPages()
@@ -144,22 +140,18 @@ export default function PdfEditorPdfLib({
 
     const finalBytes = await pdfDoc.save()
     const file = new File(
-      [Uint8Array.from(finalBytes)],
+      [new Blob([finalBytes], { type: 'application/pdf' })],
       `${currentRow?.nama_file || 'edited'}.pdf`,
       { type: 'application/pdf' }
     )
-    // const blob = new Blob([Uint8Array.from(finalBytes)], {
-    //   type: 'application/pdf',
-    // })
-    // const url = URL.createObjectURL(blob)
-    // window.open(url, '_blank')
-    onExport?.(file)
-  }
 
+    onExport?.(file)
+  }, [elements, pdfUrl, currentRow])
+
+  // Parent menerima fungsi EXPORT versi terbaru
   useEffect(() => {
     if (onSaveTrigger) onSaveTrigger(exportToPDF)
-  }, [])
-
+  }, [exportToPDF])
   return (
     <div className='flex flex-col items-center gap-3'>
       <div
@@ -205,7 +197,13 @@ export default function PdfEditorPdfLib({
                   )
                 )
               }}
-              onResizeStop={(_e, _d, ref, _delta, pos) => {
+              onResizeStop={(
+                _e: any,
+                _direction: any,
+                ref: HTMLElement,
+                _delta: { width: number; height: number },
+                pos: { x: number; y: number }
+              ) => {
                 setElements((prev) =>
                   prev.map((x) =>
                     x.id === el.id
