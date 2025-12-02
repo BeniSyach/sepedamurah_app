@@ -157,7 +157,7 @@ export function BerkasLainTTE({
         <div className='flex h-full flex-col'>
           {/* FORM + DOCUMENT */}
           <div className='flex flex-1 gap-4 overflow-hidden'>
-            <div className='flex-1 overflow-y-auto border-r p-3'>
+            <div className='flex-[0.50] overflow-y-auto border-r p-3'>
               <Form {...form}>
                 <form
                   id='berkas-masuk-form'
@@ -203,7 +203,7 @@ export function BerkasLainTTE({
                 </form>
               </Form>
             </div>
-            <div className='flex-1 overflow-auto border-l p-10'>
+            <div className='flex-1 overflow-auto border-l'>
               <PdfEditorPdfLib
                 currentRow={currentRow}
                 onExport={(file) => {
