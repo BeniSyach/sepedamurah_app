@@ -27,7 +27,7 @@ export function PermohonanSp2dTTE() {
     sort_by: search.sort_by ?? 'tanggal_upload',
     sort_dir: search.sort_dir ?? 'asc',
     menu: 'sp2d_tte',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    ...(userRole === 'Kuasa BUD' ? { user_id: user?.id } : {}),
   })
 
   return (
