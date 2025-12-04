@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type SpdTerkirim } from '@/api'
-import { Eye, FileSearch, UserPen, X } from 'lucide-react'
+import { Eye, FileSearch, Trash, UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -59,22 +59,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('tolak')
+              setOpen('delete')
             }}
             className='text-red-500!'
           >
-            Tolak
+            Hapus
             <DropdownMenuShortcut>
-              <X size={16} />
+              <Trash size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('tolak')
+              setOpen('lihat')
             }}
-            className='text-red-500!'
           >
             Lihat Berkas
             <DropdownMenuShortcut>

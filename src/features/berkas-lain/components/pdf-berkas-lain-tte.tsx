@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useCallback, useState } from 'react'
 import { type BerkasLain } from '@/api'
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb, degrees } from 'pdf-lib'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
@@ -23,6 +23,12 @@ type ElementItem = {
   height: number
 }
 
+type PageDimensions = {
+  width: number
+  height: number
+  isLandscape: boolean
+}
+
 export default function PdfEditorPdfLib({
   currentRow,
   onExport,
@@ -42,23 +48,31 @@ export default function PdfEditorPdfLib({
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [elements, setElements] = useState<ElementItem[]>([])
+  const [pageDimensions, setPageDimensions] = useState<
+    Record<number, PageDimensions>
+  >({})
 
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
-  const PDF_SCALE = 1.35
-  // ============================
-  // GET ORIGINAL PDF SIZE
-  // ============================
-  const handlePageLoad = (page: any) => {
-    const viewport = page.getViewport({ scale: PDF_SCALE })
-    setCanvasSize({
-      width: viewport.width,
-      height: viewport.height,
-    })
+  const PDF_SCALE = 1
+  const currentPageDim = pageDimensions[pageNumber] || {
+    width: 0,
+    height: 0,
+    isLandscape: false,
   }
 
-  // ============================
-  // ADD ELEMENT
-  // ============================
+  const handlePageLoad = (page: any) => {
+    const viewport = page.getViewport({ scale: PDF_SCALE })
+    const width = viewport.width
+    const height = viewport.height
+    const isLandscape = width > height
+
+    // console.log(`📄 Page ${pageNumber} loaded:`, { width, height, isLandscape })
+
+    setPageDimensions((prev) => ({
+      ...prev,
+      [pageNumber]: { width, height, isLandscape },
+    }))
+  }
+
   const addBarcode = async () => {
     const link = `${window.location.origin}/verify-tte/berkaslain/${currentRow?.id}`
     const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
@@ -73,11 +87,8 @@ export default function PdfEditorPdfLib({
         type: 'barcode',
         src: qr,
         page: pageNumber,
-
-        // ⬇⬇ MUNCUL di FOOTER
         x: 40,
-        y: canvasSize.height - (defaultHeight + 20),
-
+        y: currentPageDim.height - (defaultHeight + 20),
         width: defaultWidth,
         height: defaultHeight,
       },
@@ -97,77 +108,129 @@ export default function PdfEditorPdfLib({
         type: 'image',
         src: imgUrl,
         page: pageNumber,
-
-        // ⬇⬇ MUNCUL di FOOTER
         x: 140,
-        y: canvasSize.height - (defaultHeight + 20),
-
+        y: currentPageDim.height - (defaultHeight + 20),
         width: defaultWidth,
         height: defaultHeight,
       },
     ])
   }
 
-  // ============================
-  // EXPORT PDF — FIXED !!!
-  // ============================
   const exportToPDF = useCallback(async () => {
     const existingPdfBytes = await fetch(pdfUrl).then((r) => r.arrayBuffer())
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     const pages = pdfDoc.getPages()
 
-    // ===============================
-    // FOOTER TEXT (3 baris)
-    // ===============================
     const footerText1 = '- UU ITE No 11 Tahun 2008 Pasal 5 ayat 1'
     const footerText2 =
       '"Informasi Elektronik dan/atau Dokumen Elektronik dan/atau hasil cetaknya merupakan alat bukti sah."'
     const footerText3 =
       '- Dokumen ini telah ditandatangani secara elektronik menggunakan sertifikat elektronik yang diterbitkan BsrE.'
 
-    // Font PDF
     const font = await pdfDoc.embedFont('Helvetica')
 
-    // Loop halaman PDF
     pages.forEach((page) => {
+      const pageWidth = page.getWidth()
+      const pageHeight = page.getHeight()
+      const rotation = page.getRotation().angle
       const margin = 40
       const fontSize = 9
 
-      page.drawText(footerText1, {
-        x: margin,
-        y: 40,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      })
+      // console.log(
+      //   `Page ${index + 1}: ${pageWidth}x${pageHeight}, rotation: ${rotation}°`
+      // )
 
-      page.drawText(footerText2, {
-        x: margin,
-        y: 27,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      })
-
-      page.drawText(footerText3, {
-        x: margin,
-        y: 14,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      })
+      if (rotation === 90 || rotation === 270) {
+        if (rotation === 90) {
+          page.drawText(footerText1, {
+            x: pageWidth - 40,
+            y: margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(90),
+          })
+          page.drawText(footerText2, {
+            x: pageWidth - 27,
+            y: margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(90),
+          })
+          page.drawText(footerText3, {
+            x: pageWidth - 14,
+            y: margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(90),
+          })
+        } else {
+          page.drawText(footerText1, {
+            x: 40,
+            y: pageHeight - margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(270),
+          })
+          page.drawText(footerText2, {
+            x: 27,
+            y: pageHeight - margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(270),
+          })
+          page.drawText(footerText3, {
+            x: 14,
+            y: pageHeight - margin,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+            rotate: degrees(270),
+          })
+        }
+      } else {
+        page.drawText(footerText1, {
+          x: margin,
+          y: 40,
+          size: fontSize,
+          font,
+          color: rgb(0, 0, 0),
+        })
+        page.drawText(footerText2, {
+          x: margin,
+          y: 27,
+          size: fontSize,
+          font,
+          color: rgb(0, 0, 0),
+        })
+        page.drawText(footerText3, {
+          x: margin,
+          y: 14,
+          size: fontSize,
+          font,
+          color: rgb(0, 0, 0),
+        })
+      }
     })
 
-    // ===============================
-    // RENDER ELEMENT (barcode + image)
-    // ===============================
     for (const el of elements) {
       const page = pages[el.page - 1]
       const pdfWidth = page.getWidth()
       const pdfHeight = page.getHeight()
+      const rotation = page.getRotation().angle
 
-      const scaleX = pdfWidth / canvasSize.width
-      const scaleY = pdfHeight / canvasSize.height
+      const canvasDim = pageDimensions[el.page]
+      if (!canvasDim) {
+        // console.warn(`Dimensi halaman ${el.page} tidak ditemukan`)
+        continue
+      }
+
+      const scaleX = pdfWidth / canvasDim.width
+      const scaleY = pdfHeight / canvasDim.height
 
       let imgBytes: Uint8Array
       if (el.src.startsWith('data:image')) {
@@ -181,20 +244,88 @@ export default function PdfEditorPdfLib({
       try {
         embeddedImage = await pdfDoc.embedPng(imgBytes)
       } catch {
-        embeddedImage = await pdfDoc.embedJpg(imgBytes)
+        try {
+          embeddedImage = await pdfDoc.embedJpg(imgBytes)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          // console.error('Failed to embed image:', error)
+          continue
+        }
       }
 
-      const X = el.x * scaleX
-      const Y = pdfHeight - (el.y + el.height) * scaleY
-      const W = el.width * scaleX
-      const H = el.height * scaleY
+      if (rotation === 90) {
+        // Rotation 90° - Transform coordinates
+        const correction = el.type === 'image' ? 160 : 0
+        const correctionX = el.type === 'image' ? 25 : 0
+        const pdfX =
+          (canvasDim.height - el.y - el.height) * scaleY + 100 - correctionX
+        const pdfY = el.x * scaleX + correction
+        const W = el.height * scaleY
+        const H = el.width * scaleX
 
-      page.drawImage(embeddedImage, {
-        x: X,
-        y: Y,
-        width: W,
-        height: H,
-      })
+        // console.log(
+        //   `🔄 90° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)}) | scale: ${scaleX.toFixed(3)},${scaleY.toFixed(3)}`
+        // )
+
+        page.drawImage(embeddedImage, {
+          x: pdfX,
+          y: pdfY,
+          width: W,
+          height: H,
+          rotate: degrees(90),
+        })
+      } else if (rotation === 270) {
+        const pdfX = el.y * scaleY
+        const pdfY = (canvasDim.width - el.x - el.width) * scaleX
+        const W = el.height * scaleY
+        const H = el.width * scaleX
+
+        // console.log(
+        //   `🔄 270° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)})`
+        // )
+
+        page.drawImage(embeddedImage, {
+          x: pdfX,
+          y: pdfY,
+          width: W,
+          height: H,
+          rotate: degrees(270),
+        })
+      } else if (rotation === 180) {
+        const pdfX = (canvasDim.width - el.x - el.width) * scaleX
+        const pdfY = el.y * scaleY
+        const W = el.width * scaleX
+        const H = el.height * scaleY
+
+        // console.log(
+        //   `🔄 180° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)})`
+        // )
+
+        page.drawImage(embeddedImage, {
+          x: pdfX,
+          y: pdfY,
+          width: W,
+          height: H,
+          rotate: degrees(180),
+        })
+      } else {
+        // No rotation
+        const pdfX = el.x * scaleX
+        const pdfY = pdfHeight - (el.y + el.height) * scaleY
+        const W = el.width * scaleX
+        const H = el.height * scaleY
+
+        // console.log(
+        //   `📄 0° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)})`
+        // )
+
+        page.drawImage(embeddedImage, {
+          x: pdfX,
+          y: pdfY,
+          width: W,
+          height: H,
+        })
+      }
     }
 
     const finalBytes = await pdfDoc.save()
@@ -205,16 +336,26 @@ export default function PdfEditorPdfLib({
     })
 
     onExport?.(file)
-  }, [elements, pdfUrl, currentRow, canvasSize])
 
-  // Parent menerima fungsi EXPORT versi terbaru
+    // const finalBytes = await pdfDoc.save()
+    // const blob = new Blob([finalBytes], { type: 'application/pdf' })
+
+    // window.open(URL.createObjectURL(blob), '_blank')
+
+    // const file = new File(
+    //   [blob],
+    //   `${currentRow?.nama_dokumen ?? 'export'}.pdf`,
+    //   {
+    //     type: 'application/pdf',
+    //   }
+    // )
+    // onExport?.(file)
+  }, [elements, pdfUrl, currentRow, pageDimensions])
+
   useEffect(() => {
     if (onSaveTrigger) onSaveTrigger(exportToPDF)
-  }, [exportToPDF])
+  }, [exportToPDF, onSaveTrigger])
 
-  // ============================
-  // RENDER
-  // ============================
   return (
     <div className='flex flex-col items-center gap-4'>
       <div
@@ -222,8 +363,9 @@ export default function PdfEditorPdfLib({
         style={{
           position: 'relative',
           border: '1px solid #ddd',
-          width: canvasSize.width,
-          height: canvasSize.height,
+          width: currentPageDim.width || 'auto',
+          height: currentPageDim.height || 'auto',
+          backgroundColor: '#f5f5f5',
         }}
       >
         <Document
@@ -246,7 +388,6 @@ export default function PdfEditorPdfLib({
           />
         </Document>
 
-        {/* Draggable Elements */}
         {elements
           .filter((el) => el.page === pageNumber)
           .map((el) => (
@@ -278,9 +419,10 @@ export default function PdfEditorPdfLib({
                 )
               }}
               style={{
-                border: '1px dashed #999',
-                background: 'white',
+                border: '2px dashed #4CAF50',
+                background: 'rgba(255, 255, 255, 0.9)',
                 zIndex: 50,
+                cursor: 'move',
               }}
             >
               <img
@@ -291,6 +433,7 @@ export default function PdfEditorPdfLib({
                   height: '100%',
                   userSelect: 'none',
                   pointerEvents: 'none',
+                  objectFit: 'contain',
                 }}
               />
             </Rnd>
@@ -299,24 +442,30 @@ export default function PdfEditorPdfLib({
 
       <p className='text-sm text-gray-500'>
         Halaman {pageNumber} dari {numPages}
+        {currentPageDim.isLandscape ? ' 🔄 Landscape' : ' 📄 Portrait'}
+        {currentPageDim.width > 0 &&
+          ` - ${Math.round(currentPageDim.width)}x${Math.round(currentPageDim.height)}px`}
       </p>
 
-      <div className='mb-3 flex gap-2'>
+      <div className='mb-3 flex flex-wrap gap-2'>
         <button
           onClick={addBarcode}
-          className='rounded bg-blue-500 px-3 py-1 text-white'
+          className='rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:bg-gray-300'
+          disabled={currentPageDim.width === 0}
         >
-          + Barcode
+          + Barcode QR
         </button>
         <button
           onClick={addVisual}
-          className='rounded bg-green-500 px-3 py-1 text-white'
+          className='rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:bg-gray-300'
+          disabled={currentPageDim.width === 0}
         >
-          + Visual
+          + Visualisasi TTE
         </button>
         <button
           onClick={() => pageNumber > 1 && setPageNumber((p) => p - 1)}
-          className='rounded bg-gray-400 px-3 py-1 text-white'
+          className='rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500'
+          disabled={pageNumber <= 1}
         >
           ← Prev
         </button>
@@ -324,15 +473,16 @@ export default function PdfEditorPdfLib({
           onClick={() =>
             pageNumber < (numPages || 1) && setPageNumber((p) => p + 1)
           }
-          className='rounded bg-gray-400 px-3 py-1 text-white'
+          className='rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500'
+          disabled={pageNumber >= (numPages || 1)}
         >
           Next →
         </button>
         <button
           onClick={exportToPDF}
-          className='rounded bg-red-500 px-3 py-1 text-white'
+          className='rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600'
         >
-          Export PDF
+          💾 Export PDF
         </button>
       </div>
     </div>

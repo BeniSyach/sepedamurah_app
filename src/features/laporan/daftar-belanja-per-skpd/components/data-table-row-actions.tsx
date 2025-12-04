@@ -37,7 +37,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('lihat')
             }}
           >
-            lihat
+            Lihat Detail
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>

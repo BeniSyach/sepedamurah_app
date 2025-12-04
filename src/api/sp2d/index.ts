@@ -1,2 +1,7 @@
 export * from './permohonan-sp2d'
 export * from './sp2d-kirim'
+export * from './check_sd'
+export * from './hapus-multi-sp2d'
+export * from './sign-sp2d'
+export * from './terima-berkas-masuk-multi'
+export * from './tolak-berkas-masuk-multi'

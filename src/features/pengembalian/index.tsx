@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetPengembalian } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -16,12 +18,22 @@ const route = getRouteApi('/_authenticated/pengembalian/')
 export function Pengembalian() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
+  // const hasUserSelectedDate = Boolean(dateRange.from && dateRange.to)
+  // Gunakan dateRange jika ada, jika tidak fallback ke default
+  const finalFrom = dateRange?.from
+  const finalTo = dateRange?.to
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetPengembalian({
     page: search.page,
     perPage: search.pageSize,
     search: search.nama,
+    date_from: finalFrom && format(finalFrom, 'yyyy-MM-dd'),
+    date_to: finalTo && format(finalTo, 'yyyy-MM-dd'),
+    status: search.status,
+    sort_by: search.sort_by || 'tgl_rekam',
+    sort_dir: search.sort_dir || 'desc',
   })
 
   return (
@@ -57,6 +69,8 @@ export function Pengembalian() {
               meta={data?.meta}
               search={search}
               navigate={navigate}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
             />
           )}
         </div>

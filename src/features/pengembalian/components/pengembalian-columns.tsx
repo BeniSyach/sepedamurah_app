@@ -1,39 +1,9 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type Pengembalian } from '@/api'
-import { cn, formatRupiah, formatTanggal } from '@/lib/utils'
-import { Checkbox } from '@/components/ui/checkbox'
+import { formatRupiah, formatTanggal } from '@/lib/utils'
 import { DataTableColumnHeader } from '@/components/data-table'
 
 export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
-  // ✅ Checkbox selector
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-        className='translate-y-[2px]'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-        className='translate-y-[2px]'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    meta: {
-      className: cn('sticky start-0 z-10 rounded-tl-[inherit] bg-background'),
-    },
-  },
-
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
   {
     id: 'no',
@@ -105,7 +75,7 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'keterangan',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='keterangan' />
+      <DataTableColumnHeader column={column} title='Keterangan' />
     ),
     cell: ({ row }) => <div>{row.getValue('keterangan')}</div>,
     enableSorting: true,
@@ -115,7 +85,7 @@ export const ReferensiPengembalianColumns: ColumnDef<Pengembalian>[] = [
   {
     accessorKey: 'nm_rekening',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='nm_rekening' />
+      <DataTableColumnHeader column={column} title='Nama Rekening' />
     ),
     cell: ({ row }) => <div>{row.getValue('nm_rekening')}</div>,
     enableSorting: true,

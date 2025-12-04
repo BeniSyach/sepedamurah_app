@@ -6,7 +6,11 @@ interface UsePengembalian {
   page?: number
   perPage?: number
   search?: string
-  nik?: string
+  date_from?: string | undefined
+  date_to?: string | undefined
+  sort_by?: string | undefined
+  sort_dir?: string | undefined
+  status?: string | undefined
 }
 
 export function useGetPengembalian(params: UsePengembalian) {
@@ -18,7 +22,11 @@ export function useGetPengembalian(params: UsePengembalian) {
           page: params.page ?? 1,
           per_page: params.perPage ?? 10,
           search: params.search ?? '',
-          nik: params.nik ?? '',
+          date_from: params.date_from ?? '',
+          date_to: params.date_to ?? '',
+          sort_by: params.sort_by ?? '',
+          sort_dir: params.sort_dir ?? '',
+          status: params.status ?? '',
         },
       })
       return data

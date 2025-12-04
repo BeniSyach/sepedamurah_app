@@ -3,8 +3,13 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type SpdTerkirim } from '@/api'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import {
+  type SpdTerkirim,
+  usePostPermohonanSpd,
+  usePutPermohonanSpd,
+} from '@/api'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,115 +28,103 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
-    username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
-    email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, 'Role is required.'),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true
-      return data.password.length > 0
-    },
-    {
-      message: 'Password is required.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return password.length >= 8
-    },
-    {
-      message: 'Password must be at least 8 characters long.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /[a-z]/.test(password)
-    },
-    {
-      message: 'Password must contain at least one lowercase letter.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true
-      return /\d/.test(password)
-    },
-    {
-      message: 'Password must contain at least one number.',
-      path: ['password'],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true
-      return password === confirmPassword
-    },
-    {
-      message: "Passwords don't match.",
-      path: ['confirmPassword'],
-    }
-  )
-type UserForm = z.infer<typeof formSchema>
+const formSchema = z.object({
+  id: z.string().optional(),
+  namafile: z.string().min(1, 'Permohonan SPD Harus Ada.'),
+  nama_file_asli: z
+    .any()
+    .refine(
+      (val) =>
+        (val instanceof FileList &&
+          val.length > 0 &&
+          val[0].type === 'application/pdf') ||
+        (typeof val === 'string' && val.trim() !== ''),
+      'File harus PDF atau sudah ada file sebelumnya.'
+    ),
+  id_penerima: z.string().min(1, 'Pengirim Harus Ada.'),
+  nama_penerima: z.string().min(1, 'Pengirim Harus Ada.'),
+  kd_opd1: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd2: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
+})
+type PermohonanSPDForm = z.infer<typeof formSchema>
 
-type UserActionDialogProps = {
+type PermohonanSPDActionDialogProps = {
   currentRow?: SpdTerkirim
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function UsersActionDialog({
+export function PermohonanSPDKirimsActionDialog({
   currentRow,
   open,
   onOpenChange,
-}: UserActionDialogProps) {
+}: PermohonanSPDActionDialogProps) {
   const isEdit = !!currentRow
-  const form = useForm<UserForm>({
+  const user = useAuthStore((s) => s.user)
+
+  const { mutateAsync: postPermohonanSPDAsync } = usePostPermohonanSpd()
+  const { mutateAsync: putPermohonanSPDAsync } = usePutPermohonanSpd()
+
+  const form = useForm<PermohonanSPDForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
-      : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+    defaultValues: currentRow ?? {
+      id: '',
+      namafile: '',
+      nama_file_asli: undefined,
+      id_penerima: user?.id.toString(),
+      nama_penerima: user?.name,
+      kd_opd1: user?.kd_opd1,
+      kd_opd2: user?.kd_opd2,
+      kd_opd3: user?.kd_opd3,
+      kd_opd4: user?.kd_opd4,
+      kd_opd5: user?.kd_opd5,
+    },
   })
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
-  }
+  const onSubmit = async (data: PermohonanSPDForm) => {
+    const formData = new FormData()
+    formData.append('id', data.id || '')
+    formData.append('namafile', data.namafile)
+    formData.append('id_penerima', data.id_penerima)
+    formData.append('nama_penerima', data.nama_penerima)
+    formData.append('kd_opd1', data.kd_opd1)
+    formData.append('kd_opd2', data.kd_opd2)
+    formData.append('kd_opd3', data.kd_opd3)
+    formData.append('kd_opd4', data.kd_opd4)
+    formData.append('kd_opd5', data.kd_opd5)
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
+    // Jika user upload file baru
+    if (
+      data.nama_file_asli instanceof FileList &&
+      data.nama_file_asli.length > 0
+    ) {
+      formData.append('nama_file_asli', data.nama_file_asli[0])
+    }
+    const requestPromise = isEdit
+      ? putPermohonanSPDAsync(formData)
+      : postPermohonanSPDAsync(formData)
+
+    await toast.promise(requestPromise, {
+      loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
+      success: () => {
+        onOpenChange(false)
+        form.reset()
+        return isEdit
+          ? 'Data Permohonan SPD berhasil diperbarui!'
+          : 'Data Permohonan SPD berhasil ditambahkan!'
+      },
+      error: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        return message
+      },
+    })
+  }
 
   return (
     <Dialog
@@ -143,31 +136,37 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>
+            {' '}
+            {isEdit ? 'Edit Permohonan SPD' : 'Tambah Baru Permohonan SPD'}
+          </DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit
+              ? 'Perbarui Permohonan SPD disini. '
+              : 'Tambah baru Permohonan SPD disini. '}
+            Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='PermohonanSPD-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='namafile'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      First Name
+                      Permohonan SPD
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='John'
+                        placeholder='Permohonan SPD'
                         className='col-span-4'
+                        accept='application/pdf'
                         autoComplete='off'
                         {...field}
                       />
@@ -178,115 +177,31 @@ export function UsersActionDialog({
               />
               <FormField
                 control={form.control}
-                name='lastName'
+                name='nama_file_asli'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Last Name
+                      Upload File
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john.doe@gmail.com'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='+123456789'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
+                    <div className='col-span-4 flex flex-col'>
+                      <FormControl>
+                        <Input
+                          type='file'
+                          accept='application/pdf'
+                          className='file:bg-primary hover:file:bg-primary/90 h-9 px-3 py-1 text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-gray-500'
+                          onChange={(e) => field.onChange(e.target.files)}
+                        />
+                      </FormControl>
+
+                      {/* Preview nama file */}
+                      {field.value && field.value.length > 0 && (
+                        <span className='mt-1 text-xs text-gray-600'>
+                          {field.value[0].name}
+                        </span>
+                      )}
+
+                      <FormMessage className='mt-1 text-xs text-red-500' />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -294,7 +209,7 @@ export function UsersActionDialog({
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='PermohonanSPD-form'>
             Simpan Perubahan
           </Button>
         </DialogFooter>

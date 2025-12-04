@@ -5,16 +5,19 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { Pengembalian } from '@/api'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -24,6 +27,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import RangeDatePicker from '@/components/form-date-range'
 import { ReferensiPengembalianColumns as columns } from './pengembalian-columns'
 
 declare module '@tanstack/react-table' {
@@ -41,6 +45,8 @@ type DataTableProps = {
   }
   search: Record<string, unknown>
   navigate: NavigateFn
+  dateRange?: { from?: Date; to?: Date }
+  onDateRangeChange?: (range: { from?: Date; to?: Date }) => void
 }
 
 export function PengembalianTable({
@@ -48,14 +54,16 @@ export function PengembalianTable({
   meta,
   search,
   navigate,
+  dateRange,
+  onDateRangeChange,
 }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -63,37 +71,62 @@ export function PengembalianTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [{ columnId: 'nama', searchKey: 'nama', type: 'string' }],
+    globalFilter: {
+      enabled: true,
+      key: 'nama', // URL menjadi &filter=...
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
   const totalPages = meta ? Math.ceil(meta.total / meta.per_page) : 1
   const currentPage = meta?.current_page ?? pagination.pageIndex + 1
 
+  function onSearchChange(value: string) {
+    navigate({
+      search: {
+        ...search,
+        status: value,
+      },
+    })
+  }
+
   const table = useReactTable({
     data,
     columns,
     pageCount: totalPages,
     manualPagination: true,
+    manualFiltering: true,
+    manualSorting: true, // ⬅️ penting!
     state: {
       sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
+    },
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -104,9 +137,42 @@ export function PengembalianTable({
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Cari Pengembalian...'
-        searchKey='nama'
-        filters={[]}
+        searchPlaceholder='Cari...'
+        extraControls={
+          <div className='flex items-center gap-2'>
+            {/* 🔹 Select Status Pembayaran */}
+            <Select
+              value={(search.status as string) ?? 'all'}
+              onValueChange={(val) => onSearchChange(val === 'all' ? '' : val)}
+            >
+              <SelectTrigger className='w-[160px]'>
+                <SelectValue placeholder='Status Pembayaran' />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value='all'>Semua</SelectItem>
+                <SelectItem value='SDH BAYAR'>Sudah Bayar</SelectItem>
+                <SelectItem value='BLM BAYAR'>Belum Bayar</SelectItem>
+                <SelectItem value='KRG BAYAR'>Kurang Bayar</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* 🔹 Range Date Picker */}
+            <RangeDatePicker
+              value={{
+                from: dateRange?.from,
+                to: dateRange?.to,
+              }}
+              onChange={(range) =>
+                onDateRangeChange?.({
+                  from: range?.from,
+                  to: range?.to,
+                })
+              }
+              placeholder='Filter tanggal'
+            />
+          </div>
+        }
       />
 
       <div className='overflow-hidden rounded-md border'>

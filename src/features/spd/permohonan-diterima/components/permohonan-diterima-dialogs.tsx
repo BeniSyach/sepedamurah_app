@@ -53,7 +53,7 @@ export function UsersDialogs() {
   return (
     <>
       <PermohonanDiterimaActionDialog
-        key='akses-kuasa-bud-add'
+        key='spd-diterima-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
       />
@@ -85,7 +85,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`permohonan-spd-download-${currentRow.id}`}
+            key={`spd-diterima-download-${currentRow.id}`}
             destructive={false}
             open={open === 'download'}
             onOpenChange={() => {
