@@ -24,6 +24,7 @@ export function BelumParafSPD() {
     perPage: search.pageSize,
     menu: 'spd_belum_paraf',
     user_id: user?.id,
+    search: search.search,
   })
 
   return (

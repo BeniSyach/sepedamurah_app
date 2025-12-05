@@ -62,7 +62,7 @@ export function PermohonanDitolakSPDTable({
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: {
       enabled: true,
-      key: 'nama_pengirim',
+      key: 'search',
       trim: false,
     },
   })

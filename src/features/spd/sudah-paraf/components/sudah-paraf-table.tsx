@@ -5,11 +5,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { SpdTerkirim } from '@/api'
@@ -55,8 +51,8 @@ export function BerkasMasukTable({
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -64,9 +60,11 @@ export function BerkasMasukTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'nama_pengirim', searchKey: 'nama_pengirim', type: 'string' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'search',
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -82,21 +80,31 @@ export function BerkasMasukTable({
       sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
+    },
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -105,11 +113,7 @@ export function BerkasMasukTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari SPD Sudah Di Paraf...'
-        searchKey='nama_pengirim'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>

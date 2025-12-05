@@ -23,7 +23,7 @@ export function SpdDitandatanganiBUD() {
   const { data, isLoading, isError } = useGetSPDTerkirim({
     page: search.page,
     perPage: search.pageSize,
-    search: search.nama_pengirim,
+    search: search.search,
     menu: 'spd_ditandatangani_bud',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })

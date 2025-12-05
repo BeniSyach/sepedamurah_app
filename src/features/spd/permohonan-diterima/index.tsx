@@ -24,7 +24,7 @@ export function PermohonanDiterimaSPD() {
   const { data, isLoading, isError } = useGetPermohonanSPD({
     page: search.page,
     perPage: search.pageSize,
-    search: search.nama_pengirim,
+    search: search.search,
     sort_by: search.sort_by || 'diterima',
     sort_dir: search.sort_dir || 'desc',
     menu:

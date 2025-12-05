@@ -23,7 +23,7 @@ export function PermohonanDitolakSPD() {
   const { data, isLoading, isError } = useGetPermohonanSPD({
     page: search.page,
     perPage: search.pageSize,
-    search: search.nama_pengirim,
+    search: search.search,
     sort_by: search.sort_by || 'ditolak',
     sort_dir: search.sort_dir || 'desc',
     menu:

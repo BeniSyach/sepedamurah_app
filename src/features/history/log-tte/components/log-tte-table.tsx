@@ -5,11 +5,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { LogTTE } from '@/api'
@@ -50,8 +46,8 @@ export function LogTTETable({ data, meta, search, navigate }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
 
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -59,11 +55,11 @@ export function LogTTETable({ data, meta, search, navigate }: DataTableProps) {
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-      { columnId: 'is_active', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'search', // URL menjadi &filter=...
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -79,21 +75,31 @@ export function LogTTETable({ data, meta, search, navigate }: DataTableProps) {
       sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
+    },
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   useEffect(() => {
@@ -102,11 +108,7 @@ export function LogTTETable({ data, meta, search, navigate }: DataTableProps) {
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari data...'
-        searchKey='kategori'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>

@@ -4,11 +4,7 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { Program } from '@/api'
@@ -47,15 +43,9 @@ export function RefProgramTable({
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  // Local state management for table (uncomment to use local-only state, not synced with URL)
-  // const [globalFilter, onGlobalFilterChange] = useState('')
-  // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
-  // const [pagination, onPaginationChange] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-
-  // Synced with URL states (updated to match route search schema defaults)
   const {
-    columnFilters,
-    onColumnFiltersChange,
+    globalFilter,
+    onGlobalFilterChange,
     pagination,
     onPaginationChange,
     ensurePageInRange,
@@ -63,10 +53,11 @@ export function RefProgramTable({
     search,
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: true, key: 'filter' },
-    columnFilters: [
-      { columnId: 'nm_program', searchKey: 'nm_program', type: 'string' },
-    ],
+    globalFilter: {
+      enabled: true,
+      key: 'nm_program', // URL menjadi &filter=...
+      trim: false,
+    },
   })
 
   const totalRows = meta?.total ?? data.length
@@ -82,27 +73,31 @@ export function RefProgramTable({
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
+      globalFilter,
       pagination,
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    globalFilterFn: (row, _columnId, filterValue) => {
-      const nm_program = String(row.getValue('nm_program')).toLowerCase()
-      const searchValue = String(filterValue).toLowerCase()
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
 
-      return nm_program.includes(searchValue)
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
     },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
+    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: getCoreRowModel(),
   })
 
   useEffect(() => {
@@ -111,11 +106,7 @@ export function RefProgramTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Cari Program.....'
-        searchKey='nm_program'
-      />
+      <DataTableToolbar table={table} searchPlaceholder='Cari....' />
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>

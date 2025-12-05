@@ -23,7 +23,7 @@ export function BerkasMasukSPD() {
   const { data, isLoading, isError } = useGetPermohonanSPD({
     page: search.page,
     perPage: search.pageSize,
-    search: search.nama_pengirim,
+    search: search.search,
     sort_by: search.sort_by || 'tanggal_upload',
     sort_dir: search.sort_dir || 'desc',
     menu: 'berkas_masuk_spd',
