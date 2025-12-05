@@ -60,7 +60,43 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </>
           )}
 
-          {levelAkses !== 'Bendahara' && (
+          {levelAkses !== 'Bendahara' && sudahDiTte.length > 0 && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('kirimbank')
+                }}
+              >
+                Kirim Ke Bank
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && sudahDiTte.length > 0 && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('publish')
+                }}
+              >
+                Publish
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && levelAkses !== 'Kuasa BUD' && (
             <>
               <DropdownMenuItem
                 onClick={() => {

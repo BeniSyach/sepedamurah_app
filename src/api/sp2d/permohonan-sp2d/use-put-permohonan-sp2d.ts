@@ -28,6 +28,9 @@ export function usePutPermohonanSp2d() {
       queryClient.invalidateQueries({
         queryKey: ['useGetPermohonanSP2D'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetSP2DKirim'],
+      })
     },
     onError: (err) => {
       return err

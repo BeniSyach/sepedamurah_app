@@ -1,4 +1,4 @@
-import { useDeletePermohonanSP2D } from '@/api'
+import { useDeletePermohonanSP2D, usePutSp2DKirim } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -9,8 +9,10 @@ import { PermohonanDiterimaKirimTTEDialog } from './permohonan-diterima-sp2d-tte
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
-  const { mutateAsync } = useDeletePermohonanSP2D()
   const levelAkses = localStorage.getItem('user_role')
+  const { mutateAsync } = useDeletePermohonanSP2D()
+  const { mutateAsync: put } = usePutSp2DKirim()
+
   const handleDelete = async () => {
     if (!currentRow) return
     const deletePromise = mutateAsync({ id: currentRow.id_sp2d })
@@ -22,6 +24,48 @@ export function UsersDialogs() {
         setTimeout(() => setCurrentRow(null), 500)
 
         return `Data berhasil dihapus.`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
+
+  const handleKirimKeBank = async () => {
+    if (!currentRow) return
+    const now = new Date()
+    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+    const formData = new FormData()
+    formData.append('id', currentRow.sp2dkirim[0].id)
+    formData.append('tgl_kirim_kebank', formatted)
+    const kirimBankPromise = put(formData)
+    await toast.promise(kirimBankPromise, {
+      loading: 'Kirim Ke Bank...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `Data berhasil Berpindah Ke Menu Kirim Bank.`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
+
+  const handlePublish = async () => {
+    if (!currentRow) return
+    const formData = new FormData()
+    formData.append('id', currentRow.sp2dkirim[0].id)
+    formData.append('publish', '1')
+    const kirimBankPromise = put(formData)
+    await toast.promise(kirimBankPromise, {
+      loading: 'Publish SP2D...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `SP2D Berhasil Di Publish Ke Bendahara`
       },
       error: (err) => {
         return err.data.message
@@ -270,6 +314,46 @@ export function UsersDialogs() {
               </>
             }
             confirmText='Lihat'
+          />
+
+          <ConfirmDialog
+            key={`sp2d-terima-kirim-bank-${currentRow.id_sp2d}`}
+            destructive={false}
+            open={open === 'kirimbank'}
+            onOpenChange={() => {
+              setOpen('kirimbank')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleKirimKeBank}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan Memindahkan berkas ke Menu Kirim Bank{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Kirim Ke Bank'
+          />
+
+          <ConfirmDialog
+            key={`sp2d-terima-publish-${currentRow.id_sp2d}`}
+            destructive={false}
+            open={open === 'publish'}
+            onOpenChange={() => {
+              setOpen('publish')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handlePublish}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan Mempublish Berkas SP2D{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Publish'
           />
         </>
       )}

@@ -47,17 +47,20 @@ export function PermohonanDiterimaSP2D() {
     search: search.nama_file,
     sort_by: search.sort_by || 'diterima',
     sort_dir: search.sort_dir || 'desc',
-
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_sp2d_terima_operator'
-        : 'sp2d_diterima',
+        : userRole === 'Kuasa BUD'
+          ? 'sp2d_diterima_kuasa_bud'
+          : 'sp2d_diterima',
     // ...(shouldSendDate && {
     date_from: format(finalFrom, 'yyyy-MM-dd'),
     date_to: format(finalTo, 'yyyy-MM-dd'),
     // }),
 
-    ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
+    ...(userRole === 'Operator SKPKD' ||
+    userRole === 'Bendahara' ||
+    userRole === 'Kuasa BUD'
       ? { user_id: user?.id }
       : {}),
   }

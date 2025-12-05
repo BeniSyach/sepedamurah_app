@@ -11,6 +11,8 @@ type RefSp2dItemDialogType =
   | 'download'
   | 'lihat'
   | 'downloadTTE'
+  | 'kirimbank'
+  | 'publish'
 
 type RefSp2dItemContextType = {
   open: RefSp2dItemDialogType | null

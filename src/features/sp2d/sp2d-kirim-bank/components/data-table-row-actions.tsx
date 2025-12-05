@@ -19,6 +19,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefSp2dItem()
+  const levelAkses = localStorage.getItem('user_role')
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,51 +36,60 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('lihat')
+              setOpen('lihat_tte')
             }}
           >
-            Lihat
+            Lihat Berkas TTE
             <DropdownMenuShortcut>
               <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
-              setOpen('download')
+              setOpen('lihat')
             }}
           >
-            Download
+            Lihat Berkas SP2D
             <DropdownMenuShortcut>
               <Download size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('tolak')
-            }}
-            className='text-red-500!'
-          >
-            Tolak
-            <DropdownMenuShortcut>
-              <X size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('kirim_balik')
-            }}
-          >
-            Kembalikan
-            <DropdownMenuShortcut>
-              <RefreshCcw size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('tolak')
+                }}
+                className='text-red-500!'
+              >
+                Tolak
+                <DropdownMenuShortcut>
+                  <X size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
+          {levelAkses !== 'Bendahara' && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('kirim_balik')
+                }}
+              >
+                Kembalikan
+                <DropdownMenuShortcut>
+                  <RefreshCcw size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
