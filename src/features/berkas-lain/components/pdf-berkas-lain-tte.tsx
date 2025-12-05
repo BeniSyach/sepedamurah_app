@@ -216,7 +216,7 @@ export default function PdfEditorPdfLib({
         })
       }
     })
-
+    let barcodeIndex = 0
     for (const el of elements) {
       const page = pages[el.page - 1]
       const pdfWidth = page.getWidth()
@@ -231,6 +231,9 @@ export default function PdfEditorPdfLib({
 
       const scaleX = pdfWidth / canvasDim.width
       const scaleY = pdfHeight / canvasDim.height
+
+      let correction = 0
+      let correctionX = 0
 
       let imgBytes: Uint8Array
       if (el.src.startsWith('data:image')) {
@@ -253,19 +256,45 @@ export default function PdfEditorPdfLib({
         }
       }
 
+      if (rotation === 90 && el.type === 'barcode') {
+        barcodeIndex++
+
+        // Barcode ke-1
+        if (barcodeIndex === 1) {
+          correction = 0
+          correctionX = 10
+        }
+        // Barcode ke-2
+        else if (barcodeIndex === 2) {
+          correction = 160
+          correctionX = 25
+        }
+        // Barcode 3+ (fallback)
+        else {
+          correction = 40
+          correctionX = 10
+        }
+      }
+
+      // =======================================================
+      // Correction untuk IMAGE (seperti kode kamu sebelumnya)
+      // =======================================================
+      if (rotation === 90 && el.type === 'image') {
+        correction = 160
+        correctionX = 25
+      }
+
+      // =======================================================
+      // ROTATION 90° MODE
+      // =======================================================
       if (rotation === 90) {
-        // Rotation 90° - Transform coordinates
-        const correction = el.type === 'image' ? 160 : 0
-        const correctionX = el.type === 'image' ? 25 : 0
         const pdfX =
           (canvasDim.height - el.y - el.height) * scaleY + 100 - correctionX
+
         const pdfY = el.x * scaleX + correction
+
         const W = el.height * scaleY
         const H = el.width * scaleX
-
-        // console.log(
-        //   `🔄 90° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)}) | scale: ${scaleX.toFixed(3)},${scaleY.toFixed(3)}`
-        // )
 
         page.drawImage(embeddedImage, {
           x: pdfX,
@@ -274,6 +303,8 @@ export default function PdfEditorPdfLib({
           height: H,
           rotate: degrees(90),
         })
+
+        continue
       } else if (rotation === 270) {
         const pdfX = el.y * scaleY
         const pdfY = (canvasDim.width - el.x - el.width) * scaleX
@@ -328,28 +359,28 @@ export default function PdfEditorPdfLib({
       }
     }
 
-    const finalBytes = await pdfDoc.save()
-    const arrayBuffer = new Uint8Array(finalBytes).buffer
-
-    const file = new File([arrayBuffer], `${currentRow?.nama_dokumen}.pdf`, {
-      type: 'application/pdf',
-    })
-
-    onExport?.(file)
-
     // const finalBytes = await pdfDoc.save()
-    // const blob = new Blob([finalBytes], { type: 'application/pdf' })
+    // const arrayBuffer = new Uint8Array(finalBytes).buffer
 
-    // window.open(URL.createObjectURL(blob), '_blank')
+    // const file = new File([arrayBuffer], `${currentRow?.nama_dokumen}.pdf`, {
+    //   type: 'application/pdf',
+    // })
 
-    // const file = new File(
-    //   [blob],
-    //   `${currentRow?.nama_dokumen ?? 'export'}.pdf`,
-    //   {
-    //     type: 'application/pdf',
-    //   }
-    // )
     // onExport?.(file)
+
+    const finalBytes = await pdfDoc.save()
+    const blob = new Blob([finalBytes], { type: 'application/pdf' })
+
+    window.open(URL.createObjectURL(blob), '_blank')
+
+    const file = new File(
+      [blob],
+      `${currentRow?.nama_dokumen ?? 'export'}.pdf`,
+      {
+        type: 'application/pdf',
+      }
+    )
+    onExport?.(file)
   }, [elements, pdfUrl, currentRow, pageDimensions])
 
   useEffect(() => {
