@@ -15,6 +15,8 @@ export interface laporanBelanjaData {
   belanja_oct: string
   belanja_nov: string
   belanja_dec: string
+  total_realisasi: number
+  total_pagu: number
 }
 
 export interface LaporanBelanjaResponse {

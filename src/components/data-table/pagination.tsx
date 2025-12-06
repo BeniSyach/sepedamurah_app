@@ -50,7 +50,7 @@ export function DataTablePagination<TData>({
       {/* Left side */}
       <div className='flex w-full items-center justify-between'>
         <div className='flex w-[100px] items-center justify-center text-sm font-medium @2xl/main:hidden'>
-          Page {currentPage} of {totalPages}
+          Halaman {currentPage} dari {totalPages}
         </div>
         <div className='flex items-center gap-2 @max-2xl/main:flex-row-reverse'>
           <Select
@@ -82,14 +82,16 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
-          <p className='hidden text-sm font-medium sm:block'>Rows per page</p>
+          <p className='hidden text-sm font-medium sm:block'>
+            Baris Per Halaman
+          </p>
         </div>
       </div>
 
       {/* Right side */}
       <div className='flex items-center sm:space-x-6 lg:space-x-8'>
         <div className='flex w-[100px] items-center justify-center text-sm font-medium @max-3xl/main:hidden'>
-          Page {currentPage} of {totalPages}
+          Halaman {currentPage} dari {totalPages}
         </div>
 
         <div className='flex items-center space-x-2'>
@@ -100,7 +102,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(0)}
             disabled={!canPreviousPage}
           >
-            <span className='sr-only'>Go to first page</span>
+            <span className='sr-only'>Kembali Ke Halaman pertama</span>
             <DoubleArrowLeftIcon className='h-4 w-4' />
           </Button>
 
@@ -111,7 +113,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(currentPage - 2)}
             disabled={!canPreviousPage}
           >
-            <span className='sr-only'>Go to previous page</span>
+            <span className='sr-only'>Kembali Ke Halaman Sebelumnya</span>
             <ChevronLeftIcon className='h-4 w-4' />
           </Button>
 
@@ -143,7 +145,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(currentPage)}
             disabled={!canNextPage}
           >
-            <span className='sr-only'>Go to next page</span>
+            <span className='sr-only'>Ke Halaman Berikutnya</span>
             <ChevronRightIcon className='h-4 w-4' />
           </Button>
 
@@ -154,7 +156,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!canNextPage}
           >
-            <span className='sr-only'>Go to last page</span>
+            <span className='sr-only'>Pergi Ke Halaman Terakhir</span>
             <DoubleArrowRightIcon className='h-4 w-4' />
           </Button>
         </div>

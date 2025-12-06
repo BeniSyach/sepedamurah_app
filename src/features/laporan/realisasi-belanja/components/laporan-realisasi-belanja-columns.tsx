@@ -58,6 +58,23 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     footer: () => 'Total', // Footer label
   },
 
+  {
+    accessorKey: 'persentase_pagu_belanja',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Persentase Pagu Belanja' />
+    ),
+    cell: ({ row }) => {
+      const totalRealisasi = Number(row.original.total_realisasi ?? 0)
+      const totalPagu = Number(row.original.total_pagu ?? 0)
+
+      // hitung persen
+      const persen = totalPagu > 0 ? (totalRealisasi / totalPagu) * 100 : 0
+
+      return <div>{persen.toFixed(2)}%</div>
+    },
+    enableSorting: true,
+  },
+
   // ✅ s.d Bulan Lalu
   {
     accessorKey: 'pagu',
