@@ -7,6 +7,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { SkeletonPermohonanSP2D } from '../permohonan-penerbitan-sp2d/components/SkeletonPermohonanSP2D'
 import { UsersDialogs } from './components/permohonan-sp2d-tte-dialogs'
 import { Sp2dItemProvider } from './components/permohonan-sp2d-tte-provider'
 import { BerkasMasukSP2DTable } from './components/permohonan-sp2d-tte-table'
@@ -40,35 +41,39 @@ export function PermohonanSp2dTTE() {
           <ProfileDropdown />
         </div>
       </Header>
-
-      <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Permohonan SP2D TTE
-            </h2>
-            <p className='text-muted-foreground'>
-              Data Ini adalah Permohonan SP2D TTE
-            </p>
+      {isLoading ? (
+        <SkeletonPermohonanSP2D />
+      ) : isError ? (
+        <p>Failed to load users.</p>
+      ) : (
+        <Main>
+          <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Permohonan SP2D TTE
+              </h2>
+              <p className='text-muted-foreground'>
+                Data Ini adalah Permohonan SP2D TTE
+              </p>
+            </div>
           </div>
-        </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          {/* <UsersTable data={users} search={search} navigate={navigate} /> */}
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : isError ? (
-            <p>Failed to load users.</p>
-          ) : (
-            <BerkasMasukSP2DTable
-              data={data?.data ?? []}
-              meta={data?.meta}
-              search={search}
-              navigate={navigate}
-            />
-          )}
-        </div>
-      </Main>
-
+          <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+            {/* <UsersTable data={users} search={search} navigate={navigate} /> */}
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : isError ? (
+              <p>Failed to load users.</p>
+            ) : (
+              <BerkasMasukSP2DTable
+                data={data?.data ?? []}
+                meta={data?.meta}
+                search={search}
+                navigate={navigate}
+              />
+            )}
+          </div>
+        </Main>
+      )}
       <UsersDialogs />
     </Sp2dItemProvider>
   )

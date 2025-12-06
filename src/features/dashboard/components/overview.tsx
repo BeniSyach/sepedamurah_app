@@ -1,60 +1,21 @@
+import { useGetSp2dChart } from '@/api'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-const data = [
-  {
-    name: 'Jan',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Feb',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Mar',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Apr',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'May',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jun',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jul',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Aug',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Sep',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Oct',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Nov',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Dec',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
-
 export function Overview() {
+  const { data } = useGetSp2dChart({
+    tahun: new Date().getFullYear().toString(),
+  })
+
+  // Convert response: Sp2dChartResponse → Recharts format
+  const chartData =
+    data?.chart.labels.map((label, index) => ({
+      name: label, // "Jan", "Feb", ...
+      total: data.chart.values[index], // number
+    })) ?? []
+
   return (
     <ResponsiveContainer width='100%' height={350}>
-      <BarChart data={data}>
+      <BarChart data={chartData}>
         <XAxis
           dataKey='name'
           stroke='#888888'
@@ -67,14 +28,9 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `${value}`}
         />
-        <Bar
-          dataKey='total'
-          fill='currentColor'
-          radius={[4, 4, 0, 0]}
-          className='fill-primary'
-        />
+        <Bar dataKey='total' radius={[4, 4, 0, 0]} className='fill-primary' />
       </BarChart>
     </ResponsiveContainer>
   )

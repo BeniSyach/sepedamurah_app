@@ -1,3 +1,6 @@
+import { format } from 'date-fns'
+import { useGetCountData } from '@/api'
+import { formatTanggaldanJam } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -6,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -18,7 +22,127 @@ import { Analytics } from './components/analytics'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
+function SkeletonSummaryCard() {
+  return (
+    <Card>
+      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+        <Skeleton className='h-4 w-40' />
+        <Skeleton className='h-4 w-4 rounded-full' />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className='h-8 w-20' />
+        <Skeleton className='mt-2 h-3 w-32' />
+      </CardContent>
+    </Card>
+  )
+}
+
+function SkeletonRecentSales() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className='h-5 w-40' />
+        <Skeleton className='mt-2 h-3 w-32' />
+      </CardHeader>
+      <CardContent className='space-y-4'>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className='flex items-center justify-between'>
+            <div className='flex items-center space-x-4'>
+              <Skeleton className='h-10 w-10 rounded-full' />
+              <div>
+                <Skeleton className='h-4 w-32' />
+                <Skeleton className='mt-1 h-3 w-20' />
+              </div>
+            </div>
+            <Skeleton className='h-4 w-10' />
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  )
+}
+
+function SkeletonChart() {
+  return (
+    <Card className='col-span-1 lg:col-span-4'>
+      <CardHeader>
+        <Skeleton className='h-5 w-60' />
+      </CardHeader>
+      <CardContent className='flex h-64 items-center justify-center ps-2'>
+        <Skeleton className='h-full w-full' />
+      </CardContent>
+    </Card>
+  )
+}
+
+function SkeletonTabs() {
+  return (
+    <div className='w-full overflow-x-auto pb-2'>
+      <div className='flex space-x-2'>
+        <Skeleton className='h-8 w-20' />
+        <Skeleton className='h-8 w-24' />
+        <Skeleton className='h-8 w-20' />
+        <Skeleton className='h-8 w-28' />
+      </div>
+    </div>
+  )
+}
+
 export function Dashboard() {
+  const { data, isLoading } = useGetCountData({
+    from: '',
+    to: '',
+  })
+
+  if (isLoading) {
+    return (
+      <>
+        <Header>
+          <TopNav links={topNav} />
+          <div className='ms-auto flex items-center space-x-4'>
+            <Skeleton className='h-8 w-40' />
+            <Skeleton className='h-8 w-8 rounded-full' />
+            <Skeleton className='h-8 w-8 rounded-full' />
+            <Skeleton className='h-8 w-8 rounded-full' />
+          </div>
+        </Header>
+
+        <Main>
+          <div className='mb-2 flex items-center justify-between'>
+            <Skeleton className='h-6 w-40' />
+            <Skeleton className='h-8 w-24' />
+          </div>
+
+          <SkeletonTabs />
+
+          {/* ===== Summary SPD ===== */}
+          <div className='mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+          </div>
+
+          {/* ===== Summary SP2D ===== */}
+          <div className='mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+            <SkeletonSummaryCard />
+          </div>
+
+          {/* ===== Grafik & Recent Sales ===== */}
+          <div className='mt-4 grid grid-cols-1 gap-4 lg:grid-cols-7'>
+            <SkeletonChart />
+            <div className='col-span-1 lg:col-span-3'>
+              <SkeletonRecentSales />
+            </div>
+          </div>
+        </Main>
+      </>
+    )
+  }
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -48,9 +172,9 @@ export function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Utama</TabsTrigger>
-              <TabsTrigger value='analytics'>Analisis</TabsTrigger>
-              <TabsTrigger value='reports'>Laporan</TabsTrigger>
-              <TabsTrigger value='notifications'>Notifikasi</TabsTrigger>
+              <TabsTrigger value='analytics'>Fungsional</TabsTrigger>
+              {/* <TabsTrigger value='reports'>Laporan</TabsTrigger>
+              <TabsTrigger value='notifications'>Notifikasi</TabsTrigger> */}
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -74,9 +198,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_permohonan_spd}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -101,9 +230,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_spd_terverifikasi}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -127,9 +261,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_spd_ditolak}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +19% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -150,9 +289,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_spd_tte}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -177,9 +321,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_permohonan_sp2d}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -204,9 +353,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_sp2d_terverifikasi}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -230,9 +384,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_sp2d_ditolak}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +19% from last month
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -255,9 +414,14 @@ export function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.data.total_sp2d_tte}
+                  </div>
                   <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
+                    Terhitung sampai tanggal <br></br>
+                    {formatTanggaldanJam(
+                      format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+                    )}
                   </p>
                 </CardContent>
               </Card>
@@ -265,7 +429,7 @@ export function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Data Grafik Permohonan SP2D /Bulan</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
                   <Overview />
@@ -273,9 +437,9 @@ export function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Berkas Masuk</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Menampilkan 5 data Berkas Masuk SP2D
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

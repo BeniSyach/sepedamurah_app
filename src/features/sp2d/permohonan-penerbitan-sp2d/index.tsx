@@ -9,6 +9,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { SkeletonPermohonanSP2D } from './components/SkeletonPermohonanSP2D'
 import { RefRekeningPrimaryButtons } from './components/permohonan-penerbitan-sp2d-buttons'
 import { UsersDialogs } from './components/permohonan-penerbitan-sp2d-dialogs'
 import { Sp2dItemProvider } from './components/permohonan-penerbitan-sp2d-provider'
@@ -78,25 +79,24 @@ export function PermohonanPenerbitanSP2D() {
         </div>
       </Header>
 
-      <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Permohonan Penerbitan SP2D
-            </h2>
-            <p className='text-muted-foreground'>
-              Data Ini adalah Permohonan Penerbitan SP2D
-            </p>
+      {isLoading ? (
+        <SkeletonPermohonanSP2D />
+      ) : isError ? (
+        <p>Failed to load users.</p>
+      ) : (
+        <Main>
+          <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Permohonan Penerbitan SP2D
+              </h2>
+              <p className='text-muted-foreground'>
+                Data Ini adalah Permohonan Penerbitan SP2D
+              </p>
+            </div>
+            <RefRekeningPrimaryButtons />
           </div>
-          <RefRekeningPrimaryButtons />
-        </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          {/* <UsersTable data={users} search={search} navigate={navigate} /> */}
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : isError ? (
-            <p>Failed to load users.</p>
-          ) : (
+          <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
             <BerkasMasukSP2DTable
               data={data?.data ?? []}
               meta={data?.meta}
@@ -105,10 +105,9 @@ export function PermohonanPenerbitanSP2D() {
               dateRange={dateRange}
               onDateRangeChange={setDateRange}
             />
-          )}
-        </div>
-      </Main>
-
+          </div>
+        </Main>
+      )}
       <UsersDialogs />
     </Sp2dItemProvider>
   )
