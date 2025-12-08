@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_authenticated/dokumen/laporan-dpa')({
+export const Route = createFileRoute(
+  '/_authenticated/dokumen/laporan-dpa/laporan-dpa'
+)({
   component: RouteComponent,
 })
 

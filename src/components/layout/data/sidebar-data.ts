@@ -45,8 +45,8 @@ import {
   FileBarChart,
   PieChart,
   BookOpen,
-  FolderArchive,
   LockKeyholeOpenIcon,
+  FileSearch,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -477,16 +477,42 @@ export const sidebarData: SidebarData = {
     },
     {
       id: 'laporan-dpa',
-      title: 'Laporan DPA',
+      title: 'Dokumen Pelaksanaan Anggaran',
       items: [
         {
-          id: 'laporan-dpa-skpd',
+          id: 'laporan-dpa-judul',
           title: 'Laporan DPA',
-          url: '/dokumen/laporan-dpa',
-          icon: FolderArchive,
+          icon: FileSpreadsheet, // 🔥 ganti jadi ikon dokumen spreadsheet
+          items: [
+            {
+              id: 'berkas-masuk-laporan-dpa',
+              title: 'Berkas Masuk Laporan DPA',
+              url: '/dokumen/laporan-dpa/berkas-masuk',
+              icon: Inbox, // 🔥 lebih cocok untuk "berkas masuk"
+            },
+            {
+              id: 'laporan-dpa-menu',
+              title: 'Laporan DPA',
+              url: '/dokumen/laporan-dpa/laporan-dpa',
+              icon: FileSearch, // 🔍 laporan / detail dokumen
+            },
+            {
+              id: 'laporan-dpa-diterima',
+              title: 'Laporan DPA - Diterima',
+              url: '/dokumen/laporan-dpa/laporan-dpa-diterima',
+              icon: CheckCircle2, // ✔️ sudah cocok
+            },
+            {
+              id: 'laporan-dpa-ditolak',
+              title: 'Laporan DPA - Ditolak',
+              url: '/dokumen/laporan-dpa/laporan-dpa-ditolak',
+              icon: XCircle, // ❌ sudah cocok
+            },
+          ],
         },
       ],
     },
+
     {
       id: 'berkas-lain',
       title: 'Berkas TTE Lain-lain',

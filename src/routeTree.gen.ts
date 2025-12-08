@@ -65,7 +65,6 @@ import { Route as AuthenticatedLaporanBukuLaporanRouteImport } from './routes/_a
 import { Route as AuthenticatedHistoryLogTteRouteImport } from './routes/_authenticated/history/log-tte'
 import { Route as AuthenticatedHistoryLogHapusUsersRouteImport } from './routes/_authenticated/history/log-hapus-users'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
-import { Route as AuthenticatedDokumenLaporanDpaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa'
 import { Route as AuthenticatedDokumenBerkasLainRouteImport } from './routes/_authenticated/dokumen/berkas-lain'
 import { Route as AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaPaguSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/pagu-sumber-dana'
@@ -93,6 +92,10 @@ import { Route as AuthenticatedDokumenLaporanFungsionalPenerimaanDiterimaRouteIm
 import { Route as AuthenticatedDokumenLaporanFungsionalPenerimaanRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/penerimaan'
 import { Route as AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
 import { Route as AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
+import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/laporan-dpa-ditolak'
+import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima'
+import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/laporan-dpa'
+import { Route as AuthenticatedDokumenLaporanDpaBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/berkas-masuk'
 import { Route as authVerifyTteTypeIdRouteImport } from './routes/(auth)/verify-tte/$type/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -416,12 +419,6 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDokumenLaporanDpaRoute =
-  AuthenticatedDokumenLaporanDpaRouteImport.update({
-    id: '/dokumen/laporan-dpa',
-    path: '/dokumen/laporan-dpa',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedDokumenBerkasLainRoute =
   AuthenticatedDokumenBerkasLainRouteImport.update({
     id: '/dokumen/berkas-lain',
@@ -586,6 +583,30 @@ const AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute =
     path: '/dokumen/laporan-fungsional/berkas-masuk-penerimaan',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute =
+  AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRouteImport.update({
+    id: '/dokumen/laporan-dpa/laporan-dpa-ditolak',
+    path: '/dokumen/laporan-dpa/laporan-dpa-ditolak',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute =
+  AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRouteImport.update({
+    id: '/dokumen/laporan-dpa/laporan-dpa-diterima',
+    path: '/dokumen/laporan-dpa/laporan-dpa-diterima',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanDpaLaporanDpaRoute =
+  AuthenticatedDokumenLaporanDpaLaporanDpaRouteImport.update({
+    id: '/dokumen/laporan-dpa/laporan-dpa',
+    path: '/dokumen/laporan-dpa/laporan-dpa',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanDpaBerkasMasukRoute =
+  AuthenticatedDokumenLaporanDpaBerkasMasukRouteImport.update({
+    id: '/dokumen/laporan-dpa/berkas-masuk',
+    path: '/dokumen/laporan-dpa/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const authVerifyTteTypeIdRoute = authVerifyTteTypeIdRouteImport.update({
   id: '/(auth)/verify-tte/$type/$id',
   path: '/verify-tte/$type/$id',
@@ -611,7 +632,6 @@ export interface FileRoutesByFullPath {
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
-  '/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -654,6 +674,10 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
+  '/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
+  '/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
+  '/dokumen/laporan-dpa/laporan-dpa-ditolak': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute
   '/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -695,7 +719,6 @@ export interface FileRoutesByTo {
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
-  '/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -738,6 +761,10 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
+  '/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
+  '/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
+  '/dokumen/laporan-dpa/laporan-dpa-ditolak': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute
   '/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -783,7 +810,6 @@ export interface FileRoutesById {
   '/_authenticated/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/_authenticated/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
-  '/_authenticated/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/_authenticated/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -826,6 +852,10 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/(auth)/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/_authenticated/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
+  '/_authenticated/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
+  '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
+  '/_authenticated/dokumen/laporan-dpa/laporan-dpa-ditolak': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute
   '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   '/_authenticated/dokumen/laporan-fungsional/penerimaan': typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -871,7 +901,6 @@ export interface FileRouteTypes {
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/dokumen/berkas-lain'
-    | '/dokumen/laporan-dpa'
     | '/errors/$error'
     | '/history/log-hapus-users'
     | '/history/log-tte'
@@ -914,6 +943,10 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/verify-tte/$type/$id'
+    | '/dokumen/laporan-dpa/berkas-masuk'
+    | '/dokumen/laporan-dpa/laporan-dpa'
+    | '/dokumen/laporan-dpa/laporan-dpa-diterima'
+    | '/dokumen/laporan-dpa/laporan-dpa-ditolak'
     | '/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/dokumen/laporan-fungsional/penerimaan'
@@ -955,7 +988,6 @@ export interface FileRouteTypes {
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/dokumen/berkas-lain'
-    | '/dokumen/laporan-dpa'
     | '/errors/$error'
     | '/history/log-hapus-users'
     | '/history/log-tte'
@@ -998,6 +1030,10 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/verify-tte/$type/$id'
+    | '/dokumen/laporan-dpa/berkas-masuk'
+    | '/dokumen/laporan-dpa/laporan-dpa'
+    | '/dokumen/laporan-dpa/laporan-dpa-diterima'
+    | '/dokumen/laporan-dpa/laporan-dpa-ditolak'
     | '/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/dokumen/laporan-fungsional/penerimaan'
@@ -1042,7 +1078,6 @@ export interface FileRouteTypes {
     | '/_authenticated/alokasi-dana/pagu-sumber-dana'
     | '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/_authenticated/dokumen/berkas-lain'
-    | '/_authenticated/dokumen/laporan-dpa'
     | '/_authenticated/errors/$error'
     | '/_authenticated/history/log-hapus-users'
     | '/_authenticated/history/log-tte'
@@ -1085,6 +1120,10 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/(auth)/verify-tte/$type/$id'
+    | '/_authenticated/dokumen/laporan-dpa/berkas-masuk'
+    | '/_authenticated/dokumen/laporan-dpa/laporan-dpa'
+    | '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima'
+    | '/_authenticated/dokumen/laporan-dpa/laporan-dpa-ditolak'
     | '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
     | '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-pengeluaran'
     | '/_authenticated/dokumen/laporan-fungsional/penerimaan'
@@ -1521,13 +1560,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dokumen/laporan-dpa': {
-      id: '/_authenticated/dokumen/laporan-dpa'
-      path: '/dokumen/laporan-dpa'
-      fullPath: '/dokumen/laporan-dpa'
-      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dokumen/berkas-lain': {
       id: '/_authenticated/dokumen/berkas-lain'
       path: '/dokumen/berkas-lain'
@@ -1717,6 +1749,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/laporan-dpa/laporan-dpa-ditolak': {
+      id: '/_authenticated/dokumen/laporan-dpa/laporan-dpa-ditolak'
+      path: '/dokumen/laporan-dpa/laporan-dpa-ditolak'
+      fullPath: '/dokumen/laporan-dpa/laporan-dpa-ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima': {
+      id: '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima'
+      path: '/dokumen/laporan-dpa/laporan-dpa-diterima'
+      fullPath: '/dokumen/laporan-dpa/laporan-dpa-diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-dpa/laporan-dpa': {
+      id: '/_authenticated/dokumen/laporan-dpa/laporan-dpa'
+      path: '/dokumen/laporan-dpa/laporan-dpa'
+      fullPath: '/dokumen/laporan-dpa/laporan-dpa'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-dpa/berkas-masuk': {
+      id: '/_authenticated/dokumen/laporan-dpa/berkas-masuk'
+      path: '/dokumen/laporan-dpa/berkas-masuk'
+      fullPath: '/dokumen/laporan-dpa/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/(auth)/verify-tte/$type/$id': {
       id: '/(auth)/verify-tte/$type/$id'
       path: '/verify-tte/$type/$id'
@@ -1775,7 +1835,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAlokasiDanaPaguSumberDanaRoute: typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute: typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   AuthenticatedDokumenBerkasLainRoute: typeof AuthenticatedDokumenBerkasLainRoute
-  AuthenticatedDokumenLaporanDpaRoute: typeof AuthenticatedDokumenLaporanDpaRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedHistoryLogHapusUsersRoute: typeof AuthenticatedHistoryLogHapusUsersRoute
   AuthenticatedHistoryLogTteRoute: typeof AuthenticatedHistoryLogTteRoute
@@ -1809,6 +1868,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPengembalianIndexRoute: typeof AuthenticatedPengembalianIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedDokumenLaporanDpaBerkasMasukRoute: typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
+  AuthenticatedDokumenLaporanDpaLaporanDpaRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
+  AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
+  AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute
   AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute: typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute
   AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute: typeof AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute
   AuthenticatedDokumenLaporanFungsionalPenerimaanRoute: typeof AuthenticatedDokumenLaporanFungsionalPenerimaanRoute
@@ -1844,7 +1907,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute:
     AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute,
   AuthenticatedDokumenBerkasLainRoute: AuthenticatedDokumenBerkasLainRoute,
-  AuthenticatedDokumenLaporanDpaRoute: AuthenticatedDokumenLaporanDpaRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedHistoryLogHapusUsersRoute:
     AuthenticatedHistoryLogHapusUsersRoute,
@@ -1901,6 +1963,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPengembalianIndexRoute: AuthenticatedPengembalianIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedDokumenLaporanDpaBerkasMasukRoute:
+    AuthenticatedDokumenLaporanDpaBerkasMasukRoute,
+  AuthenticatedDokumenLaporanDpaLaporanDpaRoute:
+    AuthenticatedDokumenLaporanDpaLaporanDpaRoute,
+  AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute:
+    AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute,
+  AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute:
+    AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRoute,
   AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute:
     AuthenticatedDokumenLaporanFungsionalBerkasMasukPenerimaanRoute,
   AuthenticatedDokumenLaporanFungsionalBerkasMasukPengeluaranRoute:
