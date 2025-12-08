@@ -49,6 +49,16 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
   },
 
   {
+    accessorKey: 'jenis_belanja',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Jenis Belanja' />
+    ),
+    cell: ({ row }) => <div>{row.getValue('jenis_belanja')}</div>,
+    enableSorting: true,
+    footer: () => null, // Footer label
+  },
+
+  {
     accessorKey: 'total_pagu',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Pagu Belanja' />
@@ -68,16 +78,6 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
         )
       return <div>{formatRupiah(total)}</div>
     },
-  },
-
-  {
-    accessorKey: 'jenis_belanja',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Jenis Belanja' />
-    ),
-    cell: ({ row }) => <div>{row.getValue('jenis_belanja')}</div>,
-    enableSorting: true,
-    footer: () => null, // Footer label
   },
 
   // ✅ s.d Bulan Lalu
