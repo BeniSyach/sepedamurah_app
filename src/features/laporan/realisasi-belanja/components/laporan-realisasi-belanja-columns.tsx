@@ -69,14 +69,28 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     },
     enableSorting: true,
     footer: ({ table }) => {
-      // Hitung total dari semua row
+      // Total semua row
       const total = table
         .getRowModel()
         .rows.reduce(
           (acc, row) => acc + Number(row.original.total_pagu ?? 0),
           0
         )
-      return <div>{formatRupiah(total)}</div>
+
+      // Total dari kode 6.2.03
+      const totalKode6203 = table
+        .getRowModel()
+        .rows.filter(
+          (row) =>
+            row.original.kd_ref1 === '6' &&
+            row.original.kd_ref2 === '2' &&
+            row.original.kd_ref3 === '03'
+        )
+        .reduce((acc, row) => acc + Number(row.original.total_pagu ?? 0), 0)
+
+      const adjustedTotal = total - totalKode6203
+
+      return <div>{formatRupiah(adjustedTotal)}</div>
     },
   },
 
