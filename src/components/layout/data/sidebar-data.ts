@@ -45,6 +45,8 @@ import {
   FileBarChart,
   PieChart,
   BookOpen,
+  FolderArchive,
+  LockKeyholeOpenIcon,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -167,6 +169,12 @@ export const sidebarData: SidebarData = {
               url: '/master-data/referensi-SKPD',
               icon: Building2,
             },
+            {
+              id: 'referensi-dpa',
+              title: 'Referensi DPA',
+              url: '/master-data/referensi-dpa',
+              icon: FileText,
+            },
           ],
         },
         {
@@ -217,6 +225,12 @@ export const sidebarData: SidebarData = {
           title: 'Akses Kuasa BUD',
           url: '/manajemen-apps/akses-kuasa-bud',
           icon: LockKeyhole,
+        },
+        {
+          id: 'akses-dpa-skpd',
+          title: 'Akses DPA SKPD',
+          url: '/manajemen-apps/akses-dpa-skpd',
+          icon: LockKeyholeOpenIcon,
         },
         {
           id: 'batas-waktu',
@@ -458,6 +472,18 @@ export const sidebarData: SidebarData = {
               icon: XCircle,
             },
           ],
+        },
+      ],
+    },
+    {
+      id: 'laporan-dpa',
+      title: 'Laporan DPA',
+      items: [
+        {
+          id: 'laporan-dpa-skpd',
+          title: 'Laporan DPA',
+          url: '/dokumen/laporan-dpa',
+          icon: FolderArchive,
         },
       ],
     },

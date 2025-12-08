@@ -49,6 +49,7 @@ import { Route as AuthenticatedMasterDataReferensiPaguBelanjaRouteImport } from 
 import { Route as AuthenticatedMasterDataReferensiKegiatanRouteImport } from './routes/_authenticated/master-data/referensi-kegiatan'
 import { Route as AuthenticatedMasterDataReferensiJenisSpmRouteImport } from './routes/_authenticated/master-data/referensi-jenis-spm'
 import { Route as AuthenticatedMasterDataReferensiJenisBelanjaRouteImport } from './routes/_authenticated/master-data/referensi-jenis-belanja'
+import { Route as AuthenticatedMasterDataReferensiDpaRouteImport } from './routes/_authenticated/master-data/referensi-dpa'
 import { Route as AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRouteImport } from './routes/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
 import { Route as AuthenticatedMasterDataReferensiBidangUrusanRouteImport } from './routes/_authenticated/master-data/referensi-bidang-urusan'
 import { Route as AuthenticatedMasterDataReferensiSKPDRouteImport } from './routes/_authenticated/master-data/referensi-SKPD'
@@ -56,6 +57,7 @@ import { Route as AuthenticatedManajemenAppsUserRoleRouteImport } from './routes
 import { Route as AuthenticatedManajemenAppsBatasWaktuRouteImport } from './routes/_authenticated/manajemen-apps/batas-waktu'
 import { Route as AuthenticatedManajemenAppsAksesOperatorRouteImport } from './routes/_authenticated/manajemen-apps/akses-operator'
 import { Route as AuthenticatedManajemenAppsAksesKuasaBudRouteImport } from './routes/_authenticated/manajemen-apps/akses-kuasa-bud'
+import { Route as AuthenticatedManajemenAppsAksesDpaSkpdRouteImport } from './routes/_authenticated/manajemen-apps/akses-dpa-skpd'
 import { Route as AuthenticatedLaporanRealisasiSumberDanaRouteImport } from './routes/_authenticated/laporan/realisasi-sumber-dana'
 import { Route as AuthenticatedLaporanRealisasiBelanjaRouteImport } from './routes/_authenticated/laporan/realisasi-belanja'
 import { Route as AuthenticatedLaporanDaftarBelanjaPerSkpdRouteImport } from './routes/_authenticated/laporan/daftar-belanja-per-skpd'
@@ -63,6 +65,7 @@ import { Route as AuthenticatedLaporanBukuLaporanRouteImport } from './routes/_a
 import { Route as AuthenticatedHistoryLogTteRouteImport } from './routes/_authenticated/history/log-tte'
 import { Route as AuthenticatedHistoryLogHapusUsersRouteImport } from './routes/_authenticated/history/log-hapus-users'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedDokumenLaporanDpaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa'
 import { Route as AuthenticatedDokumenBerkasLainRouteImport } from './routes/_authenticated/dokumen/berkas-lain'
 import { Route as AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 import { Route as AuthenticatedAlokasiDanaPaguSumberDanaRouteImport } from './routes/_authenticated/alokasi-dana/pagu-sumber-dana'
@@ -315,6 +318,12 @@ const AuthenticatedMasterDataReferensiJenisBelanjaRoute =
     path: '/master-data/referensi-jenis-belanja',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMasterDataReferensiDpaRoute =
+  AuthenticatedMasterDataReferensiDpaRouteImport.update({
+    id: '/master-data/referensi-dpa',
+    path: '/master-data/referensi-dpa',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute =
   AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRouteImport.update(
     {
@@ -359,6 +368,12 @@ const AuthenticatedManajemenAppsAksesKuasaBudRoute =
     path: '/manajemen-apps/akses-kuasa-bud',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedManajemenAppsAksesDpaSkpdRoute =
+  AuthenticatedManajemenAppsAksesDpaSkpdRouteImport.update({
+    id: '/manajemen-apps/akses-dpa-skpd',
+    path: '/manajemen-apps/akses-dpa-skpd',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLaporanRealisasiSumberDanaRoute =
   AuthenticatedLaporanRealisasiSumberDanaRouteImport.update({
     id: '/laporan/realisasi-sumber-dana',
@@ -399,6 +414,12 @@ const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
     path: '/errors/$error',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanDpaRoute =
+  AuthenticatedDokumenLaporanDpaRouteImport.update({
+    id: '/dokumen/laporan-dpa',
+    path: '/dokumen/laporan-dpa',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDokumenBerkasLainRoute =
@@ -590,6 +611,7 @@ export interface FileRoutesByFullPath {
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
+  '/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -597,6 +619,7 @@ export interface FileRoutesByFullPath {
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
@@ -604,6 +627,7 @@ export interface FileRoutesByFullPath {
   '/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
   '/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
+  '/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
   '/master-data/referensi-jenis-belanja': typeof AuthenticatedMasterDataReferensiJenisBelanjaRoute
   '/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
@@ -671,6 +695,7 @@ export interface FileRoutesByTo {
   '/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
+  '/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -678,6 +703,7 @@ export interface FileRoutesByTo {
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
@@ -685,6 +711,7 @@ export interface FileRoutesByTo {
   '/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
   '/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
+  '/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
   '/master-data/referensi-jenis-belanja': typeof AuthenticatedMasterDataReferensiJenisBelanjaRoute
   '/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
@@ -756,6 +783,7 @@ export interface FileRoutesById {
   '/_authenticated/alokasi-dana/pagu-sumber-dana': typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana': typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   '/_authenticated/dokumen/berkas-lain': typeof AuthenticatedDokumenBerkasLainRoute
+  '/_authenticated/dokumen/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/history/log-hapus-users': typeof AuthenticatedHistoryLogHapusUsersRoute
   '/_authenticated/history/log-tte': typeof AuthenticatedHistoryLogTteRoute
@@ -763,6 +791,7 @@ export interface FileRoutesById {
   '/_authenticated/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/_authenticated/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/_authenticated/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/_authenticated/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/_authenticated/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/_authenticated/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/_authenticated/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
@@ -770,6 +799,7 @@ export interface FileRoutesById {
   '/_authenticated/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
   '/_authenticated/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
+  '/_authenticated/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
   '/_authenticated/master-data/referensi-jenis-belanja': typeof AuthenticatedMasterDataReferensiJenisBelanjaRoute
   '/_authenticated/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/_authenticated/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
@@ -841,6 +871,7 @@ export interface FileRouteTypes {
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/dokumen/berkas-lain'
+    | '/dokumen/laporan-dpa'
     | '/errors/$error'
     | '/history/log-hapus-users'
     | '/history/log-tte'
@@ -848,6 +879,7 @@ export interface FileRouteTypes {
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
     | '/laporan/realisasi-sumber-dana'
+    | '/manajemen-apps/akses-dpa-skpd'
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
     | '/manajemen-apps/batas-waktu'
@@ -855,6 +887,7 @@ export interface FileRouteTypes {
     | '/master-data/referensi-SKPD'
     | '/master-data/referensi-bidang-urusan'
     | '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
+    | '/master-data/referensi-dpa'
     | '/master-data/referensi-jenis-belanja'
     | '/master-data/referensi-jenis-spm'
     | '/master-data/referensi-kegiatan'
@@ -922,6 +955,7 @@ export interface FileRouteTypes {
     | '/alokasi-dana/pagu-sumber-dana'
     | '/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/dokumen/berkas-lain'
+    | '/dokumen/laporan-dpa'
     | '/errors/$error'
     | '/history/log-hapus-users'
     | '/history/log-tte'
@@ -929,6 +963,7 @@ export interface FileRouteTypes {
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
     | '/laporan/realisasi-sumber-dana'
+    | '/manajemen-apps/akses-dpa-skpd'
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
     | '/manajemen-apps/batas-waktu'
@@ -936,6 +971,7 @@ export interface FileRouteTypes {
     | '/master-data/referensi-SKPD'
     | '/master-data/referensi-bidang-urusan'
     | '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
+    | '/master-data/referensi-dpa'
     | '/master-data/referensi-jenis-belanja'
     | '/master-data/referensi-jenis-spm'
     | '/master-data/referensi-kegiatan'
@@ -1006,6 +1042,7 @@ export interface FileRouteTypes {
     | '/_authenticated/alokasi-dana/pagu-sumber-dana'
     | '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
     | '/_authenticated/dokumen/berkas-lain'
+    | '/_authenticated/dokumen/laporan-dpa'
     | '/_authenticated/errors/$error'
     | '/_authenticated/history/log-hapus-users'
     | '/_authenticated/history/log-tte'
@@ -1013,6 +1050,7 @@ export interface FileRouteTypes {
     | '/_authenticated/laporan/daftar-belanja-per-skpd'
     | '/_authenticated/laporan/realisasi-belanja'
     | '/_authenticated/laporan/realisasi-sumber-dana'
+    | '/_authenticated/manajemen-apps/akses-dpa-skpd'
     | '/_authenticated/manajemen-apps/akses-kuasa-bud'
     | '/_authenticated/manajemen-apps/akses-operator'
     | '/_authenticated/manajemen-apps/batas-waktu'
@@ -1020,6 +1058,7 @@ export interface FileRouteTypes {
     | '/_authenticated/master-data/referensi-SKPD'
     | '/_authenticated/master-data/referensi-bidang-urusan'
     | '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
+    | '/_authenticated/master-data/referensi-dpa'
     | '/_authenticated/master-data/referensi-jenis-belanja'
     | '/_authenticated/master-data/referensi-jenis-spm'
     | '/_authenticated/master-data/referensi-kegiatan'
@@ -1370,6 +1409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMasterDataReferensiJenisBelanjaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/master-data/referensi-dpa': {
+      id: '/_authenticated/master-data/referensi-dpa'
+      path: '/master-data/referensi-dpa'
+      fullPath: '/master-data/referensi-dpa'
+      preLoaderRoute: typeof AuthenticatedMasterDataReferensiDpaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': {
       id: '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
       path: '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
@@ -1419,6 +1465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManajemenAppsAksesKuasaBudRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/manajemen-apps/akses-dpa-skpd': {
+      id: '/_authenticated/manajemen-apps/akses-dpa-skpd'
+      path: '/manajemen-apps/akses-dpa-skpd'
+      fullPath: '/manajemen-apps/akses-dpa-skpd'
+      preLoaderRoute: typeof AuthenticatedManajemenAppsAksesDpaSkpdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/laporan/realisasi-sumber-dana': {
       id: '/_authenticated/laporan/realisasi-sumber-dana'
       path: '/laporan/realisasi-sumber-dana'
@@ -1466,6 +1519,13 @@ declare module '@tanstack/react-router' {
       path: '/errors/$error'
       fullPath: '/errors/$error'
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-dpa': {
+      id: '/_authenticated/dokumen/laporan-dpa'
+      path: '/dokumen/laporan-dpa'
+      fullPath: '/dokumen/laporan-dpa'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dokumen/berkas-lain': {
@@ -1715,6 +1775,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAlokasiDanaPaguSumberDanaRoute: typeof AuthenticatedAlokasiDanaPaguSumberDanaRoute
   AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute: typeof AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute
   AuthenticatedDokumenBerkasLainRoute: typeof AuthenticatedDokumenBerkasLainRoute
+  AuthenticatedDokumenLaporanDpaRoute: typeof AuthenticatedDokumenLaporanDpaRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedHistoryLogHapusUsersRoute: typeof AuthenticatedHistoryLogHapusUsersRoute
   AuthenticatedHistoryLogTteRoute: typeof AuthenticatedHistoryLogTteRoute
@@ -1722,6 +1783,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLaporanDaftarBelanjaPerSkpdRoute: typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   AuthenticatedLaporanRealisasiBelanjaRoute: typeof AuthenticatedLaporanRealisasiBelanjaRoute
   AuthenticatedLaporanRealisasiSumberDanaRoute: typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  AuthenticatedManajemenAppsAksesDpaSkpdRoute: typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   AuthenticatedManajemenAppsAksesKuasaBudRoute: typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   AuthenticatedManajemenAppsAksesOperatorRoute: typeof AuthenticatedManajemenAppsAksesOperatorRoute
   AuthenticatedManajemenAppsBatasWaktuRoute: typeof AuthenticatedManajemenAppsBatasWaktuRoute
@@ -1729,6 +1791,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMasterDataReferensiSKPDRoute: typeof AuthenticatedMasterDataReferensiSKPDRoute
   AuthenticatedMasterDataReferensiBidangUrusanRoute: typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute: typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
+  AuthenticatedMasterDataReferensiDpaRoute: typeof AuthenticatedMasterDataReferensiDpaRoute
   AuthenticatedMasterDataReferensiJenisBelanjaRoute: typeof AuthenticatedMasterDataReferensiJenisBelanjaRoute
   AuthenticatedMasterDataReferensiJenisSpmRoute: typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   AuthenticatedMasterDataReferensiKegiatanRoute: typeof AuthenticatedMasterDataReferensiKegiatanRoute
@@ -1781,6 +1844,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute:
     AuthenticatedAlokasiDanaRealisasiTransferSumberDanaRoute,
   AuthenticatedDokumenBerkasLainRoute: AuthenticatedDokumenBerkasLainRoute,
+  AuthenticatedDokumenLaporanDpaRoute: AuthenticatedDokumenLaporanDpaRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedHistoryLogHapusUsersRoute:
     AuthenticatedHistoryLogHapusUsersRoute,
@@ -1792,6 +1856,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedLaporanRealisasiBelanjaRoute,
   AuthenticatedLaporanRealisasiSumberDanaRoute:
     AuthenticatedLaporanRealisasiSumberDanaRoute,
+  AuthenticatedManajemenAppsAksesDpaSkpdRoute:
+    AuthenticatedManajemenAppsAksesDpaSkpdRoute,
   AuthenticatedManajemenAppsAksesKuasaBudRoute:
     AuthenticatedManajemenAppsAksesKuasaBudRoute,
   AuthenticatedManajemenAppsAksesOperatorRoute:
@@ -1806,6 +1872,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMasterDataReferensiBidangUrusanRoute,
   AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute:
     AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute,
+  AuthenticatedMasterDataReferensiDpaRoute:
+    AuthenticatedMasterDataReferensiDpaRoute,
   AuthenticatedMasterDataReferensiJenisBelanjaRoute:
     AuthenticatedMasterDataReferensiJenisBelanjaRoute,
   AuthenticatedMasterDataReferensiJenisSpmRoute:
