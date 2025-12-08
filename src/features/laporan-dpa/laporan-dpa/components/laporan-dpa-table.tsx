@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { DataTableBulkActions } from './data-table-bulk-actions'
-import { ReferensiLaporanFungsionalColumns as columns } from './penerimaan-columns'
+import { ReferensiLaporanFungsionalColumns as columns } from './laporan-dpa-columns'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {

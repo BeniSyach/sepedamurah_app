@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
-import { UsersMultiDeleteDialog } from './penerimaan-multi-delete-dialog'
+import { UsersMultiDeleteDialog } from './laporan-dpa-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>

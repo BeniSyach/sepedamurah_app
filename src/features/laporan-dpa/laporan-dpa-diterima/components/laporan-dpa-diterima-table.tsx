@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { ReferensiLaporanFungsionalColumns as columns } from './penerimaan-diterima-columns'
+import { ReferensiLaporanFungsionalColumns as columns } from './laporan-dpa-diterima-columns'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {

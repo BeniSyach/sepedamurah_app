@@ -9,7 +9,7 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { UsersDialogs } from './components/laporan-dpa-diterima-dialogs'
 import { LaporanFungsionalProvider } from './components/laporan-dpa-diterima-provider'
-import { BerkasMasukPenerimaanTable } from './components/penerimaan-diterima-table'
+import { BerkasMasukPenerimaanTable } from './components/laporan-dpa-diterima-table'
 
 const route = getRouteApi(
   '/_authenticated/dokumen/laporan-fungsional/penerimaan-diterima'

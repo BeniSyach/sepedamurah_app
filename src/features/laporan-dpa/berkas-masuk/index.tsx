@@ -9,7 +9,7 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { UsersDialogs } from './components/berkas-masuk-dpa-dialogs'
 import { LaporanFungsionalProvider } from './components/berkas-masuk-dpa-provider'
-import { BerkasMasukPenerimaanTable } from './components/berkas-masuk-penerimaan-table'
+import { BerkasMasukPenerimaanTable } from './components/berkas-masuk-dpa-table'
 
 const route = getRouteApi(
   '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'

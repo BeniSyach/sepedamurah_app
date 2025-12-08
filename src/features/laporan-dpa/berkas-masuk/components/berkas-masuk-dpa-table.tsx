@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { ReferensiLaporanFungsionalColumns as columns } from './berkas-masuk-penerimaan-columns'
+import { ReferensiLaporanFungsionalColumns as columns } from './berkas-masuk-dpa-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
 declare module '@tanstack/react-table' {

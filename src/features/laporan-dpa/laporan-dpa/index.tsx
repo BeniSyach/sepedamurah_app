@@ -10,7 +10,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { RefRekeningPrimaryButtons } from './components/laporan-dpa-buttons'
 import { UsersDialogs } from './components/laporan-dpa-dialogs'
 import { LaporanFungsionalProvider } from './components/laporan-dpa-provider'
-import { BerkasMasukPenerimaanTable } from './components/penerimaan-table'
+import { BerkasMasukPenerimaanTable } from './components/laporan-dpa-table'
 
 const route = getRouteApi(
   '/_authenticated/dokumen/laporan-fungsional/penerimaan'

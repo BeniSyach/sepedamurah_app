@@ -8,8 +8,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
-import { TerimaFungsionalMultiDialog } from './terima-berkas-masuk-penerimaan-dialog'
-import { TolakFungsionalMultiDialog } from './tolak-berkas-masuk-penerimaan-dialog'
+import { TerimaFungsionalMultiDialog } from './terima-berkas-masuk-dpa-dialog'
+import { TolakFungsionalMultiDialog } from './tolak-berkas-masuk-dpa-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
