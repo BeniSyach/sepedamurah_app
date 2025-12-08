@@ -49,14 +49,14 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
   },
 
   {
-    accessorKey: 'total_realisasi',
+    accessorKey: 'total_pagu',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Pagu Belanja' />
     ),
     cell: ({ row }) => {
-      const totalRealisasi = Number(row.original.total_realisasi ?? 0)
+      const totalPagu = Number(row.original.total_pagu ?? 0)
 
-      return <div>{formatRupiah(totalRealisasi)}</div>
+      return <div>{formatRupiah(totalPagu)}</div>
     },
     enableSorting: true,
   },
@@ -160,7 +160,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
   {
     accessorKey: 'persentase_pagu_belanja',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Pagu Belanja % ' />
+      <DataTableColumnHeader column={column} title='% ' />
     ),
     cell: ({ row }) => {
       const totalRealisasi = Number(row.original.total_realisasi ?? 0)
