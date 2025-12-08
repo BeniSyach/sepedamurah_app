@@ -45,7 +45,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
       return <div>{`${kd_ref1}.${kd_ref2}.${kd_ref3}`}</div>
     },
     enableSorting: false,
-    footer: () => null,
+    footer: () => 'Total',
   },
 
   {
@@ -55,10 +55,19 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     ),
     cell: ({ row }) => {
       const totalPagu = Number(row.original.total_pagu ?? 0)
-
       return <div>{formatRupiah(totalPagu)}</div>
     },
     enableSorting: true,
+    footer: ({ table }) => {
+      // Hitung total dari semua row
+      const total = table
+        .getRowModel()
+        .rows.reduce(
+          (acc, row) => acc + Number(row.original.total_pagu ?? 0),
+          0
+        )
+      return <div>{formatRupiah(total)}</div>
+    },
   },
 
   {
@@ -68,7 +77,7 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue('jenis_belanja')}</div>,
     enableSorting: true,
-    footer: () => 'Total', // Footer label
+    footer: () => null, // Footer label
   },
 
   // ✅ s.d Bulan Lalu
