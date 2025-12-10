@@ -31,11 +31,11 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 const status = [
   {
-    value: 1,
+    value: '1',
     label: 'Aktif',
   },
   {
-    value: 0,
+    value: '0',
     label: 'Tidak Aktif',
   },
 ]
@@ -83,17 +83,29 @@ export function SumberDanasActionDialog({
 
   const form = useForm<SumberDanaForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentRow ?? {
-      kd_ref1: '',
-      kd_ref2: '',
-      kd_ref3: '',
-      kd_ref4: '',
-      kd_ref5: '',
-      kd_ref6: '',
-      nm_ref: '',
-      status: '',
-      jenis_sumber_dana: '',
-    },
+    defaultValues: currentRow
+      ? {
+          kd_ref1: currentRow.kd_ref1 ?? '',
+          kd_ref2: currentRow.kd_ref2 ?? '',
+          kd_ref3: currentRow.kd_ref3 ?? '',
+          kd_ref4: currentRow.kd_ref4 ?? '',
+          kd_ref5: currentRow.kd_ref5 ?? '',
+          kd_ref6: currentRow.kd_ref6 ?? '',
+          nm_ref: currentRow.nm_ref ?? '',
+          status: String(currentRow.status ?? ''), // 🔥 pastikan string
+          jenis_sumber_dana: currentRow.jenis_sumber_dana ?? '',
+        }
+      : {
+          kd_ref1: '',
+          kd_ref2: '',
+          kd_ref3: '',
+          kd_ref4: '',
+          kd_ref5: '',
+          kd_ref6: '',
+          nm_ref: '',
+          status: '', // 🔥 tetap string
+          jenis_sumber_dana: '',
+        },
   })
 
   const onSubmit = async (data: SumberDanaForm) => {

@@ -14,7 +14,7 @@ type SelectDropdownProps = {
   defaultValue: string | undefined
   placeholder?: string
   isPending?: boolean
-  items: { label: React.ReactNode; value: string | number }[] | undefined
+  items: { label: React.ReactNode; value: string }[] | undefined
   disabled?: boolean
   className?: string
   isControlled?: boolean
