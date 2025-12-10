@@ -73,6 +73,12 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -204,6 +210,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
   const queryClient = useQueryClient()
   const [openConfirm, setOpenConfirm] = useState(false)
   const [hasConfirmedBerkas, setHasConfirmedBerkas] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
 
   const { mutateAsync: post } = usePostPermohonanSp2d()
   const { mutateAsync: put } = usePutPermohonanSp2d()
@@ -431,7 +438,11 @@ export function PermohonanPenerbitanSP2DActionDialog({
       })
 
       if (sisaBelanja > 0) {
-        toast.warning('Total sisa sumber dana tidak mencukupi nilai belanja!')
+        toast.warning(
+          'Total sisa sumber dana tidak mencukupi nilai belanja, silahkan tambahkan sumber dana yg lain !'
+        )
+      } else {
+        toast.success('Total sisa sumber dana sudah mencukupi nilai belanja')
       }
 
       // hanya update jika ada perubahan sesungguhnya
@@ -784,9 +795,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
                                           newTotal < nilaiBelanja &&
                                           iniKhusus
                                         ) {
-                                          alert(
-                                            'Sumber dana KHUSUS tidak mencukupi total belanja.'
-                                          )
+                                          setShowAlert(true)
                                           return
                                         }
 
@@ -915,6 +924,19 @@ export function PermohonanPenerbitanSP2DActionDialog({
             >
               Ya, sesuai
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Peringatan</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sumber dana KHUSUS tidak mencukupi total belanja.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>OK</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
