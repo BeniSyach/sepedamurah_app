@@ -1,10 +1,5 @@
+import type { RefDpa } from '@/api/master-data'
 import type { PaginationMeta } from '@/api/users'
-
-// Type untuk 1 item DPA
-export interface DPAItem {
-  id: number
-  nm_dpa: string
-}
 
 // Type untuk 1 SKPD beserta list DPA-nya
 export interface AksesDPAGroup {
@@ -15,7 +10,7 @@ export interface AksesDPAGroup {
   kd_opd4: string
   kd_opd5: string
   nama_opd: string
-  dpa: DPAItem[]
+  dpa: RefDpa[]
   tahun: string
 }
 
@@ -25,4 +20,27 @@ export interface AksesDPAResponse {
   message: string
   data: AksesDPAGroup[]
   meta: PaginationMeta
+}
+
+export interface CekLaporanDPAItem {
+  akses_id: number
+  opd: string
+  dpa_id: string
+  nama_dpa: string | null
+  status_laporan: boolean
+  laporan_data: string | null
+}
+
+export interface KurangUploadItem {
+  dpa_id: string
+  nama_dpa: string
+  opd: string
+  pesan: string
+}
+
+export interface CekLaporanDPAResponse {
+  status: boolean
+  status_laporan_memenuhi: boolean
+  data: CekLaporanDPAItem[]
+  kurang_upload: KurangUploadItem[]
 }

@@ -33,6 +33,10 @@ export function usePostAksesDPASKPD() {
       queryClient.invalidateQueries({
         queryKey: ['useGetAksesDPASKPD'],
       })
+      // Refresh daftar urusan setelah berhasil menambah
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanDPA'],
+      })
     },
     onError: (err) => {
       return err

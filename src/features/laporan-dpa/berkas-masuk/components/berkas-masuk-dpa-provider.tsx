@@ -1,47 +1,43 @@
 import React, { useState } from 'react'
-import { type LaporanFungsional } from '@/api'
+import { type LaporanDPA } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefLaporanFungsionalDialogType = 'lihat' | 'periksa'
+type RefLaporanDPADialogType = 'lihat' | 'periksa'
 
-type RefLaporanFungsionalContextType = {
-  open: RefLaporanFungsionalDialogType | null
-  setOpen: (str: RefLaporanFungsionalDialogType | null) => void
-  currentRow: LaporanFungsional | null
-  setCurrentRow: React.Dispatch<React.SetStateAction<LaporanFungsional | null>>
+type RefLaporanDPAContextType = {
+  open: RefLaporanDPADialogType | null
+  setOpen: (str: RefLaporanDPADialogType | null) => void
+  currentRow: LaporanDPA | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<LaporanDPA | null>>
 }
 
-const RefLaporanFungsionalContext =
-  React.createContext<RefLaporanFungsionalContextType | null>(null)
+const RefLaporanDPAContext =
+  React.createContext<RefLaporanDPAContextType | null>(null)
 
-export function LaporanFungsionalProvider({
+export function LaporanDPAProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const [open, setOpen] = useDialogState<RefLaporanFungsionalDialogType>(null)
-  const [currentRow, setCurrentRow] = useState<LaporanFungsional | null>(null)
+  const [open, setOpen] = useDialogState<RefLaporanDPADialogType>(null)
+  const [currentRow, setCurrentRow] = useState<LaporanDPA | null>(null)
 
   return (
-    <RefLaporanFungsionalContext
-      value={{ open, setOpen, currentRow, setCurrentRow }}
-    >
+    <RefLaporanDPAContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </RefLaporanFungsionalContext>
+    </RefLaporanDPAContext>
   )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useRefLaporanFungsional = () => {
-  const refLaporanFungsionalContext = React.useContext(
-    RefLaporanFungsionalContext
-  )
+export const useRefLaporanDPA = () => {
+  const refLaporanDPAContext = React.useContext(RefLaporanDPAContext)
 
-  if (!refLaporanFungsionalContext) {
+  if (!refLaporanDPAContext) {
     throw new Error(
-      'useRefLaporanFungsional has to be used within <RefLaporanFungsionalContext>'
+      'useRefLaporanDPA has to be used within <RefLaporanDPAContext>'
     )
   }
 
-  return refLaporanFungsionalContext
+  return refLaporanDPAContext
 }

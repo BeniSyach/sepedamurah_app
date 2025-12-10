@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
+  type CekLaporanDPAItem,
+  useCekLaporanDPA,
   useCekUploadFungsional,
   useDeletePermohonanSP2D,
   useGetBatasWaktu,
@@ -59,6 +61,14 @@ export function UsersDialogs() {
     kd_opd4: user?.kd_opd4 ?? '',
     kd_opd5: user?.kd_opd5 ?? '',
     status: user?.skpd.status_penerimaan ?? '0', // 0 atau 1
+  })
+  const { data: useDPA } = useCekLaporanDPA({
+    tahun: currentYear,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
   })
 
   const isServiceClosed = () => {
@@ -155,6 +165,33 @@ export function UsersDialogs() {
     return { blocked: false, reason: '' }
   }
 
+  const isDPAIncomplete = () => {
+    if (!useDPA) return { blocked: false, reason: '' }
+
+    // Jika semua laporan memenuhi akses DPA → aman
+    if (useDPA.status_laporan_memenuhi === true) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Jika ada yang kurang, ambil daftar yg harus diupload
+    if (
+      useDPA.kurang_upload &&
+      Array.isArray(useDPA.kurang_upload) &&
+      useDPA.kurang_upload.length > 0
+    ) {
+      const daftar = useDPA.kurang_upload
+        .map((d: CekLaporanDPAItem) => `• ${d.nama_dpa}`)
+        .join('\n')
+
+      return {
+        blocked: true,
+        reason: `Masih ada Laporan DPA yang belum diupload:\n${daftar}`,
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
   // 🧠 Deteksi ketika user membuka form add/edit
   useEffect(() => {
     // Berlaku hanya untuk Bendahara
@@ -168,6 +205,15 @@ export function UsersDialogs() {
         setClosedReason(status.reason)
         setOpen(null) // Jangan tampilkan form
       }
+
+      const statusDPA = isDPAIncomplete()
+      if (statusDPA.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusDPA.reason)
+        setOpen(null)
+        return
+      }
+
       // 2. CEK STATUS UPLOAD
       const statusUpload = isUploadNotAllowed()
       if (statusUpload.blocked) {

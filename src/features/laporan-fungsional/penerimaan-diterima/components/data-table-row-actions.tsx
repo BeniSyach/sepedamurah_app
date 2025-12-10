@@ -22,6 +22,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const sudahDiTteLaporanFungsional = (item: LaporanFungsional): boolean => {
     return item.berkas_tte !== '' && item.berkas_tte != null
   }
+  const levelAkses = localStorage.getItem('user_role')
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,17 +36,19 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa
-            <DropdownMenuShortcut>
-              <FolderSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('periksa')
+              }}
+            >
+              Periksa
+              <DropdownMenuShortcut>
+                <FolderSearch size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {

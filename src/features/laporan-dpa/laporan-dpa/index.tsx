@@ -1,5 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { useGetLaporanFungsional } from '@/api'
+import { useGetLaporanDPA } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -9,33 +9,32 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { RefRekeningPrimaryButtons } from './components/laporan-dpa-buttons'
 import { UsersDialogs } from './components/laporan-dpa-dialogs'
-import { LaporanFungsionalProvider } from './components/laporan-dpa-provider'
-import { BerkasMasukPenerimaanTable } from './components/laporan-dpa-table'
+import { LaporanDPAProvider } from './components/laporan-dpa-provider'
+import { LaporanDPATable } from './components/laporan-dpa-table'
 
-const route = getRouteApi(
-  '/_authenticated/dokumen/laporan-fungsional/penerimaan'
-)
+const route = getRouteApi('/_authenticated/dokumen/laporan-dpa/laporan-dpa')
 
-export function PenerimaanLaporanFungsional() {
+export function LaporanDPA() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role')
 
   // 🔥 Ambil data langsung dari Laravel API
-  const { data, isLoading, isError } = useGetLaporanFungsional({
+  const { data, isLoading, isError } = useGetLaporanDPA({
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
-    jenis: 'Penerimaan',
-    menu: userRole === 'Operator SKPKD' ? 'operator_penerimaan' : 'penerimaan',
+    jenis: 'laporan_dpa',
+    menu:
+      userRole === 'Operator SKPKD' ? 'operator_laporan_dpa' : 'laporan_dpa',
     ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
       ? { user_id: user?.id }
       : {}),
   })
 
   return (
-    <LaporanFungsionalProvider>
+    <LaporanDPAProvider>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -48,12 +47,8 @@ export function PenerimaanLaporanFungsional() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Penerimaan Laporan Fungsional
-            </h2>
-            <p className='text-muted-foreground'>
-              Data Ini adalah Penerimaan Laporan Fungsional
-            </p>
+            <h2 className='text-2xl font-bold tracking-tight'>Laporan DPA</h2>
+            <p className='text-muted-foreground'>Data Ini adalah Laporan DPA</p>
           </div>
           <RefRekeningPrimaryButtons />
         </div>
@@ -64,7 +59,7 @@ export function PenerimaanLaporanFungsional() {
           ) : isError ? (
             <p>Failed to load users.</p>
           ) : (
-            <BerkasMasukPenerimaanTable
+            <LaporanDPATable
               data={data?.data ?? []}
               meta={data?.meta}
               search={search}
@@ -75,6 +70,6 @@ export function PenerimaanLaporanFungsional() {
       </Main>
 
       <UsersDialogs />
-    </LaporanFungsionalProvider>
+    </LaporanDPAProvider>
   )
 }

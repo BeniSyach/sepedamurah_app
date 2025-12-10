@@ -2,18 +2,17 @@ import { useDeleteLaporanFungsional } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { UsersActionDialog } from './laporan-dpa-action-dialog'
-import { PenerimaanPeriksa } from './laporan-dpa-periksa'
-import { useRefLaporanFungsional } from './laporan-dpa-provider'
-import { PenerimaanTTEBerkas } from './penerimaan-tte-action'
+import { LaporanDPAActionDialog } from './laporan-dpa-action-dialog'
+import { LaporanDPAPeriksa } from './laporan-dpa-periksa'
+import { useRefLaporanDPA } from './laporan-dpa-provider'
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanFungsional()
+  const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanDPA()
   const { mutateAsync } = useDeleteLaporanFungsional()
 
   const handleDelete = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.id })
+    const deletePromise = mutateAsync({ id: currentRow.id.toString() })
 
     await toast.promise(deletePromise, {
       loading: 'Menghapus data...',
@@ -21,7 +20,7 @@ export function UsersDialogs() {
         setOpen(null)
         setTimeout(() => setCurrentRow(null), 500)
 
-        return `Data "${currentRow.jenis_berkas}" berhasil dihapus.`
+        return `Data "${currentRow.dpa?.nm_dpa}" berhasil dihapus.`
       },
       error: (err) => {
         return err.data.message
@@ -53,7 +52,7 @@ export function UsersDialogs() {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', currentRow.nama_file_asli)
+        link.setAttribute('download', currentRow.dpa?.nm_dpa ?? 'tes')
         document.body.appendChild(link)
         link.click()
         link.remove()
@@ -109,50 +108,9 @@ export function UsersDialogs() {
     )
   }
 
-  // Fungsi download file
-  const handleDownloadTTE = async () => {
-    if (!currentRow) return
-
-    await toast.promise(
-      (async () => {
-        const response = await api.get(
-          `/laporan/fungsional/downloadTTE/${currentRow.id}`,
-          {
-            responseType: 'blob',
-            headers: {
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-              Pragma: 'no-cache',
-              Expires: '0',
-            },
-            params: {
-              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
-            },
-          }
-        )
-
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', currentRow.berkas_tte ?? 'random.pdf')
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
-
-        // Tutup dialog setelah download berhasil
-        setOpen(null)
-        setTimeout(() => setCurrentRow(null), 500)
-      })(),
-      {
-        loading: 'Mengunduh file...',
-        success: 'File berhasil diunduh!',
-        error: 'Gagal mengunduh file.',
-      }
-    )
-  }
-
   return (
     <>
-      <UsersActionDialog
+      <LaporanDPAActionDialog
         key='laporan-fungsional-penerimaan-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
@@ -160,7 +118,7 @@ export function UsersDialogs() {
 
       {currentRow && (
         <>
-          <UsersActionDialog
+          <LaporanDPAActionDialog
             key={`laporan-fungsional-penerimaan-edit-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {
@@ -172,23 +130,11 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <PenerimaanPeriksa
+          <LaporanDPAPeriksa
             key={`laporan-fungsional-penerimaan-periksa-${currentRow.id}`}
             open={open === 'periksa'}
             onOpenChange={() => {
               setOpen('periksa')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
-          />
-
-          <PenerimaanTTEBerkas
-            key={`laporan-fungsional-penerimaan-TTE-Berkas-${currentRow.id}`}
-            open={open === 'TTEBerkas'}
-            onOpenChange={() => {
-              setOpen('TTEBerkas')
               setTimeout(() => {
                 setCurrentRow(null)
               }, 500)
@@ -229,11 +175,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handlePreview}
             className='max-w-md'
-            title={`Unduh File: ${currentRow.nama_file}`}
+            title={`Unduh File: ${currentRow.dpa?.nm_dpa}`}
             desc={
               <>
                 Kamu akan mengunduh file dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
+                <strong>{currentRow.dpa?.nm_dpa}</strong>.
               </>
             }
             confirmText='Lihat'
@@ -249,31 +195,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDownload}
             className='max-w-md'
-            title={`Unduh File: ${currentRow.nama_file}`}
+            title={`Unduh File: ${currentRow.dpa?.nm_dpa}`}
             desc={
               <>
                 Kamu akan mengunduh file dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
-              </>
-            }
-            confirmText='Download'
-          />
-
-          <ConfirmDialog
-            key={`fungsional-penerimaan-downloadBerkasTTE-${currentRow.id}`}
-            destructive={false}
-            open={open === 'downloadBerkasTTE'}
-            onOpenChange={() => {
-              setOpen('downloadBerkasTTE')
-              setTimeout(() => setCurrentRow(null), 500)
-            }}
-            handleConfirm={handleDownloadTTE}
-            className='max-w-md'
-            title={`Unduh File: ${currentRow.nama_file}`}
-            desc={
-              <>
-                Kamu akan mengunduh Berkas Yang Sudah Ditandatangani dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
+                <strong>{currentRow.dpa?.nm_dpa}</strong>.
               </>
             }
             confirmText='Download'

@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type LaporanFungsional } from '@/api'
+import { type LaporanDPA } from '@/api'
 import { Eye, FolderSearch2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,14 +11,14 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRefLaporanFungsional } from './berkas-masuk-dpa-provider'
+import { useRefLaporanDPA } from './berkas-masuk-dpa-provider'
 
 type DataTableRowActionsProps = {
-  row: Row<LaporanFungsional>
+  row: Row<LaporanDPA>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useRefLaporanFungsional()
+  const { setOpen, setCurrentRow } = useRefLaporanDPA()
   return (
     <>
       <DropdownMenu modal={false}>

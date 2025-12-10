@@ -1,5 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { useGetLaporanFungsional } from '@/api'
+import { useGetLaporanDPA } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -8,31 +8,29 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { UsersDialogs } from './components/berkas-masuk-dpa-dialogs'
-import { LaporanFungsionalProvider } from './components/berkas-masuk-dpa-provider'
-import { BerkasMasukPenerimaanTable } from './components/berkas-masuk-dpa-table'
+import { LaporanDPAProvider } from './components/berkas-masuk-dpa-provider'
+import { BerkasMasukLaporanDPATable } from './components/berkas-masuk-dpa-table'
 
-const route = getRouteApi(
-  '/_authenticated/dokumen/laporan-fungsional/berkas-masuk-penerimaan'
-)
+const route = getRouteApi('/_authenticated/dokumen/laporan-dpa/berkas-masuk')
 
-export function BerkasMasukPenerimaan() {
+export function BerkasMasukLaporanDPA() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role')
 
   // 🔥 Ambil data langsung dari Laravel API
-  const { data, isLoading, isError } = useGetLaporanFungsional({
+  const { data, isLoading, isError } = useGetLaporanDPA({
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_file,
     jenis: 'Penerimaan',
-    menu: 'berkas_masuk_penerimaan',
+    menu: 'berkas_masuk_laporan_dpa',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
   })
 
   return (
-    <LaporanFungsionalProvider>
+    <LaporanDPAProvider>
       <Header fixed>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
@@ -46,10 +44,10 @@ export function BerkasMasukPenerimaan() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Berkas Masuk Penerimaan Laporan Fungsional
+              Berkas Masuk Penerimaan Laporan DPA
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Berkas Masuk Penerimaan Laporan Fungsional
+              Data Ini adalah Berkas Masuk Penerimaan Laporan DPA
             </p>
           </div>
         </div>
@@ -60,7 +58,7 @@ export function BerkasMasukPenerimaan() {
           ) : isError ? (
             <p>Failed to load users.</p>
           ) : (
-            <BerkasMasukPenerimaanTable
+            <BerkasMasukLaporanDPATable
               data={data?.data ?? []}
               meta={data?.meta}
               search={search}
@@ -71,6 +69,6 @@ export function BerkasMasukPenerimaan() {
       </Main>
 
       <UsersDialogs />
-    </LaporanFungsionalProvider>
+    </LaporanDPAProvider>
   )
 }

@@ -1,9 +1,9 @@
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRefLaporanFungsional } from './laporan-dpa-provider'
+import { useRefLaporanDPA } from './laporan-dpa-provider'
 
 export function RefRekeningPrimaryButtons() {
-  const { setOpen } = useRefLaporanFungsional()
+  const { setOpen } = useRefLaporanDPA()
   return (
     <div className='flex gap-2'>
       <Button className='space-x-1' onClick={() => setOpen('add')}>

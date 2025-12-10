@@ -28,9 +28,13 @@ export function useGetLaporanDPA(params: UseLaporanDPA) {
           },
         }
       )
+
       return data
     },
+
+    // agar pagination lancar
     placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 60 * 5, // 5 menit cache
+
+    staleTime: 1000 * 60 * 5, // 5 menit
   })
 }

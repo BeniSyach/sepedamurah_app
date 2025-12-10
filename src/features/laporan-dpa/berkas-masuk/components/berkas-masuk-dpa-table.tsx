@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import type { LaporanFungsional } from '@/api'
+import type { LaporanDPA } from '@/api'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { ReferensiLaporanFungsionalColumns as columns } from './berkas-masuk-dpa-columns'
+import { ReferensiLaporanDPAColumns as columns } from './berkas-masuk-dpa-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
 declare module '@tanstack/react-table' {
@@ -30,7 +30,7 @@ declare module '@tanstack/react-table' {
 }
 
 type DataTableProps = {
-  data: LaporanFungsional[]
+  data: LaporanDPA[]
   meta?: {
     current_page: number
     per_page: number
@@ -40,7 +40,7 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
-export function BerkasMasukPenerimaanTable({
+export function BerkasMasukLaporanDPATable({
   data,
   meta,
   search,

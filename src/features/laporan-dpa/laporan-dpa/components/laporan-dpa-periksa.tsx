@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { type AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { usePutLaporanFungsional, type LaporanFungsional } from '@/api'
+import { usePutLaporanDPA, type LaporanDPA } from '@/api'
 import { Check, X } from 'lucide-react'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 import { pdfjs } from 'react-pdf'
@@ -18,21 +18,15 @@ import {
   DialogFooter,
   DialogContentLarge,
 } from '@/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form'
+import { Form, FormControl, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-type LaporanFungsionalPeriksaProps = {
+type LaporanDPAPeriksaProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow: LaporanFungsional
+  currentRow: LaporanDPA
   onAction?: (action: 'terima' | 'tolak', id: string) => void
 }
 
@@ -44,27 +38,27 @@ const formSchema = z.object({
   tanggal_upload: z.string().optional(),
 })
 
-type LaporanFungsionalForm = z.infer<typeof formSchema>
+type LaporanDPAForm = z.infer<typeof formSchema>
 
-export function PenerimaanPeriksa({
+export function LaporanDPAPeriksa({
   open,
   onOpenChange,
   currentRow,
   onAction,
-}: LaporanFungsionalPeriksaProps) {
+}: LaporanDPAPeriksaProps) {
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const user = useAuthStore((s) => s.user)
 
-  const { mutateAsync: putLaporanFungsionalAsync } = usePutLaporanFungsional()
+  const { mutateAsync: putLaporanDPAAsync } = usePutLaporanDPA()
 
-  const form = useForm<LaporanFungsionalForm>({
+  const form = useForm<LaporanDPAForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: currentRow?.id || '',
-      nama_file: currentRow?.nama_file || '',
-      nama_file_asli: currentRow?.nama_file_asli || undefined,
-      nama_pengirim: currentRow?.nama_pengirim || user?.name,
-      tanggal_upload: currentRow?.tanggal_upload || '',
+      id: currentRow?.id.toString() || '',
+      nama_file: currentRow?.dpa?.nm_dpa || '',
+      nama_file_asli: currentRow?.file || undefined,
+      nama_pengirim: currentRow?.user?.name || user?.name,
+      tanggal_upload: currentRow?.created_at || '',
     },
   })
 
@@ -74,7 +68,7 @@ export function PenerimaanPeriksa({
     const fetchPdf = async () => {
       try {
         const response = await api.get<Blob>(
-          `/laporan/fungsional/download/${currentRow.id}`,
+          `/laporan/laporan-dpa/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -122,7 +116,7 @@ export function PenerimaanPeriksa({
 
     try {
       const formData = new FormData()
-      formData.append('id', currentRow.id)
+      formData.append('id', currentRow.id.toString())
       formData.append('id_operator', user.id.toString())
       formData.append('nama_operator', user.name)
 
@@ -141,17 +135,17 @@ export function PenerimaanPeriksa({
       }
 
       // Kirim ke backend
-      await toast.promise(putLaporanFungsionalAsync(formData), {
+      await toast.promise(putLaporanDPAAsync(formData), {
         loading: action === 'terima' ? 'Menerima...' : 'Menolak...',
         success: () => {
           onOpenChange(false) // tutup modal
-          onAction?.(action, currentRow.id) // callback ke parent
+          onAction?.(action, currentRow.id.toString()) // callback ke parent
           return `Berhasil ${action === 'terima' ? 'Diterima' : 'Ditolak'}!`
         },
         error: 'Gagal melakukan aksi.',
       })
 
-      onAction?.(action, currentRow.id) // callback ke parent
+      onAction?.(action, currentRow.id.toString()) // callback ke parent
     } catch (err: unknown) {
       const error = err as AxiosError
       toast.error(
@@ -160,16 +154,10 @@ export function PenerimaanPeriksa({
     }
   }
 
-  const fields: Array<'nama_file' | 'nama_pengirim' | 'tanggal_upload'> = [
-    'nama_file',
-    'nama_pengirim',
-    'tanggal_upload',
-  ]
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContentLarge
-        title='Periksa Berkas Fungsional'
+        title='Periksa Berkas Laporan DPA'
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
@@ -178,36 +166,41 @@ export function PenerimaanPeriksa({
             <div className='flex-[0.5] overflow-y-auto border-r p-3'>
               <Form {...form}>
                 <div className='space-y-4'>
-                  {fields.map((field) => (
-                    <FormField
-                      key={field}
-                      control={form.control}
-                      name={field}
-                      render={() => (
-                        <FormItem>
-                          <FormLabel>
-                            {field === 'tanggal_upload'
-                              ? 'Tanggal Upload'
-                              : field
-                                  .replace('_', ' ')
-                                  .replace(/\b\w/g, (c) => c.toUpperCase())}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              value={
-                                field === 'tanggal_upload'
-                                  ? new Date(
-                                      currentRow[field] || ''
-                                    ).toLocaleDateString()
-                                  : currentRow[field] || ''
-                              }
-                              readOnly
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  ))}
+                  <Form {...form}>
+                    {/* NAMA FILE */}
+                    <FormItem>
+                      <FormLabel>Nama DPA</FormLabel>
+                      <FormControl>
+                        <Input
+                          value={currentRow?.dpa?.nm_dpa || '-'}
+                          readOnly
+                        />
+                      </FormControl>
+                    </FormItem>
+
+                    {/* NAMA PENGIRIM */}
+                    <FormItem>
+                      <FormLabel>Nama Pengirim</FormLabel>
+                      <FormControl>
+                        <Input value={currentRow?.user?.name || '-'} readOnly />
+                      </FormControl>
+                    </FormItem>
+
+                    {/* TANGGAL UPLOAD */}
+                    <FormItem>
+                      <FormLabel>Tanggal Upload</FormLabel>
+                      <FormControl>
+                        <Input
+                          value={
+                            currentRow?.created_at
+                              ? new Date(currentRow.created_at).toLocaleString()
+                              : '-'
+                          }
+                          readOnly
+                        />
+                      </FormControl>
+                    </FormItem>
+                  </Form>
                 </div>
               </Form>
             </div>

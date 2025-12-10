@@ -29,6 +29,9 @@ export function usePutAksesDPASKPD() {
       queryClient.invalidateQueries({
         queryKey: ['useGetAksesDPASKPD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanDPA'],
+      })
     },
     onError: (err) => {
       return err

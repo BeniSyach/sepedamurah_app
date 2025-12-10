@@ -29,15 +29,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowTerimaConfirm(true)}
               className='size-8'
-              aria-label='Terima Berkas Masuk Pengeluaran'
-              title='Terima Berkas Masuk Pengeluaran'
+              aria-label='Terima Berkas Masuk Laporan DPA'
+              title='Terima Berkas Masuk Laporan DPA'
             >
               <Check />
-              <span className='sr-only'>Terima Berkas Masuk Pengeluaran</span>
+              <span className='sr-only'>Terima Berkas Masuk Laporan DPA</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Terima Berkas Masuk Pengeluaran</p>
+            <p>Terima Berkas Masuk Laporan DPA</p>
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -47,15 +47,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowTolakConfirm(true)}
               className='size-8'
-              aria-label='Tolak Berkas Masuk Pengeluaran'
-              title='Tolak Berkas Masuk Pengeluaran'
+              aria-label='Tolak Berkas Masuk Laporan DPA'
+              title='Tolak Berkas Masuk Laporan DPA'
             >
               <X />
-              <span className='sr-only'>Tolak Berkas Masuk Pengeluaran</span>
+              <span className='sr-only'>Tolak Berkas Masuk Laporan DPA</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Tolak Berkas Masuk Pengeluaran</p>
+            <p>Tolak Berkas Masuk Laporan DPA</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

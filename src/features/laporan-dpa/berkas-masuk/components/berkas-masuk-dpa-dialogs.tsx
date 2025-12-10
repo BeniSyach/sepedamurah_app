@@ -2,10 +2,10 @@ import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PenerimaanPeriksa } from './berkas-masuk-dpa-action-dialog'
-import { useRefLaporanFungsional } from './berkas-masuk-dpa-provider'
+import { useRefLaporanDPA } from './berkas-masuk-dpa-provider'
 
 export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanFungsional()
+  const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanDPA()
 
   // Fungsi preview file di tab baru
   const handlePreview = async () => {
@@ -14,7 +14,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/laporan/fungsional/download/${currentRow.id}`,
+          `/laporan/laporan-dpa/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -71,11 +71,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handlePreview}
             className='max-w-md'
-            title={`Unduh File: ${currentRow.nama_file}`}
+            title={`Unduh File: ${currentRow.dpa?.nm_dpa}`}
             desc={
               <>
                 Kamu akan Melihat file dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
+                <strong>{currentRow.dpa?.nm_dpa}</strong>.
               </>
             }
             confirmText='Lihat'

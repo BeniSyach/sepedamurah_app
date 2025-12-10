@@ -82,6 +82,7 @@ export function AksesDPASKPDActionDialog({
   } = useGetRefSKPD({
     page: 1,
     perPage: 100, // ambil banyak biar bisa isi select
+    hidden: '0',
   })
 
   // Ambil data dari response

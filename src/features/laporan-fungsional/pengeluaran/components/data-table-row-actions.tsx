@@ -30,6 +30,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const sudahDiTteLaporanFungsional = (item: LaporanFungsional): boolean => {
     return item.berkas_tte !== '' && item.berkas_tte != null
   }
+  const levelAkses = localStorage.getItem('user_role')
+  const proses = row.original?.proses
   return (
     <>
       <DropdownMenu modal={false}>
@@ -43,17 +45,19 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa Berkas
-            <DropdownMenuShortcut>
-              <LucideFolderSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('periksa')
+              }}
+            >
+              Periksa Berkas
+              <DropdownMenuShortcut>
+                <LucideFolderSearch size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
@@ -67,18 +71,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <Pen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {proses !== '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit')
+                }}
+              >
+                Edit
+                <DropdownMenuShortcut>
+                  <Pen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

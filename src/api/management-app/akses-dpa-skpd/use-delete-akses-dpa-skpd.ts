@@ -20,6 +20,9 @@ export function useDeleteAksesDPASKPD() {
       queryClient.invalidateQueries({
         queryKey: ['useGetAksesDPASKPD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanDPA'],
+      })
     },
     onError: (error) => {
       return error

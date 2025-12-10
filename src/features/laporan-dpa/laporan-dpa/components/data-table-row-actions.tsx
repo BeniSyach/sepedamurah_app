@@ -1,15 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type LaporanFungsional } from '@/api'
-import {
-  Download,
-  FolderSearch,
-  LucideFolderSearch,
-  Trash2,
-  Pen,
-  DownloadCloudIcon,
-  Eye,
-} from 'lucide-react'
+import { type LaporanDPA } from '@/api'
+import { Download, LucideFolderSearch, Trash2, Pen, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,17 +11,16 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRefLaporanFungsional } from './laporan-dpa-provider'
+import { useRefLaporanDPA } from './laporan-dpa-provider'
 
 type DataTableRowActionsProps = {
-  row: Row<LaporanFungsional>
+  row: Row<LaporanDPA>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useRefLaporanFungsional()
-  const sudahDiTteLaporanFungsional = (item: LaporanFungsional): boolean => {
-    return item.berkas_tte !== '' && item.berkas_tte != null
-  }
+  const { setOpen, setCurrentRow } = useRefLaporanDPA()
+  const levelAkses = localStorage.getItem('user_role')
+  const proses = row.original?.proses
   return (
     <>
       <DropdownMenu modal={false}>
@@ -43,42 +34,36 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa Berkas
-            <DropdownMenuShortcut>
-              <LucideFolderSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('periksa')
+              }}
+            >
+              Periksa Berkas
+              <DropdownMenuShortcut>
+                <LucideFolderSearch size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('TTEBerkas')
-            }}
-          >
-            TTE Berkas
-            <DropdownMenuShortcut>
-              <FolderSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <Pen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {proses !== '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit')
+                }}
+              >
+                Edit
+                <DropdownMenuShortcut>
+                  <Pen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
@@ -115,22 +100,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          {sudahDiTteLaporanFungsional(row.original) && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  setCurrentRow(row.original)
-                  setOpen('downloadBerkasTTE')
-                }}
-              >
-                Download Berkas TTE
-                <DropdownMenuShortcut>
-                  <DownloadCloudIcon size={16} />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </>
-          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
