@@ -13,6 +13,7 @@ export interface CheckSumberDana {
   sumber_dana: number // sumber dana aktual
   belanja: number // realisasi belanja
   sisa: number // sisa anggaran
+  jenis_sumber_dana: string
 }
 
 export interface CheckSumberDanaResponse {

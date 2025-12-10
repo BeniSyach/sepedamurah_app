@@ -76,6 +76,19 @@ export const ReferensiPaguSumberDanaColumns: ColumnDef<PaguSumberDana>[] = [
     enableSorting: true,
   },
 
+  // ✅ nama Suber Dana
+  {
+    accessorKey: 'jenis_sumber_dana', // ganti key untuk akses nama SKPD
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Jenis Sumber Dana' />
+    ),
+    cell: ({ row }) => {
+      const sumber_dana = row.original.sumber_dana
+      return <div>{sumber_dana?.jenis_sumber_dana ?? '-'}</div>
+    },
+    enableSorting: true,
+  },
+
   // ✅ pagu
   {
     accessorKey: 'pagu',

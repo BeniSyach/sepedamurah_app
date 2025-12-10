@@ -69,6 +69,10 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -224,6 +228,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
         kd_ref6: item.kd_ref6,
         sisa: item.sisa,
         nm_sumber: item.nm_sumber,
+        jenis_sumber_dana: item.jenis_sumber_dana,
       },
       label: `${item.nm_sumber}`,
     })) ?? []
@@ -697,17 +702,58 @@ export function PermohonanPenerbitanSP2DActionDialog({
                                       v.kd_ref5 === r.value.kd_ref5 &&
                                       v.kd_ref6 === r.value.kd_ref6
                                   )
+                                  // ----------------------------------------------------------
+                                  // RULE 1: Jika jenis_sumber_dana = KHUSUS => tidak boleh multi
+                                  // ----------------------------------------------------------
+                                  const adaKhusus = sumberDana.some(
+                                    (sd: any) =>
+                                      sd.jenis_sumber_dana === 'KHUSUS'
+                                  )
+                                  const iniKhusus =
+                                    r.value.jenis_sumber_dana === 'KHUSUS'
 
+                                  // Jika sudah punya 1 KHUSUS → semua selain dirinya harus disabled
+                                  if (adaKhusus && !selected && !iniKhusus) {
+                                    return (
+                                      <CommandItem
+                                        key={r.label}
+                                        disabled={true}
+                                        className='cursor-not-allowed opacity-40'
+                                      >
+                                        <span>{r.label}</span>
+                                      </CommandItem>
+                                    )
+                                  }
+
+                                  // Jika mau memilih KHUSUS tapi sumber dana sudah lebih dari 0 → tidak boleh multi
+                                  const disableKhusus =
+                                    iniKhusus &&
+                                    sumberDana.length > 0 &&
+                                    !selected
+
+                                  // ----------------------------------------------------------
+                                  // RULE 2: Jika totalAlokasi >= nilaiBelanja → disabled
+                                  // ----------------------------------------------------------
                                   const disabled =
-                                    !selected && totalAlokasi >= nilaiBelanja
+                                    (!selected &&
+                                      totalAlokasi >= nilaiBelanja) ||
+                                    disableKhusus
 
                                   return (
                                     <CommandItem
                                       key={r.label}
                                       disabled={disabled}
                                       onSelect={() => {
+                                        // BLOKIR KHUSUS JIKA SUDAH ADA SUMBER LAIN
+                                        if (disableKhusus) {
+                                          alert(
+                                            'Sumber dana KHUSUS tidak boleh digabung dengan sumber dana lain.'
+                                          )
+                                          return
+                                        }
+
+                                        // HAPUS jika sudah ada
                                         if (selected) {
-                                          // kalau sudah dipilih, hapus dari daftar
                                           field.onChange(
                                             sumberDana.filter(
                                               (v: any) =>
@@ -726,13 +772,26 @@ export function PermohonanPenerbitanSP2DActionDialog({
                                                 )
                                             )
                                           )
-                                        } else if (!disabled) {
-                                          // tambahkan hanya kalau belum cukup
-                                          field.onChange([
-                                            ...sumberDana,
-                                            r.value,
-                                          ])
+                                          return
                                         }
+
+                                        // CEK TOTAL — jika kurang dari nilai belanja nanti dicek ulang
+                                        const newTotal =
+                                          totalAlokasi +
+                                          Number(r.value.sisa || 0)
+
+                                        if (
+                                          newTotal < nilaiBelanja &&
+                                          iniKhusus
+                                        ) {
+                                          alert(
+                                            'Sumber dana KHUSUS tidak mencukupi total belanja.'
+                                          )
+                                          return
+                                        }
+
+                                        // TAMBAH data sumber dana
+                                        field.onChange([...sumberDana, r.value])
                                       }}
                                       className={
                                         disabled

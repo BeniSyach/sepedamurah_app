@@ -31,12 +31,23 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 const status = [
   {
-    value: '1',
+    value: 1,
     label: 'Aktif',
   },
   {
-    value: '0',
+    value: 0,
     label: 'Tidak Aktif',
+  },
+]
+
+const jenis = [
+  {
+    value: 'UMUM',
+    label: 'Umum',
+  },
+  {
+    value: 'KHUSUS',
+    label: 'Khusus',
   },
 ]
 
@@ -49,6 +60,7 @@ const formSchema = z.object({
   kd_ref6: z.string().min(1, 'Kode Referensi Ke - 6 Harus Ada.'),
   nm_ref: z.string().min(1, 'Nama Sumber Dana Harus Ada.'),
   status: z.string().min(1, 'Status Harus Ada.'),
+  jenis_sumber_dana: z.string().min(1, 'Jenis Sumber Dana Harus Ada.'),
 })
 type SumberDanaForm = z.infer<typeof formSchema>
 
@@ -80,6 +92,7 @@ export function SumberDanasActionDialog({
       kd_ref6: '',
       nm_ref: '',
       status: '',
+      jenis_sumber_dana: '',
     },
   })
 
@@ -287,6 +300,28 @@ export function SumberDanasActionDialog({
                       placeholder='Pilih Status Sumber Dana'
                       className='col-span-4'
                       items={status.map(({ label, value }) => ({
+                        label,
+                        value,
+                      }))}
+                    />
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='jenis_sumber_dana'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Jenis Sumber Dana
+                    </FormLabel>
+                    <SelectDropdown
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      placeholder='Pilih Jenis Sumber Dana'
+                      className='col-span-4'
+                      items={jenis.map(({ label, value }) => ({
                         label,
                         value,
                       }))}

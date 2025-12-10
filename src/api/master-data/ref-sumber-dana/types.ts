@@ -9,6 +9,7 @@ export interface SumberDana {
   kd_ref6: string
   nm_ref: string
   status: string
+  jenis_sumber_dana: string
   created_at: string
   updated_at: string
   deleted_at: string | null
