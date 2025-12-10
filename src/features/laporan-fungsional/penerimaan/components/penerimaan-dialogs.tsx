@@ -1,6 +1,16 @@
+import { useEffect, useState } from 'react'
 import { useDeleteLaporanFungsional } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { UsersActionDialog } from './penerimaan-action-dialog'
 import { PenerimaanPeriksa } from './penerimaan-periksa'
@@ -10,6 +20,8 @@ import { PenerimaanTTEBerkas } from './penerimaan-tte-action'
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanFungsional()
   const { mutateAsync } = useDeleteLaporanFungsional()
+  const [showClosedDialog, setShowClosedDialog] = useState(false)
+  const [closedReason, setClosedReason] = useState('')
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -150,8 +162,48 @@ export function UsersDialogs() {
     )
   }
 
+  const checkTanggal10 = () => {
+    const today = new Date().getDate()
+    if (today > 10) {
+      return {
+        closed: true,
+        reason:
+          'Pelayanan upload laporan fungsional ditutup setiap tanggal 10.',
+      }
+    }
+    return { closed: false, reason: '' }
+  }
+
+  useEffect(() => {
+    if (open === 'add' || open === 'edit') {
+      const status = checkTanggal10()
+
+      if (status.closed) {
+        setClosedReason(status.reason)
+        setShowClosedDialog(true)
+        setOpen(null)
+      }
+    }
+  }, [open])
+
   return (
     <>
+      <AlertDialog open={showClosedDialog} onOpenChange={setShowClosedDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Pelayanan Ditutup</AlertDialogTitle>
+            <AlertDialogDescription>
+              {closedReason || 'Pelayanan sudah ditutup untuk hari ini.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowClosedDialog(false)}>
+              Tutup
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <UsersActionDialog
         key='laporan-fungsional-penerimaan-add'
         open={open === 'add'}
