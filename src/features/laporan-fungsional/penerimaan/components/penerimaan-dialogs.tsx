@@ -164,11 +164,11 @@ export function UsersDialogs() {
 
   const checkTanggal10 = () => {
     const today = new Date().getDate()
-    if (today > 19) {
+    if (today > 20) {
       return {
         closed: true,
         reason:
-          'Pelayanan upload laporan fungsional ditutup setiap tanggal 10.',
+          'Pelayanan upload laporan fungsional ditutup setiap tanggal 20.',
       }
     }
     return { closed: false, reason: '' }
