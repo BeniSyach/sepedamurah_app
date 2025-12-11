@@ -164,7 +164,7 @@ export function UsersDialogs() {
 
   const checkTanggal10 = () => {
     const today = new Date().getDate()
-    if (today > 10) {
+    if (today > 19) {
       return {
         closed: true,
         reason:
