@@ -13,11 +13,9 @@ interface CekUploadParams {
 }
 
 interface CekUploadResponse {
-  wajib: boolean
-  pengeluaran: boolean
-  penerimaan: boolean
-  bulan_kurang: number[] // TAMBAHKAN INI
-  message: string
+  status: boolean
+  missing_pengeluaran: number[]
+  missing_penerimaan: number[]
 }
 
 export function useCekUploadFungsional(params: CekUploadParams) {

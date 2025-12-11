@@ -129,36 +129,38 @@ export function UsersDialogs() {
   const isUploadNotAllowed = () => {
     if (!cekUpload) return { blocked: false, reason: '' }
 
-    // Jika tidak wajib upload → tidak blokir
-    if (!cekUpload.wajib) {
-      return { blocked: false, reason: '' }
-    }
+    const reasons: string[] = []
 
-    // Cek bulan-bulan yang belum upload
-    if (cekUpload.bulan_kurang && cekUpload.bulan_kurang.length > 0) {
-      const listBulan = cekUpload.bulan_kurang
+    // Pengeluaran
+    if (cekUpload.missing_pengeluaran.length > 0) {
+      const listBulan = cekUpload.missing_pengeluaran
         .map((b) => `Bulan ${b}`)
         .join(', ')
 
-      return {
-        blocked: true,
-        reason: `Masih ada laporan fungsional yang belum diupload pada: ${listBulan}.`,
-      }
+      reasons.push(
+        `Anda belum upload laporan fungsional (Pengeluaran) pada: ${listBulan}.`
+      )
     }
 
-    // Jika wajib dan belum upload bulan ini
-    if (!cekUpload.pengeluaran) {
-      return {
-        blocked: true,
-        reason: 'Anda belum upload laporan fungsional (Pengeluaran) bulan ini.',
-      }
+    // Penerimaan (hanya jika status penerimaan = 1)
+    if (
+      user?.skpd.status_penerimaan == '1' &&
+      cekUpload.missing_penerimaan.length > 0
+    ) {
+      const listBulan = cekUpload.missing_penerimaan
+        .map((b) => `Bulan ${b}`)
+        .join(', ')
+
+      reasons.push(
+        `Anda belum upload laporan fungsional (Penerimaan) pada: ${listBulan}.`
+      )
     }
 
-    // Jika status 1 → Penerimaan juga wajib
-    if (user?.skpd.status_penerimaan == '1' && !cekUpload.penerimaan) {
+    // Jika ada minimal 1 masalah → block
+    if (reasons.length > 0) {
       return {
         blocked: true,
-        reason: 'Anda belum upload laporan fungsional (Penerimaan) bulan ini.',
+        reason: reasons.join(' | '), // atau '\n' jika mau multiline
       }
     }
 
