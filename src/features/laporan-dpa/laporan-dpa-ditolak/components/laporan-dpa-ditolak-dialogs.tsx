@@ -1,6 +1,8 @@
 import { useDeleteLaporanDPA } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PenerimaanPeriksa } from '../../laporan-dpa-diterima/components/laporan-dpa-diterima-action-dialog'
 import { UsersActionDialog } from './laporan-dpa-ditolak-action-dialog'
 import { useRefLaporanDPA } from './laporan-dpa-ditolak-provider'
 
@@ -26,12 +28,50 @@ export function UsersDialogs() {
     })
   }
 
+  const handlePreview = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/laporan/laporan-dpa/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // bypass cache
+            },
+          }
+        )
+
+        const fileBlob = new Blob([response.data], { type: response.data.type })
+        const fileUrl = window.URL.createObjectURL(fileBlob)
+
+        // Buka file di tab baru
+        window.open(fileUrl, '_blank', 'noopener,noreferrer')
+
+        // Tutup dialog
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
+
   return (
     <>
       {currentRow && (
         <>
           <UsersActionDialog
-            key={`fungsional-tolak-edit-${currentRow.id.toString()}`}
+            key={`dpa-tolak-edit-${currentRow.id.toString()}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -43,7 +83,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`fungsional-tolak-delete-${currentRow.id.toString()}`}
+            key={`dpa-tolak-delete-${currentRow.id.toString()}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {
@@ -63,6 +103,38 @@ export function UsersDialogs() {
               </>
             }
             confirmText='Delete'
+          />
+
+          <ConfirmDialog
+            key={`dpa-tolak-lihat-${currentRow.id}`}
+            destructive={false}
+            open={open === 'lihat'}
+            onOpenChange={() => {
+              setOpen('lihat')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handlePreview}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.dpa?.nm_dpa}`}
+            desc={
+              <>
+                Kamu akan melihat file dengan nama{' '}
+                <strong>{currentRow.dpa?.nm_dpa}</strong>.
+              </>
+            }
+            confirmText='Lihat'
+          />
+
+          <PenerimaanPeriksa
+            key={`dpa-tolak-periksa-${currentRow.id}`}
+            open={open === 'periksa'}
+            onOpenChange={() => {
+              setOpen('periksa')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
           />
         </>
       )}

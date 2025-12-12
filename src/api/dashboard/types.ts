@@ -105,3 +105,64 @@ export interface RawSp2dRow {
   bulan: string // "01" sampai "12"
   total: number
 }
+
+export interface MonitoringItem {
+  id: number | null
+  kd_opd: string
+  kd_opd1: string
+  kd_opd2: string
+  kd_opd3: string
+  kd_opd4: string
+  kd_opd5: string
+  nama_skpd: string
+  dpa_id: number | string
+  nama_dpa: string
+  status: 'Sudah Upload' | 'Belum Upload'
+  tanggal_upload: string | null // ISO date from backend
+  proses_status: 'Diterima' | 'Ditolak' | 'Diproses' | 'Pending' | null
+  operator: string | null
+  user_id: number | string | null
+}
+
+export interface MonitoringSummary {
+  total: number
+  uploaded: number
+  notUploaded: number
+  percentage: number
+}
+
+export interface MonitoringResponse {
+  success: boolean
+  data: {
+    monitoring: MonitoringItem[]
+    summary: MonitoringSummary
+    tahun: number
+  }
+}
+
+export interface AvailableYearsResponse {
+  success: boolean
+  data: number[] // daftar tahun, contoh: [2025, 2024, 2023]
+}
+
+export interface DPATypeItem {
+  id: number
+  nm_dpa: string
+}
+
+export interface DPATypesResponse {
+  success: boolean
+  data: DPATypeItem[]
+}
+
+export interface DPAStatisticItem {
+  name: string // nama DPA
+  uploaded: number // jumlah sudah upload
+  notUploaded: number // jumlah belum upload
+  total: number // total SKPD di DPA tersebut
+}
+
+export interface DPAStatisticsResponse {
+  success: boolean
+  data: DPAStatisticItem[]
+}

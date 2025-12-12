@@ -21,7 +21,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
-import { AnalyticsDPA } from './components/reports'
+import DashboardMonitoringDPA from './components/reports'
 
 function SkeletonSummaryCard() {
   return (
@@ -174,7 +174,7 @@ export function Dashboard() {
             <TabsList>
               <TabsTrigger value='overview'>Utama</TabsTrigger>
               <TabsTrigger value='analytics'>Laporan Fungsional</TabsTrigger>
-              {/* <TabsTrigger value='reports'>Laporan DPA</TabsTrigger> */}
+              <TabsTrigger value='reports'>Laporan DPA</TabsTrigger>
               {/* <TabsTrigger value='notifications'>Notifikasi</TabsTrigger> */}
             </TabsList>
           </div>
@@ -453,7 +453,7 @@ export function Dashboard() {
             <Analytics />
           </TabsContent>
           <TabsContent value='reports' className='space-y-4'>
-            <AnalyticsDPA />
+            <DashboardMonitoringDPA />
           </TabsContent>
         </Tabs>
       </Main>

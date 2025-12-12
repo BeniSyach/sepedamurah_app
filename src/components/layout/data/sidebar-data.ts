@@ -403,6 +403,18 @@ export const sidebarData: SidebarData = {
               url: '/dokumen/sp2d/permohonan-diterima',
               icon: CheckCircle2,
             },
+            {
+              id: 'sp2d-kirim-bank-tte',
+              title: 'SP2D Kirim Ke Bank',
+              url: '/dokumen/sp2d/sp2d-kirim-ke-bank',
+              icon: Send,
+            },
+            {
+              id: 'sp2d-di-publish-bud-tte',
+              title: 'SP2D Di Publish Kuasa BUD',
+              url: '/dokumen/sp2d/sp2d-di-publish-kuasa-bud',
+              icon: Stamp,
+            },
           ],
         },
       ],

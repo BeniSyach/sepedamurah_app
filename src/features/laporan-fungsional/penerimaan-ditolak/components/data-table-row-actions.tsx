@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type LaporanFungsional } from '@/api'
-import { Trash2, UserPen } from 'lucide-react'
+import { Eye, FolderSearch, Trash2, UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-// import { type User } from '../data/schema'
 import { useRefLaporanFungsional } from './penerimaan-ditolak-provider'
 
 type DataTableRowActionsProps = {
@@ -20,6 +19,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefLaporanFungsional()
+  const levelAkses = localStorage.getItem('user_role')
   return (
     <>
       <DropdownMenu modal={false}>
@@ -33,6 +33,34 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
+          {levelAkses !== 'Bendahara' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa
+                <DropdownMenuShortcut>
+                  <FolderSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('lihat')
+            }}
+          >
+            Lihat
+            <DropdownMenuShortcut>
+              <Eye size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

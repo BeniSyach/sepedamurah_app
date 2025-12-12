@@ -79,6 +79,14 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -211,6 +219,8 @@ export function PermohonanPenerbitanSP2DActionDialog({
   const [openConfirm, setOpenConfirm] = useState(false)
   const [hasConfirmedBerkas, setHasConfirmedBerkas] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [openFirst, setOpenFirst] = useState(false)
+  const [openSecond, setOpenSecond] = useState(false)
 
   const { mutateAsync: post } = usePostPermohonanSp2d()
   const { mutateAsync: put } = usePutPermohonanSp2d()
@@ -884,8 +894,8 @@ export function PermohonanPenerbitanSP2DActionDialog({
         </div>
 
         <DialogFooter className='mt-2'>
-          <Button type='submit' form='sp2d-form'>
-            Simpan
+          <Button type='button' onClick={() => setOpenFirst(true)}>
+            Kirim
           </Button>
         </DialogFooter>
       </DialogContentLarge>
@@ -937,6 +947,53 @@ export function PermohonanPenerbitanSP2DActionDialog({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction>OK</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      {/* ===== POPUP 1 ===== */}
+      <AlertDialog open={openFirst} onOpenChange={setOpenFirst}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah jenis belanja sudah benar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setOpenFirst(false)
+                setTimeout(() => setOpenSecond(true), 50)
+              }}
+            >
+              Ya
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* ===== POPUP 2 ===== */}
+      <AlertDialog open={openSecond} onOpenChange={setOpenSecond}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah sumber dana sudah benar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setOpenSecond(false)
+                form.handleSubmit(onSubmit)()
+              }}
+            >
+              Ya, Kirim
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

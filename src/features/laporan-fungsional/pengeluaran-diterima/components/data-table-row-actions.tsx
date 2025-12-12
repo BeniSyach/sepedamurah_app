@@ -37,19 +37,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
           {levelAkses !== 'Bendahara' && (
-            <DropdownMenuItem
-              onClick={() => {
-                setCurrentRow(row.original)
-                setOpen('periksa')
-              }}
-            >
-              Periksa
-              <DropdownMenuShortcut>
-                <FolderSearch size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa
+                <DropdownMenuShortcut>
+                  <FolderSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           )}
-          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
