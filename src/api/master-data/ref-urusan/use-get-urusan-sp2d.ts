@@ -6,6 +6,7 @@ interface UseRefUrusansp2d {
   page?: number
   perPage?: number
   search?: string
+  role?: string
 }
 
 export function useGetRefUrusanSp2d(params: UseRefUrusansp2d) {
@@ -19,6 +20,7 @@ export function useGetRefUrusanSp2d(params: UseRefUrusansp2d) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            role: params.role,
           },
         }
       )

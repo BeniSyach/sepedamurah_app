@@ -6,6 +6,7 @@ interface UseRefBidangUrusanSp2d {
   page?: number
   perPage?: number
   kd_urusan?: string
+  role?: string
 }
 
 export function useGetRefBidangUrusanSp2d(params: UseRefBidangUrusanSp2d) {
@@ -20,6 +21,7 @@ export function useGetRefBidangUrusanSp2d(params: UseRefBidangUrusanSp2d) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             kd_urusan: params.kd_urusan ?? '',
+            role: params.role,
           },
         }
       )

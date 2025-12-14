@@ -7,6 +7,7 @@ interface UseRefProgramSp2d {
   perPage?: number
   kd_bu1?: string
   kd_bu2?: string
+  role?: string
 }
 
 export function useGetRefProgramSp2d(params: UseRefProgramSp2d) {
@@ -22,6 +23,7 @@ export function useGetRefProgramSp2d(params: UseRefProgramSp2d) {
             per_page: params.perPage ?? 10,
             kd_bu1: params.kd_bu1 ?? '',
             kd_bu2: params.kd_bu2 ?? '',
+            role: params.role,
           },
         }
       )

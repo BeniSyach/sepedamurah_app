@@ -10,6 +10,7 @@ interface UseRefSubKegiatanSp2d {
   kd_keg3?: string
   kd_keg4?: string
   kd_keg5?: string
+  role?: string
 }
 
 export function useGetRefSubKegiatanSp2d(params: UseRefSubKegiatanSp2d) {
@@ -33,6 +34,7 @@ export function useGetRefSubKegiatanSp2d(params: UseRefSubKegiatanSp2d) {
             kd_keg3: params.kd_keg3 ?? '',
             kd_keg4: params.kd_keg4 ?? '',
             kd_keg5: params.kd_keg5 ?? '',
+            role: params.role,
           },
         }
       )

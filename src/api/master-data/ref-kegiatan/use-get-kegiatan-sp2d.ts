@@ -8,6 +8,7 @@ interface UseRefKegiatanSp2d {
   kd_prog1?: string
   kd_prog2?: string
   kd_prog3?: string
+  role?: string
 }
 
 export function useGetRefKegiatanSp2d(params: UseRefKegiatanSp2d) {
@@ -24,6 +25,7 @@ export function useGetRefKegiatanSp2d(params: UseRefKegiatanSp2d) {
             kd_prog1: params.kd_prog1 ?? '',
             kd_prog2: params.kd_prog2 ?? '',
             kd_prog3: params.kd_prog3 ?? '',
+            role: params.role,
           },
         }
       )

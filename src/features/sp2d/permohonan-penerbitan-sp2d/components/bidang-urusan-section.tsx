@@ -26,6 +26,7 @@ export function BidangUrusanSection({
   indexBidang,
   removeBidang,
 }: any) {
+  const userRole = localStorage.getItem('user_role') ?? ''
   const { setValue, getValues, watch } = useFormContext()
   const kd_urusan = watch(`urusan.${indexUrusan}.kd_urusan`)
   const kd_bu1 = watch(
@@ -45,6 +46,7 @@ export function BidangUrusanSection({
     page: 1,
     perPage: 100,
     kd_urusan: kd_urusan,
+    role: userRole,
   })
 
   const bidangOptions =

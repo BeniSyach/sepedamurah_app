@@ -29,7 +29,7 @@ export function KegiatanSection({
   removeKegiatan,
 }: any) {
   const { setValue, watch } = useFormContext()
-
+  const userRole = localStorage.getItem('user_role') ?? ''
   // ✅ Ambil kd_prog dari parent (ProgramSection)
   const kd_prog1 = watch(
     `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kd_prog1`
@@ -48,6 +48,7 @@ export function KegiatanSection({
     kd_prog1,
     kd_prog2,
     kd_prog3,
+    role: userRole,
   })
 
   // handle subkegiatan

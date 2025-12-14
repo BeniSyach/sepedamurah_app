@@ -38,6 +38,7 @@ export function RekeningSection({
   kd_subkeg6,
 }: any) {
   const { setValue } = useFormContext()
+  const userRole = localStorage.getItem('user_role') ?? ''
   // ✅ Panggil API rekening berdasarkan sub kegiatan yang dipilih
   const { data, isPending, isError } = useGetRefRekeningSp2d({
     page: 1,
@@ -48,6 +49,7 @@ export function RekeningSection({
     kd_subkeg4,
     kd_subkeg5,
     kd_subkeg6,
+    role: userRole,
   })
 
   const rekeningList = data?.data || []

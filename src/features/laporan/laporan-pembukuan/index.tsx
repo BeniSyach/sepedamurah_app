@@ -288,7 +288,7 @@ export function LaporanPembukuan() {
     resolver: zodResolver(accountFormSchema),
     defaultValues,
   })
-
+  const userRole = localStorage.getItem('user_role') ?? ''
   const jenisLaporanValue = form.watch('jenis_laporan')
 
   const {
@@ -298,6 +298,7 @@ export function LaporanPembukuan() {
   } = useGetRefUrusanSp2d({
     page: 1,
     perPage: 100,
+    role: userRole,
   })
   const urusanList = dataUrusan?.data || []
   const urusanValue = form.watch('urusan')
@@ -310,6 +311,7 @@ export function LaporanPembukuan() {
     page: 1,
     perPage: 100,
     kd_urusan: urusanValue || '',
+    role: userRole,
   })
   const buList = dataBU?.data || []
   const buValue = form.watch('bidang_urusan')
@@ -333,6 +335,7 @@ export function LaporanPembukuan() {
     perPage: 100,
     kd_bu1: buValue?.kd_bu1,
     kd_bu2: buValue?.kd_bu2,
+    role: userRole,
   })
   const programList = dataProgram?.data || []
   const programValue = form.watch('program')
@@ -347,6 +350,7 @@ export function LaporanPembukuan() {
     kd_prog1: programValue?.kd_prog1,
     kd_prog2: programValue?.kd_prog2,
     kd_prog3: programValue?.kd_prog3,
+    role: userRole,
   })
   const kegiatanList = dataKeg?.data || []
   const kegiatanValue = form.watch('kegiatan')
@@ -363,6 +367,7 @@ export function LaporanPembukuan() {
     kd_keg3: kegiatanValue?.kd_keg3,
     kd_keg4: kegiatanValue?.kd_keg4,
     kd_keg5: kegiatanValue?.kd_keg5,
+    role: userRole,
   })
   const subkegiatanList = dataSubKeg?.data || []
 

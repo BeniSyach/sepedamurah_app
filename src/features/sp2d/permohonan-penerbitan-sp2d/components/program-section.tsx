@@ -28,7 +28,7 @@ export function ProgramSection({
   removeProgram,
 }: any) {
   const { setValue, watch } = useFormContext()
-
+  const userRole = localStorage.getItem('user_role') ?? ''
   // 🔥 Ambil kd_bu1 & kd_bu2 dari form parent
   const kd_bu1 = watch(
     `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.kd_bu1`
@@ -49,6 +49,7 @@ export function ProgramSection({
     perPage: 100,
     kd_bu1,
     kd_bu2,
+    role: userRole,
   })
 
   // ✅ Bentuk opsi dropdown

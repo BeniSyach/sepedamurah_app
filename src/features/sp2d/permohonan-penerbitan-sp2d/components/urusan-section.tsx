@@ -34,9 +34,14 @@ import { BidangUrusanSection } from './bidang-urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const [open, setOpen] = useState(true)
   const { setValue } = useFormContext()
+  const userRole = localStorage.getItem('user_role') ?? ''
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -46,6 +51,7 @@ export function UrusanSection({ control, indexUrusan, removeUrusan }: any) {
   const { data, isPending, isError } = useGetRefUrusanSp2d({
     page: 1,
     perPage: 100,
+    role: userRole,
   })
 
   const urusanList = data?.data || []

@@ -29,7 +29,7 @@ export function SubKegiatanSection({
   removeSubKegiatan,
 }: any) {
   const { watch, setValue } = useFormContext()
-
+  const userRole = localStorage.getItem('user_role') ?? ''
   // ✅ ambil kode kegiatan dari parent (yang dipilih user di KegiatanSection)
   const kd_keg1 = watch(
     `urusan.${indexUrusan}.bidangUrusan.${indexBidang}.program.${indexProgram}.kegiatan.${indexKegiatan}.kd_keg1`
@@ -56,6 +56,7 @@ export function SubKegiatanSection({
     kd_keg3,
     kd_keg4,
     kd_keg5,
+    role: userRole,
   })
 
   const { fields, append, remove } = useFieldArray({

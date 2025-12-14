@@ -11,6 +11,7 @@ interface UseRefRekeningSp2d {
   kd_subkeg4?: string
   kd_subkeg5?: string
   kd_subkeg6?: string
+  role?: string
 }
 
 export function useGetRefRekeningSp2d(params: UseRefRekeningSp2d) {
@@ -36,6 +37,7 @@ export function useGetRefRekeningSp2d(params: UseRefRekeningSp2d) {
             kd_subkeg4: params.kd_subkeg4 ?? '',
             kd_subkeg5: params.kd_subkeg5 ?? '',
             kd_subkeg6: params.kd_subkeg6 ?? '',
+            role: params.role,
           },
         }
       )
