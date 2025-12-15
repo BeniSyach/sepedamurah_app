@@ -107,6 +107,8 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -205,7 +207,11 @@ export function UsersActionDialog({
     perPage: 100, // ambil banyak biar bisa isi select
   })
 
-  const { data: dataSD } = useGetRefSumberDana({ page: 1, perPage: 1000 })
+  const { data: dataSD } = useGetRefSumberDana({
+    page: 1,
+    perPage: 1000,
+    status: '1',
+  })
   const itemsSD =
     dataSD?.data?.map((item: SumberDana) => ({
       value: [

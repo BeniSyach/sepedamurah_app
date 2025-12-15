@@ -452,6 +452,7 @@ export function LaporanPembukuan() {
   } = useGetRefSumberDana({
     page: 1,
     perPage: 1000,
+    status: '1',
   })
   const sumberDanaList = dataSD?.data || []
 
