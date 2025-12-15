@@ -119,7 +119,7 @@ export interface MonitoringItem {
   nama_dpa: string
   status: 'Sudah Upload' | 'Belum Upload'
   tanggal_upload: string | null // ISO date from backend
-  proses_status: 'Diterima' | 'Ditolak' | 'Diproses' | 'Pending' | null
+  proses_status: string
   operator: string | null
   user_id: number | string | null
 }

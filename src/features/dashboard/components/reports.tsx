@@ -548,11 +548,19 @@ const DashboardMonitoringDPA = () => {
                                     <Badge
                                       variant='outline'
                                       className={
-                                        item.proses_status === 'Diterima'
+                                        item.proses_status ===
+                                        'Berkas telah diverifikasi'
                                           ? 'border-green-200 bg-green-50 text-green-700'
-                                          : item.proses_status === 'Diproses'
+                                          : item.proses_status ===
+                                              'Berkas sedang diproses'
                                             ? 'border-yellow-200 bg-yellow-50 text-yellow-700'
-                                            : 'border-slate-200 bg-slate-50 text-slate-700'
+                                            : item.proses_status ===
+                                                'Berkas ditolak'
+                                              ? 'border-red-200 bg-red-50 text-red-700'
+                                              : item.proses_status ===
+                                                  'Berkas terkirim'
+                                                ? 'border-slate-200 bg-slate-50 text-slate-700'
+                                                : 'border-slate-200 bg-slate-50 text-slate-500'
                                       }
                                     >
                                       {item.proses_status ?? '-'}
