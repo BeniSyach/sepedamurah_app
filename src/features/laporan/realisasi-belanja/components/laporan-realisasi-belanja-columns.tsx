@@ -88,7 +88,17 @@ export const ReferensiPengembalianColumns: ColumnDef<laporanBelanjaData>[] = [
         )
         .reduce((acc, row) => acc + Number(row.original.total_pagu ?? 0), 0)
 
-      const adjustedTotal = total - totalKode6203
+      const totalKode6101 = table
+        .getRowModel()
+        .rows.filter(
+          (row) =>
+            row.original.kd_ref1 === '6' &&
+            row.original.kd_ref2 === '1' &&
+            row.original.kd_ref3 === '01'
+        )
+        .reduce((acc, row) => acc + Number(row.original.total_pagu ?? 0), 0)
+
+      const adjustedTotal = total - totalKode6203 - totalKode6101
 
       return <div>{formatRupiah(adjustedTotal)}</div>
     },
