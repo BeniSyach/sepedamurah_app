@@ -44,6 +44,9 @@ export function usePostLaporanDPA() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanDPA'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetMonitoringDPA'],
+      })
     },
     onError: (err) => {
       return err

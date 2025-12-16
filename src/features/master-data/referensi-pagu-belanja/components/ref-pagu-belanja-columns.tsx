@@ -140,13 +140,15 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     enableSorting: true,
   },
 
-  // // ✅ pergeseran
-  // {
-  //   accessorKey: 'kd_berapax',
-  //   header: ({ column }) => <DataTableColumnHeader column={column} title='#' />,
-  //   cell: ({ row }) => <div>{row.getValue('kd_berapax')}</div>,
-  //   enableSorting: true,
-  // },
+  // ✅ pergeseran
+  {
+    accessorKey: 'kd_berapax',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Pergeseran Ke' />
+    ),
+    cell: ({ row }) => <div>{row.getValue('kd_berapax')}</div>,
+    enableSorting: true,
+  },
 
   // ✅ jumlah pagu
   {

@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
+import { useImportPaguBelanjaExcel } from '@/api/master-data/ref-pagu-belanja/use-import-pagu-belanja-excel'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -25,12 +26,18 @@ import { Input } from '@/components/ui/input'
 const formSchema = z.object({
   file: z
     .instanceof(FileList)
-    .refine((files) => files.length > 0, {
-      message: 'Please upload a file',
+    .refine((files) => files.length === 1, {
+      message: 'File wajib diupload',
     })
     .refine(
-      (files) => ['text/csv'].includes(files?.[0]?.type),
-      'Please upload csv format.'
+      (files) =>
+        [
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel',
+        ].includes(files[0]?.type),
+      {
+        message: 'Format file harus .xlsx atau .xls',
+      }
     ),
 })
 
@@ -45,23 +52,36 @@ export function TasksImportDialog({
 }: TaskImportDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { file: undefined },
   })
 
-  const fileRef = form.register('file')
+  const { mutateAsync: importExcel, isPending } = useImportPaguBelanjaExcel()
 
-  const onSubmit = () => {
-    const file = form.getValues('file')
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const file = values.file[0]
 
-    if (file && file[0]) {
-      const fileDetails = {
-        name: file[0].name,
-        size: file[0].size,
-        type: file[0].type,
-      }
-      showSubmittedData(fileDetails, 'You have imported the following file:')
-    }
-    onOpenChange(false)
+    const requestPromise = new Promise((resolve, reject) => {
+      importExcel(
+        { file },
+        {
+          onSuccess: (data) => resolve(data),
+          onError: (err) => reject(err),
+        }
+      )
+    })
+
+    await toast.promise(requestPromise, {
+      loading: 'Mengimpor data Pagu Belanja...',
+      success: () => {
+        onOpenChange(false)
+        form.reset()
+        return 'Import Pagu Belanja berhasil!'
+      },
+      error: (err) => {
+        return (
+          err?.response?.data?.message || 'Terjadi kesalahan saat import data.'
+        )
+      },
+    })
   }
 
   return (
@@ -76,19 +96,28 @@ export function TasksImportDialog({
         <DialogHeader className='text-start'>
           <DialogTitle>Import Pagu Belanja</DialogTitle>
           <DialogDescription>
-            Import Pagu Belanja Lebih Cepat Dari Excel.
+            Import Pagu Belanja dari file Excel (.xlsx / .xls)
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
-          <form id='urusan-import-form' onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            id='pagu-belanja-import-form'
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-3'
+          >
             <FormField
               control={form.control}
               name='file'
-              render={() => (
-                <FormItem className='my-2'>
-                  <FormLabel>File</FormLabel>
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>File Excel</FormLabel>
                   <FormControl>
-                    <Input type='file' {...fileRef} className='h-8 py-0' />
+                    <Input
+                      type='file'
+                      accept='.xlsx,.xls'
+                      onChange={(e) => field.onChange(e.target.files)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,12 +125,19 @@ export function TasksImportDialog({
             />
           </form>
         </Form>
+
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
-            <Button variant='outline'>Close</Button>
+            <Button variant='outline' disabled={isPending}>
+              Batal
+            </Button>
           </DialogClose>
-          <Button type='submit' form='urusan-import-form'>
-            Import
+          <Button
+            type='submit'
+            form='pagu-belanja-import-form'
+            disabled={isPending}
+          >
+            {isPending ? 'Mengimpor...' : 'Import'}
           </Button>
         </DialogFooter>
       </DialogContent>

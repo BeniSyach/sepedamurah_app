@@ -49,6 +49,12 @@ export function usePostLaporanFungsional() {
       queryClient.invalidateQueries({
         queryKey: ['cekUploadFungsional'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetCheckFungsional'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetCountFungsional'],
+      })
     },
     onError: (err) => {
       return err
