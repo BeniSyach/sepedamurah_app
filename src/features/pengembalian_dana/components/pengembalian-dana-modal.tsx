@@ -112,7 +112,7 @@ export function LaporanPembayaranModal({
         </Form>
 
         {/* Table */}
-        <div className='max-h-[300px] overflow-y-auto'>
+        <div className='overflow-y-auto'>
           <PengembalianDanaTable data={pengembalianData} />
         </div>
       </DialogContentLarge>
