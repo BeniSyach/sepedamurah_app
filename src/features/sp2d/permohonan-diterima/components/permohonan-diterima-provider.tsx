@@ -13,6 +13,7 @@ type RefSp2dItemDialogType =
   | 'downloadTTE'
   | 'kirimbank'
   | 'publish'
+  | 'edit_sd'
 
 type RefSp2dItemContextType = {
   open: RefSp2dItemDialogType | null

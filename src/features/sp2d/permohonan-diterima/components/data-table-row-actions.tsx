@@ -114,6 +114,24 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           )}
 
           {levelAkses !== 'Bendahara' && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit_sd')
+                }}
+              >
+                Edit Sumber Dana
+                <DropdownMenuShortcut>
+                  <UserPen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && (
             <DropdownMenuItem
               onClick={() => {
                 setCurrentRow(row.original)

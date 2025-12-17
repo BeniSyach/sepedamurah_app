@@ -4,6 +4,7 @@ import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PermohonanDiterimaPeriksaDialog } from './Permohonan-diterima-periksa-dialog'
 import { PermohonanDiterimaActionDialog } from './permohonan-diterima-action-dialog'
+import { EditSumberDanaDialog } from './permohonan-diterima-edit-sd-dialog-action'
 import { useRefSp2dItem } from './permohonan-diterima-provider'
 import { PermohonanDiterimaKirimTTEDialog } from './permohonan-diterima-sp2d-tte-dialog'
 
@@ -228,6 +229,19 @@ export function UsersDialogs() {
               open={open === 'periksa'}
               onOpenChange={() => {
                 setOpen('periksa')
+                setTimeout(() => {
+                  setCurrentRow(null)
+                }, 500)
+              }}
+              currentRow={currentRow}
+            />
+          )}
+          {levelAkses !== 'Bendahara' && (
+            <EditSumberDanaDialog
+              key={`sp2d-terima-edit-sd-${currentRow.id_sp2d}`}
+              open={open === 'edit_sd'}
+              onOpenChange={() => {
+                setOpen('edit_sd')
                 setTimeout(() => {
                   setCurrentRow(null)
                 }, 500)
