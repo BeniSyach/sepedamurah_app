@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetLaporanRealisasiBelanja } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -12,14 +13,18 @@ import { PengembalianProvider } from './components/laporan-realisasi-belanja-pro
 import { PengembalianTable } from './components/laporan-realisasi-belanja-table'
 
 const route = getRouteApi('/_authenticated/laporan/realisasi-belanja')
-
+const currentMonth = new Date().getMonth() + 1
 export function RealisasiBelanja() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
+  const bulanFilter = Number(search.bulan ?? currentMonth)
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetLaporanRealisasiBelanja({
-    tahun: search.tahun,
+    tahun: tahunFilter,
+    bulan: bulanFilter,
+    search: search.search,
   })
 
   return (

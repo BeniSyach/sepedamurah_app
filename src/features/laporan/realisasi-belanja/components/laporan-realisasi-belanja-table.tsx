@@ -1,20 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
 import {
-  type SortingState,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import type { laporanBelanjaData } from '@/api'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -39,46 +41,77 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
+const bulanOptions = [
+  { value: 1, label: 'Januari' },
+  { value: 2, label: 'Februari' },
+  { value: 3, label: 'Maret' },
+  { value: 4, label: 'April' },
+  { value: 5, label: 'Mei' },
+  { value: 6, label: 'Juni' },
+  { value: 7, label: 'Juli' },
+  { value: 8, label: 'Agustus' },
+  { value: 9, label: 'September' },
+  { value: 10, label: 'Oktober' },
+  { value: 11, label: 'November' },
+  { value: 12, label: 'Desember' },
+]
+const currentMonth = new Date().getMonth() + 1
+
 export function PengembalianTable({ data, search, navigate }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [sorting, setSorting] = useState<SortingState>([])
+  const currentYear = new Date().getFullYear()
+  const tahunFilter = Number(search.tahun ?? currentYear)
+  // List tahun 3 tahun sebelum & 3 tahun sesudah
+  const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
+  const bulanFilter = Number(search.bulan ?? currentMonth)
+  // Update tahun → update URL → parent fetch ulang
+  function changeTahun(value: number) {
+    navigate({
+      search: {
+        ...search, // bawakan parameter lama
+        tahun: value,
+      },
+    })
+  }
 
-  const {
-    columnFilters,
-    onColumnFiltersChange,
-    pagination,
-    onPaginationChange,
-  } = useTableUrlState({
-    search,
-    navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    columnFilters: [{ columnId: 'name', searchKey: 'name', type: 'string' }],
-  })
+  function changeBulan(value: number) {
+    navigate({
+      search: {
+        ...search,
+        bulan: value,
+      },
+    })
+  }
+
+  const { globalFilter, onGlobalFilterChange, pagination, onPaginationChange } =
+    useTableUrlState({
+      search,
+      navigate,
+      pagination: { defaultPage: 1, defaultPageSize: 10 },
+      globalFilter: {
+        enabled: true,
+        key: 'search', // URL menjadi &filter=...
+        trim: false,
+      },
+    })
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(bulanFilter),
     manualPagination: true,
     state: {
-      sorting,
       pagination,
       rowSelection,
-      columnFilters,
+      globalFilter,
       columnVisibility,
     },
-    enableRowSelection: true,
     onPaginationChange,
-    onColumnFiltersChange,
+    onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   return (
@@ -86,8 +119,40 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
       <DataTableToolbar
         table={table}
         searchPlaceholder='Cari...'
-        searchKey='nama'
-        filters={[]}
+        extraControls={
+          <div className='flex items-center space-x-2'>
+            <Select
+              value={String(bulanFilter)}
+              onValueChange={(v) => changeBulan(Number(v))}
+            >
+              <SelectTrigger className='w-[160px]'>
+                <SelectValue placeholder='Bulan' />
+              </SelectTrigger>
+              <SelectContent>
+                {bulanOptions.map((bln) => (
+                  <SelectItem key={bln.value} value={String(bln.value)}>
+                    {bln.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={String(tahunFilter)}
+              onValueChange={(v) => changeTahun(Number(v))}
+            >
+              <SelectTrigger className='w-[140px]'>
+                <SelectValue placeholder='Tahun' />
+              </SelectTrigger>
+              <SelectContent>
+                {tahunOptions.map((th) => (
+                  <SelectItem key={th} value={String(th)}>
+                    Tahun {th}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
       />
 
       <div className='overflow-hidden rounded-md border'>

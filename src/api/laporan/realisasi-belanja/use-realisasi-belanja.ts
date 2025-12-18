@@ -4,6 +4,8 @@ import type { LaporanBelanjaResponse } from './types'
 
 interface UseLaporanRealisasiBelanja {
   tahun?: number | string
+  bulan?: number | string
+  search?: number | string
 }
 
 export function useGetLaporanRealisasiBelanja(
@@ -16,7 +18,9 @@ export function useGetLaporanRealisasiBelanja(
         '/laporan/realisasi-belanja',
         {
           params: {
-            tahun: params.tahun ?? 2025,
+            search: params.search ?? '',
+            tahun: params.tahun ?? '',
+            bulan: params.bulan ?? '',
           },
         }
       )
