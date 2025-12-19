@@ -7,6 +7,7 @@ import {
   useGetBatasWaktu,
 } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   AlertDialog,
@@ -70,6 +71,84 @@ export function UsersDialogs() {
     kd_opd4: user?.kd_opd4 ?? '',
     kd_opd5: user?.kd_opd5 ?? '',
   })
+
+  // Fungsi download file
+  const handleDownload = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/sp2d/permohonan-sp2d/download/${currentRow.id_sp2d}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+            },
+            params: {
+              t: Date.now(), // tambahkan query timestamp supaya cache benar-benar dilewati
+            },
+          }
+        )
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', currentRow.nama_file_asli)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        // Tutup dialog setelah download berhasil x
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+      })(),
+      {
+        loading: 'Mengunduh file...',
+        success: 'File berhasil diunduh!',
+        error: 'Gagal mengunduh file.',
+      }
+    )
+  }
+
+  // Fungsi lihat file
+  const handleLihat = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/sp2d/permohonan-sp2d/download/${currentRow.id_sp2d}`,
+          {
+            responseType: 'blob',
+            params: { t: Date.now() },
+          }
+        )
+
+        // Tentukan MIME type sesuai file
+        let mimeType = 'application/pdf' // default PDF
+        if (currentRow.nama_file_asli?.endsWith('.docx'))
+          mimeType =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else if (currentRow.nama_file_asli?.endsWith('.doc'))
+          mimeType = 'application/msword'
+
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: mimeType })
+        )
+        window.open(url, '_blank')
+
+        setTimeout(() => window.URL.revokeObjectURL(url), 5000)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
 
   const isServiceClosed = () => {
     const today = new Date().getDay() // 0 = Minggu, 6 = Sabtu
@@ -312,6 +391,44 @@ export function UsersDialogs() {
             confirmText='Delete'
           />
           {/* )} */}
+          <ConfirmDialog
+            key={`sp2d-terima-download-${currentRow.id_sp2d}`}
+            destructive={false}
+            open={open === 'download'}
+            onOpenChange={() => {
+              setOpen('download')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleDownload}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan mengunduh file dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Download'
+          />
+          <ConfirmDialog
+            key={`sp2d-terima-lihat-${currentRow.id_sp2d}`}
+            destructive={false}
+            open={open === 'lihat'}
+            onOpenChange={() => {
+              setOpen('lihat')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleLihat}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.nama_file}`}
+            desc={
+              <>
+                Kamu akan Lihat file dengan nama{' '}
+                <strong>{currentRow.nama_file}</strong>.
+              </>
+            }
+            confirmText='Lihat'
+          />
         </>
       )}
     </>
