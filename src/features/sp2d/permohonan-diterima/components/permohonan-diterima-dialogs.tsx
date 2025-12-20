@@ -310,6 +310,7 @@ export function UsersDialogs() {
             }
             confirmText='Lihat'
           />
+
           <ConfirmDialog
             key={`sp2d-terima-lihat-tte-${currentRow.id_sp2d}`}
             destructive={false}
