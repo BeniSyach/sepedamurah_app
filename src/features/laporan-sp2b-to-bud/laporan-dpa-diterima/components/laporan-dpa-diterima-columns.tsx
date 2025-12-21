@@ -97,7 +97,7 @@ export const ReferensiLaporanSp2bToBUDColumns: ColumnDef<LaporanSp2bToBUD>[] = [
   {
     accessorKey: 'nama_file',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Jenis Asset Bendahara' />
+      <DataTableColumnHeader column={column} title='Jenis SP2B Ke BUD' />
     ),
     cell: ({ row }) => {
       const jenis_dpa = row.original?.refSp2bKeBud?.nm_sp2b_ke_bud
