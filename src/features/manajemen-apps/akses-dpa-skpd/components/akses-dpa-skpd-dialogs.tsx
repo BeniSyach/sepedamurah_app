@@ -1,4 +1,4 @@
-import { useDeleteUserRole } from '@/api'
+import { useDeleteAksesDPASKPD } from '@/api'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { AksesDPASKPDActionDialog } from './akses-dpa-skpd-action-dialog'
@@ -7,7 +7,7 @@ import { useRefAksesDPAGroup } from './akses-dpa-skpd-provider'
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefAksesDPAGroup()
 
-  const { mutateAsync } = useDeleteUserRole()
+  const { mutateAsync } = useDeleteAksesDPASKPD()
 
   const handleDelete = async () => {
     if (!currentRow) return

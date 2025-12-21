@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
 import {
+  type CekLaporanAssetBendaharaItem,
   type CekLaporanDPAItem,
+  type CekLaporanPajakBendaharaItem,
+  type CekLaporanSp2bToBUDItem,
+  useCekLaporanAssetBendahara,
   useCekLaporanDPA,
+  useCekLaporanPajakBendahara,
+  useCekLaporanSp2bToBUD,
   useCekUploadFungsional,
   useDeletePermohonanSP2D,
   useGetBatasWaktu,
@@ -64,6 +70,30 @@ export function UsersDialogs() {
     status: user?.skpd.status_penerimaan ?? '0', // 0 atau 1
   })
   const { data: useDPA } = useCekLaporanDPA({
+    tahun: currentYear,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
+  })
+  const { data: usePajakBendahara } = useCekLaporanPajakBendahara({
+    tahun: currentYear,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
+  })
+  const { data: useAssetBendahara } = useCekLaporanAssetBendahara({
+    tahun: currentYear,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
+  })
+  const { data: useSp2bToBUD } = useCekLaporanSp2bToBUD({
     tahun: currentYear,
     kd_opd1: user?.kd_opd1 ?? '',
     kd_opd2: user?.kd_opd2 ?? '',
@@ -273,6 +303,87 @@ export function UsersDialogs() {
     return { blocked: false, reason: '' }
   }
 
+  const isPajakBendaharaIncomplete = () => {
+    if (!usePajakBendahara) return { blocked: false, reason: '' }
+
+    // Jika semua laporan memenuhi akses DPA → aman
+    if (usePajakBendahara.status_laporan_memenuhi === true) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Jika ada yang kurang, ambil daftar yg harus diupload
+    if (
+      usePajakBendahara.kurang_upload &&
+      Array.isArray(usePajakBendahara.kurang_upload) &&
+      usePajakBendahara.kurang_upload.length > 0
+    ) {
+      const daftar = usePajakBendahara.kurang_upload
+        .map((d: CekLaporanPajakBendaharaItem) => `• ${d.nama_pajak}`)
+        .join('\n')
+
+      return {
+        blocked: true,
+        reason: `Masih ada Laporan Pajak Bendahara yang belum diupload:\n${daftar}`,
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
+  const isAssetBendaharaIncomplete = () => {
+    if (!useAssetBendahara) return { blocked: false, reason: '' }
+
+    // Jika semua laporan memenuhi akses DPA → aman
+    if (useAssetBendahara.status_laporan_memenuhi === true) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Jika ada yang kurang, ambil daftar yg harus diupload
+    if (
+      useAssetBendahara.kurang_upload &&
+      Array.isArray(useAssetBendahara.kurang_upload) &&
+      useAssetBendahara.kurang_upload.length > 0
+    ) {
+      const daftar = useAssetBendahara.kurang_upload
+        .map((d: CekLaporanAssetBendaharaItem) => `• ${d.nama_asset}`)
+        .join('\n')
+
+      return {
+        blocked: true,
+        reason: `Masih ada Laporan Asset Bendahara yang belum diupload:\n${daftar}`,
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
+  const isSp2bToBUDIncomplete = () => {
+    if (!useSp2bToBUD) return { blocked: false, reason: '' }
+
+    // Jika semua laporan memenuhi akses DPA → aman
+    if (useSp2bToBUD.status_laporan_memenuhi === true) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Jika ada yang kurang, ambil daftar yg harus diupload
+    if (
+      useSp2bToBUD.kurang_upload &&
+      Array.isArray(useSp2bToBUD.kurang_upload) &&
+      useSp2bToBUD.kurang_upload.length > 0
+    ) {
+      const daftar = useSp2bToBUD.kurang_upload
+        .map((d: CekLaporanSp2bToBUDItem) => `• ${d.nama_sp2b}`)
+        .join('\n')
+
+      return {
+        blocked: true,
+        reason: `Masih ada Laporan SP2B Ke BUD yang belum diupload:\n${daftar}`,
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
   // 🧠 Deteksi ketika user membuka form add/edit
   useEffect(() => {
     // Berlaku hanya untuk Bendahara
@@ -291,6 +402,30 @@ export function UsersDialogs() {
       if (statusDPA.blocked) {
         setShowClosedDialog(true)
         setClosedReason(statusDPA.reason)
+        setOpen(null)
+        return
+      }
+
+      const statusPajakBendahara = isPajakBendaharaIncomplete()
+      if (statusPajakBendahara.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusPajakBendahara.reason)
+        setOpen(null)
+        return
+      }
+
+      const statusAssetBendahara = isAssetBendaharaIncomplete()
+      if (statusAssetBendahara.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusAssetBendahara.reason)
+        setOpen(null)
+        return
+      }
+
+      const statusSp2bToBUD = isSp2bToBUDIncomplete()
+      if (statusSp2bToBUD.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusSp2bToBUD.reason)
         setOpen(null)
         return
       }

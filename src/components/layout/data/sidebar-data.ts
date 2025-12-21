@@ -175,6 +175,24 @@ export const sidebarData: SidebarData = {
               url: '/master-data/referensi-dpa',
               icon: FileText,
             },
+            {
+              id: 'referensi-pajak-bendahara',
+              title: 'Referensi Pajak Bendahara',
+              url: '/master-data/referensi-pajak-bendahara',
+              icon: FileText,
+            },
+            {
+              id: 'referensi-asset-bendahara',
+              title: 'Referensi Asset Bendahara',
+              url: '/master-data/referensi-asset-bendahara',
+              icon: FileText,
+            },
+            {
+              id: 'referensi-sp2b-to-bud',
+              title: 'Referensi SP2B Ke BUD',
+              url: '/master-data/referensi-sp2b-to-bud',
+              icon: FileText,
+            },
           ],
         },
         {
@@ -230,6 +248,24 @@ export const sidebarData: SidebarData = {
           id: 'akses-dpa-skpd',
           title: 'Akses DPA SKPD',
           url: '/manajemen-apps/akses-dpa-skpd',
+          icon: LockKeyholeOpenIcon,
+        },
+        {
+          id: 'akses-pajak-bendahara',
+          title: 'Akses Pajak Bendahara',
+          url: '/manajemen-apps/akses-pajak-bendahara',
+          icon: LockKeyholeOpenIcon,
+        },
+        {
+          id: 'akses-asset-bendahara',
+          title: 'Akses Asset Bendahara',
+          url: '/manajemen-apps/akses-asset-bendahara',
+          icon: LockKeyholeOpenIcon,
+        },
+        {
+          id: 'akses-sp2b-ke-bud',
+          title: 'Akses SP2B Ke BUD',
+          url: '/manajemen-apps/akses-sp2b-ke-bud',
           icon: LockKeyholeOpenIcon,
         },
         {
@@ -518,6 +554,99 @@ export const sidebarData: SidebarData = {
               id: 'laporan-dpa-ditolak',
               title: 'Laporan DPA - Ditolak',
               url: '/dokumen/laporan-dpa/laporan-dpa-ditolak',
+              icon: XCircle, // ❌ sudah cocok
+            },
+          ],
+        },
+        {
+          id: 'laporan-pajak-bendahara-judul',
+          title: 'Pajak Bendahara',
+          icon: FileSpreadsheet, // 🔥 ganti jadi ikon dokumen spreadsheet
+          items: [
+            {
+              id: 'berkas-masuk-laporan-pajak-bendahara',
+              title: 'Berkas Masuk Laporan Pajak Bendahara',
+              url: '/dokumen/laporan-pajak-bendahara/berkas-masuk',
+              icon: Inbox, // 🔥 lebih cocok untuk "berkas masuk"
+            },
+            {
+              id: 'laporan-pajak-bendahara-menu',
+              title: 'Laporan Pajak Bendahara',
+              url: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara',
+              icon: FileSearch, // 🔍 laporan / detail dokumen
+            },
+            {
+              id: 'laporan-pajak-bendahara-diterima',
+              title: 'Laporan Pajak Bendahara - Diterima',
+              url: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima',
+              icon: CheckCircle2, // ✔️ sudah cocok
+            },
+            {
+              id: 'laporan-pajak-bendahara-ditolak',
+              title: 'Laporan Pajak Bendahara - Ditolak',
+              url: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak',
+              icon: XCircle, // ❌ sudah cocok
+            },
+          ],
+        },
+        {
+          id: 'laporan-asset-bendahara-judul',
+          title: 'Asset Bendahara',
+          icon: FileSpreadsheet, // 🔥 ganti jadi ikon dokumen spreadsheet
+          items: [
+            {
+              id: 'berkas-masuk-laporan-asset-bendahara',
+              title: 'Berkas Masuk Laporan Asset Bendahara',
+              url: '/dokumen/laporan-asset-bendahara/berkas-masuk',
+              icon: Inbox, // 🔥 lebih cocok untuk "berkas masuk"
+            },
+            {
+              id: 'laporan-asset-bendahara-menu',
+              title: 'Laporan Asset Bendahara',
+              url: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara',
+              icon: FileSearch, // 🔍 laporan / detail dokumen
+            },
+            {
+              id: 'laporan-asset-bendahara-diterima',
+              title: 'Laporan Asset Bendahara - Diterima',
+              url: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima',
+              icon: CheckCircle2, // ✔️ sudah cocok
+            },
+            {
+              id: 'laporan-asset-bendahara-ditolak',
+              title: 'Laporan Asset Bendahara - Ditolak',
+              url: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak',
+              icon: XCircle, // ❌ sudah cocok
+            },
+          ],
+        },
+        {
+          id: 'laporan-sp2b-ke-bud-judul',
+          title: 'Laporan SP2B Ke BUD',
+          icon: FileSpreadsheet, // 🔥 ganti jadi ikon dokumen spreadsheet
+          items: [
+            {
+              id: 'berkas-masuk-laporan-sp2b-ke-bud',
+              title: 'Berkas Masuk Laporan SP2B Ke BUD',
+              url: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk',
+              icon: Inbox, // 🔥 lebih cocok untuk "berkas masuk"
+            },
+            {
+              id: 'laporan-sp2b-ke-bud-menu',
+              title: 'Laporan SP2B Ke BUD',
+              url: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud',
+              icon: FileSearch, // 🔍 laporan / detail dokumen
+            },
+            {
+              id: 'laporan-sp2b-ke-bud-diterima',
+              title: 'Laporan SP2B Ke BUD - Diterima',
+              url: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima',
+              icon: CheckCircle2, // ✔️ sudah cocok
+            },
+            {
+              id: 'laporan-sp2b-ke-bud-ditolak',
+              title: 'Laporan SP2B Ke BUD - Ditolak',
+              url: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak',
               icon: XCircle, // ❌ sudah cocok
             },
           ],

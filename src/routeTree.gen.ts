@@ -42,9 +42,11 @@ import { Route as AuthenticatedProfileAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedMasterDataReferensiUrusanRouteImport } from './routes/_authenticated/master-data/referensi-urusan'
 import { Route as AuthenticatedMasterDataReferensiSumberDanaRouteImport } from './routes/_authenticated/master-data/referensi-sumber-dana'
 import { Route as AuthenticatedMasterDataReferensiSubkegiatanRouteImport } from './routes/_authenticated/master-data/referensi-subkegiatan'
+import { Route as AuthenticatedMasterDataReferensiSp2bToBudRouteImport } from './routes/_authenticated/master-data/referensi-sp2b-to-bud'
 import { Route as AuthenticatedMasterDataReferensiRekeningRouteImport } from './routes/_authenticated/master-data/referensi-rekening'
 import { Route as AuthenticatedMasterDataReferensiProgramRouteImport } from './routes/_authenticated/master-data/referensi-program'
 import { Route as AuthenticatedMasterDataReferensiPersetujuanRouteImport } from './routes/_authenticated/master-data/referensi-persetujuan'
+import { Route as AuthenticatedMasterDataReferensiPajakBendaharaRouteImport } from './routes/_authenticated/master-data/referensi-pajak-bendahara'
 import { Route as AuthenticatedMasterDataReferensiPaguBelanjaRouteImport } from './routes/_authenticated/master-data/referensi-pagu-belanja'
 import { Route as AuthenticatedMasterDataReferensiKegiatanRouteImport } from './routes/_authenticated/master-data/referensi-kegiatan'
 import { Route as AuthenticatedMasterDataReferensiJenisSpmRouteImport } from './routes/_authenticated/master-data/referensi-jenis-spm'
@@ -52,12 +54,16 @@ import { Route as AuthenticatedMasterDataReferensiJenisBelanjaRouteImport } from
 import { Route as AuthenticatedMasterDataReferensiDpaRouteImport } from './routes/_authenticated/master-data/referensi-dpa'
 import { Route as AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRouteImport } from './routes/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
 import { Route as AuthenticatedMasterDataReferensiBidangUrusanRouteImport } from './routes/_authenticated/master-data/referensi-bidang-urusan'
+import { Route as AuthenticatedMasterDataReferensiAssetBendaharaRouteImport } from './routes/_authenticated/master-data/referensi-asset-bendahara'
 import { Route as AuthenticatedMasterDataReferensiSKPDRouteImport } from './routes/_authenticated/master-data/referensi-SKPD'
 import { Route as AuthenticatedManajemenAppsUserRoleRouteImport } from './routes/_authenticated/manajemen-apps/user-role'
 import { Route as AuthenticatedManajemenAppsBatasWaktuRouteImport } from './routes/_authenticated/manajemen-apps/batas-waktu'
+import { Route as AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport } from './routes/_authenticated/manajemen-apps/akses-sp2b-ke-bud'
+import { Route as AuthenticatedManajemenAppsAksesPajakBendaharaRouteImport } from './routes/_authenticated/manajemen-apps/akses-pajak-bendahara'
 import { Route as AuthenticatedManajemenAppsAksesOperatorRouteImport } from './routes/_authenticated/manajemen-apps/akses-operator'
 import { Route as AuthenticatedManajemenAppsAksesKuasaBudRouteImport } from './routes/_authenticated/manajemen-apps/akses-kuasa-bud'
 import { Route as AuthenticatedManajemenAppsAksesDpaSkpdRouteImport } from './routes/_authenticated/manajemen-apps/akses-dpa-skpd'
+import { Route as AuthenticatedManajemenAppsAksesAssetBendaharaRouteImport } from './routes/_authenticated/manajemen-apps/akses-asset-bendahara'
 import { Route as AuthenticatedLaporanRealisasiSumberDanaRouteImport } from './routes/_authenticated/laporan/realisasi-sumber-dana'
 import { Route as AuthenticatedLaporanRealisasiBelanjaRouteImport } from './routes/_authenticated/laporan/realisasi-belanja'
 import { Route as AuthenticatedLaporanDaftarBelanjaPerSkpdRouteImport } from './routes/_authenticated/laporan/daftar-belanja-per-skpd'
@@ -84,6 +90,14 @@ import { Route as AuthenticatedDokumenSp2dPermohonanPenerbitanSp2dRouteImport } 
 import { Route as AuthenticatedDokumenSp2dPermohonanDitolakRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-ditolak'
 import { Route as AuthenticatedDokumenSp2dPermohonanDiterimaRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-diterima'
 import { Route as AuthenticatedDokumenSp2dBerkasMasukRouteImport } from './routes/_authenticated/dokumen/sp2d/berkas-masuk'
+import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+import { Route as AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+import { Route as AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/berkas-masuk'
 import { Route as AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/pengeluaran-ditolak'
 import { Route as AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/pengeluaran-diterima'
 import { Route as AuthenticatedDokumenLaporanFungsionalPengeluaranRouteImport } from './routes/_authenticated/dokumen/laporan-fungsional/pengeluaran'
@@ -96,6 +110,10 @@ import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaDitolakRouteImport } f
 import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima'
 import { Route as AuthenticatedDokumenLaporanDpaLaporanDpaRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/laporan-dpa'
 import { Route as AuthenticatedDokumenLaporanDpaBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-dpa/berkas-masuk'
+import { Route as AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
+import { Route as AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+import { Route as AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRouteImport } from './routes/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+import { Route as AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-asset-bendahara/berkas-masuk'
 import { Route as authVerifyTteTypeIdRouteImport } from './routes/(auth)/verify-tte/$type/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -279,6 +297,12 @@ const AuthenticatedMasterDataReferensiSubkegiatanRoute =
     path: '/master-data/referensi-subkegiatan',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMasterDataReferensiSp2bToBudRoute =
+  AuthenticatedMasterDataReferensiSp2bToBudRouteImport.update({
+    id: '/master-data/referensi-sp2b-to-bud',
+    path: '/master-data/referensi-sp2b-to-bud',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMasterDataReferensiRekeningRoute =
   AuthenticatedMasterDataReferensiRekeningRouteImport.update({
     id: '/master-data/referensi-rekening',
@@ -295,6 +319,12 @@ const AuthenticatedMasterDataReferensiPersetujuanRoute =
   AuthenticatedMasterDataReferensiPersetujuanRouteImport.update({
     id: '/master-data/referensi-persetujuan',
     path: '/master-data/referensi-persetujuan',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMasterDataReferensiPajakBendaharaRoute =
+  AuthenticatedMasterDataReferensiPajakBendaharaRouteImport.update({
+    id: '/master-data/referensi-pajak-bendahara',
+    path: '/master-data/referensi-pajak-bendahara',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMasterDataReferensiPaguBelanjaRoute =
@@ -341,6 +371,12 @@ const AuthenticatedMasterDataReferensiBidangUrusanRoute =
     path: '/master-data/referensi-bidang-urusan',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMasterDataReferensiAssetBendaharaRoute =
+  AuthenticatedMasterDataReferensiAssetBendaharaRouteImport.update({
+    id: '/master-data/referensi-asset-bendahara',
+    path: '/master-data/referensi-asset-bendahara',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMasterDataReferensiSKPDRoute =
   AuthenticatedMasterDataReferensiSKPDRouteImport.update({
     id: '/master-data/referensi-SKPD',
@@ -359,6 +395,18 @@ const AuthenticatedManajemenAppsBatasWaktuRoute =
     path: '/manajemen-apps/batas-waktu',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedManajemenAppsAksesSp2bKeBudRoute =
+  AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport.update({
+    id: '/manajemen-apps/akses-sp2b-ke-bud',
+    path: '/manajemen-apps/akses-sp2b-ke-bud',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManajemenAppsAksesPajakBendaharaRoute =
+  AuthenticatedManajemenAppsAksesPajakBendaharaRouteImport.update({
+    id: '/manajemen-apps/akses-pajak-bendahara',
+    path: '/manajemen-apps/akses-pajak-bendahara',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedManajemenAppsAksesOperatorRoute =
   AuthenticatedManajemenAppsAksesOperatorRouteImport.update({
     id: '/manajemen-apps/akses-operator',
@@ -375,6 +423,12 @@ const AuthenticatedManajemenAppsAksesDpaSkpdRoute =
   AuthenticatedManajemenAppsAksesDpaSkpdRouteImport.update({
     id: '/manajemen-apps/akses-dpa-skpd',
     path: '/manajemen-apps/akses-dpa-skpd',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManajemenAppsAksesAssetBendaharaRoute =
+  AuthenticatedManajemenAppsAksesAssetBendaharaRouteImport.update({
+    id: '/manajemen-apps/akses-asset-bendahara',
+    path: '/manajemen-apps/akses-asset-bendahara',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedLaporanRealisasiSumberDanaRoute =
@@ -533,6 +587,64 @@ const AuthenticatedDokumenSp2dBerkasMasukRoute =
     path: '/dokumen/sp2d/berkas-masuk',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute =
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRouteImport.update(
+    {
+      id: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak',
+      path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute =
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRouteImport.update(
+    {
+      id: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima',
+      path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute =
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRouteImport.update({
+    id: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud',
+    path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute =
+  AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRouteImport.update({
+    id: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk',
+    path: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute =
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRouteImport.update(
+    {
+      id: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak',
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute =
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRouteImport.update(
+    {
+      id: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima',
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute =
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRouteImport.update(
+    {
+      id: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara',
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute =
+  AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRouteImport.update({
+    id: '/dokumen/laporan-pajak-bendahara/berkas-masuk',
+    path: '/dokumen/laporan-pajak-bendahara/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute =
   AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRouteImport.update({
     id: '/dokumen/laporan-fungsional/pengeluaran-ditolak',
@@ -607,6 +719,36 @@ const AuthenticatedDokumenLaporanDpaBerkasMasukRoute =
     path: '/dokumen/laporan-dpa/berkas-masuk',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute =
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRouteImport.update(
+    {
+      id: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak',
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute =
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRouteImport.update(
+    {
+      id: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima',
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute =
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRouteImport.update(
+    {
+      id: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara',
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute =
+  AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRouteImport.update({
+    id: '/dokumen/laporan-asset-bendahara/berkas-masuk',
+    path: '/dokumen/laporan-asset-bendahara/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const authVerifyTteTypeIdRoute = authVerifyTteTypeIdRouteImport.update({
   id: '/(auth)/verify-tte/$type/$id',
   path: '/verify-tte/$type/$id',
@@ -639,12 +781,16 @@ export interface FileRoutesByFullPath {
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
+  '/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
   '/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
+  '/master-data/referensi-asset-bendahara': typeof AuthenticatedMasterDataReferensiAssetBendaharaRoute
   '/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
   '/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
@@ -652,9 +798,11 @@ export interface FileRoutesByFullPath {
   '/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
   '/master-data/referensi-pagu-belanja': typeof AuthenticatedMasterDataReferensiPaguBelanjaRoute
+  '/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
   '/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
+  '/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
   '/master-data/referensi-sumber-dana': typeof AuthenticatedMasterDataReferensiSumberDanaRoute
   '/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
@@ -674,6 +822,10 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/dokumen/laporan-asset-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute
   '/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
   '/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
   '/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
@@ -686,6 +838,14 @@ export interface FileRoutesByFullPath {
   '/dokumen/laporan-fungsional/pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranRoute
   '/dokumen/laporan-fungsional/pengeluaran-diterima': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute
   '/dokumen/laporan-fungsional/pengeluaran-ditolak': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute
+  '/dokumen/laporan-pajak-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -726,12 +886,16 @@ export interface FileRoutesByTo {
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
+  '/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
   '/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
+  '/master-data/referensi-asset-bendahara': typeof AuthenticatedMasterDataReferensiAssetBendaharaRoute
   '/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
   '/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
@@ -739,9 +903,11 @@ export interface FileRoutesByTo {
   '/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
   '/master-data/referensi-pagu-belanja': typeof AuthenticatedMasterDataReferensiPaguBelanjaRoute
+  '/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
   '/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
+  '/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
   '/master-data/referensi-sumber-dana': typeof AuthenticatedMasterDataReferensiSumberDanaRoute
   '/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
@@ -761,6 +927,10 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/dokumen/laporan-asset-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute
+  '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute
   '/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
   '/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
   '/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
@@ -773,6 +943,14 @@ export interface FileRoutesByTo {
   '/dokumen/laporan-fungsional/pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranRoute
   '/dokumen/laporan-fungsional/pengeluaran-diterima': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute
   '/dokumen/laporan-fungsional/pengeluaran-ditolak': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute
+  '/dokumen/laporan-pajak-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
+  '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
+  '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -817,12 +995,16 @@ export interface FileRoutesById {
   '/_authenticated/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/_authenticated/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
   '/_authenticated/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  '/_authenticated/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/_authenticated/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   '/_authenticated/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/_authenticated/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
+  '/_authenticated/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/_authenticated/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/_authenticated/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/_authenticated/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
   '/_authenticated/master-data/referensi-SKPD': typeof AuthenticatedMasterDataReferensiSKPDRoute
+  '/_authenticated/master-data/referensi-asset-bendahara': typeof AuthenticatedMasterDataReferensiAssetBendaharaRoute
   '/_authenticated/master-data/referensi-bidang-urusan': typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD': typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
   '/_authenticated/master-data/referensi-dpa': typeof AuthenticatedMasterDataReferensiDpaRoute
@@ -830,9 +1012,11 @@ export interface FileRoutesById {
   '/_authenticated/master-data/referensi-jenis-spm': typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   '/_authenticated/master-data/referensi-kegiatan': typeof AuthenticatedMasterDataReferensiKegiatanRoute
   '/_authenticated/master-data/referensi-pagu-belanja': typeof AuthenticatedMasterDataReferensiPaguBelanjaRoute
+  '/_authenticated/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/_authenticated/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/_authenticated/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
   '/_authenticated/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
+  '/_authenticated/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/_authenticated/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
   '/_authenticated/master-data/referensi-sumber-dana': typeof AuthenticatedMasterDataReferensiSumberDanaRoute
   '/_authenticated/master-data/referensi-urusan': typeof AuthenticatedMasterDataReferensiUrusanRoute
@@ -852,6 +1036,10 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/(auth)/verify-tte/$type/$id': typeof authVerifyTteTypeIdRoute
+  '/_authenticated/dokumen/laporan-asset-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute
+  '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute
+  '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute
+  '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak': typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute
   '/_authenticated/dokumen/laporan-dpa/berkas-masuk': typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
   '/_authenticated/dokumen/laporan-dpa/laporan-dpa': typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
   '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima': typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
@@ -864,6 +1052,14 @@ export interface FileRoutesById {
   '/_authenticated/dokumen/laporan-fungsional/pengeluaran': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranRoute
   '/_authenticated/dokumen/laporan-fungsional/pengeluaran-diterima': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute
   '/_authenticated/dokumen/laporan-fungsional/pengeluaran-ditolak': typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute
+  '/_authenticated/dokumen/laporan-pajak-bendahara/berkas-masuk': typeof AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute
+  '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
+  '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
+  '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
+  '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
+  '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
+  '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
   '/_authenticated/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/_authenticated/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/_authenticated/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -908,12 +1104,16 @@ export interface FileRouteTypes {
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
     | '/laporan/realisasi-sumber-dana'
+    | '/manajemen-apps/akses-asset-bendahara'
     | '/manajemen-apps/akses-dpa-skpd'
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
+    | '/manajemen-apps/akses-pajak-bendahara'
+    | '/manajemen-apps/akses-sp2b-ke-bud'
     | '/manajemen-apps/batas-waktu'
     | '/manajemen-apps/user-role'
     | '/master-data/referensi-SKPD'
+    | '/master-data/referensi-asset-bendahara'
     | '/master-data/referensi-bidang-urusan'
     | '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
     | '/master-data/referensi-dpa'
@@ -921,9 +1121,11 @@ export interface FileRouteTypes {
     | '/master-data/referensi-jenis-spm'
     | '/master-data/referensi-kegiatan'
     | '/master-data/referensi-pagu-belanja'
+    | '/master-data/referensi-pajak-bendahara'
     | '/master-data/referensi-persetujuan'
     | '/master-data/referensi-program'
     | '/master-data/referensi-rekening'
+    | '/master-data/referensi-sp2b-to-bud'
     | '/master-data/referensi-subkegiatan'
     | '/master-data/referensi-sumber-dana'
     | '/master-data/referensi-urusan'
@@ -943,6 +1145,10 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/verify-tte/$type/$id'
+    | '/dokumen/laporan-asset-bendahara/berkas-masuk'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
     | '/dokumen/laporan-dpa/berkas-masuk'
     | '/dokumen/laporan-dpa/laporan-dpa'
     | '/dokumen/laporan-dpa/laporan-dpa-diterima'
@@ -955,6 +1161,14 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-fungsional/pengeluaran'
     | '/dokumen/laporan-fungsional/pengeluaran-diterima'
     | '/dokumen/laporan-fungsional/pengeluaran-ditolak'
+    | '/dokumen/laporan-pajak-bendahara/berkas-masuk'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -995,12 +1209,16 @@ export interface FileRouteTypes {
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
     | '/laporan/realisasi-sumber-dana'
+    | '/manajemen-apps/akses-asset-bendahara'
     | '/manajemen-apps/akses-dpa-skpd'
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
+    | '/manajemen-apps/akses-pajak-bendahara'
+    | '/manajemen-apps/akses-sp2b-ke-bud'
     | '/manajemen-apps/batas-waktu'
     | '/manajemen-apps/user-role'
     | '/master-data/referensi-SKPD'
+    | '/master-data/referensi-asset-bendahara'
     | '/master-data/referensi-bidang-urusan'
     | '/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
     | '/master-data/referensi-dpa'
@@ -1008,9 +1226,11 @@ export interface FileRouteTypes {
     | '/master-data/referensi-jenis-spm'
     | '/master-data/referensi-kegiatan'
     | '/master-data/referensi-pagu-belanja'
+    | '/master-data/referensi-pajak-bendahara'
     | '/master-data/referensi-persetujuan'
     | '/master-data/referensi-program'
     | '/master-data/referensi-rekening'
+    | '/master-data/referensi-sp2b-to-bud'
     | '/master-data/referensi-subkegiatan'
     | '/master-data/referensi-sumber-dana'
     | '/master-data/referensi-urusan'
@@ -1030,6 +1250,10 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/verify-tte/$type/$id'
+    | '/dokumen/laporan-asset-bendahara/berkas-masuk'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+    | '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
     | '/dokumen/laporan-dpa/berkas-masuk'
     | '/dokumen/laporan-dpa/laporan-dpa'
     | '/dokumen/laporan-dpa/laporan-dpa-diterima'
@@ -1042,6 +1266,14 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-fungsional/pengeluaran'
     | '/dokumen/laporan-fungsional/pengeluaran-diterima'
     | '/dokumen/laporan-fungsional/pengeluaran-ditolak'
+    | '/dokumen/laporan-pajak-bendahara/berkas-masuk'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+    | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+    | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -1085,12 +1317,16 @@ export interface FileRouteTypes {
     | '/_authenticated/laporan/daftar-belanja-per-skpd'
     | '/_authenticated/laporan/realisasi-belanja'
     | '/_authenticated/laporan/realisasi-sumber-dana'
+    | '/_authenticated/manajemen-apps/akses-asset-bendahara'
     | '/_authenticated/manajemen-apps/akses-dpa-skpd'
     | '/_authenticated/manajemen-apps/akses-kuasa-bud'
     | '/_authenticated/manajemen-apps/akses-operator'
+    | '/_authenticated/manajemen-apps/akses-pajak-bendahara'
+    | '/_authenticated/manajemen-apps/akses-sp2b-ke-bud'
     | '/_authenticated/manajemen-apps/batas-waktu'
     | '/_authenticated/manajemen-apps/user-role'
     | '/_authenticated/master-data/referensi-SKPD'
+    | '/_authenticated/master-data/referensi-asset-bendahara'
     | '/_authenticated/master-data/referensi-bidang-urusan'
     | '/_authenticated/master-data/referensi-ceklis-kelengkapan-dokumen-ppk-SKPD'
     | '/_authenticated/master-data/referensi-dpa'
@@ -1098,9 +1334,11 @@ export interface FileRouteTypes {
     | '/_authenticated/master-data/referensi-jenis-spm'
     | '/_authenticated/master-data/referensi-kegiatan'
     | '/_authenticated/master-data/referensi-pagu-belanja'
+    | '/_authenticated/master-data/referensi-pajak-bendahara'
     | '/_authenticated/master-data/referensi-persetujuan'
     | '/_authenticated/master-data/referensi-program'
     | '/_authenticated/master-data/referensi-rekening'
+    | '/_authenticated/master-data/referensi-sp2b-to-bud'
     | '/_authenticated/master-data/referensi-subkegiatan'
     | '/_authenticated/master-data/referensi-sumber-dana'
     | '/_authenticated/master-data/referensi-urusan'
@@ -1120,6 +1358,10 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/(auth)/verify-tte/$type/$id'
+    | '/_authenticated/dokumen/laporan-asset-bendahara/berkas-masuk'
+    | '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+    | '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+    | '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
     | '/_authenticated/dokumen/laporan-dpa/berkas-masuk'
     | '/_authenticated/dokumen/laporan-dpa/laporan-dpa'
     | '/_authenticated/dokumen/laporan-dpa/laporan-dpa-diterima'
@@ -1132,6 +1374,14 @@ export interface FileRouteTypes {
     | '/_authenticated/dokumen/laporan-fungsional/pengeluaran'
     | '/_authenticated/dokumen/laporan-fungsional/pengeluaran-diterima'
     | '/_authenticated/dokumen/laporan-fungsional/pengeluaran-ditolak'
+    | '/_authenticated/dokumen/laporan-pajak-bendahara/berkas-masuk'
+    | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+    | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+    | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+    | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+    | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+    | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
     | '/_authenticated/dokumen/sp2d/berkas-masuk'
     | '/_authenticated/dokumen/sp2d/permohonan-diterima'
     | '/_authenticated/dokumen/sp2d/permohonan-ditolak'
@@ -1399,6 +1649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMasterDataReferensiSubkegiatanRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/master-data/referensi-sp2b-to-bud': {
+      id: '/_authenticated/master-data/referensi-sp2b-to-bud'
+      path: '/master-data/referensi-sp2b-to-bud'
+      fullPath: '/master-data/referensi-sp2b-to-bud'
+      preLoaderRoute: typeof AuthenticatedMasterDataReferensiSp2bToBudRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/master-data/referensi-rekening': {
       id: '/_authenticated/master-data/referensi-rekening'
       path: '/master-data/referensi-rekening'
@@ -1418,6 +1675,13 @@ declare module '@tanstack/react-router' {
       path: '/master-data/referensi-persetujuan'
       fullPath: '/master-data/referensi-persetujuan'
       preLoaderRoute: typeof AuthenticatedMasterDataReferensiPersetujuanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/master-data/referensi-pajak-bendahara': {
+      id: '/_authenticated/master-data/referensi-pajak-bendahara'
+      path: '/master-data/referensi-pajak-bendahara'
+      fullPath: '/master-data/referensi-pajak-bendahara'
+      preLoaderRoute: typeof AuthenticatedMasterDataReferensiPajakBendaharaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/master-data/referensi-pagu-belanja': {
@@ -1469,6 +1733,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMasterDataReferensiBidangUrusanRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/master-data/referensi-asset-bendahara': {
+      id: '/_authenticated/master-data/referensi-asset-bendahara'
+      path: '/master-data/referensi-asset-bendahara'
+      fullPath: '/master-data/referensi-asset-bendahara'
+      preLoaderRoute: typeof AuthenticatedMasterDataReferensiAssetBendaharaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/master-data/referensi-SKPD': {
       id: '/_authenticated/master-data/referensi-SKPD'
       path: '/master-data/referensi-SKPD'
@@ -1490,6 +1761,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManajemenAppsBatasWaktuRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/manajemen-apps/akses-sp2b-ke-bud': {
+      id: '/_authenticated/manajemen-apps/akses-sp2b-ke-bud'
+      path: '/manajemen-apps/akses-sp2b-ke-bud'
+      fullPath: '/manajemen-apps/akses-sp2b-ke-bud'
+      preLoaderRoute: typeof AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manajemen-apps/akses-pajak-bendahara': {
+      id: '/_authenticated/manajemen-apps/akses-pajak-bendahara'
+      path: '/manajemen-apps/akses-pajak-bendahara'
+      fullPath: '/manajemen-apps/akses-pajak-bendahara'
+      preLoaderRoute: typeof AuthenticatedManajemenAppsAksesPajakBendaharaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/manajemen-apps/akses-operator': {
       id: '/_authenticated/manajemen-apps/akses-operator'
       path: '/manajemen-apps/akses-operator'
@@ -1509,6 +1794,13 @@ declare module '@tanstack/react-router' {
       path: '/manajemen-apps/akses-dpa-skpd'
       fullPath: '/manajemen-apps/akses-dpa-skpd'
       preLoaderRoute: typeof AuthenticatedManajemenAppsAksesDpaSkpdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manajemen-apps/akses-asset-bendahara': {
+      id: '/_authenticated/manajemen-apps/akses-asset-bendahara'
+      path: '/manajemen-apps/akses-asset-bendahara'
+      fullPath: '/manajemen-apps/akses-asset-bendahara'
+      preLoaderRoute: typeof AuthenticatedManajemenAppsAksesAssetBendaharaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/laporan/realisasi-sumber-dana': {
@@ -1693,6 +1985,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': {
+      id: '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+      path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+      fullPath: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': {
+      id: '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+      path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+      fullPath: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': {
+      id: '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+      path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+      fullPath: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk': {
+      id: '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+      path: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+      fullPath: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': {
+      id: '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+      fullPath: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': {
+      id: '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+      fullPath: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': {
+      id: '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+      path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+      fullPath: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-pajak-bendahara/berkas-masuk': {
+      id: '/_authenticated/dokumen/laporan-pajak-bendahara/berkas-masuk'
+      path: '/dokumen/laporan-pajak-bendahara/berkas-masuk'
+      fullPath: '/dokumen/laporan-pajak-bendahara/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dokumen/laporan-fungsional/pengeluaran-ditolak': {
       id: '/_authenticated/dokumen/laporan-fungsional/pengeluaran-ditolak'
       path: '/dokumen/laporan-fungsional/pengeluaran-ditolak'
@@ -1777,6 +2125,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenLaporanDpaBerkasMasukRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak': {
+      id: '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
+      fullPath: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima': {
+      id: '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+      fullPath: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara-diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara': {
+      id: '/_authenticated/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+      path: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+      fullPath: '/dokumen/laporan-asset-bendahara/laporan-asset-bendahara'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-asset-bendahara/berkas-masuk': {
+      id: '/_authenticated/dokumen/laporan-asset-bendahara/berkas-masuk'
+      path: '/dokumen/laporan-asset-bendahara/berkas-masuk'
+      fullPath: '/dokumen/laporan-asset-bendahara/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/(auth)/verify-tte/$type/$id': {
       id: '/(auth)/verify-tte/$type/$id'
       path: '/verify-tte/$type/$id'
@@ -1842,12 +2218,16 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLaporanDaftarBelanjaPerSkpdRoute: typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   AuthenticatedLaporanRealisasiBelanjaRoute: typeof AuthenticatedLaporanRealisasiBelanjaRoute
   AuthenticatedLaporanRealisasiSumberDanaRoute: typeof AuthenticatedLaporanRealisasiSumberDanaRoute
+  AuthenticatedManajemenAppsAksesAssetBendaharaRoute: typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   AuthenticatedManajemenAppsAksesDpaSkpdRoute: typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
   AuthenticatedManajemenAppsAksesKuasaBudRoute: typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   AuthenticatedManajemenAppsAksesOperatorRoute: typeof AuthenticatedManajemenAppsAksesOperatorRoute
+  AuthenticatedManajemenAppsAksesPajakBendaharaRoute: typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  AuthenticatedManajemenAppsAksesSp2bKeBudRoute: typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   AuthenticatedManajemenAppsBatasWaktuRoute: typeof AuthenticatedManajemenAppsBatasWaktuRoute
   AuthenticatedManajemenAppsUserRoleRoute: typeof AuthenticatedManajemenAppsUserRoleRoute
   AuthenticatedMasterDataReferensiSKPDRoute: typeof AuthenticatedMasterDataReferensiSKPDRoute
+  AuthenticatedMasterDataReferensiAssetBendaharaRoute: typeof AuthenticatedMasterDataReferensiAssetBendaharaRoute
   AuthenticatedMasterDataReferensiBidangUrusanRoute: typeof AuthenticatedMasterDataReferensiBidangUrusanRoute
   AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute: typeof AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute
   AuthenticatedMasterDataReferensiDpaRoute: typeof AuthenticatedMasterDataReferensiDpaRoute
@@ -1855,9 +2235,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMasterDataReferensiJenisSpmRoute: typeof AuthenticatedMasterDataReferensiJenisSpmRoute
   AuthenticatedMasterDataReferensiKegiatanRoute: typeof AuthenticatedMasterDataReferensiKegiatanRoute
   AuthenticatedMasterDataReferensiPaguBelanjaRoute: typeof AuthenticatedMasterDataReferensiPaguBelanjaRoute
+  AuthenticatedMasterDataReferensiPajakBendaharaRoute: typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   AuthenticatedMasterDataReferensiPersetujuanRoute: typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   AuthenticatedMasterDataReferensiProgramRoute: typeof AuthenticatedMasterDataReferensiProgramRoute
   AuthenticatedMasterDataReferensiRekeningRoute: typeof AuthenticatedMasterDataReferensiRekeningRoute
+  AuthenticatedMasterDataReferensiSp2bToBudRoute: typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   AuthenticatedMasterDataReferensiSubkegiatanRoute: typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
   AuthenticatedMasterDataReferensiSumberDanaRoute: typeof AuthenticatedMasterDataReferensiSumberDanaRoute
   AuthenticatedMasterDataReferensiUrusanRoute: typeof AuthenticatedMasterDataReferensiUrusanRoute
@@ -1868,6 +2250,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPengembalianIndexRoute: typeof AuthenticatedPengembalianIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute: typeof AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute
   AuthenticatedDokumenLaporanDpaBerkasMasukRoute: typeof AuthenticatedDokumenLaporanDpaBerkasMasukRoute
   AuthenticatedDokumenLaporanDpaLaporanDpaRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaRoute
   AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute: typeof AuthenticatedDokumenLaporanDpaLaporanDpaDiterimaRoute
@@ -1880,6 +2266,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDokumenLaporanFungsionalPengeluaranRoute: typeof AuthenticatedDokumenLaporanFungsionalPengeluaranRoute
   AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute: typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute
   AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute: typeof AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute
+  AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
   AuthenticatedDokumenSp2dBerkasMasukRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute: typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   AuthenticatedDokumenSp2dPermohonanDitolakRoute: typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1918,18 +2312,26 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedLaporanRealisasiBelanjaRoute,
   AuthenticatedLaporanRealisasiSumberDanaRoute:
     AuthenticatedLaporanRealisasiSumberDanaRoute,
+  AuthenticatedManajemenAppsAksesAssetBendaharaRoute:
+    AuthenticatedManajemenAppsAksesAssetBendaharaRoute,
   AuthenticatedManajemenAppsAksesDpaSkpdRoute:
     AuthenticatedManajemenAppsAksesDpaSkpdRoute,
   AuthenticatedManajemenAppsAksesKuasaBudRoute:
     AuthenticatedManajemenAppsAksesKuasaBudRoute,
   AuthenticatedManajemenAppsAksesOperatorRoute:
     AuthenticatedManajemenAppsAksesOperatorRoute,
+  AuthenticatedManajemenAppsAksesPajakBendaharaRoute:
+    AuthenticatedManajemenAppsAksesPajakBendaharaRoute,
+  AuthenticatedManajemenAppsAksesSp2bKeBudRoute:
+    AuthenticatedManajemenAppsAksesSp2bKeBudRoute,
   AuthenticatedManajemenAppsBatasWaktuRoute:
     AuthenticatedManajemenAppsBatasWaktuRoute,
   AuthenticatedManajemenAppsUserRoleRoute:
     AuthenticatedManajemenAppsUserRoleRoute,
   AuthenticatedMasterDataReferensiSKPDRoute:
     AuthenticatedMasterDataReferensiSKPDRoute,
+  AuthenticatedMasterDataReferensiAssetBendaharaRoute:
+    AuthenticatedMasterDataReferensiAssetBendaharaRoute,
   AuthenticatedMasterDataReferensiBidangUrusanRoute:
     AuthenticatedMasterDataReferensiBidangUrusanRoute,
   AuthenticatedMasterDataReferensiCeklisKelengkapanDokumenPpkSKPDRoute:
@@ -1944,12 +2346,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMasterDataReferensiKegiatanRoute,
   AuthenticatedMasterDataReferensiPaguBelanjaRoute:
     AuthenticatedMasterDataReferensiPaguBelanjaRoute,
+  AuthenticatedMasterDataReferensiPajakBendaharaRoute:
+    AuthenticatedMasterDataReferensiPajakBendaharaRoute,
   AuthenticatedMasterDataReferensiPersetujuanRoute:
     AuthenticatedMasterDataReferensiPersetujuanRoute,
   AuthenticatedMasterDataReferensiProgramRoute:
     AuthenticatedMasterDataReferensiProgramRoute,
   AuthenticatedMasterDataReferensiRekeningRoute:
     AuthenticatedMasterDataReferensiRekeningRoute,
+  AuthenticatedMasterDataReferensiSp2bToBudRoute:
+    AuthenticatedMasterDataReferensiSp2bToBudRoute,
   AuthenticatedMasterDataReferensiSubkegiatanRoute:
     AuthenticatedMasterDataReferensiSubkegiatanRoute,
   AuthenticatedMasterDataReferensiSumberDanaRoute:
@@ -1963,6 +2369,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPengembalianIndexRoute: AuthenticatedPengembalianIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute:
+    AuthenticatedDokumenLaporanAssetBendaharaBerkasMasukRoute,
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute:
+    AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaRoute,
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute:
+    AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDiterimaRoute,
+  AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute:
+    AuthenticatedDokumenLaporanAssetBendaharaLaporanAssetBendaharaDitolakRoute,
   AuthenticatedDokumenLaporanDpaBerkasMasukRoute:
     AuthenticatedDokumenLaporanDpaBerkasMasukRoute,
   AuthenticatedDokumenLaporanDpaLaporanDpaRoute:
@@ -1987,6 +2401,22 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDokumenLaporanFungsionalPengeluaranDiterimaRoute,
   AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute:
     AuthenticatedDokumenLaporanFungsionalPengeluaranDitolakRoute,
+  AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute:
+    AuthenticatedDokumenLaporanPajakBendaharaBerkasMasukRoute,
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute:
+    AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute,
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute:
+    AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute,
+  AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute:
+    AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute,
+  AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute:
+    AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute,
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute:
+    AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute,
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute:
+    AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute,
+  AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute:
+    AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute,
   AuthenticatedDokumenSp2dBerkasMasukRoute:
     AuthenticatedDokumenSp2dBerkasMasukRoute,
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute:

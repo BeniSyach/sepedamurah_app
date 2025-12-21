@@ -1,4 +1,4 @@
-import { useDeleteRefCeklisSPM } from '@/api'
+import { useDeleteRefDPA } from '@/api'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { DPAsActionDialog } from './ref-dpa-action-dialog'
@@ -8,7 +8,7 @@ import { useRefRefDpa } from './ref-dpa-provider'
 export function DPADialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefRefDpa()
 
-  const { mutateAsync } = useDeleteRefCeklisSPM()
+  const { mutateAsync } = useDeleteRefDPA()
 
   const handleDelete = async () => {
     if (!currentRow) return
