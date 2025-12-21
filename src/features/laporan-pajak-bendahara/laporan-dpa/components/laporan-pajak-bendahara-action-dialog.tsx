@@ -184,19 +184,21 @@ export function LaporanPajakBendaharaActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit Laporan DPA' : 'Tambah Laporan DPA'}
+            {isEdit
+              ? 'Edit Laporan Pajak Bendahara'
+              : 'Tambah Laporan Pajak Bendahara'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui data laporan DPA.'
-              : 'Tambahkan laporan DPA baru.'}
+              ? 'Perbarui data Laporan Pajak Bendahara.'
+              : 'Tambahkan Laporan Pajak Bendahara baru.'}
           </DialogDescription>
         </DialogHeader>
 
         <div className='h-[26rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
           <Form {...form}>
             <form
-              id='form-laporan-dpa'
+              id='form-laporan-pajak-bendahara'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4'
             >
@@ -228,7 +230,7 @@ export function LaporanPajakBendaharaActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Pilih DPA
+                      Pajak Bendahara
                     </FormLabel>
 
                     {/* ➜ Tambahkan col-span-4 disini agar dropdown lebar */}
@@ -250,7 +252,7 @@ export function LaporanPajakBendaharaActionDialog({
                                       (d) =>
                                         String(d.id) === String(field.value)
                                     )?.nm_pajak_bendahara
-                                  : 'Pilih DPA'}
+                                  : 'Pilih Pajak Bendahara'}
                               </span>
                               <CaretSortIcon className='h-4 w-4 opacity-50' />
                             </Button>
@@ -262,7 +264,7 @@ export function LaporanPajakBendaharaActionDialog({
                           className='w-[var(--radix-popover-trigger-width)] p-0'
                         >
                           <Command>
-                            <CommandInput placeholder='Cari DPA...' />
+                            <CommandInput placeholder='Cari Pajak Bendahara...' />
                             <CommandEmpty>Tidak ditemukan.</CommandEmpty>
 
                             <CommandGroup>
@@ -330,7 +332,7 @@ export function LaporanPajakBendaharaActionDialog({
         </div>
 
         <DialogFooter>
-          <Button type='submit' form='form-laporan-dpa'>
+          <Button type='submit' form='form-laporan-pajak-bendahara'>
             Simpan
           </Button>
         </DialogFooter>
