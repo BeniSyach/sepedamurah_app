@@ -19,6 +19,11 @@ const bulanKeys = [
   'belanja_dec',
 ] as const
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isExcludedKode = (row: any) =>
+  (row.kd_ref1 === '6' && row.kd_ref2 === '2' && row.kd_ref3 === '03') ||
+  (row.kd_ref1 === '6' && row.kd_ref2 === '1' && row.kd_ref3 === '01')
+
 export function ReferensiPengembalianColumns(
   bulanFilter: number
 ): ColumnDef<laporanBelanjaData>[] {
@@ -196,6 +201,11 @@ export function ReferensiPengembalianColumns(
         <DataTableColumnHeader column={column} title='Sisa' />
       ),
       cell: ({ row }) => {
+        // 🚫 kalau kode 6.2.03 / 6.1.01 → sisa = 0
+        if (isExcludedKode(row.original)) {
+          return <div>{formatRupiah(0)}</div>
+        }
+
         const endIndex = bulanFilter - 1
 
         const realisasiSdBulan = bulanKeys
@@ -203,7 +213,6 @@ export function ReferensiPengembalianColumns(
           .reduce((acc, key) => acc + Number(row.original[key] ?? 0), 0)
 
         const totalPagu = Number(row.original.total_pagu ?? 0)
-
         const sisa = totalPagu - realisasiSdBulan
 
         return <div>{formatRupiah(sisa)}</div>
@@ -211,27 +220,21 @@ export function ReferensiPengembalianColumns(
       footer: ({ table }) => {
         const endIndex = bulanFilter - 1
 
-        const totalRealisasi = table
+        const totalSisa = table
           .getFilteredRowModel()
-          .rows.reduce(
-            (acc, row) =>
-              acc +
-              bulanKeys
-                .slice(0, endIndex + 1)
-                .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0),
-            0
-          )
+          .rows// 🚫 exclude kode 6.2.03 & 6.1.01
+          .filter((row) => !isExcludedKode(row.original))
+          .reduce((acc, row) => {
+            const realisasi = bulanKeys
+              .slice(0, endIndex + 1)
+              .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0)
 
-        const totalPagu = table
-          .getFilteredRowModel()
-          .rows.reduce(
-            (acc, row) => acc + Number(row.original.total_pagu ?? 0),
-            0
-          )
+            const pagu = Number(row.original.total_pagu ?? 0)
 
-        const sisaTotal = totalPagu - totalRealisasi
+            return acc + (pagu - realisasi)
+          }, 0)
 
-        return <div className='font-semibold'>{formatRupiah(sisaTotal)}</div>
+        return <div className='font-semibold'>{formatRupiah(totalSisa)}</div>
       },
       enableSorting: true,
     },
