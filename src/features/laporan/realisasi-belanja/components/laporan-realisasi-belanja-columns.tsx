@@ -190,18 +190,66 @@ export function ReferensiPengembalianColumns(
         return <div className='font-semibold'>{formatRupiah(total)}</div>
       },
     },
+    {
+      id: 'sisa_pagu',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title='Sisa' />
+      ),
+      cell: ({ row }) => {
+        const endIndex = bulanFilter - 1
 
+        const realisasiSdBulan = bulanKeys
+          .slice(0, endIndex + 1)
+          .reduce((acc, key) => acc + Number(row.original[key] ?? 0), 0)
+
+        const totalPagu = Number(row.original.total_pagu ?? 0)
+
+        const sisa = totalPagu - realisasiSdBulan
+
+        return <div>{formatRupiah(sisa)}</div>
+      },
+      footer: ({ table }) => {
+        const endIndex = bulanFilter - 1
+
+        const totalRealisasi = table
+          .getFilteredRowModel()
+          .rows.reduce(
+            (acc, row) =>
+              acc +
+              bulanKeys
+                .slice(0, endIndex + 1)
+                .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0),
+            0
+          )
+
+        const totalPagu = table
+          .getFilteredRowModel()
+          .rows.reduce(
+            (acc, row) => acc + Number(row.original.total_pagu ?? 0),
+            0
+          )
+
+        const sisaTotal = totalPagu - totalRealisasi
+
+        return <div className='font-semibold'>{formatRupiah(sisaTotal)}</div>
+      },
+      enableSorting: true,
+    },
     {
       accessorKey: 'persentase_pagu_belanja',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='% ' />
+        <DataTableColumnHeader column={column} title='%' />
       ),
       cell: ({ row }) => {
-        const totalRealisasi = Number(row.original.total_realisasi ?? 0)
+        const endIndex = bulanFilter - 1
+
+        const realisasiSdBulan = bulanKeys
+          .slice(0, endIndex + 1)
+          .reduce((acc, key) => acc + Number(row.original[key] ?? 0), 0)
+
         const totalPagu = Number(row.original.total_pagu ?? 0)
 
-        // hitung persen
-        const persen = totalPagu > 0 ? (totalRealisasi / totalPagu) * 100 : 0
+        const persen = totalPagu > 0 ? (realisasiSdBulan / totalPagu) * 100 : 0
 
         return <div>{persen.toFixed(2)}%</div>
       },
