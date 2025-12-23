@@ -68,7 +68,7 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
   const bulanFilter = Number(search.bulan ?? currentMonth)
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role') ?? ''
-  const isBendahara = userRole === 'bendahara'
+  const isBendahara = userRole === 'Bendahara'
 
   const { data: dataSKPD } = useGetRefSKPD({
     page: 1,
