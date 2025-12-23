@@ -6,8 +6,8 @@ export interface DatRekeningItem {
   kd_rek2: string
   kd_rek3: string
   kd_rek4: string
-  kd_rek5: string | null
-  kd_rek6: string | null
+  kd_rek5: string
+  kd_rek6: string
   nm_rekening: string
   status_rek: string
 }

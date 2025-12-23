@@ -7,11 +7,13 @@ interface UseRefRekening {
   perPage?: number
   search?: string
   status_rek?: string
+  enabled?: boolean
 }
 
 export function useGetDatRekening(params: UseRefRekening) {
   return useQuery({
     queryKey: ['useGetDatRekening', params],
+    enabled: params.enabled ?? true, // default aktif
     queryFn: async () => {
       const { data } = await api.get<PaginatedDatRekening>('/dat-rekening', {
         params: {

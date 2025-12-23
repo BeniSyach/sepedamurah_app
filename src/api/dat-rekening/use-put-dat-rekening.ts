@@ -10,6 +10,8 @@ interface UpdateRekeningPayload {
   kd_rek5: string
   kd_rek6: string
   nm_rekening: string
+  tahun_rek: string
+  status_rek: string
 }
 
 /**
@@ -24,7 +26,7 @@ export function usePutDatRekening() {
       payload: UpdateRekeningPayload
     ): Promise<PaginatedDatRekening> => {
       const { data } = await api.put<PaginatedDatRekening>(
-        `/master-data/rekening/${payload.kd_rek1}/${payload.kd_rek2}/${payload.kd_rek3}/${payload.kd_rek4}/${payload.kd_rek5}/${payload.kd_rek6}`,
+        `/dat-rekening/${payload.tahun_rek}/${payload.kd_rek1}/${payload.kd_rek2}/${payload.kd_rek3}/${payload.kd_rek4}/${payload.kd_rek5}/${payload.kd_rek6}`,
         payload
       )
       return data

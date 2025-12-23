@@ -8,6 +8,7 @@ interface DeleteDatRekeningPayload {
   kd_rek4: string
   kd_rek5: string
   kd_rek6: string
+  tahun: string
 }
 
 /**
@@ -24,9 +25,10 @@ export function useDeleteDatRekening() {
       kd_rek4,
       kd_rek5,
       kd_rek6,
+      tahun,
     }: DeleteDatRekeningPayload): Promise<void> => {
       await api.delete(
-        `/dat-rekening/${kd_rek1}/${kd_rek2}/${kd_rek3}/${kd_rek4}/${kd_rek5}/${kd_rek6}`
+        `/dat-rekening/${tahun}/${kd_rek1}/${kd_rek2}/${kd_rek3}/${kd_rek4}/${kd_rek5}/${kd_rek6}`
       )
     },
     onSuccess: () => {

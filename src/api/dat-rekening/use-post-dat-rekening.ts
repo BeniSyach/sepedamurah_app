@@ -10,6 +10,8 @@ interface CreateDatRekeningPayload {
   kd_rek5: string
   kd_rek6: string
   nm_rekening: string
+  tahun_rek: string
+  status_rek: string
 }
 
 /**
