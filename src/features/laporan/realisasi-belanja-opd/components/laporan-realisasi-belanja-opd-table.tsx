@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { type MasterSkpd, useGetRefSKPD, type laporanBelanjaData } from '@/api'
+import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -65,6 +66,9 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
   // List tahun 3 tahun sebelum & 3 tahun sesudah
   const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
   const bulanFilter = Number(search.bulan ?? currentMonth)
+  const user = useAuthStore((s) => s.user)
+  const userRole = localStorage.getItem('user_role') ?? ''
+  const isBendahara = userRole === 'bendahara'
 
   const { data: dataSKPD } = useGetRefSKPD({
     page: 1,
@@ -100,8 +104,17 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
       }),
     })
   }
-  const skpdValue =
-    search.kd_opd1 && search.kd_opd2
+  const skpdValue = isBendahara
+    ? [
+        user?.kd_opd1,
+        user?.kd_opd2,
+        user?.kd_opd3,
+        user?.kd_opd4,
+        user?.kd_opd5,
+      ]
+        .filter(Boolean)
+        .join('.')
+    : search.kd_opd1
       ? [
           search.kd_opd1,
           search.kd_opd2,
@@ -169,7 +182,11 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
         searchPlaceholder='Cari...'
         extraControls={
           <div className='flex items-center space-x-2'>
-            <Select value={skpdValue} onValueChange={changeSkpd}>
+            <Select
+              disabled={isBendahara}
+              value={skpdValue}
+              onValueChange={changeSkpd}
+            >
               <SelectTrigger className='w-[260px]'>
                 <SelectValue placeholder='Pilih SKPD' />
               </SelectTrigger>
