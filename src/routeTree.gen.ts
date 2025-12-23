@@ -65,6 +65,7 @@ import { Route as AuthenticatedManajemenAppsAksesKuasaBudRouteImport } from './r
 import { Route as AuthenticatedManajemenAppsAksesDpaSkpdRouteImport } from './routes/_authenticated/manajemen-apps/akses-dpa-skpd'
 import { Route as AuthenticatedManajemenAppsAksesAssetBendaharaRouteImport } from './routes/_authenticated/manajemen-apps/akses-asset-bendahara'
 import { Route as AuthenticatedLaporanRealisasiSumberDanaRouteImport } from './routes/_authenticated/laporan/realisasi-sumber-dana'
+import { Route as AuthenticatedLaporanRealisasiBelanjaOpdRouteImport } from './routes/_authenticated/laporan/realisasi-belanja-opd'
 import { Route as AuthenticatedLaporanRealisasiBelanjaRouteImport } from './routes/_authenticated/laporan/realisasi-belanja'
 import { Route as AuthenticatedLaporanDaftarBelanjaPerSkpdRouteImport } from './routes/_authenticated/laporan/daftar-belanja-per-skpd'
 import { Route as AuthenticatedLaporanBukuLaporanRouteImport } from './routes/_authenticated/laporan/buku-laporan'
@@ -437,6 +438,12 @@ const AuthenticatedLaporanRealisasiSumberDanaRoute =
     path: '/laporan/realisasi-sumber-dana',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLaporanRealisasiBelanjaOpdRoute =
+  AuthenticatedLaporanRealisasiBelanjaOpdRouteImport.update({
+    id: '/laporan/realisasi-belanja-opd',
+    path: '/laporan/realisasi-belanja-opd',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLaporanRealisasiBelanjaRoute =
   AuthenticatedLaporanRealisasiBelanjaRouteImport.update({
     id: '/laporan/realisasi-belanja',
@@ -780,6 +787,7 @@ export interface FileRoutesByFullPath {
   '/laporan/buku-laporan': typeof AuthenticatedLaporanBukuLaporanRoute
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
+  '/laporan/realisasi-belanja-opd': typeof AuthenticatedLaporanRealisasiBelanjaOpdRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
   '/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
@@ -885,6 +893,7 @@ export interface FileRoutesByTo {
   '/laporan/buku-laporan': typeof AuthenticatedLaporanBukuLaporanRoute
   '/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
+  '/laporan/realisasi-belanja-opd': typeof AuthenticatedLaporanRealisasiBelanjaOpdRoute
   '/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
   '/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
@@ -994,6 +1003,7 @@ export interface FileRoutesById {
   '/_authenticated/laporan/buku-laporan': typeof AuthenticatedLaporanBukuLaporanRoute
   '/_authenticated/laporan/daftar-belanja-per-skpd': typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   '/_authenticated/laporan/realisasi-belanja': typeof AuthenticatedLaporanRealisasiBelanjaRoute
+  '/_authenticated/laporan/realisasi-belanja-opd': typeof AuthenticatedLaporanRealisasiBelanjaOpdRoute
   '/_authenticated/laporan/realisasi-sumber-dana': typeof AuthenticatedLaporanRealisasiSumberDanaRoute
   '/_authenticated/manajemen-apps/akses-asset-bendahara': typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   '/_authenticated/manajemen-apps/akses-dpa-skpd': typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
@@ -1103,6 +1113,7 @@ export interface FileRouteTypes {
     | '/laporan/buku-laporan'
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
+    | '/laporan/realisasi-belanja-opd'
     | '/laporan/realisasi-sumber-dana'
     | '/manajemen-apps/akses-asset-bendahara'
     | '/manajemen-apps/akses-dpa-skpd'
@@ -1208,6 +1219,7 @@ export interface FileRouteTypes {
     | '/laporan/buku-laporan'
     | '/laporan/daftar-belanja-per-skpd'
     | '/laporan/realisasi-belanja'
+    | '/laporan/realisasi-belanja-opd'
     | '/laporan/realisasi-sumber-dana'
     | '/manajemen-apps/akses-asset-bendahara'
     | '/manajemen-apps/akses-dpa-skpd'
@@ -1316,6 +1328,7 @@ export interface FileRouteTypes {
     | '/_authenticated/laporan/buku-laporan'
     | '/_authenticated/laporan/daftar-belanja-per-skpd'
     | '/_authenticated/laporan/realisasi-belanja'
+    | '/_authenticated/laporan/realisasi-belanja-opd'
     | '/_authenticated/laporan/realisasi-sumber-dana'
     | '/_authenticated/manajemen-apps/akses-asset-bendahara'
     | '/_authenticated/manajemen-apps/akses-dpa-skpd'
@@ -1810,6 +1823,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLaporanRealisasiSumberDanaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/laporan/realisasi-belanja-opd': {
+      id: '/_authenticated/laporan/realisasi-belanja-opd'
+      path: '/laporan/realisasi-belanja-opd'
+      fullPath: '/laporan/realisasi-belanja-opd'
+      preLoaderRoute: typeof AuthenticatedLaporanRealisasiBelanjaOpdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/laporan/realisasi-belanja': {
       id: '/_authenticated/laporan/realisasi-belanja'
       path: '/laporan/realisasi-belanja'
@@ -2217,6 +2237,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLaporanBukuLaporanRoute: typeof AuthenticatedLaporanBukuLaporanRoute
   AuthenticatedLaporanDaftarBelanjaPerSkpdRoute: typeof AuthenticatedLaporanDaftarBelanjaPerSkpdRoute
   AuthenticatedLaporanRealisasiBelanjaRoute: typeof AuthenticatedLaporanRealisasiBelanjaRoute
+  AuthenticatedLaporanRealisasiBelanjaOpdRoute: typeof AuthenticatedLaporanRealisasiBelanjaOpdRoute
   AuthenticatedLaporanRealisasiSumberDanaRoute: typeof AuthenticatedLaporanRealisasiSumberDanaRoute
   AuthenticatedManajemenAppsAksesAssetBendaharaRoute: typeof AuthenticatedManajemenAppsAksesAssetBendaharaRoute
   AuthenticatedManajemenAppsAksesDpaSkpdRoute: typeof AuthenticatedManajemenAppsAksesDpaSkpdRoute
@@ -2310,6 +2331,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedLaporanDaftarBelanjaPerSkpdRoute,
   AuthenticatedLaporanRealisasiBelanjaRoute:
     AuthenticatedLaporanRealisasiBelanjaRoute,
+  AuthenticatedLaporanRealisasiBelanjaOpdRoute:
+    AuthenticatedLaporanRealisasiBelanjaOpdRoute,
   AuthenticatedLaporanRealisasiSumberDanaRoute:
     AuthenticatedLaporanRealisasiSumberDanaRoute,
   AuthenticatedManajemenAppsAksesAssetBendaharaRoute:

@@ -706,6 +706,12 @@ export const sidebarData: SidebarData = {
           url: '/laporan/realisasi-belanja',
           icon: PieChart,
         },
+        {
+          id: 'laporan-realisasi-belanja-opd',
+          title: 'Realisasi Belanja SKPD',
+          url: '/laporan/realisasi-belanja-opd',
+          icon: PieChart,
+        },
       ],
     },
   ],

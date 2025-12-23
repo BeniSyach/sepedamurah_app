@@ -79,6 +79,7 @@ export function UsersActionDialog({
   const { data: dataSKPD } = useGetRefSKPD({
     page: 1,
     perPage: 100,
+    hidden: '0',
   })
 
   const itemsSKPD =
