@@ -1,4 +1,4 @@
-import { Plus, RefreshCcw } from 'lucide-react'
+import { DoorClosedLocked, Plus, RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRefBatasWaktu } from './batas-waktu-provider'
 
@@ -11,6 +11,9 @@ export function RefRekeningPrimaryButtons() {
       </Button>
       <Button className='space-x-1' onClick={() => setOpen('reset')}>
         <span>Reset Batas Waktu</span> <RefreshCcw size={18} />
+      </Button>
+      <Button className='space-x-1' onClick={() => setOpen('tutup')}>
+        <span>Tutup Pelayanan</span> <DoorClosedLocked size={18} />
       </Button>
     </div>
   )

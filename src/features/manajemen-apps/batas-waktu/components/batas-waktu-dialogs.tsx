@@ -1,6 +1,7 @@
 import { useDeleteBatasWaktu } from '@/api'
 import { toast } from 'sonner'
 import { useResetBatasWaktu } from '@/api/management-app/batas-waktu/use-reset-batas-waktu'
+import { useResetTutupBatasWaktu } from '@/api/management-app/batas-waktu/use-reset-tutup-batas-waktu'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { BatasWaktusActionDialog } from './batas-waktu-action-dialog'
 import { useRefBatasWaktu } from './batas-waktu-provider'
@@ -10,6 +11,7 @@ export function UsersDialogs() {
 
   const { mutateAsync } = useDeleteBatasWaktu()
   const { mutateAsync: resetWaktu } = useResetBatasWaktu()
+  const { mutateAsync: resetWaktuTutup } = useResetTutupBatasWaktu()
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -46,6 +48,23 @@ export function UsersDialogs() {
     })
   }
 
+  const handleResetTutup = async () => {
+    const resetPromise = resetWaktuTutup()
+
+    await toast.promise(resetPromise, {
+      loading: 'Reset data...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `Batas Waktu SKPD berhasil ditutup.`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
+
   return (
     <>
       <BatasWaktusActionDialog
@@ -66,6 +85,20 @@ export function UsersDialogs() {
         title={`reset batas Waktu ?`}
         desc={<>Kamu akan Reset batas Waktu SKPD</>}
         confirmText='Reset'
+      />
+
+      <ConfirmDialog
+        key={`batas-waktu-reset-tutup`}
+        destructive
+        open={open === 'tutup'}
+        onOpenChange={() => {
+          setOpen('tutup')
+        }}
+        handleConfirm={handleResetTutup}
+        className='max-w-md'
+        title={`Tutup Pelayanan ?`}
+        desc={<>Kamu akan Tutup Pelayanan SP2D</>}
+        confirmText='Tutup'
       />
 
       {currentRow && (
