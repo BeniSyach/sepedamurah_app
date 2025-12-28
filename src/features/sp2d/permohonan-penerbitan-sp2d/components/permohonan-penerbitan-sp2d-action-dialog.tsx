@@ -87,6 +87,24 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -463,6 +481,39 @@ export function PermohonanPenerbitanSP2DActionDialog({
     }
   }, [sumberDana, nilaiBelanja])
 
+  const noSpmValue = form.watch('no_spm')
+  const isNoSpmFilled = Boolean(noSpmValue && noSpmValue.trim() !== '')
+  const JenisBerkasValue = form.watch('jenis_berkas')
+  const isJenisBerkasFilled = Boolean(
+    JenisBerkasValue && JenisBerkasValue.trim() !== ''
+  )
+  const nilai_belanjaValue = form.watch('nilai_belanja')
+  const isnilai_belanjaFilled = Boolean(
+    nilai_belanjaValue && nilai_belanjaValue.trim() !== ''
+  )
+  const sumberDanaValue = form.watch('sumber_dana') as
+    | {
+        kd_ref1: string | null
+        kd_ref2: string | null
+        kd_ref3: string | null
+        kd_ref4: string | null
+        kd_ref5: string | null
+        kd_ref6: string | null
+        sisa: string | number
+        nilai: string | number
+      }[]
+    | undefined
+
+  const issumber_danaFilled = Boolean(
+    Array.isArray(sumberDanaValue) && sumberDanaValue.length > 0
+  )
+
+  const idBerkasValue = form.watch('id_berkas') as string[] | undefined
+
+  const isIdBerkasFilled = Boolean(
+    Array.isArray(idBerkasValue) && idBerkasValue.length > 0
+  )
+
   return (
     <Dialog
       open={open}
@@ -508,6 +559,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
                   <FormField
                     control={form.control}
                     name='jenis_berkas'
+                    rules={{ required: isNoSpmFilled }}
                     render={({ field }) => (
                       <FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-2'>
                         <FormLabel className='col-span-2 pt-2 text-end'>
@@ -527,7 +579,12 @@ export function PermohonanPenerbitanSP2DActionDialog({
                             <RadioGroup
                               onValueChange={field.onChange}
                               value={field.value}
-                              className='flex flex-row gap-2'
+                              className={`flex gap-2 ${
+                                !isNoSpmFilled
+                                  ? 'pointer-events-none opacity-50'
+                                  : ''
+                              }`}
+                              disabled={!isNoSpmFilled}
                             >
                               {data?.data?.map(
                                 (item: CeklisKelengkapanDokumen) => (
@@ -546,7 +603,11 @@ export function PermohonanPenerbitanSP2DActionDialog({
                             </RadioGroup>
                           )}
                         </FormControl>
-
+                        {!isNoSpmFilled && (
+                          <p className='text-muted-foreground col-span-4 col-start-3 text-xs'>
+                            Isi No SPM terlebih dahulu
+                          </p>
+                        )}
                         <FormMessage className='col-span-4 col-start-3' />
                       </FormItem>
                     )}
@@ -557,6 +618,7 @@ export function PermohonanPenerbitanSP2DActionDialog({
                     <FormField
                       control={form.control}
                       name='id_berkas'
+                      rules={{ required: isNoSpmFilled || isJenisBerkasFilled }}
                       render={() => (
                         <FormItem className='mt-4 grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
                           {/* Label kolom kiri */}
@@ -580,6 +642,9 @@ export function PermohonanPenerbitanSP2DActionDialog({
                                     key={item.id}
                                     control={form.control}
                                     name='id_berkas'
+                                    disabled={
+                                      !isNoSpmFilled || !isJenisBerkasFilled
+                                    }
                                     render={({ field }) => {
                                       const value = field.value || []
                                       return (
@@ -633,6 +698,17 @@ export function PermohonanPenerbitanSP2DActionDialog({
                         size='sm'
                         variant='outline'
                         onClick={() => {
+                          if (
+                            !isNoSpmFilled ||
+                            !isJenisBerkasFilled ||
+                            !isIdBerkasFilled
+                          ) {
+                            alert(
+                              'Anda harus mengisi No SPM, Jenis Berkas dan daftar Berkas'
+                            )
+                            return
+                          }
+
                           if (!hasConfirmedBerkas) {
                             setOpenConfirm(true) // buka modal dulu
                             return
@@ -662,6 +738,12 @@ export function PermohonanPenerbitanSP2DActionDialog({
                   <FormField
                     control={form.control}
                     name='nilai_belanja'
+                    rules={{
+                      required:
+                        isNoSpmFilled ||
+                        isJenisBerkasFilled ||
+                        isIdBerkasFilled,
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nilai Belanja</FormLabel>
@@ -682,6 +764,11 @@ export function PermohonanPenerbitanSP2DActionDialog({
                                 ? 'cursor-not-allowed bg-gray-100'
                                 : ''
                             }
+                            disabled={
+                              !isNoSpmFilled ||
+                              !isJenisBerkasFilled ||
+                              !isIdBerkasFilled
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -692,6 +779,13 @@ export function PermohonanPenerbitanSP2DActionDialog({
                   <FormField
                     control={form.control}
                     name='sumber_dana'
+                    rules={{
+                      required:
+                        isNoSpmFilled ||
+                        isJenisBerkasFilled ||
+                        isIdBerkasFilled ||
+                        isnilai_belanjaFilled,
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Sumber Dana</FormLabel>
@@ -837,11 +931,28 @@ export function PermohonanPenerbitanSP2DActionDialog({
                   <FormField
                     control={form.control}
                     name='nama_file'
+                    rules={{
+                      required:
+                        isNoSpmFilled ||
+                        isJenisBerkasFilled ||
+                        isIdBerkasFilled ||
+                        isnilai_belanjaFilled ||
+                        issumber_danaFilled,
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Uraian SPM</FormLabel>
                         <FormControl>
-                          <Textarea {...field} placeholder='Uraian SPM' />
+                          <Textarea
+                            {...field}
+                            placeholder='Uraian SPM'
+                            disabled={
+                              !isNoSpmFilled ||
+                              !isJenisBerkasFilled ||
+                              !isIdBerkasFilled ||
+                              !issumber_danaFilled
+                            }
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
