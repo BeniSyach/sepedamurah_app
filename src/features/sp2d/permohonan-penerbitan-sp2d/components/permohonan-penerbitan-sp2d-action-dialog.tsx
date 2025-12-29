@@ -109,6 +109,8 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -441,7 +443,22 @@ export function PermohonanPenerbitanSP2DActionDialog({
         form.reset()
         return isEdit ? 'Data berhasil diperbarui!' : 'Data berhasil disimpan!'
       },
-      error: 'Gagal menyimpan data.',
+      error: (err: any) => {
+        // Axios error handling
+        const response = err?.response?.data
+
+        // Prioritas pesan dari backend
+        if (response?.message) {
+          return response.message
+        }
+
+        // Jika error validasi Laravel (422)
+        if (response?.errors) {
+          return Object.values(response.errors).flat().join(', ')
+        }
+
+        return 'Gagal menyimpan data.'
+      },
     })
   }
 
