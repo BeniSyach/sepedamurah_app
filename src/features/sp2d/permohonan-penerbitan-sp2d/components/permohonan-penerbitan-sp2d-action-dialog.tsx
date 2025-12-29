@@ -105,6 +105,10 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -469,8 +473,6 @@ export function PermohonanPenerbitanSP2DActionDialog({
         toast.warning(
           'Total sisa sumber dana tidak mencukupi nilai belanja, silahkan tambahkan sumber dana yg lain !'
         )
-      } else {
-        toast.success('Total sisa sumber dana sudah mencukupi nilai belanja')
       }
 
       // hanya update jika ada perubahan sesungguhnya
