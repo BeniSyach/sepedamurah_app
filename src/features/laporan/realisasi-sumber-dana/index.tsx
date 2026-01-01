@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetLaporanRealisasiSumberDana } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -16,10 +17,11 @@ const route = getRouteApi('/_authenticated/laporan/realisasi-sumber-dana')
 export function RealisasiSumberDana() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetLaporanRealisasiSumberDana({
-    tahun: search.tahun,
+    tahun: tahunFilter,
     search: search.search,
   })
 

@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { RealisasiSumberDana } from '@/features/laporan/realisasi-sumber-dana'
 
 const LaporanRealiasaiSumberDanaSearchSchema = z.object({
-  tahun: z.string().optional().catch(''),
+  tahun: z.coerce.number().optional(),
   search: z.string().optional().catch(''),
 })
 
