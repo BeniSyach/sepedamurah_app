@@ -453,6 +453,37 @@ export const sidebarData: SidebarData = {
             },
           ],
         },
+        {
+          id: 'lpj-up-nihil',
+          title: 'LPJ UPNIHIL',
+          icon: FileCheck2,
+          items: [
+            {
+              id: 'berkas-masuk-lpj-up-nihil',
+              title: 'Berkas masuk',
+              url: '/dokumen/lpj-up-nihil/berkas-masuk',
+              icon: Inbox,
+            },
+            {
+              id: 'permohonan-penerbitan-lpj-up-nihil',
+              title: 'Penerbitan LPJ UPNIHIL',
+              url: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil',
+              icon: FilePlus2,
+            },
+            {
+              id: 'permohonan-diterima-lpj-up-nihil',
+              title: 'Diterima LPJ UPNIHIL',
+              url: '/dokumen/lpj-up-nihil/diterima',
+              icon: CheckCircle2,
+            },
+            {
+              id: 'permohonan-ditolak-lpj-up-nihil',
+              title: 'Ditolak LPJ UPNIHIL',
+              url: '/dokumen/lpj-up-nihil/ditolak',
+              icon: XCircle,
+            },
+          ],
+        },
       ],
     },
     {

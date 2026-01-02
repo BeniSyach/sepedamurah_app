@@ -91,6 +91,10 @@ import { Route as AuthenticatedDokumenSp2dPermohonanPenerbitanSp2dRouteImport } 
 import { Route as AuthenticatedDokumenSp2dPermohonanDitolakRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-ditolak'
 import { Route as AuthenticatedDokumenSp2dPermohonanDiterimaRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-diterima'
 import { Route as AuthenticatedDokumenSp2dBerkasMasukRouteImport } from './routes/_authenticated/dokumen/sp2d/berkas-masuk'
+import { Route as AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+import { Route as AuthenticatedDokumenLpjUpNihilDitolakRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/ditolak'
+import { Route as AuthenticatedDokumenLpjUpNihilDiterimaRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/diterima'
+import { Route as AuthenticatedDokumenLpjUpNihilBerkasMasukRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/berkas-masuk'
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
@@ -594,6 +598,30 @@ const AuthenticatedDokumenSp2dBerkasMasukRoute =
     path: '/dokumen/sp2d/berkas-masuk',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute =
+  AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRouteImport.update({
+    id: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil',
+    path: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLpjUpNihilDitolakRoute =
+  AuthenticatedDokumenLpjUpNihilDitolakRouteImport.update({
+    id: '/dokumen/lpj-up-nihil/ditolak',
+    path: '/dokumen/lpj-up-nihil/ditolak',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLpjUpNihilDiterimaRoute =
+  AuthenticatedDokumenLpjUpNihilDiterimaRouteImport.update({
+    id: '/dokumen/lpj-up-nihil/diterima',
+    path: '/dokumen/lpj-up-nihil/diterima',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenLpjUpNihilBerkasMasukRoute =
+  AuthenticatedDokumenLpjUpNihilBerkasMasukRouteImport.update({
+    id: '/dokumen/lpj-up-nihil/berkas-masuk',
+    path: '/dokumen/lpj-up-nihil/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute =
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRouteImport.update(
     {
@@ -854,6 +882,10 @@ export interface FileRoutesByFullPath {
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
+  '/dokumen/lpj-up-nihil/berkas-masuk': typeof AuthenticatedDokumenLpjUpNihilBerkasMasukRoute
+  '/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
+  '/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
+  '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -960,6 +992,10 @@ export interface FileRoutesByTo {
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
+  '/dokumen/lpj-up-nihil/berkas-masuk': typeof AuthenticatedDokumenLpjUpNihilBerkasMasukRoute
+  '/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
+  '/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
+  '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1070,6 +1106,10 @@ export interface FileRoutesById {
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
+  '/_authenticated/dokumen/lpj-up-nihil/berkas-masuk': typeof AuthenticatedDokumenLpjUpNihilBerkasMasukRoute
+  '/_authenticated/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
+  '/_authenticated/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
+  '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
   '/_authenticated/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/_authenticated/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/_authenticated/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1180,6 +1220,10 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+    | '/dokumen/lpj-up-nihil/berkas-masuk'
+    | '/dokumen/lpj-up-nihil/diterima'
+    | '/dokumen/lpj-up-nihil/ditolak'
+    | '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -1286,6 +1330,10 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+    | '/dokumen/lpj-up-nihil/berkas-masuk'
+    | '/dokumen/lpj-up-nihil/diterima'
+    | '/dokumen/lpj-up-nihil/ditolak'
+    | '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -1395,6 +1443,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
+    | '/_authenticated/dokumen/lpj-up-nihil/berkas-masuk'
+    | '/_authenticated/dokumen/lpj-up-nihil/diterima'
+    | '/_authenticated/dokumen/lpj-up-nihil/ditolak'
+    | '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
     | '/_authenticated/dokumen/sp2d/berkas-masuk'
     | '/_authenticated/dokumen/sp2d/permohonan-diterima'
     | '/_authenticated/dokumen/sp2d/permohonan-ditolak'
@@ -2005,6 +2057,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': {
+      id: '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+      path: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+      fullPath: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+      preLoaderRoute: typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/lpj-up-nihil/ditolak': {
+      id: '/_authenticated/dokumen/lpj-up-nihil/ditolak'
+      path: '/dokumen/lpj-up-nihil/ditolak'
+      fullPath: '/dokumen/lpj-up-nihil/ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLpjUpNihilDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/lpj-up-nihil/diterima': {
+      id: '/_authenticated/dokumen/lpj-up-nihil/diterima'
+      path: '/dokumen/lpj-up-nihil/diterima'
+      fullPath: '/dokumen/lpj-up-nihil/diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLpjUpNihilDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/lpj-up-nihil/berkas-masuk': {
+      id: '/_authenticated/dokumen/lpj-up-nihil/berkas-masuk'
+      path: '/dokumen/lpj-up-nihil/berkas-masuk'
+      fullPath: '/dokumen/lpj-up-nihil/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLpjUpNihilBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak': {
       id: '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
       path: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak'
@@ -2295,6 +2375,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute
+  AuthenticatedDokumenLpjUpNihilBerkasMasukRoute: typeof AuthenticatedDokumenLpjUpNihilBerkasMasukRoute
+  AuthenticatedDokumenLpjUpNihilDiterimaRoute: typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
+  AuthenticatedDokumenLpjUpNihilDitolakRoute: typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
+  AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute: typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
   AuthenticatedDokumenSp2dBerkasMasukRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute: typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   AuthenticatedDokumenSp2dPermohonanDitolakRoute: typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -2440,6 +2524,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute,
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute:
     AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRoute,
+  AuthenticatedDokumenLpjUpNihilBerkasMasukRoute:
+    AuthenticatedDokumenLpjUpNihilBerkasMasukRoute,
+  AuthenticatedDokumenLpjUpNihilDiterimaRoute:
+    AuthenticatedDokumenLpjUpNihilDiterimaRoute,
+  AuthenticatedDokumenLpjUpNihilDitolakRoute:
+    AuthenticatedDokumenLpjUpNihilDitolakRoute,
+  AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute:
+    AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute,
   AuthenticatedDokumenSp2dBerkasMasukRoute:
     AuthenticatedDokumenSp2dBerkasMasukRoute,
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute:

@@ -1,0 +1,208 @@
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { type Row } from '@tanstack/react-table'
+import { type Sp2dData, type Sp2dItem } from '@/api'
+import { Download, Eye, FileSearch, Send, Trash2, UserPen } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+// import { type User } from '../data/schema'
+import { useRefSp2dItem } from './permohonan-diterima-provider'
+
+type DataTableRowActionsProps = {
+  row: Row<Sp2dItem>
+}
+
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const { setOpen, setCurrentRow } = useRefSp2dItem()
+  const sudahDikirim =
+    row.original.sp2dkirim && row.original.sp2dkirim.length > 0
+  const sudahDiTte = sudahDikirim
+    ? row.original.sp2dkirim.filter(
+        (item: Sp2dData) => item.tte !== null && item.tte.trim() !== ''
+      )
+    : []
+  const levelAkses = localStorage.getItem('user_role')
+  return (
+    <>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant='ghost'
+            className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+          >
+            <DotsHorizontalIcon className='h-4 w-4' />
+            <span className='sr-only'>Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align='end' className='w-[160px]'>
+          {levelAkses !== 'Bendahara' && !sudahDikirim && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('kirimsp2d')
+                }}
+              >
+                Kirim SP2D
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && sudahDiTte.length > 0 && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('kirimbank')
+                }}
+              >
+                Kirim Ke Bank
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && sudahDiTte.length > 0 && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('publish')
+                }}
+              >
+                Publish
+                <DropdownMenuShortcut>
+                  <Send size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && levelAkses !== 'Kuasa BUD' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa Berkas
+                <DropdownMenuShortcut>
+                  <FileSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && (
+            <>
+              {' '}
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit_sd')
+                }}
+              >
+                Edit Sumber Dana
+                <DropdownMenuShortcut>
+                  <UserPen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {levelAkses !== 'Bendahara' && (
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('edit')
+              }}
+            >
+              Edit
+              <DropdownMenuShortcut>
+                <UserPen size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+          {levelAkses !== 'Bendahara' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('delete')
+                }}
+                className='text-red-500!'
+              >
+                Delete
+                <DropdownMenuShortcut>
+                  <Trash2 size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('lihat')
+            }}
+          >
+            Lihat
+            <DropdownMenuShortcut>
+              <Eye size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('download')
+            }}
+          >
+            Download
+            <DropdownMenuShortcut>
+              <Download size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          {sudahDiTte.length > 0 && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('downloadTTE')
+                }}
+              >
+                Download Berkas TTE
+                <DropdownMenuShortcut>
+                  <Download size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  )
+}
