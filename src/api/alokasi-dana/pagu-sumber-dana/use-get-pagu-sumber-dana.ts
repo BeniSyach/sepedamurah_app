@@ -6,6 +6,7 @@ interface UsePaguSumberDana {
   page?: number
   perPage?: number
   search?: string
+  tahun?: string | number
 }
 
 export function useGetPaguSumberDana(params: UsePaguSumberDana) {
@@ -19,6 +20,7 @@ export function useGetPaguSumberDana(params: UsePaguSumberDana) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            tahun: params.tahun ?? '',
           },
         }
       )
