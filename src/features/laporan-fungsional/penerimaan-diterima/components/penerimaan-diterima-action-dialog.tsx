@@ -213,13 +213,21 @@ export function PenerimaanPeriksa({
             </div>
 
             {/* PDF Preview */}
-            <div className='flex-1 overflow-auto border-l'>
+            <div
+              className='flex-1 border-l'
+              style={{
+                height: '100%',
+                overflow: 'hidden',
+              }}
+            >
               {fileUrl ? (
                 <iframe
                   src={fileUrl}
                   className='h-full w-full'
-                  title='PDF Viewer'
-                  frameBorder='0'
+                  scrolling='yes'
+                  style={{
+                    touchAction: 'pan-y',
+                  }}
                 />
               ) : (
                 <p className='mt-10 text-center'>Loading PDF...</p>

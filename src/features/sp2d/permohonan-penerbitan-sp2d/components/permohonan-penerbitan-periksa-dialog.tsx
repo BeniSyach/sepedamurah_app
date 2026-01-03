@@ -62,6 +62,12 @@ import { mapRekeningToFormData } from '../../permohonan-sp2d-tte/data/mapRekenin
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 // ============================
@@ -633,13 +639,21 @@ export function PermohonanPenerbitanPeriksaDialog({
             </div>
 
             {/* PDF Preview */}
-            <div className='flex-1 overflow-auto border-l p-10'>
+            <div
+              className='flex-1 border-l'
+              style={{
+                height: '100%',
+                overflow: 'hidden',
+              }}
+            >
               {fileUrl ? (
                 <iframe
                   src={fileUrl}
                   className='h-full w-full'
-                  title='PDF Viewer'
-                  frameBorder='0'
+                  scrolling='yes'
+                  style={{
+                    touchAction: 'pan-y',
+                  }}
                 />
               ) : (
                 <p className='mt-10 text-center'>Loading PDF...</p>
