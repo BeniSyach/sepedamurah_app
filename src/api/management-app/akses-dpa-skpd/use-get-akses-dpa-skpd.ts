@@ -6,6 +6,7 @@ interface UseAksesDPASKPD {
   page?: number
   perPage?: number
   search?: string
+  tahun?: string | number
 }
 
 export function useGetAksesDPASKPD(params: UseAksesDPASKPD) {
@@ -19,6 +20,7 @@ export function useGetAksesDPASKPD(params: UseAksesDPASKPD) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            tahun: params.tahun ?? '',
           },
         }
       )

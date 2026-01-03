@@ -367,8 +367,8 @@ export function PermohonanDiterimaActionDialog({
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
-            Simpan Perubahan
+          <Button type='submit' form='PermohonanSPD-form'>
+            Kirim
           </Button>
         </DialogFooter>
       </DialogContent>

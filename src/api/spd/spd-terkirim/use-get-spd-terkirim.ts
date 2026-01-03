@@ -8,6 +8,7 @@ interface UseSPDTerkirim {
   search?: string
   menu?: string
   user_id?: string | number
+  tahun?: string | number
 }
 
 export function useGetSPDTerkirim(params: UseSPDTerkirim) {
@@ -21,6 +22,7 @@ export function useGetSPDTerkirim(params: UseSPDTerkirim) {
           search: params.search ?? '',
           menu: params.menu,
           user_id: params.user_id,
+          tahun: params.tahun ?? '',
         },
       })
       return data

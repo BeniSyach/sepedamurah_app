@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetLogTTE } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -15,12 +16,14 @@ const route = getRouteApi('/_authenticated/history/log-tte')
 export function LogTTE() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetLogTTE({
     page: search.page,
     perPage: search.pageSize,
     search: search.search,
+    tahun: tahunFilter,
   })
 
   return (

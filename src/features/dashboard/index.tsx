@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { format } from 'date-fns'
 import { useGetCountData } from '@/api'
 import { formatTanggaldanJam } from '@/lib/utils'
@@ -9,6 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -88,13 +96,18 @@ function SkeletonTabs() {
     </div>
   )
 }
-
+const currentYear = new Date().getFullYear()
 export function Dashboard() {
+  const [tahun, setTahun] = useState(String(currentYear))
+
+  const tahunList = Array.from({ length: 4 }, (_, i) => currentYear - 3 + i)
+
+  // 🔥 API otomatis refetch saat `tahun` berubah
   const { data, isLoading } = useGetCountData({
     from: '',
     to: '',
+    tahun: Number(tahun),
   })
-
   if (isLoading) {
     return (
       <>
@@ -179,6 +192,20 @@ export function Dashboard() {
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
+            <div className='flex justify-start'>
+              <Select value={tahun} onValueChange={setTahun}>
+                <SelectTrigger className='w-40'>
+                  <SelectValue placeholder='Pilih Tahun' />
+                </SelectTrigger>
+                <SelectContent>
+                  {tahunList.map((t) => (
+                    <SelectItem key={t} value={String(t)}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -433,7 +460,7 @@ export function Dashboard() {
                   <CardTitle>Data Grafik Permohonan SP2D /Bulan</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
-                  <Overview />
+                  <Overview tahun={tahun} />
                 </CardContent>
               </Card>
               <Card className='col-span-1 lg:col-span-3'>

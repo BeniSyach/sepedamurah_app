@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetLaporanFungsional } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
@@ -20,6 +21,7 @@ export function PengeluaranDitolakLaporanFungsional() {
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role')
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetLaporanFungsional({
@@ -34,6 +36,7 @@ export function PengeluaranDitolakLaporanFungsional() {
     ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
       ? { user_id: user?.id }
       : {}),
+    tahun: tahunFilter,
   })
 
   return (

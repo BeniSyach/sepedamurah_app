@@ -9,6 +9,7 @@ interface UseLaporanPajakBendahara {
   jenis?: string
   menu?: string
   user_id?: string | number
+  tahun?: string | number
 }
 
 export function useGetLaporanPajakBendahara(params: UseLaporanPajakBendahara) {
@@ -25,6 +26,7 @@ export function useGetLaporanPajakBendahara(params: UseLaporanPajakBendahara) {
             jenis: params.jenis,
             menu: params.menu,
             user_id: params.user_id,
+            tahun: params.tahun ?? '',
           },
         }
       )

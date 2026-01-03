@@ -1,9 +1,13 @@
 import { useGetSp2dChart } from '@/api'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-export function Overview() {
+interface Props {
+  tahun: string
+}
+
+export function Overview({ tahun }: Props) {
   const { data } = useGetSp2dChart({
-    tahun: new Date().getFullYear().toString(),
+    tahun,
   })
 
   // Convert response: Sp2dChartResponse → Recharts format

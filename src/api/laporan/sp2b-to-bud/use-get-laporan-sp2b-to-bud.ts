@@ -9,6 +9,7 @@ interface UseLaporanSp2bToBUD {
   jenis?: string
   menu?: string
   user_id?: string | number
+  tahun?: string | number
 }
 
 export function useGetLaporanSp2bToBUD(params: UseLaporanSp2bToBUD) {
@@ -25,6 +26,7 @@ export function useGetLaporanSp2bToBUD(params: UseLaporanSp2bToBUD) {
             jenis: params.jenis,
             menu: params.menu,
             user_id: params.user_id,
+            tahun: params.tahun ?? '',
           },
         }
       )

@@ -5,6 +5,7 @@ import { type DashboardResponse } from './types'
 interface useReqCountData {
   from?: string | undefined
   to?: string | undefined
+  tahun?: string | number
 }
 
 export function useGetCountData(params: useReqCountData) {
@@ -17,6 +18,7 @@ export function useGetCountData(params: useReqCountData) {
           params: {
             from: params.from ?? '',
             to: params.to ?? '',
+            tahun: params.tahun ?? '',
           },
         }
       )

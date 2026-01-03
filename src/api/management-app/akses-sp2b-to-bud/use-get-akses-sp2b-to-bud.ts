@@ -6,6 +6,7 @@ interface UseAksesSp2bToBUD {
   page?: number
   perPage?: number
   search?: string
+  tahun?: string | number
 }
 
 export function useGetAksesSp2bToBUD(params: UseAksesSp2bToBUD) {
@@ -19,6 +20,7 @@ export function useGetAksesSp2bToBUD(params: UseAksesSp2bToBUD) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            tahun: params.tahun ?? '',
           },
         }
       )

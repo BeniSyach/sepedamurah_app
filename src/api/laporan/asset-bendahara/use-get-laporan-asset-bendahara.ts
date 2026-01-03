@@ -9,6 +9,7 @@ interface UseLaporanAssetBendahara {
   jenis?: string
   menu?: string
   user_id?: string | number
+  tahun?: string | number
 }
 
 export function useGetLaporanAssetBendahara(params: UseLaporanAssetBendahara) {
@@ -25,6 +26,7 @@ export function useGetLaporanAssetBendahara(params: UseLaporanAssetBendahara) {
             jenis: params.jenis,
             menu: params.menu,
             user_id: params.user_id,
+            tahun: params.tahun ?? '',
           },
         }
       )

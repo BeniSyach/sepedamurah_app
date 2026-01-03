@@ -6,6 +6,7 @@ interface UseAksesAssetBendahara {
   page?: number
   perPage?: number
   search?: string
+  tahun?: string | number
 }
 
 export function useGetAksesAssetBendahara(params: UseAksesAssetBendahara) {
@@ -19,6 +20,7 @@ export function useGetAksesAssetBendahara(params: UseAksesAssetBendahara) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            tahun: params.tahun ?? '',
           },
         }
       )

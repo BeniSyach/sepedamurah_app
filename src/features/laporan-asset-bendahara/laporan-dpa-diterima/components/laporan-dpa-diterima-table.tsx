@@ -12,6 +12,13 @@ import type { LaporanAssetBendahara } from '@/api'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Table,
   TableBody,
   TableCell,
@@ -48,6 +55,18 @@ export function LaporanAssetBendaharaDiterimaTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
+  const currentYear = new Date().getFullYear()
+  const tahunFilter = Number(search.tahun ?? currentYear)
+  const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
+
+  function changeTahun(value: number) {
+    navigate({
+      search: {
+        ...search, // bawakan parameter lama
+        tahun: value,
+      },
+    })
+  }
 
   const {
     globalFilter,
@@ -114,7 +133,29 @@ export function LaporanAssetBendaharaDiterimaTable({
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
-      <DataTableToolbar table={table} searchPlaceholder='Cari...' />
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder='Cari...'
+        extraControls={
+          <div className='flex items-center space-x-2'>
+            <Select
+              value={String(tahunFilter)}
+              onValueChange={(v) => changeTahun(Number(v))}
+            >
+              <SelectTrigger className='w-[140px]'>
+                <SelectValue placeholder='Tahun' />
+              </SelectTrigger>
+              <SelectContent>
+                {tahunOptions.map((th) => (
+                  <SelectItem key={th} value={String(th)}>
+                    Tahun {th}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      />
 
       <div className='overflow-hidden rounded-md border'>
         <Table>

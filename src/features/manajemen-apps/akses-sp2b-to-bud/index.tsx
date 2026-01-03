@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetAksesSp2bToBUD } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -16,12 +17,14 @@ const route = getRouteApi('/_authenticated/manajemen-apps/akses-sp2b-ke-bud')
 export function AksesSp2bToBUD() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetAksesSp2bToBUD({
     page: search.page,
     perPage: search.pageSize,
     search: search.search,
+    tahun: tahunFilter,
   })
 
   return (

@@ -9,6 +9,7 @@ interface UseLaporanFungsional {
   jenis?: string
   menu?: string
   user_id?: string | number
+  tahun?: string | number
 }
 
 export function useGetLaporanFungsional(params: UseLaporanFungsional) {
@@ -25,6 +26,7 @@ export function useGetLaporanFungsional(params: UseLaporanFungsional) {
             jenis: params.jenis,
             menu: params.menu,
             user_id: params.user_id,
+            tahun: params.tahun ?? '',
           },
         }
       )

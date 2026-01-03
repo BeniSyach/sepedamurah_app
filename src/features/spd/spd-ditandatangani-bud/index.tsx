@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetSPDTerkirim } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
@@ -18,6 +19,7 @@ export function SpdDitandatanganiBUD() {
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role')
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetSPDTerkirim({
@@ -26,6 +28,7 @@ export function SpdDitandatanganiBUD() {
     search: search.search,
     menu: 'spd_ditandatangani_bud',
     ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    tahun: tahunFilter,
   })
 
   return (
