@@ -127,10 +127,10 @@ export function UsersDialogs() {
             }}
             handleConfirm={handlePreview}
             className='max-w-md'
-            title={`Unduh File: ${currentRow.namafile}`}
+            title={`Lihat File: ${currentRow.namafile}`}
             desc={
               <>
-                Kamu akan mengunduh file dengan nama{' '}
+                Kamu akan melihat file dengan nama{' '}
                 <strong>{currentRow.namafile}</strong>.
               </>
             }

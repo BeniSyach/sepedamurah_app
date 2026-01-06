@@ -47,6 +47,42 @@ export function UsersDialogs() {
     )
   }
 
+  const handleLihat = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/spd/spd-terkirim/downloadSPDTTE/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            params: { t: Date.now() },
+          }
+        )
+
+        // Tentukan MIME type sesuai file
+        let mimeType = 'application/pdf' // default PDF
+        if (currentRow.nama_file_asli?.endsWith('.docx'))
+          mimeType =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else if (currentRow.nama_file_asli?.endsWith('.doc'))
+          mimeType = 'application/msword'
+
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: mimeType })
+        )
+        window.open(url, '_blank')
+
+        setTimeout(() => window.URL.revokeObjectURL(url), 5000)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
+
   return (
     <>
       {currentRow && (
@@ -71,27 +107,25 @@ export function UsersDialogs() {
             }
             confirmText='Download'
           />
-          {/* <ConfirmDialog
-            key={`spd-ditandatangani-bud-download-${currentRow.id}`}
-            destructive
-            open={open === 'cekTTE'}
+          <ConfirmDialog
+            key={`permohonan-spd-lihat-${currentRow.id}`}
+            destructive={false}
+            open={open === 'lihat'}
             onOpenChange={() => {
-              setOpen('cekTTE')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+              setOpen('lihat')
+              setTimeout(() => setCurrentRow(null), 500)
             }}
-            handleConfirm={handleDownload}
+            handleConfirm={handleLihat}
             className='max-w-md'
-            title={`Download SPD TTE Ini: ${currentRow.namafile} ?`}
+            title={`Lihat File: ${currentRow.namafile}`}
             desc={
               <>
-                Kamu akan mengunduh file dengan nama{' '}
+                Kamu akan Lihat file dengan nama{' '}
                 <strong>{currentRow.namafile}</strong>.
               </>
             }
-            confirmText='Download'
-          /> */}
+            confirmText='Lihat'
+          />
         </>
       )}
     </>

@@ -8,6 +8,7 @@ type RefPermohonanSpdDialogType =
   | 'kirimspd'
   | 'download'
   | 'periksa'
+  | 'lihat'
 
 type RefPermohonanSpdContextType = {
   open: RefPermohonanSpdDialogType | null

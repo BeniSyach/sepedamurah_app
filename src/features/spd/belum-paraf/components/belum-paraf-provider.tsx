@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { type SpdTerkirim } from '@/api'
 import useDialogState from '@/hooks/use-dialog-state'
 
-type RefPermohonanSpdDialogType = 'terima' | 'tolak'
+type RefPermohonanSpdDialogType = 'terima' | 'tolak' | 'lihat'
 
 type RefPermohonanSpdContextType = {
   open: RefPermohonanSpdDialogType | null

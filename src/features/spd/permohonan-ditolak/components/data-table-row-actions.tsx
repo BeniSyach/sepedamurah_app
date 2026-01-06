@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type PermohonanSpd } from '@/api'
-import { FileSearch, Trash2, UserPen } from 'lucide-react'
+import { Eye, FileSearch, Trash2, UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -66,6 +66,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             Delete
             <DropdownMenuShortcut>
               <Trash2 size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('lihat')
+            }}
+          >
+            Lihat
+            <DropdownMenuShortcut>
+              <Eye size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

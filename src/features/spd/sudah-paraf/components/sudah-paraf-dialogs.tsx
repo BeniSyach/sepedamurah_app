@@ -1,5 +1,6 @@
 import { usePutPermohonanSpd } from '@/api'
 import { toast } from 'sonner'
+import { api } from '@/api/common/client'
 import { useAuthStore } from '@/stores/auth-store'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useRefPermohonanSpd } from './sudah-paraf-provider'
@@ -43,6 +44,43 @@ export function UsersDialogs() {
     })
   }
 
+  // Fungsi lihat file
+  const handleLihat = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/spd/permohonan-spd/download/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            params: { t: Date.now() },
+          }
+        )
+
+        // Tentukan MIME type sesuai file
+        let mimeType = 'application/pdf' // default PDF
+        if (currentRow.nama_file_asli?.endsWith('.docx'))
+          mimeType =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else if (currentRow.nama_file_asli?.endsWith('.doc'))
+          mimeType = 'application/msword'
+
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: mimeType })
+        )
+        window.open(url, '_blank')
+
+        setTimeout(() => window.URL.revokeObjectURL(url), 5000)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
+
   return (
     <>
       {currentRow && (
@@ -68,6 +106,25 @@ export function UsersDialogs() {
               </>
             }
             confirmText='Tolak'
+          />
+          <ConfirmDialog
+            key={`permohonan-spd-lihat-${currentRow.id}`}
+            destructive={false}
+            open={open === 'lihat'}
+            onOpenChange={() => {
+              setOpen('lihat')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleLihat}
+            className='max-w-md'
+            title={`Lihat File: ${currentRow.namafile}`}
+            desc={
+              <>
+                Kamu akan Lihat file dengan nama{' '}
+                <strong>{currentRow.namafile}</strong>.
+              </>
+            }
+            confirmText='Lihat'
           />
         </>
       )}
