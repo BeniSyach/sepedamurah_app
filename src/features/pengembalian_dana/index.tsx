@@ -76,6 +76,10 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
+const currentYear = new Date().getFullYear()
+
+const years = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
+
 export default function PengembalianDanaForm() {
   const [open, setOpen] = useState(false)
   const [resultData, setResultData] = useState<PengembalianRes | null>(null)
@@ -301,7 +305,7 @@ export default function PengembalianDanaForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {[2022, 2023, 2024, 2025].map((t) => (
+                        {years.map((t) => (
                           <SelectItem key={t} value={String(t)}>
                             {t}
                           </SelectItem>

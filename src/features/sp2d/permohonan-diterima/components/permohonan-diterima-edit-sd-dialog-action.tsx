@@ -75,7 +75,7 @@ export function EditSumberDanaDialog({
 
   /* ===== Fetch sumber dana ===== */
   const { data } = useGetCheckSumberDana({
-    tahun: new Date().getFullYear().toString(),
+    tahun: currentRow.tahun,
   })
 
   const sumberDanaRefs =
