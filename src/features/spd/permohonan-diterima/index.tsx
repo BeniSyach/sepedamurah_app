@@ -30,7 +30,9 @@ export function PermohonanDiterimaSPD() {
     menu:
       userRole === 'Operator SKPKD'
         ? 'permohonan_spd_terima_operator'
-        : 'spd_diterima',
+        : userRole === 'BUD' || userRole === 'Administrator'
+          ? 'spd_diterima_bud'
+          : 'spd_diterima',
     ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
       ? { user_id: user?.id }
       : {}),
