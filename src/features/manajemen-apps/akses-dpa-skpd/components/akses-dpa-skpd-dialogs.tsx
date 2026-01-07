@@ -11,7 +11,15 @@ export function UsersDialogs() {
 
   const handleDelete = async () => {
     if (!currentRow) return
-    const deletePromise = mutateAsync({ id: currentRow.kode_opd })
+
+    const deletePromise = mutateAsync({
+      kd1: currentRow.kd_opd1,
+      kd2: currentRow.kd_opd2,
+      kd3: currentRow.kd_opd3,
+      kd4: currentRow.kd_opd4,
+      kd5: currentRow.kd_opd5,
+      tahun: currentRow.tahun, // pastikan ada field tahun
+    })
 
     await toast.promise(deletePromise, {
       loading: 'Menghapus data...',
@@ -22,7 +30,7 @@ export function UsersDialogs() {
         return `Data "${currentRow.nama_opd}" berhasil dihapus.`
       },
       error: (err) => {
-        return err.data.message
+        return err?.response?.data?.message || 'Gagal menghapus data'
       },
     })
   }

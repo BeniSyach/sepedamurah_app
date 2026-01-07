@@ -2,7 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../common/client'
 
 interface DeleteAksesPajakBendaharaPayload {
-  id: string
+  kd1: string
+  kd2: string
+  kd3: string
+  kd4: string
+  kd5: string
+  tahun: string
 }
 
 /**
@@ -13,9 +18,16 @@ export function useDeleteAksesPajakBendahara() {
 
   return useMutation({
     mutationFn: async ({
-      id,
+      kd1,
+      kd2,
+      kd3,
+      kd4,
+      kd5,
+      tahun,
     }: DeleteAksesPajakBendaharaPayload): Promise<void> => {
-      await api.delete(`/hak-akses/akses-pajak-bendahara/${id}`)
+      await api.delete(
+        `/hak-akses/akses-pajak-bendahara/${kd1}/${kd2}/${kd3}/${kd4}/${kd5}/${tahun}`
+      )
     },
     onSuccess: () => {
       // Refresh data setelah delete berhasil

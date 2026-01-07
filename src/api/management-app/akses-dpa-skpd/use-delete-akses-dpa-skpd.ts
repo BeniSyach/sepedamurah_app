@@ -2,7 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../common/client'
 
 interface DeleteAksesDPASKPDPayload {
-  id: string
+  kd1: string
+  kd2: string
+  kd3: string
+  kd4: string
+  kd5: string
+  tahun: string
 }
 
 /**
@@ -12,11 +17,20 @@ export function useDeleteAksesDPASKPD() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id }: DeleteAksesDPASKPDPayload): Promise<void> => {
-      await api.delete(`/hak-akses/akses-dpa-skpd/${id}`)
+    mutationFn: async ({
+      kd1,
+      kd2,
+      kd3,
+      kd4,
+      kd5,
+      tahun,
+    }: DeleteAksesDPASKPDPayload): Promise<void> => {
+      await api.delete(
+        `/hak-akses/akses-dpa-skpd/${kd1}/${kd2}/${kd3}/${kd4}/${kd5}/${tahun}`
+      )
     },
+
     onSuccess: () => {
-      // Refresh data setelah delete berhasil
       queryClient.invalidateQueries({
         queryKey: ['useGetAksesDPASKPD'],
       })
@@ -24,8 +38,9 @@ export function useDeleteAksesDPASKPD() {
         queryKey: ['useCekLaporanDPA'],
       })
     },
+
     onError: (error) => {
-      return error
+      throw error
     },
   })
 }
