@@ -91,11 +91,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
               setOpen('lihat')
+            }}
+          >
+            Lihat
+            <DropdownMenuShortcut>
+              <Eye size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setCurrentRow(row.original)
+              setOpen('lihatTTE')
             }}
           >
             Lihat

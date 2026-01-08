@@ -7,7 +7,7 @@ type RefPermohonanSpdDialogType =
   | 'periksa'
   | 'download'
   | 'kirimspd'
-  | 'downloadTTE'
+  | 'lihatTTE'
   | 'lihat'
   | 'publish'
 

@@ -110,6 +110,42 @@ export function UsersDialogs() {
     )
   }
 
+  const handleLihatTTE = async () => {
+    if (!currentRow) return
+
+    await toast.promise(
+      (async () => {
+        const response = await api.get(
+          `/spd/spd-terkirim/downloadSPDTTE/${currentRow.id}`,
+          {
+            responseType: 'blob',
+            params: { t: Date.now() },
+          }
+        )
+
+        // Tentukan MIME type sesuai file
+        let mimeType = 'application/pdf' // default PDF
+        if (currentRow.nama_file_asli?.endsWith('.docx'))
+          mimeType =
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else if (currentRow.nama_file_asli?.endsWith('.doc'))
+          mimeType = 'application/msword'
+
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: mimeType })
+        )
+        window.open(url, '_blank')
+
+        setTimeout(() => window.URL.revokeObjectURL(url), 5000)
+      })(),
+      {
+        loading: 'Membuka file...',
+        success: 'File berhasil dibuka!',
+        error: 'Gagal membuka file.',
+      }
+    )
+  }
+
   return (
     <>
       <PermohonanDiterimaActionDialog
@@ -192,6 +228,25 @@ export function UsersDialogs() {
               setTimeout(() => setCurrentRow(null), 500)
             }}
             handleConfirm={handleLihat}
+            className='max-w-md'
+            title={`Lihat File: ${currentRow.namafile}`}
+            desc={
+              <>
+                Kamu akan Lihat file dengan nama{' '}
+                <strong>{currentRow.namafile}</strong>.
+              </>
+            }
+            confirmText='Lihat'
+          />
+          <ConfirmDialog
+            key={`permohonan-spd-lihat-TTE-${currentRow.id}`}
+            destructive={false}
+            open={open === 'lihatTTE'}
+            onOpenChange={() => {
+              setOpen('lihatTTE')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleLihatTTE}
             className='max-w-md'
             title={`Lihat File: ${currentRow.namafile}`}
             desc={
