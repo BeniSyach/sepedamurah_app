@@ -1,3 +1,4 @@
+import { usePutSpdTerkirim } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -9,6 +10,28 @@ import { PermohonanDiterimaSPDTTE } from './permohonan-diterima-spd-tte'
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefPermohonanSpd()
 
+  const { mutateAsync: put } = usePutSpdTerkirim()
+
+  const handlePublish = async () => {
+    if (!currentRow) return
+    const formData = new FormData()
+    formData.append('id', currentRow.id)
+    formData.append('publish', '1')
+    const kirimBankPromise = put(formData)
+    await toast.promise(kirimBankPromise, {
+      loading: 'Publish SPD...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `SPD Berhasil Di Publish Ke Bendahara`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
+
   // Fungsi download file
   const handleDownload = async () => {
     if (!currentRow) return
@@ -16,7 +39,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/spd/permohonan-spd/download/${currentRow.id}`,
+          `/spd/spd-terkirim/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -57,7 +80,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/spd/permohonan-spd/download/${currentRow.id}`,
+          `/spd/spd-terkirim/download/${currentRow.id}`,
           {
             responseType: 'blob',
             params: { t: Date.now() },
@@ -122,6 +145,26 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
+            key={`spd-diterima-publish-${currentRow.id}`}
+            destructive={false}
+            open={open === 'publish'}
+            onOpenChange={() => {
+              setOpen('publish')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handlePublish}
+            className='max-w-md'
+            title={`Unduh File: ${currentRow.namafile}`}
+            desc={
+              <>
+                Kamu akan Mempublish Berkas SPD{' '}
+                <strong>{currentRow.namafile}</strong>.
+              </>
+            }
+            confirmText='Publish'
+          />
+
+          <ConfirmDialog
             key={`spd-diterima-download-${currentRow.id}`}
             destructive={false}
             open={open === 'download'}
@@ -131,11 +174,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDownload}
             className='max-w-md'
-            title={`Unduh File: ${currentRow.nama_file}`}
+            title={`Unduh File: ${currentRow.namafile}`}
             desc={
               <>
                 Kamu akan mengunduh file dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
+                <strong>{currentRow.namafile}</strong>.
               </>
             }
             confirmText='Download'
@@ -150,11 +193,11 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleLihat}
             className='max-w-md'
-            title={`Lihat File: ${currentRow.nama_file}`}
+            title={`Lihat File: ${currentRow.namafile}`}
             desc={
               <>
                 Kamu akan Lihat file dengan nama{' '}
-                <strong>{currentRow.nama_file}</strong>.
+                <strong>{currentRow.namafile}</strong>.
               </>
             }
             confirmText='Lihat'

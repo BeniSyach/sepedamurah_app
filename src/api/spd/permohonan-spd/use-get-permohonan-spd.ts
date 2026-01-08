@@ -14,6 +14,7 @@ interface UsePermohonanSPD {
   date_to?: string | undefined
   sort_by?: string | undefined
   sort_dir?: string | undefined
+  tahun?: string | number
 }
 
 export function useGetPermohonanSPD(params: UsePermohonanSPD) {
@@ -34,6 +35,7 @@ export function useGetPermohonanSPD(params: UsePermohonanSPD) {
             date_to: params.date_to,
             sort_by: params.sort_by,
             sort_dir: params.sort_dir,
+            tahun: params.tahun ?? '',
           },
         }
       )

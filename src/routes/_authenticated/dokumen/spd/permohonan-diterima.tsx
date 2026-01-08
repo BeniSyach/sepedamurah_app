@@ -8,6 +8,7 @@ const PermohonanDiterimaSPDSearchSchema = z.object({
   search: z.string().optional().catch(''),
   sort_by: z.string().optional(),
   sort_dir: z.enum(['asc', 'desc']).optional(),
+  tahun: z.coerce.number().optional(),
 })
 
 export const Route = createFileRoute(

@@ -12,10 +12,12 @@ export interface PermohonanSpd {
   id: string
   id_pengirim: string
   nama_pengirim: string
+  nama_penerima: string
   id_operator: string
   nama_operator: string | null
   jenis_berkas: string | null
   nama_file: string
+  namafile: string
   nama_file_asli: string
   tanggal_upload: string
   kode_file: string
@@ -36,4 +38,6 @@ export interface PermohonanSpd {
   pengirim: User
   operator: User
   skpd: MasterSkpd
+  status: string
+  tte: string
 }

@@ -23,11 +23,18 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
 
   // ✅ nama_pengirim
   {
-    accessorKey: 'nama_pengirim',
+    id: 'nama_pengirim',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nama Pengirim' />
     ),
-    cell: ({ row }) => <div>{row.getValue('nama_pengirim')}</div>,
+    cell: ({ row }) => {
+      const pengirim = row.original.nama_pengirim
+      const penerima = row.original.nama_penerima
+
+      return (
+        <div>{pengirim && pengirim.trim() !== '' ? pengirim : penerima}</div>
+      )
+    },
     enableSorting: true,
   },
 
@@ -112,6 +119,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
       const diterima = row.original?.diterima
       const ditolak = row.original?.ditolak
       const alasanTolak = row.original?.alasan_tolak
+      const tte = row.original?.status
 
       let color = 'bg-yellow-100 text-yellow-800'
       let text = 'Berkas sedang diproses'
@@ -120,6 +128,9 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
         color = 'bg-red-100 text-red-800'
         text = `Berkas ditolak${alasanTolak ? `: ${alasanTolak}` : ''}`
       } else if (diterima) {
+        color = 'bg-green-100 text-green-800'
+        text = 'Berkas telah diverifikasi'
+      } else if (tte == '1') {
         color = 'bg-green-100 text-green-800'
         text = 'Berkas telah diverifikasi'
       }
