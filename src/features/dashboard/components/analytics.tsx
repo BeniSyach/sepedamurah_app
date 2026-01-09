@@ -91,6 +91,7 @@ function SkeletonCard() {
 }
 
 export function Analytics() {
+  const [tahun, setTahun] = useState<string>('')
   // === API Call ===
   const { data: datacheck, isLoading: loadingDataCheck } =
     useGetCheckFungsional({
@@ -99,7 +100,7 @@ export function Analytics() {
       kd_opd3: '',
       kd_opd4: '',
       kd_opd5: '',
-      tahun: '',
+      tahun,
     })
 
   const { data: dataCount, isLoading: loadingDataCount } =
@@ -109,13 +110,13 @@ export function Analytics() {
       kd_opd3: '',
       kd_opd4: '',
       kd_opd5: '',
-      tahun: '',
+      tahun,
     })
 
   const tahunList = datacheck?.data?.tahun_list ?? []
   const tahunSelected = datacheck?.data?.tahun_selected ?? ''
 
-  const [tahun, setTahun] = useState(tahunSelected)
+  // const [tahun, setTahun] = useState(tahunSelected)
 
   // Update tahun ketika data API pertama kali masuk
   useEffect(() => {
