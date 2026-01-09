@@ -5,8 +5,11 @@ import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { DataTableRowActions } from './data-table-row-actions'
 
+const levelAkses = localStorage.getItem('user_role')
+
 export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
   // ✅ Nomor Urut (tetap berlanjut antar halaman)
+
   {
     accessorKey: 'no',
     header: ({ column }) => (
@@ -108,6 +111,35 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
     },
     enableSorting: true, // bisa diset true kalau mau
   },
+
+  // ✅ CONDITIONAL COLUMN (AMAN)
+  ...(levelAkses !== 'Bendahara'
+    ? [
+        {
+          accessorKey: 'publish',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title='Publish' />
+          ),
+          cell: ({ row }) => {
+            const publish = row.original?.publish
+
+            const isPublished = publish === '1'
+
+            const color = isPublished
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
+
+            const text = isPublished
+              ? 'SPD sudah dipublish'
+              : 'SPD belum dipublish'
+
+            return (
+              <Badge className={`max-w-[300px] ps-3 ${color}`}>{text}</Badge>
+            )
+          },
+        } as ColumnDef<PermohonanSpd>,
+      ]
+    : []),
 
   // ✅ status
   {

@@ -109,6 +109,7 @@ export function PermohonanDiterimaActionDialog({
         item.kd_opd3,
         item.kd_opd4,
         item.kd_opd5,
+        item.skpd?.nm_opd,
       ]
         .filter(Boolean)
         .join('-'), // hasil: "00-01-01-02-03"

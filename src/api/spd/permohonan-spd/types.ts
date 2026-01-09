@@ -40,4 +40,5 @@ export interface PermohonanSpd {
   skpd: MasterSkpd
   status: string
   tte: string
+  publish: string
 }
