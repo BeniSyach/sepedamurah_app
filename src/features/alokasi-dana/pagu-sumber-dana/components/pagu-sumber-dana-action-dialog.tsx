@@ -58,6 +58,12 @@ type UserActionDialogProps = {
 
 const currentYear = new Date().getFullYear()
 
+function toLocalISOString(date: Date) {
+  const tzOffset = date.getTimezoneOffset() * 60000 // offset dalam ms
+  const localTime = new Date(date.getTime() - tzOffset)
+  return localTime.toISOString().slice(0, 23) + 'Z' // biar tetap bentuk ISO
+}
+
 export function UsersActionDialog({
   currentRow,
   open,
@@ -136,6 +142,7 @@ export function UsersActionDialog({
 
     const payload = {
       ...data,
+      tgl_rekam: toLocalISOString(data.tgl_rekam), // ⬅️ ubah di sini
       kd_ref1,
       kd_ref2,
       kd_ref3,
@@ -143,6 +150,7 @@ export function UsersActionDialog({
       kd_ref5,
       kd_ref6,
     }
+
     const requestPromise = isEdit
       ? putPaguSumberDanaAsync(payload)
       : postPaguSumberDanaAsync(payload)

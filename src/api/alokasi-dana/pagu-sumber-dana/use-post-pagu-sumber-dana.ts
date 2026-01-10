@@ -10,7 +10,7 @@ interface CreatePaguSumberDanaPayload {
   kd_ref5: string
   kd_ref6: string
   tahun: string
-  tgl_rekam: Date
+  tgl_rekam: string
   pagu: string
   jumlah_silpa: string
 }
