@@ -55,7 +55,9 @@ const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
 
-  ref_sp2b_ke_bud_id: z.string().min(1, 'SP2B Ke BUD harus dipilih.'),
+  ref_sp2b_ke_bud_id: z
+    .string()
+    .min(1, 'SPB (Surat Pengesahan Belanja) harus dipilih.'),
 
   file: z
     .any()
@@ -184,12 +186,14 @@ export function LaporanSp2bToBUDActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit Laporan SP2B Ke BUD' : 'Tambah Laporan SP2B Ke BUD'}
+            {isEdit
+              ? 'Edit Laporan SPB (Surat Pengesahan Belanja)'
+              : 'Tambah Laporan SPB (Surat Pengesahan Belanja)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui data Laporan SP2B Ke BUD.'
-              : 'Tambahkan Laporan SP2B Ke BUD baru.'}
+              ? 'Perbarui data Laporan SPB (Surat Pengesahan Belanja).'
+              : 'Tambahkan Laporan SPB (Surat Pengesahan Belanja) baru.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -228,7 +232,7 @@ export function LaporanSp2bToBUDActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      SP2B Ke BUD
+                      SPB (Surat Pengesahan Belanja)
                     </FormLabel>
 
                     {/* ➜ Tambahkan col-span-4 disini agar dropdown lebar */}
@@ -250,7 +254,7 @@ export function LaporanSp2bToBUDActionDialog({
                                       (d) =>
                                         String(d.id) === String(field.value)
                                     )?.nm_sp2b_ke_bud
-                                  : 'Pilih SP2B Ke BUD'}
+                                  : 'Pilih SPB (Surat Pengesahan Belanja)'}
                               </span>
                               <CaretSortIcon className='h-4 w-4 opacity-50' />
                             </Button>
@@ -262,7 +266,7 @@ export function LaporanSp2bToBUDActionDialog({
                           className='w-[var(--radix-popover-trigger-width)] p-0'
                         >
                           <Command>
-                            <CommandInput placeholder='Cari SP2B Ke BUD...' />
+                            <CommandInput placeholder='Cari SPB (Surat Pengesahan Belanja)...' />
                             <CommandEmpty>Tidak ditemukan.</CommandEmpty>
 
                             <CommandGroup>

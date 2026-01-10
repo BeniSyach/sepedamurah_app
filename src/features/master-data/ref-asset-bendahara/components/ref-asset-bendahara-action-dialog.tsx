@@ -30,7 +30,9 @@ import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   id: z.string().optional(),
-  nm_asset_bendahara: z.string().min(1, 'Nama Asset Bendahara Harus Ada.'),
+  nm_asset_bendahara: z
+    .string()
+    .min(1, 'Nama BMD (Barang Milik Daerah) Harus Ada.'),
 })
 type DPAForm = z.infer<typeof formSchema>
 
@@ -67,8 +69,8 @@ export function DPAsActionDialog({
         onOpenChange(false)
         form.reset()
         return isEdit
-          ? 'Data Asset Bendahara berhasil diperbarui!'
-          : 'Data Asset Bendahara berhasil ditambahkan!'
+          ? 'Data BMD (Barang Milik Daerah) berhasil diperbarui!'
+          : 'Data BMD (Barang Milik Daerah) berhasil ditambahkan!'
       },
       error: (err) => {
         const message =
@@ -90,12 +92,14 @@ export function DPAsActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit Asset Bendahara' : 'Add New Asset Bendahara'}
+            {isEdit
+              ? 'Edit BMD (Barang Milik Daerah)'
+              : 'Add New BMD (Barang Milik Daerah)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui Asset Bendahara disini. '
-              : 'Tambah baru Asset Bendahara disini. '}
+              ? 'Perbarui BMD (Barang Milik Daerah) disini. '
+              : 'Tambah baru BMD (Barang Milik Daerah) disini. '}
             Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
@@ -113,11 +117,11 @@ export function DPAsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Nama Asset Bendahara
+                      Nama BMD (Barang Milik Daerah)
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Ketik Nama Asset Bendahara'
+                        placeholder='Ketik Nama BMD (Barang Milik Daerah)'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}

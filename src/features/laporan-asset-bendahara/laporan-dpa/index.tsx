@@ -52,10 +52,10 @@ export function LaporanAssetBendahara() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Laporan Asset Bendahara
+              Laporan BMD (Barang Milik Daerah)
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Laporan Asset Bendahara
+              Data Ini adalah Laporan BMD (Barang Milik Daerah)
             </p>
           </div>
           <RefRekeningPrimaryButtons />

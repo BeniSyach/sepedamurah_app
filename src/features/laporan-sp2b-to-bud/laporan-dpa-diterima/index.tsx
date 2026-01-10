@@ -54,10 +54,10 @@ export function LaporanSp2bToBUDDiterima() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Laporan SP2B Ke BUD Diterima
+              Laporan SPB (Surat Pengesahan Belanja) Diterima
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Laporan SP2B Ke BUD Diterima
+              Data Ini adalah Laporan SPB (Surat Pengesahan Belanja) Diterima
             </p>
           </div>
         </div>

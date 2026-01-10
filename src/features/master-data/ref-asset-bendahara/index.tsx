@@ -41,10 +41,10 @@ export function ReferensiAssetBendahara() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Referensi Asset Bendahara
+              Referensi BMD (Barang Milik Daerah)
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Referensi untuk Asset Bendahara
+              Data Ini adalah Referensi untuk BMD (Barang Milik Daerah)
             </p>
           </div>
           <RefAssetBendaharaPrimaryButtons />

@@ -36,7 +36,10 @@ export const ReferensiAksesAssetBendaharaGroupColumns: ColumnDef<AksesAssetBenda
     {
       id: 'Asset_list',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Daftar Asset' />
+        <DataTableColumnHeader
+          column={column}
+          title='Daftar BMD (Barang Milik Daerah)'
+        />
       ),
       cell: ({ row }) => {
         const Asset = row.original.asset ?? []
@@ -51,7 +54,7 @@ export const ReferensiAksesAssetBendaharaGroupColumns: ColumnDef<AksesAssetBenda
               ))
             ) : (
               <li className='text-muted-foreground italic'>
-                Tidak ada Asset Bendahara
+                Tidak ada BMD (Barang Milik Daerah)
               </li>
             )}
           </ul>

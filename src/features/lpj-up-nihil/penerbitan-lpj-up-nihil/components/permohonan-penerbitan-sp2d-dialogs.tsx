@@ -350,7 +350,7 @@ export function UsersDialogs() {
 
       return {
         blocked: true,
-        reason: `Masih ada Laporan Asset Bendahara yang belum diupload:\n${daftar}`,
+        reason: `Masih ada Laporan BMD (Barang Milik Daerah) yang belum diupload:\n${daftar}`,
       }
     }
 
@@ -377,7 +377,7 @@ export function UsersDialogs() {
 
       return {
         blocked: true,
-        reason: `Masih ada Laporan SP2B Ke BUD yang belum diupload:\n${daftar}`,
+        reason: `Masih ada Laporan SPB (Surat Pengesahan Belanja) yang belum diupload:\n${daftar}`,
       }
     }
 

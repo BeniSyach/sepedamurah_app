@@ -155,6 +155,32 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
     enableSorting: false,
   },
 
+  // ✅ status paraf KBUD
+  {
+    accessorKey: 'paraf_kbud',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Status ' />
+    ),
+    cell: ({ row }) => {
+      const paraf = row.getValue('paraf_kbud') as string | null
+
+      return (
+        <div className='ps-3'>
+          {paraf == '1' ? (
+            <Badge className='bg-green-100 text-green-800 hover:bg-green-100'>
+              SPD Sudah Diparaf
+            </Badge>
+          ) : (
+            <Badge className='bg-red-100 text-red-800 hover:bg-red-100'>
+              SPD Belum Diparaf
+            </Badge>
+          )}
+        </div>
+      )
+    },
+    enableSorting: true,
+  },
+
   // ✅ Aksi
   {
     id: 'actions',

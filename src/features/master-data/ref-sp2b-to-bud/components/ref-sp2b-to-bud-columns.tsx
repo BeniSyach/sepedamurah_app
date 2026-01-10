@@ -23,7 +23,10 @@ export const ReferensiRefSp2dbToBUDColumns: ColumnDef<RefSp2dbToBUD>[] = [
   {
     accessorKey: 'nm_pajak_bendahara',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama Pajak Bendahara' />
+      <DataTableColumnHeader
+        column={column}
+        title='Nama SPB (Surat Pengesahan Belanja)'
+      />
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>

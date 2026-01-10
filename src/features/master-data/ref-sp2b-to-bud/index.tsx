@@ -39,10 +39,10 @@ export function ReferensiSp2bToBUD() {
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Referensi SP2B Ke BUD
+              Referensi SPB (Surat Pengesahan Belanja)
             </h2>
             <p className='text-muted-foreground'>
-              Data Ini adalah Referensi untuk SP2B Ke BUD
+              Data Ini adalah Referensi untuk SPB (Surat Pengesahan Belanja)
             </p>
           </div>
           <Sp2dbToBUDPrimaryButtons />

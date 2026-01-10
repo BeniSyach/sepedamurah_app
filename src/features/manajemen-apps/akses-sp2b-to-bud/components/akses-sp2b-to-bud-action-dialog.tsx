@@ -48,7 +48,9 @@ const formSchema = z.object({
   kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  sp2bIds: z.array(z.string()).min(1, 'Pilih minimal 1 SP2B Ke BUD'),
+  sp2bIds: z
+    .array(z.string())
+    .min(1, 'Pilih minimal 1 SPB (Surat Pengesahan Belanja)'),
 })
 
 type AksesDPASKPDForm = z.infer<typeof formSchema>
@@ -151,8 +153,8 @@ export function AksesDPASKPDActionDialog({
         onOpenChange(false)
         form.reset()
         return isEdit
-          ? 'Data Akses SP2B Ke BUD berhasil diperbarui!'
-          : 'Data Akses SP2B Ke BUD berhasil ditambahkan!'
+          ? 'Data Akses SPB (Surat Pengesahan Belanja) berhasil diperbarui!'
+          : 'Data Akses SPB (Surat Pengesahan Belanja) berhasil ditambahkan!'
       },
       error: (err) => {
         const message =
@@ -175,12 +177,14 @@ export function AksesDPASKPDActionDialog({
         <DialogHeader className='text-start'>
           <DialogTitle>
             {' '}
-            {isEdit ? 'Edit Akses SP2B Ke BUD' : 'Tambah Akses SP2B Ke BUD'}
+            {isEdit
+              ? 'Edit Akses SPB (Surat Pengesahan Belanja)'
+              : 'Tambah Akses SPB (Surat Pengesahan Belanja)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui Akses SP2B Ke BUD disini. '
-              : 'Tambah baru Akses SP2B Ke BUD disini. '}
+              ? 'Perbarui Akses SPB (Surat Pengesahan Belanja) disini. '
+              : 'Tambah baru Akses SPB (Surat Pengesahan Belanja) disini. '}
             Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
@@ -243,18 +247,18 @@ export function AksesDPASKPDActionDialog({
                   return (
                     <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
                       <FormLabel className='col-span-2 pt-2 text-end'>
-                        SP2B Ke BUD
+                        SPB (Surat Pengesahan Belanja)
                       </FormLabel>
 
                       <div className='col-span-4 w-full'>
                         <FormControl>
                           <Command className='rounded-md border'>
-                            <CommandInput placeholder='Cari SP2B Ke BUD...' />
+                            <CommandInput placeholder='Cari SPB (Surat Pengesahan Belanja)...' />
 
                             <CommandList>
                               {listDPA.length === 0 && (
                                 <CommandEmpty>
-                                  Tidak ada SP2B Ke BUD
+                                  Tidak ada SPB (Surat Pengesahan Belanja)
                                 </CommandEmpty>
                               )}
 

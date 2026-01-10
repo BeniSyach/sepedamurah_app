@@ -1,4 +1,5 @@
-import { format } from 'date-fns'
+import { useState } from 'react'
+import { startOfMonth, endOfMonth, format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetRekapRealisasiTransferSumberDana } from '@/api'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -15,16 +16,32 @@ import { RekapTransferSumberDanaTable } from './components/realisasi-tf-sumber-d
 const route = getRouteApi(
   '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
 )
-const currentMonth = new Date().getMonth() + 1
+
+// Hitung awal & akhir bulan sekarang
+const defaultFrom = startOfMonth(new Date())
+const defaultTo = endOfMonth(new Date())
+
+// const currentMonth = new Date().getMonth() + 1
 export function RealisasiTransferSumberDana() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
-  const bulanFilter = Number(search.bulan ?? currentMonth)
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
+  const finalFrom = dateRange?.from ?? defaultFrom
+  const finalTo = dateRange?.to ?? defaultTo
+  // const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
+  const tahunFilter = dateRange?.from
+    ? format(dateRange.from, 'yyyy') // ✅ ambil tahun dari tanggal awal
+    : (search.tahun ?? format(new Date(), 'yyyy'))
+  // const bulanFilter = Number(search.bulan ?? currentMonth)
+  const bulanFilter = dateRange?.from
+    ? Number(format(dateRange.from, 'M')) // ambil bulan dari tanggal awal
+    : Number(search.bulan ?? format(new Date(), 'M'))
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetRekapRealisasiTransferSumberDana({
     tahun: tahunFilter,
     bulan: bulanFilter,
+    tgl_awal: format(finalFrom, 'yyyy-MM-dd'),
+    tgl_akhir: format(finalTo, 'yyyy-MM-dd'),
     search: search.search,
   })
 
@@ -62,6 +79,8 @@ export function RealisasiTransferSumberDana() {
               data={data?.data ?? []}
               search={search}
               navigate={navigate}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
             />
           )}
         </div>

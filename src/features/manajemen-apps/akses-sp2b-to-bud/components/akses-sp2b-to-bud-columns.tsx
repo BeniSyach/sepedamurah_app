@@ -36,7 +36,10 @@ export const ReferensiAksesSp2bToBUDGroupColumns: ColumnDef<AksesSp2bToBUDGroup>
     {
       id: 'sp2b_list',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Daftar SP2B Ke BUD' />
+        <DataTableColumnHeader
+          column={column}
+          title='Daftar SPB (Surat Pengesahan Belanja)'
+        />
       ),
       cell: ({ row }) => {
         const sp2b = row.original.sp2b ?? []
@@ -51,7 +54,7 @@ export const ReferensiAksesSp2bToBUDGroupColumns: ColumnDef<AksesSp2bToBUDGroup>
               ))
             ) : (
               <li className='text-muted-foreground italic'>
-                Tidak ada SP2B Ke BUD
+                Tidak ada SPB (Surat Pengesahan Belanja)
               </li>
             )}
           </ul>

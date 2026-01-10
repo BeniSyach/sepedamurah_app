@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { startOfMonth, endOfMonth } from 'date-fns'
 import {
   flexRender,
   getCoreRowModel,
@@ -13,13 +14,13 @@ import { toast } from 'sonner'
 import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
 import { type NavigateFn } from '@/hooks/use-table-url-state'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from '@/components/ui/select'
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectContent,
+//   SelectItem,
+//   SelectValue,
+// } from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -30,6 +31,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTableToolbar } from '@/components/data-table'
+import RangeDatePicker from '@/components/form-date-range'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiRekapSumberDanaItemColumns as columns } from './realisasi-tf-sumber-dana-columns'
 
@@ -37,22 +39,25 @@ type DataTableProps = {
   data: RekapSumberDanaItem[]
   search: Record<string, unknown>
   navigate: NavigateFn
+  dateRange?: { from?: Date; to?: Date }
+  onDateRangeChange?: (range: { from?: Date; to?: Date }) => void
 }
 
-const bulanOptions = [
-  { value: 1, label: 'Januari' },
-  { value: 2, label: 'Februari' },
-  { value: 3, label: 'Maret' },
-  { value: 4, label: 'April' },
-  { value: 5, label: 'Mei' },
-  { value: 6, label: 'Juni' },
-  { value: 7, label: 'Juli' },
-  { value: 8, label: 'Agustus' },
-  { value: 9, label: 'September' },
-  { value: 10, label: 'Oktober' },
-  { value: 11, label: 'November' },
-  { value: 12, label: 'Desember' },
-]
+// const bulanOptions = [
+//   { value: 1, label: 'Januari' },
+//   { value: 2, label: 'Februari' },
+//   { value: 3, label: 'Maret' },
+//   { value: 4, label: 'April' },
+//   { value: 5, label: 'Mei' },
+//   { value: 6, label: 'Juni' },
+//   { value: 7, label: 'Juli' },
+//   { value: 8, label: 'Agustus' },
+//   { value: 9, label: 'September' },
+//   { value: 10, label: 'Oktober' },
+//   { value: 11, label: 'November' },
+//   { value: 12, label: 'Desember' },
+// ]
+
 const currentMonth = new Date().getMonth() + 1
 
 // Mapping bulan → key sesuai schema dari backend
@@ -74,33 +79,35 @@ const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
 export function RekapTransferSumberDanaTable({
   data,
   search,
-  navigate,
+  // navigate,
+  dateRange,
+  onDateRangeChange,
 }: DataTableProps) {
   // Tahun diambil dari URL, default tahun sekarang
-  const currentYear = new Date().getFullYear()
-  const tahunFilter = Number(search.tahun ?? currentYear)
+  // const currentYear = new Date().getFullYear()
+  // const tahunFilter = Number(search.tahun ?? currentYear)
   const { mutateAsync } = useSyncRealisasiTransferSumberDanaPajak()
   // List tahun 3 tahun sebelum & 3 tahun sesudah
-  const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
+  // const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
   const bulanFilter = Number(search.bulan ?? currentMonth)
   // Update tahun → update URL → parent fetch ulang
-  function changeTahun(value: number) {
-    navigate({
-      search: {
-        ...search, // bawakan parameter lama
-        tahun: value,
-      },
-    })
-  }
+  // function changeTahun(value: number) {
+  //   navigate({
+  //     search: {
+  //       ...search, // bawakan parameter lama
+  //       tahun: value,
+  //     },
+  //   })
+  // }
 
-  function changeBulan(value: number) {
-    navigate({
-      search: {
-        ...search,
-        bulan: value,
-      },
-    })
-  }
+  // function changeBulan(value: number) {
+  //   navigate({
+  //     search: {
+  //       ...search,
+  //       bulan: value,
+  //     },
+  //   })
+  // }
 
   // table config
   const [rowSelection, setRowSelection] = useState({})
@@ -155,7 +162,7 @@ export function RekapTransferSumberDanaTable({
         searchKey='nm_sumber'
         extraControls={
           <div className='flex items-center space-x-2'>
-            <Select
+            {/* <Select
               value={String(bulanFilter)}
               onValueChange={(v) => changeBulan(Number(v))}
             >
@@ -169,8 +176,21 @@ export function RekapTransferSumberDanaTable({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
-            <Select
+            </Select> */}
+            <RangeDatePicker
+              value={{
+                from: dateRange?.from ?? startOfMonth(new Date()),
+                to: dateRange?.to ?? endOfMonth(new Date()),
+              }}
+              onChange={(range) =>
+                onDateRangeChange?.({
+                  from: range?.from ?? undefined,
+                  to: range?.to ?? undefined,
+                })
+              }
+              placeholder='Filter tanggal'
+            />
+            {/* <Select
               value={String(tahunFilter)}
               onValueChange={(v) => changeTahun(Number(v))}
             >
@@ -184,7 +204,7 @@ export function RekapTransferSumberDanaTable({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </Select> */}
 
             {/* Tombol Export */}
             <Button

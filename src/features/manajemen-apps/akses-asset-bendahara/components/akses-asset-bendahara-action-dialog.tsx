@@ -48,7 +48,9 @@ const formSchema = z.object({
   kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
   kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  assetIds: z.array(z.string()).min(1, 'Pilih minimal 1 Asset Bendahara'),
+  assetIds: z
+    .array(z.string())
+    .min(1, 'Pilih minimal 1 BMD (Barang Milik Daerah)'),
 })
 
 type AksesDPASKPDForm = z.infer<typeof formSchema>
@@ -151,8 +153,8 @@ export function AksesDPASKPDActionDialog({
         onOpenChange(false)
         form.reset()
         return isEdit
-          ? 'Data Akses Asset Bendahara berhasil diperbarui!'
-          : 'Data Akses Asset Bendahara berhasil ditambahkan!'
+          ? 'Data Akses BMD (Barang Milik Daerah) berhasil diperbarui!'
+          : 'Data Akses BMD (Barang Milik Daerah) berhasil ditambahkan!'
       },
       error: (err) => {
         const message =
@@ -176,13 +178,13 @@ export function AksesDPASKPDActionDialog({
           <DialogTitle>
             {' '}
             {isEdit
-              ? 'Edit Akses Asset Bendahara'
-              : 'Tambah Akses Asset Bendahara'}
+              ? 'Edit Akses BMD (Barang Milik Daerah)'
+              : 'Tambah Akses BMD (Barang Milik Daerah)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui Akses Asset Bendahara disini. '
-              : 'Tambah baru Akses Asset Bendahara disini. '}
+              ? 'Perbarui Akses BMD (Barang Milik Daerah) disini. '
+              : 'Tambah baru Akses BMD (Barang Milik Daerah) disini. '}
             Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
@@ -245,18 +247,18 @@ export function AksesDPASKPDActionDialog({
                   return (
                     <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
                       <FormLabel className='col-span-2 pt-2 text-end'>
-                        Asset Bendahara
+                        BMD (Barang Milik Daerah)
                       </FormLabel>
 
                       <div className='col-span-4 w-full'>
                         <FormControl>
                           <Command className='rounded-md border'>
-                            <CommandInput placeholder='Cari Asset Bendahara...' />
+                            <CommandInput placeholder='Cari BMD (Barang Milik Daerah)...' />
 
                             <CommandList>
                               {listDPA.length === 0 && (
                                 <CommandEmpty>
-                                  Tidak ada Asset Bendahara
+                                  Tidak ada BMD (Barang Milik Daerah)
                                 </CommandEmpty>
                               )}
 

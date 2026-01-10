@@ -52,7 +52,9 @@ const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
 
-  ref_sp2b_ke_bud_id: z.string().min(1, 'SP2B Ke BUD harus dipilih.'),
+  ref_sp2b_ke_bud_id: z
+    .string()
+    .min(1, 'SPB (Surat Pengesahan Belanja) harus dipilih.'),
 
   file: z
     .any()
@@ -184,12 +186,14 @@ export function UsersActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit SP2B Ke BUD' : 'Tambah SP2B Ke BUD'}
+            {isEdit
+              ? 'Edit SPB (Surat Pengesahan Belanja)'
+              : 'Tambah SPB (Surat Pengesahan Belanja)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui data SP2B Ke BUD.'
-              : 'Tambahkan SP2B Ke BUD baru.'}
+              ? 'Perbarui data SPB (Surat Pengesahan Belanja).'
+              : 'Tambahkan SPB (Surat Pengesahan Belanja) baru.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -228,7 +232,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Pilih SP2B Ke BUD
+                      Pilih SPB (Surat Pengesahan Belanja)
                     </FormLabel>
 
                     {/* ➜ Tambahkan col-span-4 disini agar dropdown lebar */}
@@ -250,7 +254,7 @@ export function UsersActionDialog({
                                       (d) =>
                                         String(d.id) === String(field.value)
                                     )?.nm_sp2b_ke_bud
-                                  : 'Pilih Jenis SP2B Ke BUD'}
+                                  : 'Pilih Jenis SPB'}
                               </span>
                               <CaretSortIcon className='h-4 w-4 opacity-50' />
                             </Button>

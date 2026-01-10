@@ -97,7 +97,7 @@ export const ReferensiLaporanAssetBendaharaColumns: ColumnDef<LaporanAssetBendah
     {
       accessorKey: 'nama_file',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Jenis Asset Bendahara' />
+        <DataTableColumnHeader column={column} title='Jenis BMD' />
       ),
       cell: ({ row }) => {
         const jenis_dpa = row.original?.refAssetBendahara?.nm_asset_bendahara

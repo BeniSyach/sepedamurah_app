@@ -166,7 +166,9 @@ export function PenerimaanPeriksa({
                   <Form {...form}>
                     {/* NAMA FILE */}
                     <FormItem>
-                      <FormLabel>Nama Laporan SP2B Ke BUD</FormLabel>
+                      <FormLabel>
+                        Nama Laporan SPB (Surat Pengesahan Belanja)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           value={

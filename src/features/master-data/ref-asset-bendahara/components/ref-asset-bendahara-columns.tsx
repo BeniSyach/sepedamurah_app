@@ -24,7 +24,10 @@ export const ReferensiRefAssetBendaharaColumns: ColumnDef<RefAssetBendahara>[] =
     {
       accessorKey: 'nm_asset_bendahara',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Nama Asset Bendahara' />
+        <DataTableColumnHeader
+          column={column}
+          title='Nama BMD (Barang Milik Daerah)'
+        />
       ),
       cell: ({ row }) => (
         <LongText className='max-w-300 ps-3'>

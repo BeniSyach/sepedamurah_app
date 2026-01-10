@@ -55,7 +55,7 @@ const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
 
-  ref_asset_id: z.string().min(1, 'Asset Bendahara harus dipilih.'),
+  ref_asset_id: z.string().min(1, 'BMD (Barang Milik Daerah) harus dipilih.'),
 
   file: z
     .any()
@@ -185,13 +185,13 @@ export function LaporanAssetBendaharaActionDialog({
         <DialogHeader className='text-start'>
           <DialogTitle>
             {isEdit
-              ? 'Edit Laporan Asset Bendahara'
-              : 'Tambah Laporan Asset Bendahara'}
+              ? 'Edit Laporan BMD (Barang Milik Daerah)'
+              : 'Tambah Laporan BMD (Barang Milik Daerah)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui data Laporan Asset Bendahara.'
-              : 'Tambahkan Laporan Asset Bendahara baru.'}
+              ? 'Perbarui data Laporan BMD (Barang Milik Daerah).'
+              : 'Tambahkan Laporan BMD (Barang Milik Daerah) baru.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -230,7 +230,7 @@ export function LaporanAssetBendaharaActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Asset Bendahara
+                      BMD (Barang Milik Daerah)
                     </FormLabel>
 
                     {/* ➜ Tambahkan col-span-4 disini agar dropdown lebar */}
@@ -252,7 +252,7 @@ export function LaporanAssetBendaharaActionDialog({
                                       (d) =>
                                         String(d.id) === String(field.value)
                                     )?.nm_asset_bendahara
-                                  : 'Pilih Asset Bendahara'}
+                                  : 'Pilih BMD (Barang Milik Daerah)'}
                               </span>
                               <CaretSortIcon className='h-4 w-4 opacity-50' />
                             </Button>
@@ -264,7 +264,7 @@ export function LaporanAssetBendaharaActionDialog({
                           className='w-[var(--radix-popover-trigger-width)] p-0'
                         >
                           <Command>
-                            <CommandInput placeholder='Cari Asset Bendahara...' />
+                            <CommandInput placeholder='Cari BMD (Barang Milik Daerah)...' />
                             <CommandEmpty>Tidak ditemukan.</CommandEmpty>
 
                             <CommandGroup>

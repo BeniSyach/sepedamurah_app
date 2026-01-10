@@ -15,7 +15,7 @@ export function RefAssetBendaharaPrimaryButtons() {
         <span>Import</span> <Download size={18} />
       </Button>
       <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambah Asset Bendahara</span> <Plus size={18} />
+        <span>Tambah BMD (Barang Milik Daerah)</span> <Plus size={18} />
       </Button>
     </div>
   )

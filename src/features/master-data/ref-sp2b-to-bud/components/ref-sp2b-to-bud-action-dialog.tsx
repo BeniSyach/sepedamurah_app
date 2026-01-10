@@ -67,8 +67,8 @@ export function DPAsActionDialog({
         onOpenChange(false)
         form.reset()
         return isEdit
-          ? 'Data SP2B Ke BUD berhasil diperbarui!'
-          : 'Data SP2B Ke BUD berhasil ditambahkan!'
+          ? 'Data SPB (Surat Pengesahan Belanja) berhasil diperbarui!'
+          : 'Data SPB (Surat Pengesahan Belanja) berhasil ditambahkan!'
       },
       error: (err) => {
         const message =
@@ -90,12 +90,14 @@ export function DPAsActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
           <DialogTitle>
-            {isEdit ? 'Edit SP2B Ke BUD' : 'Add New SP2B Ke BUD'}
+            {isEdit
+              ? 'Edit SPB (Surat Pengesahan Belanja)'
+              : 'Add New SPB (Surat Pengesahan Belanja)'}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Perbarui SP2B Ke BUD disini. '
-              : 'Tambah baru SP2B Ke BUD disini. '}
+              ? 'Perbarui SPB (Surat Pengesahan Belanja) disini. '
+              : 'Tambah baru SPB (Surat Pengesahan Belanja) disini. '}
             Klik simpan ketika kamu sudah selesai.
           </DialogDescription>
         </DialogHeader>
@@ -113,11 +115,11 @@ export function DPAsActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Nama SP2B Ke BUD
+                      Nama SPB (Surat Pengesahan Belanja)
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Ketik Nama SP2B Ke BUD'
+                        placeholder='Ketik Nama SPB (Surat Pengesahan Belanja)'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}

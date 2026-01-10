@@ -6,6 +6,8 @@ interface UseRekapRealisasiTransferSumberDana {
   search?: string
   tahun?: string | number
   bulan?: string | number
+  tgl_awal?: string
+  tgl_akhir?: string
 }
 
 export function useGetRekapRealisasiTransferSumberDana(
@@ -21,6 +23,8 @@ export function useGetRekapRealisasiTransferSumberDana(
             search: params.search ?? '',
             tahun: params.tahun ?? '',
             bulan: params.bulan ?? '',
+            tgl_awal: params.tgl_awal ?? '',
+            tgl_akhir: params.tgl_akhir ?? '',
           },
         }
       )
