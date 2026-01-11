@@ -14,6 +14,11 @@ interface UsePermohonanSP2D {
   date_to?: string | undefined
   sort_by?: string | undefined
   sort_dir?: string | undefined
+  kd_opd1?: string
+  kd_opd2?: string
+  kd_opd3?: string
+  kd_opd4?: string
+  kd_opd5?: string
 }
 
 export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
@@ -32,6 +37,11 @@ export function useGetPermohonanSP2D(params: UsePermohonanSP2D) {
           date_to: params.date_to,
           sort_by: params.sort_by,
           sort_dir: params.sort_dir,
+          kd_opd1: params.kd_opd1 ?? '',
+          kd_opd2: params.kd_opd2 ?? '',
+          kd_opd3: params.kd_opd3 ?? '',
+          kd_opd4: params.kd_opd4 ?? '',
+          kd_opd5: params.kd_opd5 ?? '',
         },
       })
       return data

@@ -29,7 +29,14 @@ export function LaporanDPA() {
     menu:
       userRole === 'Operator SKPKD' ? 'operator_laporan_dpa' : 'laporan_dpa',
     ...(userRole === 'Operator SKPKD' || userRole === 'Bendahara'
-      ? { user_id: user?.id }
+      ? {
+          user_id: user?.id,
+          kd_opd1: user?.kd_opd1,
+          kd_opd2: user?.kd_opd2,
+          kd_opd3: user?.kd_opd3,
+          kd_opd4: user?.kd_opd4,
+          kd_opd5: user?.kd_opd5,
+        }
       : {}),
   })
 

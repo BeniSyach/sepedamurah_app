@@ -28,7 +28,16 @@ export function BerkasMasukLaporanAssetBendahara() {
     search: search.nama_file,
     jenis: 'Penerimaan',
     menu: 'berkas_masuk_laporan_asset',
-    ...(userRole === 'Bendahara' ? { user_id: user?.id } : {}),
+    ...(userRole === 'Bendahara'
+      ? {
+          user_id: user?.id,
+          kd_opd1: user?.kd_opd1,
+          kd_opd2: user?.kd_opd2,
+          kd_opd3: user?.kd_opd3,
+          kd_opd4: user?.kd_opd4,
+          kd_opd5: user?.kd_opd5,
+        }
+      : {}),
   })
 
   return (

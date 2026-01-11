@@ -15,6 +15,11 @@ interface UsePermohonanSPD {
   sort_by?: string | undefined
   sort_dir?: string | undefined
   tahun?: string | number
+  kd_opd1?: string
+  kd_opd2?: string
+  kd_opd3?: string
+  kd_opd4?: string
+  kd_opd5?: string
 }
 
 export function useGetPermohonanSPD(params: UsePermohonanSPD) {
@@ -36,6 +41,11 @@ export function useGetPermohonanSPD(params: UsePermohonanSPD) {
             sort_by: params.sort_by,
             sort_dir: params.sort_dir,
             tahun: params.tahun ?? '',
+            kd_opd1: params.kd_opd1 ?? '',
+            kd_opd2: params.kd_opd2 ?? '',
+            kd_opd3: params.kd_opd3 ?? '',
+            kd_opd4: params.kd_opd4 ?? '',
+            kd_opd5: params.kd_opd5 ?? '',
           },
         }
       )

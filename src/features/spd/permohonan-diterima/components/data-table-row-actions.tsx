@@ -19,7 +19,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefPermohonanSpd()
-  const sudahDiTte = row.original.tte !== null && row.original.tte.trim() !== ''
+  const sudahDiTte = row.original.tte !== null && row.original.tte !== ''
 
   const levelAkses = localStorage.getItem('user_role')
   return (
