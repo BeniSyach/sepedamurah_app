@@ -95,24 +95,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<SpdTerkirim>[] = [
 
       return (
         <div className='flex items-center gap-2 ps-3'>
-          {value ? (
-            <>
-              <div className='max-w-300'>{value}</div>
-              <Badge
-                variant='secondary'
-                className='bg-green-100 text-green-800 hover:bg-green-100'
-              >
-                Selesai
-              </Badge>
-            </>
-          ) : (
-            <Badge
-              variant='secondary'
-              className='bg-yellow-100 text-yellow-800 hover:bg-yellow-100'
-            >
-              Sedang Memeriksa
-            </Badge>
-          )}
+          <div className='max-w-300'>{value}</div>
         </div>
       )
     },

@@ -64,7 +64,7 @@ export function UsersDialogs() {
         return `Data SPD Berhasil Ditolak.`
       },
       error: (err) => {
-        return err.data.message
+        return err
       },
     })
   }

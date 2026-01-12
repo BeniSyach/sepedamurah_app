@@ -41,4 +41,5 @@ export interface PermohonanSpd {
   status: string
   tte: string
   publish: string
+  nm_opd: string
 }

@@ -40,6 +40,19 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
     },
     enableSorting: true,
   },
+  // ✅ nama_pengirim
+  {
+    id: 'nm_opd',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Nama Pengirim' />
+    ),
+    cell: ({ row }) => {
+      const nm_opd = row.original.nm_opd
+
+      return <div>{nm_opd}</div>
+    },
+    enableSorting: true,
+  },
 
   // ✅ nama_operator
   {
