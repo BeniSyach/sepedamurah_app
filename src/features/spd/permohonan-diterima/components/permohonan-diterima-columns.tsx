@@ -44,7 +44,7 @@ export const ReferensiPermohonanSpdColumns: ColumnDef<PermohonanSpd>[] = [
   {
     id: 'nm_opd',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nama Pengirim' />
+      <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
       const nm_opd = row.original.nm_opd
