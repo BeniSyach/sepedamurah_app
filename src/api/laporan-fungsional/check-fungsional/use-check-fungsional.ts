@@ -36,6 +36,6 @@ export function useCekUploadFungsional(params: CekUploadParams) {
       !!params.kd_opd3 &&
       !!params.kd_opd4 &&
       !!params.kd_opd5,
-    staleTime: 1000 * 60 * 1, // 5 menit
+    staleTime: 1000 * 60 * 0.5, // 5 menit
   })
 }

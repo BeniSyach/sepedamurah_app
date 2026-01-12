@@ -79,7 +79,7 @@ const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
 export function RekapTransferSumberDanaTable({
   data,
   search,
-  // navigate,
+  navigate,
   dateRange,
   onDateRangeChange,
 }: DataTableProps) {
@@ -182,14 +182,28 @@ export function RekapTransferSumberDanaTable({
                 from: dateRange?.from ?? startOfMonth(new Date()),
                 to: dateRange?.to ?? endOfMonth(new Date()),
               }}
-              onChange={(range) =>
-                onDateRangeChange?.({
-                  from: range?.from ?? undefined,
-                  to: range?.to ?? undefined,
+              onChange={(range) => {
+                if (!range?.from) return
+
+                const tahun = range.from.getFullYear()
+                const bulan = range.from.getMonth() + 1
+
+                navigate({
+                  search: {
+                    ...search, // parameter lama tetap
+                    tahun,
+                    bulan,
+                  },
                 })
-              }
+
+                onDateRangeChange?.({
+                  from: range.from,
+                  to: range.to ?? undefined,
+                })
+              }}
               placeholder='Filter tanggal'
             />
+
             {/* <Select
               value={String(tahunFilter)}
               onValueChange={(v) => changeTahun(Number(v))}
