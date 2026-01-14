@@ -25,8 +25,8 @@ export interface AksesRefRekonsiliasiGajiSkpdResponse {
 export interface CekLaporanRekonsiliasiGajiSkpdItem {
   akses_id: number
   opd: string
-  dpa_id: string
-  nama_dpa: string | null
+  rek_gaji_id: string
+  nama_rek_gaji: string | null
   status_laporan: boolean
   laporan_data: string | null
 }

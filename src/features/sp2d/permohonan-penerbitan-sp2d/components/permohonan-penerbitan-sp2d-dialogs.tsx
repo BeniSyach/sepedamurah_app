@@ -3,10 +3,12 @@ import {
   type CekLaporanAssetBendaharaItem,
   type CekLaporanDPAItem,
   type CekLaporanPajakBendaharaItem,
+  type CekLaporanRekonsiliasiGajiSkpdItem,
   type CekLaporanSp2bToBUDItem,
   useCekLaporanAssetBendahara,
   useCekLaporanDPA,
   useCekLaporanPajakBendahara,
+  useCekLaporanRefRekonsiliasiGajiSkpd,
   useCekLaporanSp2bToBUD,
   useCekUploadFungsional,
   useDeletePermohonanSP2D,
@@ -94,6 +96,14 @@ export function UsersDialogs() {
     kd_opd5: user?.kd_opd5 ?? '',
   })
   const { data: useSp2bToBUD } = useCekLaporanSp2bToBUD({
+    tahun: currentYear,
+    kd_opd1: user?.kd_opd1 ?? '',
+    kd_opd2: user?.kd_opd2 ?? '',
+    kd_opd3: user?.kd_opd3 ?? '',
+    kd_opd4: user?.kd_opd4 ?? '',
+    kd_opd5: user?.kd_opd5 ?? '',
+  })
+  const { data: useRekGajiSKPD } = useCekLaporanRefRekonsiliasiGajiSkpd({
     tahun: currentYear,
     kd_opd1: user?.kd_opd1 ?? '',
     kd_opd2: user?.kd_opd2 ?? '',
@@ -384,6 +394,33 @@ export function UsersDialogs() {
     return { blocked: false, reason: '' }
   }
 
+  const isRekGajiSKPDIncomplete = () => {
+    if (!useRekGajiSKPD) return { blocked: false, reason: '' }
+
+    // Jika semua laporan memenuhi akses DPA → aman
+    if (useRekGajiSKPD.status_laporan_memenuhi === true) {
+      return { blocked: false, reason: '' }
+    }
+
+    // Jika ada yang kurang, ambil daftar yg harus diupload
+    if (
+      useRekGajiSKPD.kurang_upload &&
+      Array.isArray(useRekGajiSKPD.kurang_upload) &&
+      useRekGajiSKPD.kurang_upload.length > 0
+    ) {
+      const daftar = useRekGajiSKPD.kurang_upload
+        .map((d: CekLaporanRekonsiliasiGajiSkpdItem) => `• ${d.nama_rek_gaji}`)
+        .join('\n')
+
+      return {
+        blocked: true,
+        reason: `Masih ada Laporan Rekonsiliasi Gaji SKPD yang belum diupload:\n${daftar}`,
+      }
+    }
+
+    return { blocked: false, reason: '' }
+  }
+
   // 🧠 Deteksi ketika user membuka form add/edit
   useEffect(() => {
     // Berlaku hanya untuk Bendahara
@@ -426,6 +463,14 @@ export function UsersDialogs() {
       if (statusSp2bToBUD.blocked) {
         setShowClosedDialog(true)
         setClosedReason(statusSp2bToBUD.reason)
+        setOpen(null)
+        return
+      }
+
+      const statusRekGajiSKPD = isRekGajiSKPDIncomplete()
+      if (statusRekGajiSKPD.blocked) {
+        setShowClosedDialog(true)
+        setClosedReason(statusRekGajiSKPD.reason)
         setOpen(null)
         return
       }
