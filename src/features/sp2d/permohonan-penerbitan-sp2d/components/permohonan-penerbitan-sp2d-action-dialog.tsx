@@ -111,6 +111,16 @@ import { UrusanSection } from './urusan-section'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // ============================
 // 🧾 VALIDATION SCHEMA
 // ============================
@@ -424,6 +434,12 @@ export function PermohonanPenerbitanSP2DActionDialog({
     formData.append('nilai_belanja', data.nilai_belanja)
     formData.append('agreement', data.agreement)
     formData.append('id_berkas', JSON.stringify(data.id_berkas))
+    // === KONDISI JENIS BERKAS UP ===
+    if (data.jenis_berkas === 'UP') {
+      formData.append('kd_belanja1', '6')
+      formData.append('kd_belanja2', '1')
+      formData.append('kd_belanja3', '01')
+    }
     // Jika user upload file baru
     if (
       data.nama_file_asli instanceof FileList &&
