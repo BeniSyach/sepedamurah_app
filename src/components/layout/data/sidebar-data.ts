@@ -193,6 +193,12 @@ export const sidebarData: SidebarData = {
               url: '/master-data/referensi-sp2b-to-bud',
               icon: FileText,
             },
+            {
+              id: 'referensi-rekonsiliasi-gaji-skpd',
+              title: 'Referensi Rekonsiliasi Gaji SKPD',
+              url: '/master-data/referensi-rek-gaji-skpd',
+              icon: FileText,
+            },
           ],
         },
         {
@@ -266,6 +272,12 @@ export const sidebarData: SidebarData = {
           id: 'akses-sp2b-ke-bud',
           title: 'Akses SPB (Surat Pengesahan Belanja)',
           url: '/manajemen-apps/akses-sp2b-ke-bud',
+          icon: LockKeyholeOpenIcon,
+        },
+        {
+          id: 'akses-rekonsiliasi-gaji-skpd',
+          title: 'Akses Rekonsiliasi Gaji SKPD',
+          url: '/manajemen-apps/akses-rekonsiliasi-gaji-skpd',
           icon: LockKeyholeOpenIcon,
         },
         {
@@ -678,6 +690,37 @@ export const sidebarData: SidebarData = {
               id: 'laporan-sp2b-ke-bud-ditolak',
               title: 'Laporan SPB (Surat Pengesahan Belanja) - Ditolak',
               url: '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-ditolak',
+              icon: XCircle, // ❌ sudah cocok
+            },
+          ],
+        },
+        {
+          id: 'laporan-rekonsiliasi-gaji-skpd-judul',
+          title: 'Laporan Rekonsiliasi Gaji SKPD',
+          icon: FileSpreadsheet, // 🔥 ganti jadi ikon dokumen spreadsheet
+          items: [
+            {
+              id: 'berkas-masuk-laporan-rekonsiliasi-gaji-skpd',
+              title: 'Berkas Masuk Laporan Rekonsiliasi Gaji SKPD',
+              url: '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk',
+              icon: Inbox, // 🔥 lebih cocok untuk "berkas masuk"
+            },
+            {
+              id: 'laporan-rekonsiliasi-gaji-skpd-menu',
+              title: 'Laporan Rekonsiliasi Gaji SKPD',
+              url: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd',
+              icon: FileSearch, // 🔍 laporan / detail dokumen
+            },
+            {
+              id: 'laporan-rekonsiliasi-gaji-skpd-diterima',
+              title: 'Laporan Rekonsiliasi Gaji SKPD - Diterima',
+              url: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima',
+              icon: CheckCircle2, // ✔️ sudah cocok
+            },
+            {
+              id: 'laporan-rekonsiliasi-gaji-skpd-ditolak',
+              title: 'Laporan Rekonsiliasi Gaji SKPD - Ditolak',
+              url: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak',
               icon: XCircle, // ❌ sudah cocok
             },
           ],

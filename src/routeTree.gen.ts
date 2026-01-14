@@ -44,6 +44,7 @@ import { Route as AuthenticatedMasterDataReferensiSumberDanaRouteImport } from '
 import { Route as AuthenticatedMasterDataReferensiSubkegiatanRouteImport } from './routes/_authenticated/master-data/referensi-subkegiatan'
 import { Route as AuthenticatedMasterDataReferensiSp2bToBudRouteImport } from './routes/_authenticated/master-data/referensi-sp2b-to-bud'
 import { Route as AuthenticatedMasterDataReferensiRekeningRouteImport } from './routes/_authenticated/master-data/referensi-rekening'
+import { Route as AuthenticatedMasterDataReferensiRekGajiSkpdRouteImport } from './routes/_authenticated/master-data/referensi-rek-gaji-skpd'
 import { Route as AuthenticatedMasterDataReferensiProgramRouteImport } from './routes/_authenticated/master-data/referensi-program'
 import { Route as AuthenticatedMasterDataReferensiPersetujuanRouteImport } from './routes/_authenticated/master-data/referensi-persetujuan'
 import { Route as AuthenticatedMasterDataReferensiPajakBendaharaRouteImport } from './routes/_authenticated/master-data/referensi-pajak-bendahara'
@@ -59,6 +60,7 @@ import { Route as AuthenticatedMasterDataReferensiSKPDRouteImport } from './rout
 import { Route as AuthenticatedManajemenAppsUserRoleRouteImport } from './routes/_authenticated/manajemen-apps/user-role'
 import { Route as AuthenticatedManajemenAppsBatasWaktuRouteImport } from './routes/_authenticated/manajemen-apps/batas-waktu'
 import { Route as AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport } from './routes/_authenticated/manajemen-apps/akses-sp2b-ke-bud'
+import { Route as AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRouteImport } from './routes/_authenticated/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
 import { Route as AuthenticatedManajemenAppsAksesPajakBendaharaRouteImport } from './routes/_authenticated/manajemen-apps/akses-pajak-bendahara'
 import { Route as AuthenticatedManajemenAppsAksesOperatorRouteImport } from './routes/_authenticated/manajemen-apps/akses-operator'
 import { Route as AuthenticatedManajemenAppsAksesKuasaBudRouteImport } from './routes/_authenticated/manajemen-apps/akses-kuasa-bud'
@@ -99,6 +101,10 @@ import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDitolakRou
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
 import { Route as AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
+import { Route as AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
+import { Route as AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+import { Route as AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRouteImport } from './routes/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+import { Route as AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRouteImport } from './routes/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
 import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
 import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
 import { Route as AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRouteImport } from './routes/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
@@ -314,6 +320,12 @@ const AuthenticatedMasterDataReferensiRekeningRoute =
     path: '/master-data/referensi-rekening',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMasterDataReferensiRekGajiSkpdRoute =
+  AuthenticatedMasterDataReferensiRekGajiSkpdRouteImport.update({
+    id: '/master-data/referensi-rek-gaji-skpd',
+    path: '/master-data/referensi-rek-gaji-skpd',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMasterDataReferensiProgramRoute =
   AuthenticatedMasterDataReferensiProgramRouteImport.update({
     id: '/master-data/referensi-program',
@@ -404,6 +416,12 @@ const AuthenticatedManajemenAppsAksesSp2bKeBudRoute =
   AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport.update({
     id: '/manajemen-apps/akses-sp2b-ke-bud',
     path: '/manajemen-apps/akses-sp2b-ke-bud',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute =
+  AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRouteImport.update({
+    id: '/manajemen-apps/akses-rekonsiliasi-gaji-skpd',
+    path: '/manajemen-apps/akses-rekonsiliasi-gaji-skpd',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedManajemenAppsAksesPajakBendaharaRoute =
@@ -650,6 +668,36 @@ const AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute =
     path: '/dokumen/laporan-sp2b-ke-bud/berkas-masuk',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute =
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRouteImport.update(
+    {
+      id: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak',
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute =
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRouteImport.update(
+    {
+      id: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima',
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute =
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRouteImport.update(
+    {
+      id: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd',
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute =
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRouteImport.update({
+    id: '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk',
+    path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute =
   AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRouteImport.update(
     {
@@ -822,6 +870,7 @@ export interface FileRoutesByFullPath {
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/manajemen-apps/akses-rekonsiliasi-gaji-skpd': typeof AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute
   '/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
@@ -837,6 +886,7 @@ export interface FileRoutesByFullPath {
   '/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
+  '/master-data/referensi-rek-gaji-skpd': typeof AuthenticatedMasterDataReferensiRekGajiSkpdRoute
   '/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
   '/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
@@ -878,6 +928,10 @@ export interface FileRoutesByFullPath {
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute
   '/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
@@ -932,6 +986,7 @@ export interface FileRoutesByTo {
   '/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/manajemen-apps/akses-rekonsiliasi-gaji-skpd': typeof AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute
   '/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
@@ -947,6 +1002,7 @@ export interface FileRoutesByTo {
   '/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
+  '/master-data/referensi-rek-gaji-skpd': typeof AuthenticatedMasterDataReferensiRekGajiSkpdRoute
   '/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
   '/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
@@ -988,6 +1044,10 @@ export interface FileRoutesByTo {
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
   '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute
+  '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute
   '/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
@@ -1046,6 +1106,7 @@ export interface FileRoutesById {
   '/_authenticated/manajemen-apps/akses-kuasa-bud': typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   '/_authenticated/manajemen-apps/akses-operator': typeof AuthenticatedManajemenAppsAksesOperatorRoute
   '/_authenticated/manajemen-apps/akses-pajak-bendahara': typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  '/_authenticated/manajemen-apps/akses-rekonsiliasi-gaji-skpd': typeof AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute
   '/_authenticated/manajemen-apps/akses-sp2b-ke-bud': typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   '/_authenticated/manajemen-apps/batas-waktu': typeof AuthenticatedManajemenAppsBatasWaktuRoute
   '/_authenticated/manajemen-apps/user-role': typeof AuthenticatedManajemenAppsUserRoleRoute
@@ -1061,6 +1122,7 @@ export interface FileRoutesById {
   '/_authenticated/master-data/referensi-pajak-bendahara': typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   '/_authenticated/master-data/referensi-persetujuan': typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   '/_authenticated/master-data/referensi-program': typeof AuthenticatedMasterDataReferensiProgramRoute
+  '/_authenticated/master-data/referensi-rek-gaji-skpd': typeof AuthenticatedMasterDataReferensiRekGajiSkpdRoute
   '/_authenticated/master-data/referensi-rekening': typeof AuthenticatedMasterDataReferensiRekeningRoute
   '/_authenticated/master-data/referensi-sp2b-to-bud': typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   '/_authenticated/master-data/referensi-subkegiatan': typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
@@ -1102,6 +1164,10 @@ export interface FileRoutesById {
   '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
   '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
   '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute
+  '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute
+  '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute
+  '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak': typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk': typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima': typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
@@ -1160,6 +1226,7 @@ export interface FileRouteTypes {
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
     | '/manajemen-apps/akses-pajak-bendahara'
+    | '/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
     | '/manajemen-apps/akses-sp2b-ke-bud'
     | '/manajemen-apps/batas-waktu'
     | '/manajemen-apps/user-role'
@@ -1175,6 +1242,7 @@ export interface FileRouteTypes {
     | '/master-data/referensi-pajak-bendahara'
     | '/master-data/referensi-persetujuan'
     | '/master-data/referensi-program'
+    | '/master-data/referensi-rek-gaji-skpd'
     | '/master-data/referensi-rekening'
     | '/master-data/referensi-sp2b-to-bud'
     | '/master-data/referensi-subkegiatan'
@@ -1216,6 +1284,10 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
     | '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
@@ -1270,6 +1342,7 @@ export interface FileRouteTypes {
     | '/manajemen-apps/akses-kuasa-bud'
     | '/manajemen-apps/akses-operator'
     | '/manajemen-apps/akses-pajak-bendahara'
+    | '/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
     | '/manajemen-apps/akses-sp2b-ke-bud'
     | '/manajemen-apps/batas-waktu'
     | '/manajemen-apps/user-role'
@@ -1285,6 +1358,7 @@ export interface FileRouteTypes {
     | '/master-data/referensi-pajak-bendahara'
     | '/master-data/referensi-persetujuan'
     | '/master-data/referensi-program'
+    | '/master-data/referensi-rek-gaji-skpd'
     | '/master-data/referensi-rekening'
     | '/master-data/referensi-sp2b-to-bud'
     | '/master-data/referensi-subkegiatan'
@@ -1326,6 +1400,10 @@ export interface FileRouteTypes {
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
     | '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+    | '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
     | '/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
@@ -1383,6 +1461,7 @@ export interface FileRouteTypes {
     | '/_authenticated/manajemen-apps/akses-kuasa-bud'
     | '/_authenticated/manajemen-apps/akses-operator'
     | '/_authenticated/manajemen-apps/akses-pajak-bendahara'
+    | '/_authenticated/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
     | '/_authenticated/manajemen-apps/akses-sp2b-ke-bud'
     | '/_authenticated/manajemen-apps/batas-waktu'
     | '/_authenticated/manajemen-apps/user-role'
@@ -1398,6 +1477,7 @@ export interface FileRouteTypes {
     | '/_authenticated/master-data/referensi-pajak-bendahara'
     | '/_authenticated/master-data/referensi-persetujuan'
     | '/_authenticated/master-data/referensi-program'
+    | '/_authenticated/master-data/referensi-rek-gaji-skpd'
     | '/_authenticated/master-data/referensi-rekening'
     | '/_authenticated/master-data/referensi-sp2b-to-bud'
     | '/_authenticated/master-data/referensi-subkegiatan'
@@ -1439,6 +1519,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara'
     | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-diterima'
     | '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
+    | '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+    | '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+    | '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+    | '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/berkas-masuk'
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud'
     | '/_authenticated/dokumen/laporan-sp2b-ke-bud/laporan-sp2b-ke-bud-diterima'
@@ -1728,6 +1812,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMasterDataReferensiRekeningRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/master-data/referensi-rek-gaji-skpd': {
+      id: '/_authenticated/master-data/referensi-rek-gaji-skpd'
+      path: '/master-data/referensi-rek-gaji-skpd'
+      fullPath: '/master-data/referensi-rek-gaji-skpd'
+      preLoaderRoute: typeof AuthenticatedMasterDataReferensiRekGajiSkpdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/master-data/referensi-program': {
       id: '/_authenticated/master-data/referensi-program'
       path: '/master-data/referensi-program'
@@ -1831,6 +1922,13 @@ declare module '@tanstack/react-router' {
       path: '/manajemen-apps/akses-sp2b-ke-bud'
       fullPath: '/manajemen-apps/akses-sp2b-ke-bud'
       preLoaderRoute: typeof AuthenticatedManajemenAppsAksesSp2bKeBudRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manajemen-apps/akses-rekonsiliasi-gaji-skpd': {
+      id: '/_authenticated/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
+      path: '/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
+      fullPath: '/manajemen-apps/akses-rekonsiliasi-gaji-skpd'
+      preLoaderRoute: typeof AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/manajemen-apps/akses-pajak-bendahara': {
@@ -2113,6 +2211,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak': {
+      id: '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
+      fullPath: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima': {
+      id: '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+      fullPath: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd-diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd': {
+      id: '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+      fullPath: '/dokumen/laporan-rekonsiliasi-gaji-skpd/laporan-rekonsiliasi-gaji-skpd'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk': {
+      id: '/_authenticated/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+      path: '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+      fullPath: '/dokumen/laporan-rekonsiliasi-gaji-skpd/berkas-masuk'
+      preLoaderRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak': {
       id: '/_authenticated/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
       path: '/dokumen/laporan-pajak-bendahara/laporan-pajak-bendahara-ditolak'
@@ -2324,6 +2450,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedManajemenAppsAksesKuasaBudRoute: typeof AuthenticatedManajemenAppsAksesKuasaBudRoute
   AuthenticatedManajemenAppsAksesOperatorRoute: typeof AuthenticatedManajemenAppsAksesOperatorRoute
   AuthenticatedManajemenAppsAksesPajakBendaharaRoute: typeof AuthenticatedManajemenAppsAksesPajakBendaharaRoute
+  AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute: typeof AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute
   AuthenticatedManajemenAppsAksesSp2bKeBudRoute: typeof AuthenticatedManajemenAppsAksesSp2bKeBudRoute
   AuthenticatedManajemenAppsBatasWaktuRoute: typeof AuthenticatedManajemenAppsBatasWaktuRoute
   AuthenticatedManajemenAppsUserRoleRoute: typeof AuthenticatedManajemenAppsUserRoleRoute
@@ -2339,6 +2466,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMasterDataReferensiPajakBendaharaRoute: typeof AuthenticatedMasterDataReferensiPajakBendaharaRoute
   AuthenticatedMasterDataReferensiPersetujuanRoute: typeof AuthenticatedMasterDataReferensiPersetujuanRoute
   AuthenticatedMasterDataReferensiProgramRoute: typeof AuthenticatedMasterDataReferensiProgramRoute
+  AuthenticatedMasterDataReferensiRekGajiSkpdRoute: typeof AuthenticatedMasterDataReferensiRekGajiSkpdRoute
   AuthenticatedMasterDataReferensiRekeningRoute: typeof AuthenticatedMasterDataReferensiRekeningRoute
   AuthenticatedMasterDataReferensiSp2bToBudRoute: typeof AuthenticatedMasterDataReferensiSp2bToBudRoute
   AuthenticatedMasterDataReferensiSubkegiatanRoute: typeof AuthenticatedMasterDataReferensiSubkegiatanRoute
@@ -2371,6 +2499,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaRoute
   AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute
   AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute: typeof AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute: typeof AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute
   AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute: typeof AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudDiterimaRoute
@@ -2429,6 +2561,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedManajemenAppsAksesOperatorRoute,
   AuthenticatedManajemenAppsAksesPajakBendaharaRoute:
     AuthenticatedManajemenAppsAksesPajakBendaharaRoute,
+  AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute:
+    AuthenticatedManajemenAppsAksesRekonsiliasiGajiSkpdRoute,
   AuthenticatedManajemenAppsAksesSp2bKeBudRoute:
     AuthenticatedManajemenAppsAksesSp2bKeBudRoute,
   AuthenticatedManajemenAppsBatasWaktuRoute:
@@ -2459,6 +2593,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMasterDataReferensiPersetujuanRoute,
   AuthenticatedMasterDataReferensiProgramRoute:
     AuthenticatedMasterDataReferensiProgramRoute,
+  AuthenticatedMasterDataReferensiRekGajiSkpdRoute:
+    AuthenticatedMasterDataReferensiRekGajiSkpdRoute,
   AuthenticatedMasterDataReferensiRekeningRoute:
     AuthenticatedMasterDataReferensiRekeningRoute,
   AuthenticatedMasterDataReferensiSp2bToBudRoute:
@@ -2516,6 +2652,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDiterimaRoute,
   AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute:
     AuthenticatedDokumenLaporanPajakBendaharaLaporanPajakBendaharaDitolakRoute,
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute:
+    AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdBerkasMasukRoute,
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute:
+    AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdRoute,
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute:
+    AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDiterimaRoute,
+  AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute:
+    AuthenticatedDokumenLaporanRekonsiliasiGajiSkpdLaporanRekonsiliasiGajiSkpdDitolakRoute,
   AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute:
     AuthenticatedDokumenLaporanSp2bKeBudBerkasMasukRoute,
   AuthenticatedDokumenLaporanSp2bKeBudLaporanSp2bKeBudRoute:
