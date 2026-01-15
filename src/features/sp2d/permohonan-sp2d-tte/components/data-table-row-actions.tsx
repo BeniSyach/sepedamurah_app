@@ -39,7 +39,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('edit')
             }}
           >
-            Periksa
+            Tandatangani Berkas
             <DropdownMenuShortcut>
               <FolderSearch size={16} />
             </DropdownMenuShortcut>

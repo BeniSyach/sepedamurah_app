@@ -38,7 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('periksa')
             }}
           >
-            Periksa Berkas
+            Tandatangani Berkas
             <DropdownMenuShortcut>
               <FileSearch size={16} />
             </DropdownMenuShortcut>
