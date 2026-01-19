@@ -22,6 +22,8 @@ export function ReferensiPaguBelanja() {
     page: search.page,
     perPage: search.pageSize,
     search: search.search,
+    sort_by: search.sort_by,
+    sort_dir: search.sort_dir,
   })
 
   return (

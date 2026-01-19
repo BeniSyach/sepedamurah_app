@@ -56,46 +56,46 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
       <DataTableColumnHeader column={column} title='SKPD' />
     ),
     cell: ({ row }) => {
-      const skpd = row.original.skpd
-      return <div>{skpd?.nm_opd ?? '-'}</div>
+      const skpd = row.original.nm_opd
+      return <div>{skpd ?? '-'}</div>
     },
     enableSorting: true,
   },
 
   // ✅ nama Urusan
   {
-    accessorKey: 'urusan.nm_urusan', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_urusan', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Urusan' />
     ),
     cell: ({ row }) => {
-      const urusan = row.original.urusan
-      return <div>{urusan?.nm_urusan ?? '-'}</div>
+      const urusan = row.original.nm_urusan
+      return <div>{urusan ?? '-'}</div>
     },
     enableSorting: true,
   },
 
   // ✅ nama Bu
   {
-    accessorKey: 'bu.nm_bu', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_bu', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='B.. Urusan' />
     ),
     cell: ({ row }) => {
-      const bu = row.original.bu
-      return <div>{bu?.nm_bu ?? '-'}</div>
+      const bu = row.original.nm_bu
+      return <div>{bu ?? '-'}</div>
     },
     enableSorting: true,
   },
 
   // ✅ nama program
   {
-    accessorKey: 'program.nm_program', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_program', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Program' />
     ),
     cell: ({ row }) => {
-      const program = row.original.program
+      const program = row.original
       return <div>{program?.nm_program ?? '-'}</div>
     },
     enableSorting: true,
@@ -103,12 +103,12 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
 
   // ✅ nama kegiatan
   {
-    accessorKey: 'kegiatan.nm_kegiatan', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_kegiatan', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Kegiatan' />
     ),
     cell: ({ row }) => {
-      const kegiatan = row.original.kegiatan
+      const kegiatan = row.original
       return <div>{kegiatan?.nm_kegiatan ?? '-'}</div>
     },
     enableSorting: true,
@@ -116,12 +116,12 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
 
   // ✅ nama subkegiatan
   {
-    accessorKey: 'subkegiatan.nm_subkegiatan', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_subkegiatan', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='SubKegiatan' />
     ),
     cell: ({ row }) => {
-      const subkegiatan = row.original.subkegiatan
+      const subkegiatan = row.original
       return <div>{subkegiatan?.nm_subkegiatan ?? '-'}</div>
     },
     enableSorting: true,
@@ -129,12 +129,12 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
 
   // ✅ rekening
   {
-    accessorKey: 'rekening.nm_rekening', // ganti key untuk akses nama SKPD
+    accessorKey: 'nm_rekening', // ganti key untuk akses nama SKPD
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Rekening' />
     ),
     cell: ({ row }) => {
-      const rekening = row.original.rekening
+      const rekening = row.original
       return <div>{rekening?.nm_rekening ?? '-'}</div>
     },
     enableSorting: true,

@@ -6,6 +6,8 @@ interface UseRefPaguBelanja {
   page?: number
   perPage?: number
   search?: string
+  sort_by?: string | undefined
+  sort_dir?: string | undefined
 }
 
 export function useGetRefPaguBelanja(params: UseRefPaguBelanja) {
@@ -19,6 +21,8 @@ export function useGetRefPaguBelanja(params: UseRefPaguBelanja) {
             page: params.page ?? 1,
             per_page: params.perPage ?? 10,
             search: params.search ?? '',
+            sort_by: params.sort_by ?? '',
+            sort_dir: params.sort_dir ?? '',
           },
         }
       )

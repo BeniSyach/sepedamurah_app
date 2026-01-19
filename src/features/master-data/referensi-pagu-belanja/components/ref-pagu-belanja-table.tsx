@@ -76,6 +76,7 @@ export function ReferensiPaguBelanjaTable({
     columns,
     pageCount: totalPages,
     manualPagination: true,
+    manualSorting: true,
     state: {
       sorting,
       pagination,
@@ -83,10 +84,25 @@ export function ReferensiPaguBelanjaTable({
       globalFilter,
       columnVisibility,
     },
+    onSortingChange: (updater) => {
+      const nextSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+
+      setSorting(nextSorting)
+
+      const sort = nextSorting[0]
+
+      navigate({
+        search: {
+          ...search,
+          sort_by: sort?.id ?? undefined,
+          sort_dir: sort?.desc ? 'desc' : 'asc',
+        },
+      })
+    },
     onPaginationChange,
     onGlobalFilterChange,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
