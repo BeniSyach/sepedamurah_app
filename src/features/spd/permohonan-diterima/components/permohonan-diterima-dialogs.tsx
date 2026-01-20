@@ -1,4 +1,4 @@
-import { usePutSpdTerkirim } from '@/api'
+import { useDeleteSPDTerkirim, usePutSpdTerkirim } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -11,6 +11,24 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefPermohonanSpd()
 
   const { mutateAsync: put } = usePutSpdTerkirim()
+  const { mutateAsync: del } = useDeleteSPDTerkirim()
+
+  const handleHapus = async () => {
+    if (!currentRow) return
+    const HapusPromise = del({ id: currentRow.id })
+    await toast.promise(HapusPromise, {
+      loading: 'Hapus SPD...',
+      success: () => {
+        setOpen(null)
+        setTimeout(() => setCurrentRow(null), 500)
+
+        return `SPD Berhasil Di Hapus`
+      },
+      error: (err) => {
+        return err.data.message
+      },
+    })
+  }
 
   const handlePublish = async () => {
     if (!currentRow) return
@@ -178,6 +196,26 @@ export function UsersDialogs() {
               }, 500)
             }}
             currentRow={currentRow}
+          />
+
+          <ConfirmDialog
+            key={`spd-hapus-terkirim-${currentRow.id}`}
+            destructive
+            open={open === 'hapus'}
+            onOpenChange={() => {
+              setOpen('hapus')
+              setTimeout(() => setCurrentRow(null), 500)
+            }}
+            handleConfirm={handleHapus}
+            className='max-w-md'
+            title={`Hapus Data: ${currentRow.namafile}`}
+            desc={
+              <>
+                Kamu akan Menghapus Berkas SPD{' '}
+                <strong>{currentRow.namafile}</strong>.
+              </>
+            }
+            confirmText='Hapus'
           />
 
           <ConfirmDialog

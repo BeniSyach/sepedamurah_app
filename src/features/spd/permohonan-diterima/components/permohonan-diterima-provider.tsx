@@ -10,6 +10,7 @@ type RefPermohonanSpdDialogType =
   | 'lihatTTE'
   | 'lihat'
   | 'publish'
+  | 'hapus'
 
 type RefPermohonanSpdContextType = {
   open: RefPermohonanSpdDialogType | null

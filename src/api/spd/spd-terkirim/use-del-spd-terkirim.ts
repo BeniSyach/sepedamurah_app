@@ -20,6 +20,9 @@ export function useDeleteSPDTerkirim() {
       queryClient.invalidateQueries({
         queryKey: ['useGetSPDTerkirim'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetPermohonanSPD'],
+      })
     },
     onError: (error) => {
       return error
