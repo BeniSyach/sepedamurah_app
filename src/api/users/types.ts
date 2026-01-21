@@ -32,7 +32,7 @@ export interface Users {
   kd_opd4: string
   kd_opd5: string
   image: string | null
-  is_active: boolean | string
+  is_active: string
   visualisasi_tte: string | null
   chat_id: string | null
   date_created: string | null

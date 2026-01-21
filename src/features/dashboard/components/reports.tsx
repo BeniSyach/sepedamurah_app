@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useMemo } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
   Building2,
   CheckCircle2,
@@ -102,8 +103,11 @@ const DashboardMonitoringDPA = () => {
 
   // 🔵 Summary
   const summary = useMemo(() => {
-    const total = data.length
-    const uploaded = data.filter((i) => i.status === 'Sudah Upload').length
+    const allItems = data.flatMap((skpd) => skpd.items)
+
+    const total = allItems.length
+    const uploaded = allItems.filter((i) => i.status === 'Sudah Upload').length
+
     const notUploaded = total - uploaded
     const percentage = total > 0 ? Math.round((uploaded / total) * 100) : 0
 
@@ -112,18 +116,29 @@ const DashboardMonitoringDPA = () => {
 
   // 🔵 Filtering table
   const filteredData = useMemo(() => {
-    return data.filter((item) => {
-      const matchSearch =
-        item.nama_skpd.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.kd_opd.includes(searchTerm)
+    return data
+      .map((skpd) => {
+        const matchSearch =
+          skpd.nama_skpd.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          skpd.kd_opd.includes(searchTerm)
 
-      const matchStatus =
-        statusFilter === 'all' ||
-        (statusFilter === 'sudah' && item.status === 'Sudah Upload') ||
-        (statusFilter === 'belum' && item.status === 'Belum Upload')
+        if (!matchSearch) return null
 
-      return matchSearch && matchStatus
-    })
+        const filteredItems = skpd.items.filter((item) => {
+          if (statusFilter === 'all') return true
+          if (statusFilter === 'sudah') return item.status === 'Sudah Upload'
+          if (statusFilter === 'belum') return item.status === 'Belum Upload'
+          return true
+        })
+
+        if (filteredItems.length === 0) return null
+
+        return {
+          ...skpd,
+          items: filteredItems,
+        }
+      })
+      .filter(Boolean)
   }, [data, searchTerm, statusFilter])
 
   // 🔵 Chart data
@@ -133,20 +148,22 @@ const DashboardMonitoringDPA = () => {
       { name: string; uploaded: number; notUploaded: number }
     > = {}
 
-    data.forEach((item) => {
-      if (!groups[item.nama_dpa]) {
-        groups[item.nama_dpa] = {
-          name: item.nama_dpa,
-          uploaded: 0,
-          notUploaded: 0,
+    data.forEach((skpd) => {
+      skpd.items.forEach((item) => {
+        if (!groups[item.nama_dpa]) {
+          groups[item.nama_dpa] = {
+            name: item.nama_dpa,
+            uploaded: 0,
+            notUploaded: 0,
+          }
         }
-      }
 
-      if (item.status === 'Sudah Upload') {
-        groups[item.nama_dpa].uploaded++
-      } else {
-        groups[item.nama_dpa].notUploaded++
-      }
+        if (item.status === 'Sudah Upload') {
+          groups[item.nama_dpa].uploaded++
+        } else {
+          groups[item.nama_dpa].notUploaded++
+        }
+      })
     })
 
     return Object.values(groups)
@@ -476,7 +493,7 @@ const DashboardMonitoringDPA = () => {
                       </thead>
 
                       <tbody className='divide-y'>
-                        {filteredData.length === 0 ? (
+                        {data.length === 0 ? (
                           <tr>
                             <td
                               colSpan={9}
@@ -487,40 +504,45 @@ const DashboardMonitoringDPA = () => {
                             </td>
                           </tr>
                         ) : (
-                          <AnimatePresence initial={false}>
-                            {filteredData.map((item, index) => (
+                          data.map((skpd, skpdIndex) =>
+                            skpd.items.map((item, itemIndex) => (
                               <tr
-                                key={item.id ?? index}
-                                // variants={rowVariants}
-                                // initial='hidden'
-                                // animate='show'
-                                // exit='hidden'
-                                // layout
+                                key={`${skpd.kd_opd}-${itemIndex}`}
                                 className={`hover:bg-slate-50 dark:hover:bg-slate-800 ${
                                   item.status === 'Belum Upload'
                                     ? 'bg-red-50 dark:bg-red-900/30'
                                     : ''
                                 }`}
                               >
+                                {/* NO (HANYA BARIS PERTAMA SKPD) */}
                                 <td className='px-4 py-3 text-sm'>
-                                  {index + 1}
+                                  {itemIndex === 0 ? skpdIndex + 1 : ''}
                                 </td>
+
+                                {/* KODE OPD (HANYA BARIS PERTAMA SKPD) */}
                                 <td className='px-4 py-3'>
-                                  <code className='rounded bg-slate-100 px-2 py-1 text-xs text-slate-800 dark:bg-slate-700 dark:text-slate-100'>
-                                    {item.kd_opd}
-                                  </code>
+                                  {itemIndex === 0 ? (
+                                    <code className='rounded bg-slate-100 px-2 py-1 text-xs text-slate-800 dark:bg-slate-700 dark:text-slate-100'>
+                                      {skpd.kd_opd}
+                                    </code>
+                                  ) : (
+                                    ''
+                                  )}
                                 </td>
 
+                                {/* NAMA SKPD (HANYA BARIS PERTAMA SKPD) */}
                                 <td className='px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-50'>
-                                  {item.nama_skpd}
+                                  {itemIndex === 0 ? skpd.nama_skpd : ''}
                                 </td>
 
+                                {/* NAMA DPA */}
                                 <td className='px-4 py-3'>
                                   <Badge className='border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-900/30'>
                                     {item.nama_dpa}
                                   </Badge>
                                 </td>
 
+                                {/* STATUS UPLOAD */}
                                 <td className='px-4 py-3'>
                                   {item.status === 'Sudah Upload' ? (
                                     <Badge className='bg-green-100 text-green-700'>
@@ -535,6 +557,7 @@ const DashboardMonitoringDPA = () => {
                                   )}
                                 </td>
 
+                                {/* TANGGAL UPLOAD */}
                                 <td className='px-4 py-3 text-sm'>
                                   {item.tanggal_upload
                                     ? new Date(
@@ -543,6 +566,7 @@ const DashboardMonitoringDPA = () => {
                                     : '-'}
                                 </td>
 
+                                {/* STATUS PROSES */}
                                 <td className='px-4 py-3'>
                                   {item.status === 'Sudah Upload' ? (
                                     <Badge
@@ -557,23 +581,22 @@ const DashboardMonitoringDPA = () => {
                                             : item.proses_status ===
                                                 'Berkas ditolak'
                                               ? 'border-red-200 bg-red-50 text-red-700'
-                                              : item.proses_status ===
-                                                  'Berkas terkirim'
-                                                ? 'border-slate-200 bg-slate-50 text-slate-700'
-                                                : 'border-slate-200 bg-slate-50 text-slate-500'
+                                              : 'border-slate-200 bg-slate-50 text-slate-700'
                                       }
                                     >
-                                      {item.proses_status ?? '-'}
+                                      {item.proses_status}
                                     </Badge>
                                   ) : (
                                     <span className='text-slate-400'>-</span>
                                   )}
                                 </td>
 
+                                {/* OPERATOR */}
                                 <td className='px-4 py-3 text-sm text-slate-900 dark:text-slate-50'>
                                   {item.operator ?? '-'}
                                 </td>
 
+                                {/* AKSI */}
                                 <td className='px-4 py-3'>
                                   {item.status === 'Sudah Upload' ? (
                                     <Button
@@ -588,8 +611,8 @@ const DashboardMonitoringDPA = () => {
                                   )}
                                 </td>
                               </tr>
-                            ))}
-                          </AnimatePresence>
+                            ))
+                          )
                         )}
                       </tbody>
                     </table>

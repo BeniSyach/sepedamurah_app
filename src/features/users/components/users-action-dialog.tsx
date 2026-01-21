@@ -43,6 +43,17 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
 
+const status = [
+  {
+    value: '1',
+    label: 'Aktif',
+  },
+  {
+    value: '0',
+    label: 'Tidak Aktif',
+  },
+]
+
 const formSchema = z
   .object({
     id: z.string().optional(),
@@ -55,6 +66,7 @@ const formSchema = z
     kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
     kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
     kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
+    is_active: z.string().min(1, 'Status Users Harus Ada.'),
     email: z.email({
       error: (iss) =>
         iss.input === '' ? 'Email Tidak Boleh Kosong.' : undefined,
@@ -176,6 +188,7 @@ export function UsersActionDialog({
       password: '',
       confirmPassword: '',
       role: currentRow?.rules?.map((r) => r.id.toString()) ?? [],
+      is_active: currentRow?.is_active,
       isEdit: isEdit ?? false,
     },
   })
@@ -397,6 +410,29 @@ export function UsersActionDialog({
                         </CommandList>
                       </Command>
                     </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='is_active'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Status Penerimaan
+                    </FormLabel>
+                    <SelectDropdown
+                      defaultValue={String(field.value ?? '')}
+                      onValueChange={(val) => field.onChange(val)}
+                      placeholder='Pilih Status Penerimaan SKPD'
+                      className='col-span-4'
+                      items={status.map(({ label, value }) => ({
+                        label,
+                        value,
+                      }))}
+                    />
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}

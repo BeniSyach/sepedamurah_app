@@ -107,21 +107,25 @@ export interface RawSp2dRow {
 }
 
 export interface MonitoringItem {
-  id: number | null
   kd_opd: string
-  kd_opd1: string
-  kd_opd2: string
-  kd_opd3: string
-  kd_opd4: string
-  kd_opd5: string
   nama_skpd: string
-  dpa_id: number | string
-  nama_dpa: string
-  status: 'Sudah Upload' | 'Belum Upload'
-  tanggal_upload: string | null // ISO date from backend
-  proses_status: string
-  operator: string | null
-  user_id: number | string | null
+  items: [
+    {
+      id: number | null
+      kd_opd1: string
+      kd_opd2: string
+      kd_opd3: string
+      kd_opd4: string
+      kd_opd5: string
+      dpa_id: number | string
+      nama_dpa: string
+      status: 'Sudah Upload' | 'Belum Upload'
+      tanggal_upload: string | null // ISO date from backend
+      proses_status: string
+      operator: string | null
+      user_id: number | string | null
+    },
+  ]
 }
 
 export interface MonitoringSummary {
