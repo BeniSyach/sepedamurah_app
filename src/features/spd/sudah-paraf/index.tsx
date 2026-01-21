@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
 import { useGetSPDTerkirim } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
@@ -17,6 +18,7 @@ export function SudahParafSPD() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
+  const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
 
   // 🔥 Ambil data langsung dari Laravel API
   const { data, isLoading, isError } = useGetSPDTerkirim({
@@ -25,6 +27,7 @@ export function SudahParafSPD() {
     search: search.search,
     menu: 'spd_sudah_paraf',
     user_id: user?.id,
+    tahun: tahunFilter,
   })
 
   return (
