@@ -8,7 +8,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 import { Rnd } from 'react-rnd'
-import { useAuthStore } from '@/stores/auth-store'
+// import { useAuthStore } from '@/stores/auth-store'
 import { createQRCodeWithLogo } from '@/lib/utils'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
@@ -34,7 +34,7 @@ export default function PdfEditorPdfLib({
   onSaveTrigger?: (fn: () => Promise<void>) => void
 }) {
   const ASSET_URL = import.meta.env.VITE_ASSET_URL
-  const user = useAuthStore((s) => s.user)
+  // const user = useAuthStore((s) => s.user)
   const [pdfUrl] = useState(
     `${ASSET_URL}public-file/${currentRow?.sp2dkirim[0].nama_file_asli}`
   )
@@ -82,7 +82,8 @@ export default function PdfEditorPdfLib({
 
   // Tambah logo/image
   const addVisual = () => {
-    const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
+    // const imgUrl = `${ASSET_URL}public-file/visualisasi_tte/${user?.visualisasi_tte}`
+    const imgUrl = `/images/ttd.jpg`
 
     const defaultWidth = 90
     const defaultHeight = 90
