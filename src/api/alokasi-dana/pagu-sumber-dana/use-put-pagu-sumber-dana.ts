@@ -27,7 +27,7 @@ export function usePutPaguSumberDana() {
       payload: UpdatePaguSumberDanaPayload
     ): Promise<PaguSumberDana> => {
       const { data } = await api.put<PaguSumberDana>(
-        `/alokasi-dana/pagu-sumber-dana/${payload.kd_ref1}/${payload.kd_ref2}/${payload.kd_ref3}/${payload.kd_ref4}/${payload.kd_ref5}/${payload.kd_ref6}`,
+        `/alokasi-dana/pagu-sumber-dana/${payload.kd_ref1}/${payload.kd_ref2}/${payload.kd_ref3}/${payload.kd_ref4}/${payload.kd_ref5}/${payload.kd_ref6}/${payload.tahun}`,
         payload
       )
       return data
