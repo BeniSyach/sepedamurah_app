@@ -1,4 +1,4 @@
-import type { User as typeUser } from '@/api'
+import type { MasterSkpd, User as typeUser } from '@/api'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar } from '@/components/ui/avatar'
@@ -23,6 +23,9 @@ type NavUserProps = {
 }
 
 export function NavUser({ userData }: NavUserProps) {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const ASSET_URL = import.meta.env.VITE_ASSET_URL
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
@@ -51,9 +54,7 @@ export function NavUser({ userData }: NavUserProps) {
                   <span className='truncate font-semibold'>
                     {userData.name}
                   </span>
-                  <span className='truncate text-xs'>
-                    {userData?.skpd?.nm_opd}
-                  </span>
+                  <span className='truncate text-xs'>{skpd?.nm_opd}</span>
                 </div>
                 <ChevronsUpDown className='ms-auto size-4' />
               </SidebarMenuButton>
@@ -80,9 +81,7 @@ export function NavUser({ userData }: NavUserProps) {
                     <span className='truncate font-semibold'>
                       {userData.name}
                     </span>
-                    <span className='truncate text-xs'>
-                      {userData?.skpd?.nm_opd}
-                    </span>
+                    <span className='truncate text-xs'>{skpd?.nm_opd}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>

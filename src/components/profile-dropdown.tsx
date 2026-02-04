@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { type MasterSkpd } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar } from '@/components/ui/avatar'
@@ -18,6 +19,9 @@ import { SignOutDialog } from '@/components/sign-out-dialog'
 export function ProfileDropdown() {
   const ASSET_URL = import.meta.env.VITE_ASSET_URL
   const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const [open, setOpen] = useDialogState()
 
   return (
@@ -42,7 +46,7 @@ export function ProfileDropdown() {
             <div className='flex flex-col gap-1.5'>
               <p className='text-sm leading-none font-medium'>{user?.name}</p>
               <p className='text-muted-foreground text-xs leading-none'>
-                {user?.skpd.nm_opd}
+                {skpd.nm_opd}
               </p>
             </div>
           </DropdownMenuLabel>
