@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  type MasterSkpd,
   usePostLaporanFungsional,
   usePutLaporanFungsional,
   type LaporanFungsional,
@@ -94,6 +95,9 @@ export function UsersActionDialog({
 }: LaporanFungsionalActionDialogProps) {
   const isEdit = !!currentRow
   const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   // Buat array tahun: 3 tahun ke belakang sampai 3 tahun ke depan
   const years = useMemo(() => {
     const arr = []
@@ -129,11 +133,11 @@ export function UsersActionDialog({
             id_pengirim:
               currentRow.id_pengirim?.toString() ?? user?.id.toString(),
             nama_pengirim: currentRow.nama_pengirim ?? user?.name,
-            kd_opd1: currentRow.kd_opd1 ?? user?.kd_opd1,
-            kd_opd2: currentRow.kd_opd2 ?? user?.kd_opd2,
-            kd_opd3: currentRow.kd_opd3 ?? user?.kd_opd3,
-            kd_opd4: currentRow.kd_opd4 ?? user?.kd_opd4,
-            kd_opd5: currentRow.kd_opd5 ?? user?.kd_opd5,
+            kd_opd1: currentRow.kd_opd1 ?? skpd?.kd_opd1,
+            kd_opd2: currentRow.kd_opd2 ?? skpd?.kd_opd2,
+            kd_opd3: currentRow.kd_opd3 ?? skpd?.kd_opd3,
+            kd_opd4: currentRow.kd_opd4 ?? skpd?.kd_opd4,
+            kd_opd5: currentRow.kd_opd5 ?? skpd?.kd_opd5,
             jenis_berkas: currentRow.jenis_berkas ?? 'Penerimaan',
             tahun: currentRow.tanggal_upload
               ? new Date(currentRow.tanggal_upload).getFullYear().toString()
@@ -150,11 +154,11 @@ export function UsersActionDialog({
             nama_file_asli: undefined,
             id_pengirim: user?.id.toString(),
             nama_pengirim: user?.name,
-            kd_opd1: user?.kd_opd1,
-            kd_opd2: user?.kd_opd2,
-            kd_opd3: user?.kd_opd3,
-            kd_opd4: user?.kd_opd4,
-            kd_opd5: user?.kd_opd5,
+            kd_opd1: skpd?.kd_opd1,
+            kd_opd2: skpd?.kd_opd2,
+            kd_opd3: skpd?.kd_opd3,
+            kd_opd4: skpd?.kd_opd4,
+            kd_opd5: skpd?.kd_opd5,
             jenis_berkas: 'Penerimaan',
             tahun: currentYear.toString(),
             bulan: currentMonth,

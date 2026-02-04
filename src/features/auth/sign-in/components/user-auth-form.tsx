@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { useLogin, type User } from '@/api'
+import { type MasterSkpd, useLogin, type User } from '@/api'
 import { Loader2, LogIn } from 'lucide-react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { toast } from 'sonner'
@@ -49,6 +49,8 @@ export function UserAuthForm({
   const [captchaValue, setCaptchaValue] = useState<string | null>(null)
   const [userData, setUserData] = useState<User | null>(null)
   const [openRoleDialog, setOpenRoleDialog] = useState(false)
+  const [openSkpdDialog, setOpenSkpdDialog] = useState(false)
+  const [selectedSkpd, setSelectedSkpd] = useState<MasterSkpd | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
   const navigate = useNavigate()
 
@@ -82,11 +84,22 @@ export function UserAuthForm({
         setUserData(res.user)
 
         // Jika user punya banyak rules, tampilkan modal
-        if (res.user.rules.length > 1) {
+        const skpdList = res.user.skpds ?? []
+        const roleList = res.user.rules ?? []
+
+        // 1️⃣ Banyak SKPD → pilih SKPD dulu
+        if (skpdList.length > 1) {
+          setOpenSkpdDialog(true)
+        }
+        // 2️⃣ Satu SKPD tapi banyak role
+        else if (roleList.length > 1) {
+          setSelectedSkpd(skpdList[0])
           setOpenRoleDialog(true)
-        } else {
-          // Jika hanya 1 role, langsung masuk
-          localStorage.setItem('user_role', res.user.rules[0].rule)
+        }
+        // 3️⃣ Satu SKPD & satu role
+        else {
+          localStorage.setItem('user_skpd', JSON.stringify(skpdList[0]))
+          localStorage.setItem('user_role', roleList[0].rule)
           navigate({ to: '/dashboard', replace: true })
         }
 
@@ -103,9 +116,27 @@ export function UserAuthForm({
     })
   }
 
+  function handleSelectSkpd(skpd: MasterSkpd) {
+    setSelectedSkpd(skpd)
+    setOpenSkpdDialog(false)
+
+    const roleList = userData?.rules ?? []
+
+    // Kalau role > 1 → pilih role
+    if (roleList.length > 1) {
+      setOpenRoleDialog(true)
+    } else {
+      localStorage.setItem('user_skpd', JSON.stringify(skpd))
+      localStorage.setItem('user_role', roleList[0].rule)
+      navigate({ to: '/dashboard', replace: true })
+    }
+  }
+
   function handleSelectRole(role: string) {
-    if (userData) {
+    if (selectedSkpd) {
+      localStorage.setItem('user_skpd', JSON.stringify(selectedSkpd))
       localStorage.setItem('user_role', role)
+
       toast.success(`Login sebagai ${role}`)
       setOpenRoleDialog(false)
       navigate({ to: '/dashboard', replace: true })
@@ -170,6 +201,28 @@ export function UserAuthForm({
           </Button>
         </form>
       </Form>
+
+      <Dialog open={openSkpdDialog} onOpenChange={setOpenSkpdDialog}>
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Pilih SKPD</DialogTitle>
+          </DialogHeader>
+
+          <div className='space-y-3'>
+            {userData?.skpds.map((s) => (
+              <Button
+                key={s.nm_opd}
+                variant='outline'
+                className='w-full justify-start'
+                onClick={() => handleSelectSkpd(s)}
+              >
+                {s.nm_opd}
+              </Button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* 💬 Modal Pilih Role */}
       <Dialog open={openRoleDialog} onOpenChange={setOpenRoleDialog}>
         <DialogContent className='max-w-md'>

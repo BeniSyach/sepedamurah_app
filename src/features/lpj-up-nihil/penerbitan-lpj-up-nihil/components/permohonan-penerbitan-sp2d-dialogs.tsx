@@ -4,6 +4,7 @@ import {
   type CekLaporanDPAItem,
   type CekLaporanPajakBendaharaItem,
   type CekLaporanSp2bToBUDItem,
+  type MasterSkpd,
   useCekLaporanAssetBendahara,
   useCekLaporanDPA,
   useCekLaporanPajakBendahara,
@@ -14,7 +15,6 @@ import {
 } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
-import { useAuthStore } from '@/stores/auth-store'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,59 +47,61 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
   const levelAkses = localStorage.getItem('user_role')
-  const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   // console.log('data user', user?.skpd.status_penerimaan)
   const [showClosedDialog, setShowClosedDialog] = useState(false)
   const [closedReason, setClosedReason] = useState('')
   const { data: dataBatasWaktu } = useGetBatasWaktu({
-    kd_opd1: user?.kd_opd1,
-    kd_opd2: user?.kd_opd2,
-    kd_opd3: user?.kd_opd3,
-    kd_opd4: user?.kd_opd4,
-    kd_opd5: user?.kd_opd5,
+    kd_opd1: skpd?.kd_opd1,
+    kd_opd2: skpd?.kd_opd2,
+    kd_opd3: skpd?.kd_opd3,
+    kd_opd4: skpd?.kd_opd4,
+    kd_opd5: skpd?.kd_opd5,
     search: hariIni,
   })
   const { data: cekUpload } = useCekUploadFungsional({
     tahun: currentYear,
     bulan: currentMonth,
-    kd_opd1: user?.kd_opd1 ?? '',
-    kd_opd2: user?.kd_opd2 ?? '',
-    kd_opd3: user?.kd_opd3 ?? '',
-    kd_opd4: user?.kd_opd4 ?? '',
-    kd_opd5: user?.kd_opd5 ?? '',
-    status: user?.skpd.status_penerimaan ?? '0', // 0 atau 1
+    kd_opd1: skpd?.kd_opd1 ?? '',
+    kd_opd2: skpd?.kd_opd2 ?? '',
+    kd_opd3: skpd?.kd_opd3 ?? '',
+    kd_opd4: skpd?.kd_opd4 ?? '',
+    kd_opd5: skpd?.kd_opd5 ?? '',
+    status: skpd?.status_penerimaan ?? '0', // 0 atau 1
   })
   const { data: useDPA } = useCekLaporanDPA({
     tahun: currentYear,
-    kd_opd1: user?.kd_opd1 ?? '',
-    kd_opd2: user?.kd_opd2 ?? '',
-    kd_opd3: user?.kd_opd3 ?? '',
-    kd_opd4: user?.kd_opd4 ?? '',
-    kd_opd5: user?.kd_opd5 ?? '',
+    kd_opd1: skpd?.kd_opd1 ?? '',
+    kd_opd2: skpd?.kd_opd2 ?? '',
+    kd_opd3: skpd?.kd_opd3 ?? '',
+    kd_opd4: skpd?.kd_opd4 ?? '',
+    kd_opd5: skpd?.kd_opd5 ?? '',
   })
   const { data: usePajakBendahara } = useCekLaporanPajakBendahara({
     tahun: currentYear,
-    kd_opd1: user?.kd_opd1 ?? '',
-    kd_opd2: user?.kd_opd2 ?? '',
-    kd_opd3: user?.kd_opd3 ?? '',
-    kd_opd4: user?.kd_opd4 ?? '',
-    kd_opd5: user?.kd_opd5 ?? '',
+    kd_opd1: skpd?.kd_opd1 ?? '',
+    kd_opd2: skpd?.kd_opd2 ?? '',
+    kd_opd3: skpd?.kd_opd3 ?? '',
+    kd_opd4: skpd?.kd_opd4 ?? '',
+    kd_opd5: skpd?.kd_opd5 ?? '',
   })
   const { data: useAssetBendahara } = useCekLaporanAssetBendahara({
     tahun: currentYear,
-    kd_opd1: user?.kd_opd1 ?? '',
-    kd_opd2: user?.kd_opd2 ?? '',
-    kd_opd3: user?.kd_opd3 ?? '',
-    kd_opd4: user?.kd_opd4 ?? '',
-    kd_opd5: user?.kd_opd5 ?? '',
+    kd_opd1: skpd?.kd_opd1 ?? '',
+    kd_opd2: skpd?.kd_opd2 ?? '',
+    kd_opd3: skpd?.kd_opd3 ?? '',
+    kd_opd4: skpd?.kd_opd4 ?? '',
+    kd_opd5: skpd?.kd_opd5 ?? '',
   })
   const { data: useSp2bToBUD } = useCekLaporanSp2bToBUD({
     tahun: currentYear,
-    kd_opd1: user?.kd_opd1 ?? '',
-    kd_opd2: user?.kd_opd2 ?? '',
-    kd_opd3: user?.kd_opd3 ?? '',
-    kd_opd4: user?.kd_opd4 ?? '',
-    kd_opd5: user?.kd_opd5 ?? '',
+    kd_opd1: skpd?.kd_opd1 ?? '',
+    kd_opd2: skpd?.kd_opd2 ?? '',
+    kd_opd3: skpd?.kd_opd3 ?? '',
+    kd_opd4: skpd?.kd_opd4 ?? '',
+    kd_opd5: skpd?.kd_opd5 ?? '',
   })
 
   // Fungsi download file
@@ -253,7 +255,7 @@ export function UsersDialogs() {
 
     // Penerimaan (hanya jika status penerimaan = 1)
     if (
-      user?.skpd.status_penerimaan == '1' &&
+      skpd.status_penerimaan == '1' &&
       cekUpload.missing_penerimaan.length > 0
     ) {
       const listBulan = cekUpload.missing_penerimaan

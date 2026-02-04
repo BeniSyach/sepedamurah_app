@@ -8,7 +8,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { type MasterSkpd, useGetRefSKPD, type laporanBelanjaData } from '@/api'
-import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -66,8 +65,10 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
   // List tahun 3 tahun sebelum & 3 tahun sesudah
   const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
   const bulanFilter = Number(search.bulan ?? currentMonth)
-  const user = useAuthStore((s) => s.user)
   const userRole = localStorage.getItem('user_role') ?? ''
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const isBendahara = userRole === 'Bendahara'
 
   const { data: dataSKPD } = useGetRefSKPD({
@@ -106,11 +107,11 @@ export function PengembalianTable({ data, search, navigate }: DataTableProps) {
   }
   const skpdValue = isBendahara
     ? [
-        user?.kd_opd1,
-        user?.kd_opd2,
-        user?.kd_opd3,
-        user?.kd_opd4,
-        user?.kd_opd5,
+        skpd?.kd_opd1,
+        skpd?.kd_opd2,
+        skpd?.kd_opd3,
+        skpd?.kd_opd4,
+        skpd?.kd_opd5,
       ]
         .filter(Boolean)
         .join('.')

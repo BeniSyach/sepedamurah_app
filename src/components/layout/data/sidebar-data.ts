@@ -727,7 +727,6 @@ export const sidebarData: SidebarData = {
         },
       ],
     },
-
     {
       id: 'berkas-lain',
       title: 'Berkas TTE Lain-lain',

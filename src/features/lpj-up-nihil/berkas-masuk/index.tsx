@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { startOfMonth, endOfMonth, format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
-import { useGetPermohonanSP2D } from '@/api'
+import { type MasterSkpd, useGetPermohonanSP2D } from '@/api'
 import { useAuthStore } from '@/stores/auth-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -32,6 +32,9 @@ export function BerkasMasukLPJUPNihil() {
 
   // 🔥 Ambil data langsung dari Laravel API
   const userRole = localStorage.getItem('user_role') ?? ''
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
 
   // cek apakah role tidak punya default tanggal
   const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
@@ -58,11 +61,11 @@ export function BerkasMasukLPJUPNihil() {
     ...(userRole === 'Bendahara'
       ? {
           user_id: user?.id,
-          kd_opd1: user?.kd_opd1,
-          kd_opd2: user?.kd_opd2,
-          kd_opd3: user?.kd_opd3,
-          kd_opd4: user?.kd_opd4,
-          kd_opd5: user?.kd_opd5,
+          kd_opd1: skpd?.kd_opd1,
+          kd_opd2: skpd?.kd_opd2,
+          kd_opd3: skpd?.kd_opd3,
+          kd_opd4: skpd?.kd_opd4,
+          kd_opd5: skpd?.kd_opd5,
         }
       : {}),
   }

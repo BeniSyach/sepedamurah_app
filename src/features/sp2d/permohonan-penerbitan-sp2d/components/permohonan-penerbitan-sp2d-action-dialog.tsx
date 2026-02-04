@@ -13,6 +13,7 @@ import {
   usePutPermohonanSp2d,
   type Sp2dItem,
   useGetRefJenisSPM,
+  type MasterSkpd,
 } from '@/api'
 import { CheckIcon, Plus } from 'lucide-react'
 import { toast } from 'sonner'
@@ -60,6 +61,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { mapRekeningToFormData } from '../data/mapRekeningToFormData'
 import { UrusanSection } from './urusan-section'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -251,6 +254,9 @@ export function PermohonanPenerbitanSP2DActionDialog({
 }) {
   const isEdit = !!currentRow
   const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const queryClient = useQueryClient()
   const [openConfirm, setOpenConfirm] = useState(false)
   const [hasConfirmedBerkas, setHasConfirmedBerkas] = useState(false)
@@ -331,11 +337,11 @@ export function PermohonanPenerbitanSP2DActionDialog({
           no_spm: '',
           jenis_berkas: '',
           id_berkas: [],
-          kd_opd1: user?.kd_opd1,
-          kd_opd2: user?.kd_opd2,
-          kd_opd3: user?.kd_opd3,
-          kd_opd4: user?.kd_opd4,
-          kd_opd5: user?.kd_opd5,
+          kd_opd1: skpd?.kd_opd1,
+          kd_opd2: skpd?.kd_opd2,
+          kd_opd3: skpd?.kd_opd3,
+          kd_opd4: skpd?.kd_opd4,
+          kd_opd5: skpd?.kd_opd5,
           nilai_belanja: '',
           nama_file: '',
           nama_file_asli: undefined,

@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { getRouteApi } from '@tanstack/react-router'
+import { type MasterSkpd } from '@/api'
 import { useGetLaporanRealisasiBelanjaPerSKPD } from '@/api/laporan/realisasi-belanja/use-realisasi-belanja-per-skpd'
-import { useAuthStore } from '@/stores/auth-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -16,7 +16,9 @@ import { PengembalianTable } from './components/laporan-realisasi-belanja-opd-ta
 const route = getRouteApi('/_authenticated/laporan/realisasi-belanja-opd')
 const currentMonth = new Date().getMonth() + 1
 export function RealisasiBelanjaSKPD() {
-  const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const tahunFilter = search.tahun ?? format(new Date(), 'yyyy')
@@ -27,11 +29,11 @@ export function RealisasiBelanjaSKPD() {
     bulan: bulanFilter,
     search: search.search,
 
-    kd_opd1: search.kd_opd1 ?? user?.kd_opd1,
-    kd_opd2: search.kd_opd2 ?? user?.kd_opd2,
-    kd_opd3: search.kd_opd3 ?? user?.kd_opd3,
-    kd_opd4: search.kd_opd4 ?? user?.kd_opd4,
-    kd_opd5: search.kd_opd5 ?? user?.kd_opd5,
+    kd_opd1: search.kd_opd1 ?? skpd?.kd_opd1,
+    kd_opd2: search.kd_opd2 ?? skpd?.kd_opd2,
+    kd_opd3: search.kd_opd3 ?? skpd?.kd_opd3,
+    kd_opd4: search.kd_opd4 ?? skpd?.kd_opd4,
+    kd_opd5: search.kd_opd5 ?? skpd?.kd_opd5,
   })
   return (
     <PengembalianProvider>

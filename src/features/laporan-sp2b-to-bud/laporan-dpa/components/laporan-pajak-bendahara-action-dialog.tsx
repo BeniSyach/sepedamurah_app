@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  type MasterSkpd,
   useGetRefSp2bToBUD,
   usePostLaporanSp2bToBUD,
   usePutLaporanSp2bToBUD,
@@ -96,7 +97,9 @@ export function LaporanSp2bToBUDActionDialog({
 }: Props) {
   const isEdit = !!currentRow
   const user = useAuthStore((s) => s.user)
-
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   /* Tahun */
   const years = useMemo(() => {
     return Array.from({ length: 7 }, (_, i) => {
@@ -133,11 +136,11 @@ export function LaporanSp2bToBUDActionDialog({
           ref_sp2b_ke_bud_id: '',
           file: undefined,
 
-          kd_opd1: user?.kd_opd1 ?? '',
-          kd_opd2: user?.kd_opd2 ?? '',
-          kd_opd3: user?.kd_opd3 ?? '',
-          kd_opd4: user?.kd_opd4 ?? '',
-          kd_opd5: user?.kd_opd5 ?? '',
+          kd_opd1: skpd?.kd_opd1 ?? '',
+          kd_opd2: skpd?.kd_opd2 ?? '',
+          kd_opd3: skpd?.kd_opd3 ?? '',
+          kd_opd4: skpd?.kd_opd4 ?? '',
+          kd_opd5: skpd?.kd_opd5 ?? '',
           user_id: user?.id.toString() ?? '',
         },
   })

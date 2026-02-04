@@ -42,6 +42,7 @@ export interface User {
   chat_id: string | null
   updated_at: string
   skpd: MasterSkpd
+  skpds: MasterSkpd[]
   rules: UserRule[] // 👈 daftar role yang dimiliki user
 }
 
