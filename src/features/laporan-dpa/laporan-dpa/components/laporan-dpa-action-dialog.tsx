@@ -55,7 +55,7 @@ import { SelectDropdown } from '@/components/select-dropdown'
 const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
-
+  bulan: z.string().min(1, 'bulan Harus Ada.'),
   dpa_id: z.string().min(1, 'DPA harus dipilih.'),
 
   file: z
@@ -86,6 +86,25 @@ type Props = {
   onOpenChange: (open: boolean) => void
 }
 
+// Nama-nama bulan
+const monthNames = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+]
+
+// Ambil bulan sekarang (0 = Januari, 11 = Desember)
+const currentMonthIndex = new Date().getMonth()
+const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0')
 const currentYear = new Date().getFullYear()
 
 export function LaporanDPAActionDialog({
@@ -107,6 +126,16 @@ export function LaporanDPAActionDialog({
     })
   }, [])
 
+  // Buat array items untuk SelectDropdown
+  const months = useMemo(
+    () =>
+      monthNames.map((name, index) => ({
+        label: name, // tampil di UI
+        value: (index + 1).toString().padStart(2, '0'), // value di form: '01', '02', ...
+      })),
+    []
+  )
+
   /* API */
   const { mutateAsync: postAsync } = usePostLaporanDPA()
   const { mutateAsync: putAsync } = usePutLaporanDPA()
@@ -119,6 +148,12 @@ export function LaporanDPAActionDialog({
       ? {
           id: currentRow.id.toString(),
           tahun: currentRow.tahun,
+          bulan: currentRow.created_at
+            ? String(new Date(currentRow.created_at).getMonth() + 1).padStart(
+                2,
+                '0'
+              )
+            : currentMonth,
           dpa_id: currentRow.dpa_id?.toString(),
           file: currentRow.file,
 
@@ -132,9 +167,9 @@ export function LaporanDPAActionDialog({
       : {
           id: '',
           tahun: currentYear.toString(),
+          bulan: currentMonth,
           dpa_id: '',
           file: undefined,
-
           kd_opd1: skpd?.kd_opd1 ?? '',
           kd_opd2: skpd?.kd_opd2 ?? '',
           kd_opd3: skpd?.kd_opd3 ?? '',
@@ -224,7 +259,32 @@ export function LaporanDPAActionDialog({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name='bulan'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-end'>
+                      Pilih Bulan
+                    </FormLabel>
 
+                    <SelectDropdown
+                      defaultValue={
+                        field.value ||
+                        (currentMonthIndex + 1).toString().padStart(2, '0')
+                      } // default bulan sekarang
+                      onValueChange={(value) => {
+                        field.onChange(value) // value tetap angka '01', '02', ...
+                      }}
+                      placeholder='Pilih Bulan'
+                      className='col-span-4 w-full'
+                      items={months} // label = nama, value = angka
+                    />
+
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
               {/* DPA */}
               <FormField
                 control={form.control}
