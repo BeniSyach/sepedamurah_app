@@ -85,25 +85,25 @@ type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
-// Nama-nama bulan
-const monthNames = [
-  'Januari',
-  'Februari',
-  'Maret',
-  'April',
-  'Mei',
-  'Juni',
-  'Juli',
-  'Agustus',
-  'September',
-  'Oktober',
-  'November',
-  'Desember',
-]
+// // Nama-nama bulan
+// const monthNames = [
+//   'Januari',
+//   'Februari',
+//   'Maret',
+//   'April',
+//   'Mei',
+//   'Juni',
+//   'Juli',
+//   'Agustus',
+//   'September',
+//   'Oktober',
+//   'November',
+//   'Desember',
+// ]
 
-// Ambil bulan sekarang (0 = Januari, 11 = Desember)
-const currentMonthIndex = new Date().getMonth()
-const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0')
+// // Ambil bulan sekarang (0 = Januari, 11 = Desember)
+// const currentMonthIndex = new Date().getMonth()
+// const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0')
 const currentYear = new Date().getFullYear()
 
 export function LaporanAssetBendaharaActionDialog({
@@ -126,14 +126,14 @@ export function LaporanAssetBendaharaActionDialog({
   }, [])
 
   // Buat array items untuk SelectDropdown
-  const months = useMemo(
-    () =>
-      monthNames.map((name, index) => ({
-        label: name, // tampil di UI
-        value: (index + 1).toString().padStart(2, '0'), // value di form: '01', '02', ...
-      })),
-    []
-  )
+  // const months = useMemo(
+  //   () =>
+  //     monthNames.map((name, index) => ({
+  //       label: name, // tampil di UI
+  //       value: (index + 1).toString().padStart(2, '0'), // value di form: '01', '02', ...
+  //     })),
+  //   []
+  // )
 
   /* API */
   const { mutateAsync: postAsync } = usePostLaporanAssetBendahara()
@@ -149,12 +149,12 @@ export function LaporanAssetBendaharaActionDialog({
           tahun: currentRow.tahun,
           ref_asset_id: currentRow.ref_asset_id?.toString(),
           file: currentRow.file,
-          bulan: currentRow.created_at
-            ? String(new Date(currentRow.created_at).getMonth() + 1).padStart(
-                2,
-                '0'
-              )
-            : currentMonth,
+          // bulan: currentRow.created_at
+          //   ? String(new Date(currentRow.created_at).getMonth() + 1).padStart(
+          //       2,
+          //       '0'
+          //     )
+          //   : currentMonth,
           kd_opd1: currentRow.kd_opd1,
           kd_opd2: currentRow.kd_opd2,
           kd_opd3: currentRow.kd_opd3,
@@ -167,7 +167,7 @@ export function LaporanAssetBendaharaActionDialog({
           tahun: currentYear.toString(),
           ref_asset_id: '',
           file: undefined,
-          bulan: currentMonth,
+          // bulan: currentMonth,
           kd_opd1: skpd?.kd_opd1 ?? '',
           kd_opd2: skpd?.kd_opd2 ?? '',
           kd_opd3: skpd?.kd_opd3 ?? '',
@@ -259,7 +259,7 @@ export function LaporanAssetBendaharaActionDialog({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='bulan'
                 render={({ field }) => (
@@ -284,7 +284,7 @@ export function LaporanAssetBendaharaActionDialog({
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
-              />
+              /> */}
               {/* DPA */}
               <FormField
                 control={form.control}
