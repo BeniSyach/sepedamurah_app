@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type LaporanDPA } from '@/api'
 import { Download, LucideFolderSearch, Trash2, Pen, Eye } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const user = useAuthStore((s) => s.user)
   const { setOpen, setCurrentRow } = useRefLaporanDPA()
   const levelAkses = localStorage.getItem('user_role')
   const proses = row.original?.proses
@@ -48,7 +50,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          {proses !== '1' && (
+          {proses !== '1' && user?.is_active === '1' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
@@ -64,19 +66,23 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='text-red-500!'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('delete')
+                }}
+                className='text-red-500!'
+              >
+                Delete
+                <DropdownMenuShortcut>
+                  <Trash2 size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

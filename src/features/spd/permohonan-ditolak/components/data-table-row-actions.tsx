@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type PermohonanSpd } from '@/api'
 import { Eye, FileSearch, Trash2, UserPen } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const user = useAuthStore((s) => s.user)
   const { setOpen, setCurrentRow } = useRefPermohonanSpd()
   return (
     <>
@@ -32,43 +34,47 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa
-            <DropdownMenuShortcut>
-              <FileSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <UserPen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='text-red-500!'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa
+                <DropdownMenuShortcut>
+                  <FileSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit')
+                }}
+              >
+                Edit
+                <DropdownMenuShortcut>
+                  <UserPen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('delete')
+                }}
+                className='text-red-500!'
+              >
+                Delete
+                <DropdownMenuShortcut>
+                  <Trash2 size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

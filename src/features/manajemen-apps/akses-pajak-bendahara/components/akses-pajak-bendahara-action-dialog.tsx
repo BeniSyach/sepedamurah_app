@@ -11,8 +11,9 @@ import {
   type AksesPajakBendaharaGroup,
   useGetRefPajakBendahara,
 } from '@/api'
-import { CheckIcon } from 'lucide-react'
+import { Check, CheckIcon, ChevronDown } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -38,16 +39,17 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { SelectDropdown } from '@/components/select-dropdown'
 
 const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun wajib dipilih'),
-  kd_opd1: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd2: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd3: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd4: z.string().min(1, 'Kode SKPD Harus Ada.'),
-  kd_opd5: z.string().min(1, 'Kode SKPD Harus Ada.'),
+  kd_opd: z.array(z.string()).min(1, 'Pilih minimal 1 SKPD'),
   pajakIds: z.array(z.string()).min(1, 'Pilih minimal 1 Pajak Bendahara'),
 })
 
@@ -75,11 +77,7 @@ export function AksesDPASKPDActionDialog({
   const { mutateAsync: post } = usePostAksesPajakBendahara()
   const { mutateAsync: put } = usePutAksesPajakBendahara()
 
-  const {
-    data: dataSKPD,
-    isLoading: isLoadingSKPD,
-    isError: isErrorSKPD,
-  } = useGetRefSKPD({
+  const { data: dataSKPD, isError: isErrorSKPD } = useGetRefSKPD({
     page: 1,
     perPage: 100, // ambil banyak biar bisa isi select
     hidden: '0',
@@ -115,31 +113,34 @@ export function AksesDPASKPDActionDialog({
     defaultValues: currentRow
       ? {
           tahun: currentRow.tahun ?? String(currentYear),
-          kd_opd1: currentRow.kd_opd1,
-          kd_opd2: currentRow.kd_opd2,
-          kd_opd3: currentRow.kd_opd3,
-          kd_opd4: currentRow.kd_opd4,
-          kd_opd5: currentRow.kd_opd5,
+          kd_opd: [
+            [
+              currentRow.kd_opd1,
+              currentRow.kd_opd2,
+              currentRow.kd_opd3,
+              currentRow.kd_opd4,
+              currentRow.kd_opd5,
+            ]
+              .filter(Boolean)
+              .join('-'),
+          ],
           pajakIds: currentRow?.pajak?.map((d) => String(d.id)) ?? [],
         }
       : {
           tahun: String(currentYear),
-          kd_opd1: '',
-          kd_opd2: '',
-          kd_opd3: '',
-          kd_opd4: '',
-          kd_opd5: '',
+          kd_opd: [],
           pajakIds: [],
         },
   })
 
   const onSubmit = async (data: AksesDPASKPDForm) => {
+    const opdParsed = data.kd_opd.map((v) => {
+      const [kd_opd1, kd_opd2, kd_opd3, kd_opd4, kd_opd5] = v.split('-')
+      return { kd_opd1, kd_opd2, kd_opd3, kd_opd4, kd_opd5 }
+    })
+
     const payload = {
-      kd_opd1: data.kd_opd1,
-      kd_opd2: data.kd_opd2,
-      kd_opd3: data.kd_opd3,
-      kd_opd4: data.kd_opd4,
-      kd_opd5: data.kd_opd5,
+      opd: opdParsed,
       pajakIds: data.pajakIds,
       tahun: data.tahun,
     }
@@ -195,41 +196,65 @@ export function AksesDPASKPDActionDialog({
             >
               <FormField
                 control={form.control}
-                name='kd_opd1'
+                name='kd_opd'
                 render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormItem className='grid grid-cols-6 items-center gap-x-4'>
                     <FormLabel className='col-span-2 text-end'>
                       Pilih SKPD
                     </FormLabel>
 
-                    <SelectDropdown
-                      // 💡 Gunakan gabungan kode SKPD sebagai default value
-                      defaultValue={
-                        [
-                          form.getValues('kd_opd1'),
-                          form.getValues('kd_opd2'),
-                          form.getValues('kd_opd3'),
-                          form.getValues('kd_opd4'),
-                          form.getValues('kd_opd5'),
-                        ]
-                          .filter(Boolean)
-                          .join('-') || undefined
-                      }
-                      onValueChange={(value) => {
-                        const parts = value.split('-')
-                        form.setValue('kd_opd1', parts[0] ?? '')
-                        form.setValue('kd_opd2', parts[1] ?? '')
-                        form.setValue('kd_opd3', parts[2] ?? '')
-                        form.setValue('kd_opd4', parts[3] ?? '')
-                        form.setValue('kd_opd5', parts[4] ?? '')
-                        field.onChange(parts[0])
-                      }}
-                      placeholder='Pilih SKPD'
-                      className='col-span-4 w-full'
-                      isPending={isLoadingSKPD}
-                      items={safeItemsSKPD}
-                      disabled={isErrorSKPD}
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant='outline'
+                          role='combobox'
+                          className='col-span-4 justify-between'
+                        >
+                          {field.value?.length
+                            ? `${field.value.length} SKPD dipilih`
+                            : 'Pilih SKPD'}
+                          <ChevronDown className='ml-2 h-4 w-4 opacity-50' />
+                        </Button>
+                      </PopoverTrigger>
+
+                      <PopoverContent className='col-span-4 p-0'>
+                        <Command>
+                          <CommandGroup>
+                            {safeItemsSKPD.map((item) => {
+                              const selected = field.value?.includes(item.value)
+
+                              return (
+                                <CommandItem
+                                  key={item.value}
+                                  onSelect={() => {
+                                    if (selected) {
+                                      field.onChange(
+                                        field.value.filter(
+                                          (v: string) => v !== item.value
+                                        )
+                                      )
+                                    } else {
+                                      field.onChange([
+                                        ...(field.value ?? []),
+                                        item.value,
+                                      ])
+                                    }
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      selected ? 'opacity-100' : 'opacity-0'
+                                    )}
+                                  />
+                                  {item.label}
+                                </CommandItem>
+                              )
+                            })}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
 
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>

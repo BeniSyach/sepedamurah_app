@@ -3,11 +3,13 @@ import { api } from '../../common/client'
 import type { AksesSp2bToBUDResponse } from './types'
 
 interface CreateAksesSp2bToBUDPayload {
-  kd_opd1: string
-  kd_opd2: string
-  kd_opd3: string
-  kd_opd4: string
-  kd_opd5: string
+  opd: {
+    kd_opd1: string
+    kd_opd2: string
+    kd_opd3: string
+    kd_opd4: string
+    kd_opd5: string
+  }[]
   sp2bIds: string[]
   tahun: string
 }

@@ -3,13 +3,15 @@ import { api } from '../../common/client'
 import type { AksesDPAResponse } from './types'
 
 interface CreateAksesDPASKPDPayload {
-  kd_opd1: string
-  kd_opd2: string
-  kd_opd3: string
-  kd_opd4: string
-  kd_opd5: string
-  dpaIds: string[]
   tahun: string
+  dpaIds: string[]
+  opd: {
+    kd_opd1: string
+    kd_opd2: string
+    kd_opd3: string
+    kd_opd4: string
+    kd_opd5: string
+  }[]
 }
 
 /**

@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type PermohonanSpd } from '@/api'
 import { Download, Eye, FileSearch, Send, Trash } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const user = useAuthStore((s) => s.user)
   const { setOpen, setCurrentRow } = useRefPermohonanSpd()
   const sudahDiTte = row.original.tte !== null && row.original.tte !== ''
 
@@ -51,18 +53,22 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('periksa')
-            }}
-          >
-            Periksa
-            <DropdownMenuShortcut>
-              <FileSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa
+                <DropdownMenuShortcut>
+                  <FileSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           {levelAkses !== 'Bendahara' && (
             <>
               <DropdownMenuItem

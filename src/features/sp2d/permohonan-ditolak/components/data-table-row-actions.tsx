@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type Sp2dItem } from '@/api'
 import { Download, Eye, Trash2, UserPen } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const user = useAuthStore((s) => s.user)
   const { setOpen, setCurrentRow } = useRefSp2dItem()
   const levelAkses = localStorage.getItem('user_role')
   return (
@@ -35,44 +37,50 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
           {levelAkses !== 'Bendahara' && (
-            <DropdownMenuItem
-              onClick={() => {
-                setCurrentRow(row.original)
-                setOpen('periksa')
-              }}
-            >
-              Periksa
-              <DropdownMenuShortcut>
-                <UserPen size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa
+                <DropdownMenuShortcut>
+                  <UserPen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <UserPen size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='text-red-500!'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('edit')
+                }}
+              >
+                Edit
+                <DropdownMenuShortcut>
+                  <UserPen size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('delete')
+                }}
+                className='text-red-500!'
+              >
+                Delete
+                <DropdownMenuShortcut>
+                  <Trash2 size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

@@ -10,6 +10,7 @@ import {
   DownloadCloudIcon,
   Eye,
 } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -26,6 +27,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const user = useAuthStore((s) => s.user)
   const { setOpen, setCurrentRow } = useRefLaporanFungsional()
   const sudahDiTteLaporanFungsional = (item: LaporanFungsional): boolean => {
     return item.berkas_tte !== '' && item.berkas_tte != null
@@ -46,32 +48,38 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
           {levelAkses !== 'Bendahara' && (
-            <DropdownMenuItem
-              onClick={() => {
-                setCurrentRow(row.original)
-                setOpen('periksa')
-              }}
-            >
-              Periksa Berkas
-              <DropdownMenuShortcut>
-                <LucideFolderSearch size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('periksa')
+                }}
+              >
+                Periksa Berkas
+                <DropdownMenuShortcut>
+                  <LucideFolderSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('TTEBerkas')
-            }}
-          >
-            TTE Berkas
-            <DropdownMenuShortcut>
-              <FolderSearch size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {proses !== '1' && (
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('TTEBerkas')
+                }}
+              >
+                TTE Berkas
+                <DropdownMenuShortcut>
+                  <FolderSearch size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+          {proses !== '1' && user?.is_active === '1' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
@@ -87,19 +95,23 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='text-red-500!'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {user?.is_active === '1' && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  setCurrentRow(row.original)
+                  setOpen('delete')
+                }}
+                className='text-red-500!'
+              >
+                Delete
+                <DropdownMenuShortcut>
+                  <Trash2 size={16} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
