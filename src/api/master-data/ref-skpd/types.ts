@@ -13,6 +13,7 @@ export interface MasterSkpd {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  is_active: string
 }
 
 export interface MasterSkpdResponse {

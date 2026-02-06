@@ -1,8 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type LaporanFungsional } from '@/api'
+import { type MasterSkpd, type LaporanFungsional } from '@/api'
 import { Eye, FolderSearch, Trash2, UserPen } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,7 +18,9 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const { setOpen, setCurrentRow } = useRefLaporanFungsional()
   const levelAkses = localStorage.getItem('user_role')
   return (
@@ -63,7 +64,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {user?.is_active === '1' && (
+          {skpd?.is_active === '1' && (
             <>
               <DropdownMenuItem
                 onClick={() => {

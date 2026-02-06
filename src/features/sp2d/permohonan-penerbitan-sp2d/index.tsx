@@ -104,7 +104,7 @@ export function PermohonanPenerbitanSP2D() {
                 Data Ini adalah Permohonan Penerbitan SP2D
               </p>
             </div>
-            {user?.is_active === '1' && <RefRekeningPrimaryButtons />}
+            {skpd?.is_active === '1' && <RefRekeningPrimaryButtons />}
           </div>
           <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
             <BerkasMasukSP2DTable

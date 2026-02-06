@@ -60,7 +60,7 @@ export function LaporanDPA() {
             <h2 className='text-2xl font-bold tracking-tight'>Laporan DPA</h2>
             <p className='text-muted-foreground'>Data Ini adalah Laporan DPA</p>
           </div>
-          {user?.is_active === '1' && <RefRekeningPrimaryButtons />}
+          {skpd?.is_active === '1' && <RefRekeningPrimaryButtons />}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           {/* <UsersTable data={users} search={search} navigate={navigate} /> */}

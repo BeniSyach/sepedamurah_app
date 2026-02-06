@@ -1,8 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { type LaporanSp2bToBUD } from '@/api'
+import { type MasterSkpd, type LaporanSp2bToBUD } from '@/api'
 import { Download, LucideFolderSearch, Trash2, Pen, Eye } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,7 +18,9 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const user = useAuthStore((s) => s.user)
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
   const { setOpen, setCurrentRow } = useRefLaporanSp2bToBUD()
   const levelAkses = localStorage.getItem('user_role')
   const proses = row.original?.proses
@@ -50,7 +51,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          {proses !== '1' && user?.is_active === '1' && (
+          {proses !== '1' && skpd?.is_active === '1' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
@@ -66,7 +67,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               <DropdownMenuSeparator />
             </>
           )}
-          {user?.is_active === '1' && (
+          {skpd?.is_active === '1' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
