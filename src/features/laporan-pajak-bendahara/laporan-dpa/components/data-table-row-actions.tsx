@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type MasterSkpd, type LaporanPajakBendahara } from '@/api'
 import { Download, LucideFolderSearch, Trash2, Pen, Eye } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -24,6 +25,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefLaporanPajakBendahara()
   const levelAkses = localStorage.getItem('user_role')
   const proses = row.original?.proses
+  const user = useAuthStore((s) => s.user)
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -37,7 +40,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          {levelAkses !== 'Bendahara' && (
+          {levelAkses !== 'Bendahara' && user?.nip === '198712022011011007' && (
             <DropdownMenuItem
               onClick={() => {
                 setCurrentRow(row.original)
@@ -51,23 +54,25 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          {proses !== '1' && skpd?.is_active === '1' && (
-            <>
-              <DropdownMenuItem
-                onClick={() => {
-                  setCurrentRow(row.original)
-                  setOpen('edit')
-                }}
-              >
-                Edit
-                <DropdownMenuShortcut>
-                  <Pen size={16} />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </>
-          )}
-          {skpd?.is_active === '1' && (
+          {proses !== '1' &&
+            skpd?.is_active === '1' &&
+            user?.nip === '198712022011011007' && (
+              <>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setCurrentRow(row.original)
+                    setOpen('edit')
+                  }}
+                >
+                  Edit
+                  <DropdownMenuShortcut>
+                    <Pen size={16} />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+          {skpd?.is_active === '1' && user?.nip === '198712022011011007' && (
             <>
               <DropdownMenuItem
                 onClick={() => {
