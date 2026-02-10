@@ -217,39 +217,47 @@ export function AksesDPASKPDActionDialog({
 
                       <PopoverContent className='col-span-4 p-0'>
                         <Command>
-                          <CommandGroup>
-                            {safeItemsSKPD.map((item) => {
-                              const selected = field.value?.includes(item.value)
+                          {/* (Optional) Search */}
+                          <CommandInput placeholder='Cari SKPD...' />
 
-                              return (
-                                <CommandItem
-                                  key={item.value}
-                                  onSelect={() => {
-                                    if (selected) {
-                                      field.onChange(
-                                        field.value.filter(
-                                          (v: string) => v !== item.value
+                          {/* INI YANG PENTING */}
+                          <CommandList className='max-h-64 overflow-y-auto'>
+                            <CommandGroup>
+                              {safeItemsSKPD.map((item) => {
+                                const selected = field.value?.includes(
+                                  item.value
+                                )
+
+                                return (
+                                  <CommandItem
+                                    key={item.value}
+                                    onSelect={() => {
+                                      if (selected) {
+                                        field.onChange(
+                                          field.value.filter(
+                                            (v: string) => v !== item.value
+                                          )
                                         )
-                                      )
-                                    } else {
-                                      field.onChange([
-                                        ...(field.value ?? []),
-                                        item.value,
-                                      ])
-                                    }
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      'mr-2 h-4 w-4',
-                                      selected ? 'opacity-100' : 'opacity-0'
-                                    )}
-                                  />
-                                  {item.label}
-                                </CommandItem>
-                              )
-                            })}
-                          </CommandGroup>
+                                      } else {
+                                        field.onChange([
+                                          ...(field.value ?? []),
+                                          item.value,
+                                        ])
+                                      }
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        selected ? 'opacity-100' : 'opacity-0'
+                                      )}
+                                    />
+                                    {item.label}
+                                  </CommandItem>
+                                )
+                              })}
+                            </CommandGroup>
+                          </CommandList>
                         </Command>
                       </PopoverContent>
                     </Popover>
