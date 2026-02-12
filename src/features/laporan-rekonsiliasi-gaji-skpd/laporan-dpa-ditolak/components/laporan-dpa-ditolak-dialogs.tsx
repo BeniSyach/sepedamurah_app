@@ -35,7 +35,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/laporan/laporan-sp2b-to-bud/download/${currentRow.id}`,
+          `/laporan/laporan-rekonsiliasi-gaji-skpd/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
