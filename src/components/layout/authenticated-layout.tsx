@@ -30,7 +30,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const navigate = useNavigate()
   const accessToken = useAuthStore((s) => s.accessToken)
   const user = useAuthStore((s) => s.user)
-  const userNik = user?.nik ?? '0'
+  // const userNik = user?.nik ?? '0'
   const defaultOpen = getCookie('sidebar_state') !== 'false'
 
   useEffect(() => {
@@ -76,46 +76,46 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
     }, [])
   }
 
-  const allowedNikForBerkasLain = ['1218030212870001']
-
-  // const filteredNavGroups = useMemo(() => {
-  //   return sidebarData.navGroups
-  //     .map((group) => {
-  //       const filteredItems = filterMenuItems(group.items, userMenuNames)
-  //       return { ...group, items: filteredItems }
-  //     })
-  //     .filter(
-  //       (group) => userMenuNames.includes(group.id) || group.items.length > 0
-  //     )
-  // }, [userMenuNames])
+  // const allowedNikForBerkasLain = ['1218030212870001']
 
   const filteredNavGroups = useMemo(() => {
     return sidebarData.navGroups
       .map((group) => {
-        // ⬇️ filter berdasarkan NIK
-        if (
-          group.id == 'berkas-lain' &&
-          !allowedNikForBerkasLain.includes(userNik)
-        ) {
-          return null
-        }
-
-        if (
-          group.items[0].id == 'berkas-lain-menu' &&
-          !allowedNikForBerkasLain.includes(userNik)
-        ) {
-          return null
-        }
-
         const filteredItems = filterMenuItems(group.items, userMenuNames)
         return { ...group, items: filteredItems }
       })
       .filter(
-        (group): group is NonNullable<typeof group> =>
-          !!group &&
-          (userMenuNames.includes(group.id) || group.items.length > 0)
+        (group) => userMenuNames.includes(group.id) || group.items.length > 0
       )
-  }, [userMenuNames, userNik])
+  }, [userMenuNames])
+
+  // const filteredNavGroups = useMemo(() => {
+  //   return sidebarData.navGroups
+  //     .map((group) => {
+  //       // ⬇️ filter berdasarkan NIK
+  //       if (
+  //         group.id == 'berkas-lain' &&
+  //         !allowedNikForBerkasLain.includes(userNik)
+  //       ) {
+  //         return null
+  //       }
+
+  //       if (
+  //         group.items[0].id == 'berkas-lain-menu' &&
+  //         !allowedNikForBerkasLain.includes(userNik)
+  //       ) {
+  //         return null
+  //       }
+
+  //       const filteredItems = filterMenuItems(group.items, userMenuNames)
+  //       return { ...group, items: filteredItems }
+  //     })
+  //     .filter(
+  //       (group): group is NonNullable<typeof group> =>
+  //         !!group &&
+  //         (userMenuNames.includes(group.id) || group.items.length > 0)
+  //     )
+  // }, [userMenuNames, userNik])
 
   return (
     <SearchProvider>
