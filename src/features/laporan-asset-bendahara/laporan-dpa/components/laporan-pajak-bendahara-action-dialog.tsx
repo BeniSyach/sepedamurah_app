@@ -55,7 +55,7 @@ import { SelectDropdown } from '@/components/select-dropdown'
 const formSchema = z.object({
   id: z.string().optional(),
   tahun: z.string().min(1, 'Tahun Harus Ada.'),
-  bulan: z.string().min(1, 'bulan Harus Ada.'),
+  // bulan: z.string().min(1, 'bulan Harus Ada.'),
   ref_asset_id: z.string().min(1, 'BMD (Barang Milik Daerah) harus dipilih.'),
 
   file: z

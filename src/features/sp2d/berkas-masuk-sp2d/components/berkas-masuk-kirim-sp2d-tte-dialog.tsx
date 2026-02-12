@@ -47,6 +47,8 @@ import { SelectDropdown } from '@/components/select-dropdown'
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 const formSchema = z.object({
   id: z.string().optional(),
   keterangan: z.string().min(1),
@@ -208,7 +210,7 @@ export function BerkasMasukKirimTTEDialog({
     formData.append('namafile', data.no_sp2d ?? '')
     formData.append('keterangan', data.keterangan ?? '')
     formData.append('id_penandatangan', data.id_operator ?? '')
-    formData.append('status', '0')
+    formData.append('status', '2')
 
     // ✅ Jika user upload file baru
     if (
