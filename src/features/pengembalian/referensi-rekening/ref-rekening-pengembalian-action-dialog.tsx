@@ -37,12 +37,18 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
-  kd_rek1: z.string().min(1, 'Kode Rekening 1 wajib diisi'),
-  kd_rek2: z.string().min(1, 'Kode Rekening 2 wajib diisi'),
-  kd_rek3: z.string().min(1, 'Kode Rekening 3 wajib diisi'),
-  kd_rek4: z.string().min(1, 'Kode Rekening 4 wajib diisi'),
-  kd_rek5: z.string().min(1, 'Kode Rekening 5 wajib diisi'),
-  kd_rek6: z.string().min(1, 'Kode Rekening 6 wajib diisi'),
+  kd_rek1: z.string().length(1, 'Kode Rekening 1 harus 1 karakter'),
+  kd_rek2: z.string().length(1, 'Kode Rekening 2 harus 1 karakter'),
+  kd_rek3: z.string().length(1, 'Kode Rekening 3 harus 1 karakter'),
+  kd_rek4: z.string().length(2, 'Kode Rekening 4 harus 2 karakter'),
+  kd_rek5: z
+    .string()
+    .length(2, 'Kode Rekening 5 harus 2 karakter')
+    .or(z.literal('')),
+  kd_rek6: z
+    .string()
+    .length(3, 'Kode Rekening 6 harus 3 karakter')
+    .or(z.literal('')),
   nm_rekening: z.string().min(1, 'Nama Rekening wajib diisi'),
   tahun_rek: z.string().min(4, 'Tahun Rekening wajib dipilih'),
   status_rek: z.string().min(1, 'Status wajib diisi'),
@@ -193,7 +199,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 1</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 1' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 1'
+                        maxLength={1}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +216,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 2</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 2' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 2'
+                        maxLength={1}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,7 +233,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 3</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 3' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 3'
+                        maxLength={1}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -232,7 +250,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 4</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 4' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 4'
+                        maxLength={2}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -245,7 +267,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 5</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 5' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 5'
+                        maxLength={2}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -258,7 +284,11 @@ export function UsersActionDialog({
                   <FormItem>
                     <FormLabel>Kode Rekening 6</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder='Kode Rekening 6' />
+                      <Input
+                        {...field}
+                        placeholder='Kode Rekening 6'
+                        maxLength={3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
