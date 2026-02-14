@@ -14,7 +14,7 @@ export function usePutLaporanRekonsiliasiGajiSKPD() {
       const id = formData.get('id')
       if (!id) throw new Error('ID harus ada')
       const { data } = await api.post<LaporanRekonsiliasiGajiSKPD>(
-        `/laporan/LaporanRekonsiliasiGajiSKPD/${id}`,
+        `/laporan/laporan-rekonsiliasi-gaji-skpd/${id}`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

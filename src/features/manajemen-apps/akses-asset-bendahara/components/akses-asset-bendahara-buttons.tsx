@@ -7,7 +7,7 @@ export function RefRekeningPrimaryButtons() {
   return (
     <div className='flex gap-2'>
       <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambah Pajak Bendahara</span> <Plus size={18} />
+        <span>Tambah BMD (Barang Milik Daerah)</span> <Plus size={18} />
       </Button>
     </div>
   )

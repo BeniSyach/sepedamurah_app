@@ -38,7 +38,7 @@ export const ReferensiAksesRefRekonsiliasiGajiSkpdGroupColumns: ColumnDef<AksesR
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title='Daftar SPB (Surat Pengesahan Belanja)'
+          title='Daftar Rekonsiliasi Gaji SKPD'
         />
       ),
       cell: ({ row }) => {

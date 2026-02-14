@@ -72,7 +72,7 @@ export function PenerimaanPeriksa({
     const fetchPdf = async () => {
       try {
         const response = await api.get<Blob>(
-          `/laporan/laporan-sp2b-to-bud/download/${currentRow.id}`,
+          `/laporan/laporan-rekonsiliasi-gaji-skpd/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -159,7 +159,7 @@ export function PenerimaanPeriksa({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContentLarge
-        title='Periksa Berkas Laporan DPA'
+        title='Periksa Berkas Laporan Laporan Rekonsiliasi Gaji SKPD'
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
@@ -171,9 +171,7 @@ export function PenerimaanPeriksa({
                   <Form {...form}>
                     {/* NAMA FILE */}
                     <FormItem>
-                      <FormLabel>
-                        Nama Laporan SPB (Surat Pengesahan Belanja)
-                      </FormLabel>
+                      <FormLabel>Nama Laporan Rekonsiliasi Gaji SKPD</FormLabel>
                       <FormControl>
                         <Input
                           value={

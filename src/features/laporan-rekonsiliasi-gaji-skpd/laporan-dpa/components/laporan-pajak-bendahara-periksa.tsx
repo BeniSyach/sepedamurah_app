@@ -73,7 +73,7 @@ export function LaporanRekonsiliasiGajiSKPDPeriksa({
     const fetchPdf = async () => {
       try {
         const response = await api.get<Blob>(
-          `/laporan/laporan-sp2b-to-bud/download/${currentRow.id}`,
+          `/laporan/laporan-rekonsiliasi-gaji-skpd/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {

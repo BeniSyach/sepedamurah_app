@@ -57,7 +57,7 @@ export function BerkasMasukSP2DTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
   const userRole = localStorage.getItem('user_role') ?? ''
-  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
+  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator', 'superadmin']
   const isNoDefaultRole = noDefaultDateRoles.includes(userRole ?? '')
 
   const {

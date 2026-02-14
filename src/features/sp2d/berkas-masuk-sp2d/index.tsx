@@ -34,7 +34,7 @@ export function BerkasMasukSP2D() {
   const userRole = localStorage.getItem('user_role') ?? ''
 
   // cek apakah role tidak punya default tanggal
-  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
+  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator', 'superadmin']
   const isNoDefaultRole = noDefaultDateRoles.includes(userRole)
 
   // hanya kirim tanggal jika dia:

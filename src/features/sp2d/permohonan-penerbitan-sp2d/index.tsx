@@ -40,7 +40,7 @@ export function PermohonanPenerbitanSP2D() {
   ) as MasterSkpd
 
   // cek apakah role tidak punya default tanggal
-  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator']
+  const noDefaultDateRoles = ['Operator SKPKD', 'Administrator', 'superadmin']
   const isNoDefaultRole = noDefaultDateRoles.includes(userRole)
 
   // hanya kirim tanggal jika dia:

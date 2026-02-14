@@ -36,7 +36,7 @@ export const ReferensiAksesPajakBendaharaGroupColumns: ColumnDef<AksesPajakBenda
     {
       id: 'Pajak_list',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Daftar Pajak' />
+        <DataTableColumnHeader column={column} title='Daftar Pajak Bendahara' />
       ),
       cell: ({ row }) => {
         const Pajak = row.original.pajak ?? []
