@@ -19,7 +19,7 @@ export function BerkasLainLain() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const user = useAuthStore((s) => s.user)
-  // const userRole = localStorage.getItem('user_role')
+  const userRole = localStorage.getItem('user_role')
   const skpd = JSON.parse(
     localStorage.getItem('user_skpd') || '{}'
   ) as MasterSkpd
@@ -30,7 +30,7 @@ export function BerkasLainLain() {
     page: search.page,
     perPage: search.pageSize,
     search: search.nama_dokumen,
-    user_id: user?.id,
+    ...(userRole !== 'superadmin' && { user_id: user?.id }),
     kd_opd1: skpd?.kd_opd1,
     kd_opd2: skpd?.kd_opd2,
     kd_opd3: skpd?.kd_opd3,
