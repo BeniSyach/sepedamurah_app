@@ -21,7 +21,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='Laporan DPA'>
+      <BulkActionsToolbar table={table} entityName='Laporan Pajak Bendahara'>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -29,15 +29,17 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Hapus Laporan DPA yg dipilih'
-              title='Hapus Laporan DPA yg dipilih'
+              aria-label='Hapus Laporan Pajak Bendahara yg dipilih'
+              title='Hapus Laporan Pajak Bendahara yg dipilih'
             >
               <Trash2 />
-              <span className='sr-only'>Hapus Laporan DPA yg dipilih</span>
+              <span className='sr-only'>
+                Hapus Laporan Pajak Bendahara yg dipilih
+              </span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Hapus Laporan DPA yg dipilih</p>
+            <p>Hapus Laporan Pajak Bendahara yg dipilih</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

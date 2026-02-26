@@ -21,6 +21,8 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 type TerimaBerkasSP2DMultiDialogProps<TData> = {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -49,10 +51,10 @@ export function TerimaFungsionalMultiDialog<TData>({
     toast.promise(
       terimaMulti(formData), // <= ini penting
       {
-        loading: 'Mengirim data Laporan DPA...',
+        loading: 'Mengirim data Laporan BMD (Barang Milik Daerah)...',
         success: () => {
           table.resetRowSelection()
-          return `Berhasil menerima ${selectedRows.length} Laporan DPA.`
+          return `Berhasil menerima ${selectedRows.length} Laporan BMD (Barang Milik Daerah).`
         },
         error: (err) => {
           return err?.response?.data?.message || 'Gagal memproses data'

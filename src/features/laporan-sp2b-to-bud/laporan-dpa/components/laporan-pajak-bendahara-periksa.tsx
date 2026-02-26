@@ -157,7 +157,7 @@ export function LaporanSp2bToBUDPeriksa({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContentLarge
-        title='Periksa Berkas Laporan DPA'
+        title='Periksa Berkas Laporan SPB (Surat Pengesahan Belanja)'
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>

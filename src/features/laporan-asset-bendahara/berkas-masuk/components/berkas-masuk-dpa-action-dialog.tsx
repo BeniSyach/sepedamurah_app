@@ -155,7 +155,7 @@ export function PenerimaanPeriksa({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContentLarge
-        title='Periksa Berkas Laporan DPA'
+        title='Periksa Berkas Laporan BMD (Barang Milik Daerah)'
         description='Lengkapi data di bawah ini.'
       >
         <div className='flex h-full flex-col'>
@@ -167,7 +167,9 @@ export function PenerimaanPeriksa({
                   <Form {...form}>
                     {/* NAMA FILE */}
                     <FormItem>
-                      <FormLabel>Nama Laporan Asset Bendara</FormLabel>
+                      <FormLabel>
+                        Nama Laporan BMD (Barang Milik Daerah)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           value={

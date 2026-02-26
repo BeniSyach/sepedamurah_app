@@ -21,7 +21,10 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='Laporan DPA'>
+      <BulkActionsToolbar
+        table={table}
+        entityName='Laporan SPB (Surat Pengesahan Belanja)'
+      >
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -29,15 +32,17 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Hapus Laporan DPA yg dipilih'
-              title='Hapus Laporan DPA yg dipilih'
+              aria-label='Hapus Laporan SPB (Surat Pengesahan Belanja) yg dipilih'
+              title='Hapus Laporan SPB (Surat Pengesahan Belanja) yg dipilih'
             >
               <Trash2 />
-              <span className='sr-only'>Hapus Laporan DPA yg dipilih</span>
+              <span className='sr-only'>
+                Hapus Laporan SPB (Surat Pengesahan Belanja) yg dipilih
+              </span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Hapus Laporan DPA yg dipilih</p>
+            <p>Hapus Laporan SPB (Surat Pengesahan Belanja) yg dipilih</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
