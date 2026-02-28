@@ -21,7 +21,7 @@ export const ReferensiRefSp2dbToBUDColumns: ColumnDef<RefSp2dbToBUD>[] = [
 
   // ✅ Kategori
   {
-    accessorKey: 'nm_pajak_bendahara',
+    accessorKey: 'nm_sp2b_ke_bud',
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
@@ -30,7 +30,7 @@ export const ReferensiRefSp2dbToBUDColumns: ColumnDef<RefSp2dbToBUD>[] = [
     ),
     cell: ({ row }) => (
       <LongText className='max-w-300 ps-3'>
-        {row.getValue('nm_pajak_bendahara')}
+        {row.getValue('nm_sp2b_ke_bud')}
       </LongText>
     ),
     enableSorting: true,
