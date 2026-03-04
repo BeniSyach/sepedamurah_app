@@ -1,6 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type LaporanSp2bToBUD } from '@/api'
-import { cn, formatTanggal, getJam, getNamaBulan } from '@/lib/utils'
+import { cn, formatTanggal, getJam } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -64,14 +64,14 @@ export const ReferensiLaporanSp2bToBUDColumns: ColumnDef<LaporanSp2bToBUD>[] = [
   },
 
   // ✅ Berkas Bulan
-  {
-    accessorKey: 'Berkas Bulan',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Bulan' />
-    ),
-    cell: ({ row }) => getNamaBulan(row.getValue('created_at')),
-    enableSorting: true,
-  },
+  // {
+  //   accessorKey: 'Berkas Bulan',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='Bulan' />
+  //   ),
+  //   cell: ({ row }) => getNamaBulan(row.getValue('created_at')),
+  //   enableSorting: true,
+  // },
 
   // ✅ Tanggal Upload
   {

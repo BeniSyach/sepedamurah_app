@@ -1,6 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { type LaporanRekonsiliasiGajiSKPD } from '@/api'
-import { cn, formatTanggal, getJam, getNamaBulan } from '@/lib/utils'
+import { cn, formatTanggal, getJam } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { DataTableRowActions } from './data-table-row-actions'
@@ -63,15 +63,15 @@ export const ReferensiLaporanRekonsiliasiGajiSKPDColumns: ColumnDef<LaporanRekon
       enableSorting: true,
     },
 
-    // ✅ Berkas Bulan
-    {
-      accessorKey: 'Berkas Bulan',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Bulan' />
-      ),
-      cell: ({ row }) => getNamaBulan(row.getValue('created_at')),
-      enableSorting: true,
-    },
+    // // ✅ Berkas Bulan
+    // {
+    //   accessorKey: 'Berkas Bulan',
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} title='Bulan' />
+    //   ),
+    //   cell: ({ row }) => getNamaBulan(row.getValue('created_at')),
+    //   enableSorting: true,
+    // },
 
     // ✅ Tanggal Upload
     {
