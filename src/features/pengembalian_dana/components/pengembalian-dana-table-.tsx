@@ -33,6 +33,7 @@ export function PengembalianDanaTable({ data }: Props) {
       keterangan: row.keterangan || '', // pastikan string
       jumlah: String(row.jml_pengembalian),
       no_billing: row.no_sts || '', // pastikan string
+      status_bayar: row.status_bayar || '',
     }).toString()
     const API_URL = import.meta.env.VITE_API_URL
     const url = `${API_URL}/pengembalian/download?${params}`
