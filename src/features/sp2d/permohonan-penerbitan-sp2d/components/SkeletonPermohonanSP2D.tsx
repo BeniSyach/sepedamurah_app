@@ -12,8 +12,7 @@ export function SkeletonPermohonanSP2D() {
 
         {/* Right buttons skeleton */}
         <div className='flex space-x-2'>
-          <Skeleton className='h-10 w-32' />
-          <Skeleton className='h-10 w-32' />
+          <Skeleton className='h-9 w-52 rounded-md' />
         </div>
       </div>
 

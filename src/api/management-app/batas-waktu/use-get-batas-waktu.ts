@@ -13,7 +13,10 @@ interface UseBatasWaktu {
   kd_opd5?: string
 }
 
-export function useGetBatasWaktu(params: UseBatasWaktu) {
+export function useGetBatasWaktu(
+  params: UseBatasWaktu,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['useGetBatasWaktu', params],
     queryFn: async () => {
@@ -34,7 +37,6 @@ export function useGetBatasWaktu(params: UseBatasWaktu) {
       )
       return data
     },
-    placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 60 * 5, // 5 menit cache
+    enabled: options?.enabled ?? true,
   })
 }

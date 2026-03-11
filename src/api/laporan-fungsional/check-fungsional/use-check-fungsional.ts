@@ -18,7 +18,10 @@ interface CekUploadResponse {
   missing_penerimaan: number[]
 }
 
-export function useCekUploadFungsional(params: CekUploadParams) {
+export function useCekUploadFungsional(
+  params: CekUploadParams,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['cekUploadFungsional', params],
     queryFn: async () => {
@@ -28,14 +31,6 @@ export function useCekUploadFungsional(params: CekUploadParams) {
       )
       return data
     },
-    enabled:
-      !!params.tahun &&
-      !!params.bulan &&
-      !!params.kd_opd1 &&
-      !!params.kd_opd2 &&
-      !!params.kd_opd3 &&
-      !!params.kd_opd4 &&
-      !!params.kd_opd5,
-    staleTime: 1000 * 60 * 0.5, // 5 menit
+    enabled: options?.enabled ?? true,
   })
 }

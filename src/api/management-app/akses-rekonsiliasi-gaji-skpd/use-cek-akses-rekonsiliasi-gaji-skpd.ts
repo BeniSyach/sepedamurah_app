@@ -11,7 +11,8 @@ interface CekLaporanRefRekonsiliasiGajiSkpdParams {
 }
 
 export function useCekLaporanRefRekonsiliasiGajiSkpd(
-  params: CekLaporanRefRekonsiliasiGajiSkpdParams
+  params: CekLaporanRefRekonsiliasiGajiSkpdParams,
+  options?: { enabled?: boolean }
 ) {
   return useQuery({
     queryKey: ['useCekLaporanRefRekonsiliasiGajiSkpd', params],
@@ -31,8 +32,6 @@ export function useCekLaporanRefRekonsiliasiGajiSkpd(
       )
       return data
     },
-    enabled: !!params.tahun, // hanya fetch jika tahun terisi
-    staleTime: 1000 * 60 * 1, // cache 5 menit
-    placeholderData: (previous) => previous,
+    enabled: options?.enabled ?? true,
   })
 }

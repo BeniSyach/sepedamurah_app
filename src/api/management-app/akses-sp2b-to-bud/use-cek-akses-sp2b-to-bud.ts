@@ -10,7 +10,10 @@ interface CekLaporanSp2bToBUDParams {
   kd_opd5?: string
 }
 
-export function useCekLaporanSp2bToBUD(params: CekLaporanSp2bToBUDParams) {
+export function useCekLaporanSp2bToBUD(
+  params: CekLaporanSp2bToBUDParams,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['useCekLaporanSp2bToBUD', params],
     queryFn: async () => {
@@ -26,8 +29,6 @@ export function useCekLaporanSp2bToBUD(params: CekLaporanSp2bToBUDParams) {
       })
       return data
     },
-    enabled: !!params.tahun, // hanya fetch jika tahun terisi
-    staleTime: 1000 * 60 * 1, // cache 5 menit
-    placeholderData: (previous) => previous,
+    enabled: options?.enabled ?? true,
   })
 }

@@ -10,7 +10,10 @@ interface CekLaporanDPAParams {
   kd_opd5?: string
 }
 
-export function useCekLaporanDPA(params: CekLaporanDPAParams) {
+export function useCekLaporanDPA(
+  params: CekLaporanDPAParams,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ['useCekLaporanDPA', params],
     queryFn: async () => {
@@ -26,8 +29,6 @@ export function useCekLaporanDPA(params: CekLaporanDPAParams) {
       })
       return data
     },
-    enabled: !!params.tahun, // hanya fetch jika tahun terisi
-    staleTime: 1000 * 60 * 1, // cache 5 menit
-    placeholderData: (previous) => previous,
+    enabled: options?.enabled ?? true,
   })
 }

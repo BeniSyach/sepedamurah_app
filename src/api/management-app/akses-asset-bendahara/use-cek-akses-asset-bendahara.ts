@@ -11,7 +11,8 @@ interface CekLaporanAssetBendaharaParams {
 }
 
 export function useCekLaporanAssetBendahara(
-  params: CekLaporanAssetBendaharaParams
+  params: CekLaporanAssetBendaharaParams,
+  options?: { enabled?: boolean }
 ) {
   return useQuery({
     queryKey: ['useCekLaporanAssetBendahara', params],
@@ -28,8 +29,6 @@ export function useCekLaporanAssetBendahara(
       })
       return data
     },
-    enabled: !!params.tahun, // hanya fetch jika tahun terisi
-    staleTime: 1000 * 60 * 1, // cache 5 menit
-    placeholderData: (previous) => previous,
+    enabled: options?.enabled ?? true,
   })
 }

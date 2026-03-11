@@ -49,70 +49,93 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefSp2dItem()
   const { mutateAsync } = useDeletePermohonanSP2D()
   const levelAkses = localStorage.getItem('user_role')
+  const isBendahara = levelAkses === 'Bendahara'
   const skpd = JSON.parse(
     localStorage.getItem('user_skpd') || '{}'
   ) as MasterSkpd
   // console.log('data user', user?.skpd.status_penerimaan)
   const [showClosedDialog, setShowClosedDialog] = useState(false)
   const [closedReason, setClosedReason] = useState('')
-  const { data: dataBatasWaktu } = useGetBatasWaktu({
-    kd_opd1: skpd?.kd_opd1,
-    kd_opd2: skpd?.kd_opd2,
-    kd_opd3: skpd?.kd_opd3,
-    kd_opd4: skpd?.kd_opd4,
-    kd_opd5: skpd?.kd_opd5,
-    search: hariIni,
-  })
-  const { data: cekUpload } = useCekUploadFungsional({
-    tahun: currentYear,
-    bulan: currentMonth,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-    status: skpd?.status_penerimaan ?? '0', // 0 atau 1
-  })
-  const { data: useDPA } = useCekLaporanDPA({
-    tahun: currentYear,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-  })
-  const { data: usePajakBendahara } = useCekLaporanPajakBendahara({
-    tahun: currentYear,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-  })
-  const { data: useAssetBendahara } = useCekLaporanAssetBendahara({
-    tahun: currentYear,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-  })
-  const { data: useSp2bToBUD } = useCekLaporanSp2bToBUD({
-    tahun: currentYear,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-  })
-  const { data: useRekGajiSKPD } = useCekLaporanRefRekonsiliasiGajiSkpd({
-    tahun: currentYear,
-    kd_opd1: skpd?.kd_opd1 ?? '',
-    kd_opd2: skpd?.kd_opd2 ?? '',
-    kd_opd3: skpd?.kd_opd3 ?? '',
-    kd_opd4: skpd?.kd_opd4 ?? '',
-    kd_opd5: skpd?.kd_opd5 ?? '',
-  })
+
+  const { data: dataBatasWaktu } = useGetBatasWaktu(
+    {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+      search: hariIni,
+    },
+    { enabled: isBendahara }
+  )
+  const { data: cekUpload } = useCekUploadFungsional(
+    {
+      tahun: currentYear,
+      bulan: currentMonth,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+      status: skpd?.status_penerimaan ?? '0', // 0 atau 1
+    },
+    { enabled: isBendahara }
+  )
+  const { data: useDPA } = useCekLaporanDPA(
+    {
+      tahun: currentYear,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+    },
+    { enabled: isBendahara }
+  )
+  const { data: usePajakBendahara } = useCekLaporanPajakBendahara(
+    {
+      tahun: currentYear,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+    },
+    { enabled: isBendahara }
+  )
+  const { data: useAssetBendahara } = useCekLaporanAssetBendahara(
+    {
+      tahun: currentYear,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+    },
+    { enabled: isBendahara }
+  )
+  const { data: useSp2bToBUD } = useCekLaporanSp2bToBUD(
+    {
+      tahun: currentYear,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+    },
+    { enabled: isBendahara }
+  )
+  const { data: useRekGajiSKPD } = useCekLaporanRefRekonsiliasiGajiSkpd(
+    {
+      tahun: currentYear,
+      kd_opd1: skpd?.kd_opd1 ?? '',
+      kd_opd2: skpd?.kd_opd2 ?? '',
+      kd_opd3: skpd?.kd_opd3 ?? '',
+      kd_opd4: skpd?.kd_opd4 ?? '',
+      kd_opd5: skpd?.kd_opd5 ?? '',
+    },
+    { enabled: isBendahara }
+  )
 
   // Fungsi download file
   const handleDownload = async () => {
