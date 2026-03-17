@@ -14,12 +14,15 @@ export function useGetCheckSumberDana(params: UseCheckSumberDana) {
         '/sp2d/sp2d-sumber-dana/check_sd',
         {
           params: {
-            tahun: params.tahun ?? 2025,
+            tahun: params.tahun ?? 2026,
             _t: Date.now(),
           },
         }
       )
       return data
     },
+    placeholderData: (previousData) => previousData,
+    refetchOnMount: true, // ✅ refetch setiap mount
+    refetchOnWindowFocus: true, // ✅ refetch saat tab aktif lagi
   })
 }
