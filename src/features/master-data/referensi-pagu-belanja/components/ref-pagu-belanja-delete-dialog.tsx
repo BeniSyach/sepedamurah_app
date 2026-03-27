@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { type PaguBelanja } from '@/api'
+import { useDeleteRefPaguBelanja, type PaguBelanja } from '@/api'
 import { AlertTriangle } from 'lucide-react'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -22,11 +22,21 @@ export function RefPaguBelanjasDeleteDialog({
 }: RefPaguBelanjaDeleteDialogProps) {
   const [value, setValue] = useState('')
 
+  const deleteMutation = useDeleteRefPaguBelanja()
+
   const handleDelete = () => {
     if (value.trim() !== currentRow.id_pb) return
 
-    onOpenChange(false)
-    showSubmittedData(currentRow, 'The following user has been deleted:')
+    toast.promise(deleteMutation.mutateAsync(currentRow.id_pb), {
+      loading: 'Menghapus Referensi Pagu Belanja...',
+      success: () => {
+        onOpenChange(false)
+        return `Berhasil menghapus ID ${currentRow.id_pb}`
+      },
+      error: (err) => {
+        return err?.message || 'Gagal menghapus data'
+      },
+    })
   }
 
   return (
@@ -41,28 +51,23 @@ export function RefPaguBelanjasDeleteDialog({
             className='stroke-destructive me-1 inline-block'
             size={18}
           />{' '}
-          Delete User
+          Delete Referensi Pagu Belanja
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            Apakah Anda Yakin menghapus Referensi Pagu belanja dengan id{' '}
             <span className='font-bold'>{currentRow.id_pb}</span>?
             <br />
-            {/* This action will permanently remove the user with the role of{' '}
-            <span className='font-bold'>
-              {currentRow.role.toUpperCase()}
-            </span>{' '}
-            from the system. This cannot be undone. */}
           </p>
 
           <Label className='my-2'>
-            Username:
+            Ketik Id Pagu Belanja:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter username to confirm deletion.'
+              placeholder='Ketik id Pagu Belanja.'
             />
           </Label>
 
