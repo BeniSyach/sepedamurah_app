@@ -222,7 +222,7 @@ export function ReferensiPengembalianColumns(
 
         const totalSisa = table
           .getFilteredRowModel()
-          .rows// 🚫 exclude kode 6.2.03 & 6.1.01
+          .rows // 🚫 exclude kode 6.2.03 & 6.1.01
           .filter((row) => !isExcludedKode(row.original))
           .reduce((acc, row) => {
             const realisasi = bulanKeys
@@ -256,6 +256,33 @@ export function ReferensiPengembalianColumns(
 
         return <div>{persen.toFixed(2)}%</div>
       },
+
+      footer: ({ table }) => {
+        const endIndex = bulanFilter - 1
+
+        // total realisasi semua row (exclude kode tertentu kalau mau konsisten)
+        const totalRealisasi = table
+          .getFilteredRowModel()
+          .rows.filter((row) => !isExcludedKode(row.original)) // biar konsisten dengan SISA
+          .reduce((acc, row) => {
+            const realisasi = bulanKeys
+              .slice(0, endIndex + 1)
+              .reduce((sum, key) => sum + Number(row.original[key] ?? 0), 0)
+
+            return acc + realisasi
+          }, 0)
+
+        // total pagu semua row
+        const totalPagu = table
+          .getFilteredRowModel()
+          .rows.filter((row) => !isExcludedKode(row.original))
+          .reduce((acc, row) => acc + Number(row.original.total_pagu ?? 0), 0)
+
+        const persen = totalPagu > 0 ? (totalRealisasi / totalPagu) * 100 : 0
+
+        return <div className='font-semibold'>{persen.toFixed(2)}%</div>
+      },
+
       enableSorting: true,
     },
   ]
