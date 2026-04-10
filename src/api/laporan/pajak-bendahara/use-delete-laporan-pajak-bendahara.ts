@@ -20,6 +20,9 @@ export function useDeleteLaporanPajakBendahara() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanPajakBendahara'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanPajakBendahara'],
+      })
     },
     onError: (error) => {
       return error

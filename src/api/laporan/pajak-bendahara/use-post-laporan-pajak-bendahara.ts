@@ -47,7 +47,7 @@ export function usePostLaporanPajakBendahara() {
         queryKey: ['useGetLaporanPajakBendahara'],
       })
       queryClient.invalidateQueries({
-        queryKey: ['useGetMonitoringDPA'],
+        queryKey: ['useCekLaporanPajakBendahara'],
       })
     },
     onError: (err) => {

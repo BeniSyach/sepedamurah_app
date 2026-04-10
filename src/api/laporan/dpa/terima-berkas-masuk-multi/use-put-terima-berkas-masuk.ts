@@ -20,6 +20,9 @@ export function usePutTerimaDPAMulti() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanDPA'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useGetMonitoringDPA'],
+      })
     },
 
     onError: (err) => err,

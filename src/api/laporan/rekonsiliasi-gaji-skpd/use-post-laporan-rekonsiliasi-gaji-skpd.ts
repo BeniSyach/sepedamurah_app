@@ -46,6 +46,9 @@ export function usePostLaporanRekonsiliasiGajiSKPD() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanRekonsiliasiGajiSKPD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanRefRekonsiliasiGajiSkpd'],
+      })
     },
     onError: (err) => {
       return err

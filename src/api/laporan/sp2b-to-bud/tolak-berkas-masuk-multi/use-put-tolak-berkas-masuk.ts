@@ -20,6 +20,9 @@ export function usePutTolakSp2bToBUDMulti() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanSp2bToBUD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanSp2bToBUD'],
+      })
     },
 
     onError: (err) => err,

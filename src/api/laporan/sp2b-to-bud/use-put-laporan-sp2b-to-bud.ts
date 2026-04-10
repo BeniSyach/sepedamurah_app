@@ -28,6 +28,9 @@ export function usePutLaporanSp2bToBUD() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanSp2bToBUD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanSp2bToBUD'],
+      })
     },
     onError: (err) => {
       return err

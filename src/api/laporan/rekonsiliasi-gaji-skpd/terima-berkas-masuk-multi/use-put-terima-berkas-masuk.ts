@@ -20,6 +20,9 @@ export function usePutTerimaRekonsiliasiGajiSKPDMulti() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanRekonsiliasiGajiSKPD'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanRefRekonsiliasiGajiSkpd'],
+      })
     },
 
     onError: (err) => err,

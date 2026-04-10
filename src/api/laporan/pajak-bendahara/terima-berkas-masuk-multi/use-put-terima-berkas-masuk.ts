@@ -20,6 +20,9 @@ export function usePutTerimaPajakBendaharaMulti() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanPajakBendahara'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanPajakBendahara'],
+      })
     },
 
     onError: (err) => err,

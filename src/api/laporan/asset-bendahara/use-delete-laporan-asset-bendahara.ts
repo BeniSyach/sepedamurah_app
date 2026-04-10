@@ -20,6 +20,9 @@ export function useDeleteLaporanAssetBendahara() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanAssetBendahara'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanAssetBendahara'],
+      })
     },
     onError: (error) => {
       return error

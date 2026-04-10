@@ -45,7 +45,7 @@ export function usePostLaporanSp2bToBUD() {
         queryKey: ['useGetLaporanSp2bToBUD'],
       })
       queryClient.invalidateQueries({
-        queryKey: ['useGetMonitoringDPA'],
+        queryKey: ['useCekLaporanSp2bToBUD'],
       })
     },
     onError: (err) => {

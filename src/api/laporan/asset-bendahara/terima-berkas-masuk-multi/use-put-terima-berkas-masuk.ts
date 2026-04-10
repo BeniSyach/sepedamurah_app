@@ -20,6 +20,9 @@ export function usePutTerimaAssetBendaharaMulti() {
       queryClient.invalidateQueries({
         queryKey: ['useGetLaporanAssetBendahara'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['useCekLaporanAssetBendahara'],
+      })
     },
 
     onError: (err) => err,

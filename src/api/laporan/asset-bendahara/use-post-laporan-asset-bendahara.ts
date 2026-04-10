@@ -47,7 +47,7 @@ export function usePostLaporanAssetBendahara() {
         queryKey: ['useGetLaporanAssetBendahara'],
       })
       queryClient.invalidateQueries({
-        queryKey: ['useGetMonitoringDPA'],
+        queryKey: ['useCekLaporanAssetBendahara'],
       })
     },
     onError: (err) => {
