@@ -10,10 +10,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { RekapSumberDanaItem } from '@/api'
-import { toast } from 'sonner'
-import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
+// import { toast } from 'sonner'
+// import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
 import { type NavigateFn } from '@/hooks/use-table-url-state'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 // import {
 //   Select,
 //   SelectTrigger,
@@ -71,7 +71,7 @@ export function RekapTransferSumberDanaTable({
   // Tahun diambil dari URL, default tahun sekarang
   // const currentYear = new Date().getFullYear()
   // const tahunFilter = Number(search.tahun ?? currentYear)
-  const { mutateAsync } = useSyncRealisasiTransferSumberDanaPajak()
+  // const { mutateAsync } = useSyncRealisasiTransferSumberDanaPajak()
   // List tahun 3 tahun sebelum & 3 tahun sesudah
   // const tahunOptions = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i)
   const bulanFilter = Number(search.bulan ?? currentMonth)
@@ -115,16 +115,16 @@ export function RekapTransferSumberDanaTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  const handleExportSumberDanaPajak = async () => {
-    await toast.promise(
-      mutateAsync(), // memanggil hook mutation tanpa payload
-      {
-        loading: 'Sinkronisasi sedang berjalan...',
-        success: () => 'Sinkronisasi berhasil!',
-        error: (err) => `Sinkronisasi gagal: ${err.message || err}`,
-      }
-    )
-  }
+  // const handleExportSumberDanaPajak = async () => {
+  //   await toast.promise(
+  //     mutateAsync(), // memanggil hook mutation tanpa payload
+  //     {
+  //       loading: 'Sinkronisasi sedang berjalan...',
+  //       success: () => 'Sinkronisasi berhasil!',
+  //       error: (err) => `Sinkronisasi gagal: ${err.message || err}`,
+  //     }
+  //   )
+  // }
 
   // Fungsi untuk memeriksa apakah ada nilai negatif di dalam baris
   function getTotalForRow(
@@ -206,12 +206,12 @@ export function RekapTransferSumberDanaTable({
             </Select> */}
 
             {/* Tombol Export */}
-            <Button
+            {/* <Button
               className='rounded-xl bg-blue-600 px-3 py-1 text-white hover:bg-blue-700'
               onClick={handleExportSumberDanaPajak} // fungsi export
             >
               sinkron Sumber Dana Pajak
-            </Button>
+            </Button> */}
           </div>
         }
       />
