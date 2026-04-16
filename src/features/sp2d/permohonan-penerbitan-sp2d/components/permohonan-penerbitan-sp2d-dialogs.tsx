@@ -434,7 +434,7 @@ export function UsersDialogs() {
       useRekGajiSKPD.kurang_upload.length > 0
     ) {
       const daftar = useRekGajiSKPD.kurang_upload
-        .map((d: CekLaporanRekonsiliasiGajiSkpdItem) => `• ${d.nama_rek_gaji}`)
+        .map((d: CekLaporanRekonsiliasiGajiSkpdItem) => `• ${d.nama}`)
         .join('\n')
 
       return {

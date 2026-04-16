@@ -29,6 +29,7 @@ export interface CekLaporanRekonsiliasiGajiSkpdItem {
   nama_rek_gaji: string | null
   status_laporan: boolean
   laporan_data: string | null
+  nama: string
 }
 
 export interface KurangUploadRekonsiliasiGajiSkpdItem {
