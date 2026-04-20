@@ -62,7 +62,7 @@ export function ReferensiPengembalianColumns(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Jenis Belanja' />
       ),
-      cell: ({ row }) => <div>{row.getValue('jenis_belanja')}</div>,
+      cell: ({ row }) => <div>{row.getValue('nm_belanja')}</div>,
       enableSorting: true,
       footer: () => null, // Footer label
     },
@@ -222,7 +222,7 @@ export function ReferensiPengembalianColumns(
 
         const totalSisa = table
           .getFilteredRowModel()
-          .rows// 🚫 exclude kode 6.2.03 & 6.1.01
+          .rows // 🚫 exclude kode 6.2.03 & 6.1.01
           .filter((row) => !isExcludedKode(row.original))
           .reduce((acc, row) => {
             const realisasi = bulanKeys
