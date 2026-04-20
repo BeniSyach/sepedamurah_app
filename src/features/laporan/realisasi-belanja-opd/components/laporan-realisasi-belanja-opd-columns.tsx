@@ -58,7 +58,7 @@ export function ReferensiPengembalianColumns(
     },
 
     {
-      accessorKey: 'jenis_belanja',
+      accessorKey: 'nm_belanja',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Jenis Belanja' />
       ),
