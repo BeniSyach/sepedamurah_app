@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { startOfMonth, endOfMonth } from 'date-fns'
-import { getRouteApi } from '@tanstack/react-router'
 import {
   flexRender,
   getCoreRowModel,
@@ -11,9 +10,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { RekapSumberDanaItem } from '@/api'
+import { type NavigateFn } from '@/hooks/use-table-url-state'
 // import { toast } from 'sonner'
 // import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
-import { useTableUrlState, type NavigateFn } from '@/hooks/use-table-url-state'
 // import { Button } from '@/components/ui/button'
 // import {
 //   Select,
@@ -35,10 +34,6 @@ import { DataTableToolbar } from '@/components/data-table'
 import RangeDatePicker from '@/components/form-date-range'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiRekapSumberDanaItemColumns as columns } from './realisasi-tf-sumber-dana-columns'
-
-const route = getRouteApi(
-  '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
-)
 
 type DataTableProps = {
   data: RekapSumberDanaItem[]
@@ -87,10 +82,7 @@ export function RekapTransferSumberDanaTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState({})
 
-  const { globalFilter } = useTableUrlState({
-    search: route.useSearch(),
-    navigate: route.useNavigate(),
-  })
+  const [globalFilter, setGlobalFilter] = useState('')
 
   const table = useReactTable({
     data,
@@ -108,14 +100,7 @@ export function RekapTransferSumberDanaTable({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    onGlobalFilterChange: (value) => {
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          search: value, // ✅ JANGAN trim
-        }),
-      })
-    },
+    onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: (row, _, filterValue) => {
       const keywords = String(filterValue).toLowerCase().trim().split(/\s+/) // 🔥 pecah berdasarkan spasi
 
