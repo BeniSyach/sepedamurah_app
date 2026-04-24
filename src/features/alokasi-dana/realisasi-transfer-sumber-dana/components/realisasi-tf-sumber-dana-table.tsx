@@ -110,25 +110,28 @@ export function RekapTransferSumberDanaTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onGlobalFilterChange,
     globalFilterFn: (row, _, filterValue) => {
-      const search = String(filterValue).toLowerCase()
+      const keywords = String(filterValue).toLowerCase().trim().split(/\s+/) // 🔥 pecah berdasarkan spasi
 
-      return row.getAllCells().some((cell) => {
-        const raw = cell.getValue()
-        const value = Number(raw)
+      return keywords.every((keyword) =>
+        row.getAllCells().some((cell) => {
+          const raw = cell.getValue()
+          const value = Number(raw)
 
-        if (!isNaN(value)) {
-          if (search.startsWith('>')) {
-            return value > Number(search.slice(1))
+          // support > dan <
+          if (!isNaN(value)) {
+            if (keyword.startsWith('>')) {
+              return value > Number(keyword.slice(1))
+            }
+            if (keyword.startsWith('<')) {
+              return value < Number(keyword.slice(1))
+            }
           }
-          if (search.startsWith('<')) {
-            return value < Number(search.slice(1))
-          }
-        }
 
-        return String(raw ?? '')
-          .toLowerCase()
-          .includes(search)
-      })
+          return String(raw ?? '')
+            .toLowerCase()
+            .includes(keyword)
+        })
+      )
     },
   })
 
