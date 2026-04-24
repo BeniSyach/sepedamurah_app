@@ -19,6 +19,16 @@ const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
   12: 'total_dec',
 }
 
+// helper biar reusable & clean
+function sumMonths(item: RekapSumberDanaItem, from: number, to: number) {
+  let total = 0
+  for (let i = from; i <= to; i++) {
+    const key = monthKeyMap[i]
+    total += Number(item[key] ?? 0)
+  }
+  return total
+}
+
 export function ReferensiRekapSumberDanaItemColumns(
   bulanFilter: number
 ): ColumnDef<RekapSumberDanaItem>[] {
@@ -30,6 +40,7 @@ export function ReferensiRekapSumberDanaItemColumns(
       enableSorting: false,
       enableHiding: false,
     },
+
     {
       accessorKey: 'nm_sumber',
       header: 'Nama Sumber Dana',
@@ -40,26 +51,11 @@ export function ReferensiRekapSumberDanaItemColumns(
     {
       id: 'sd_bulan_lalu',
       header: `s.d Bulan Lalu`,
-      cell: ({ row }) => {
-        const data = row.original
-        let total = 0
-
-        for (let i = 1; i < bulanFilter; i++) {
-          const key = monthKeyMap[i]
-          total += Number(data[key] ?? 0)
-        }
-
-        return <div>{formatRupiah(total)}</div>
-      },
+      accessorFn: (row) => sumMonths(row, 1, bulanFilter - 1),
+      cell: ({ getValue }) => <div>{formatRupiah(getValue<number>())}</div>,
       footer: ({ table }) => {
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
-          const item = row.original
-          let subtotal = 0
-          for (let i = 1; i < bulanFilter; i++) {
-            const key = monthKeyMap[i]
-            subtotal += Number(item[key] ?? 0)
-          }
-          return sum + subtotal
+          return sum + (row.getValue<number>('sd_bulan_lalu') ?? 0)
         }, 0)
 
         return <strong>{formatRupiah(total)}</strong>
@@ -70,16 +66,14 @@ export function ReferensiRekapSumberDanaItemColumns(
     {
       id: 'bulan_ini',
       header: `Bulan Ini`,
-      cell: ({ row }) => {
-        const data = row.original
+      accessorFn: (row) => {
         const key = monthKeyMap[bulanFilter]
-        return <div>{formatRupiah(Number(data[key] ?? 0))}</div>
+        return Number(row[key] ?? 0)
       },
+      cell: ({ getValue }) => <div>{formatRupiah(getValue<number>())}</div>,
       footer: ({ table }) => {
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
-          const item = row.original
-          const key = monthKeyMap[bulanFilter]
-          return sum + Number(item[key] ?? 0)
+          return sum + (row.getValue<number>('bulan_ini') ?? 0)
         }, 0)
 
         return <strong>{formatRupiah(total)}</strong>
@@ -90,26 +84,11 @@ export function ReferensiRekapSumberDanaItemColumns(
     {
       id: 'sd_bulan_ini',
       header: `s.d Bulan Ini`,
-      cell: ({ row }) => {
-        const data = row.original
-        let total = 0
-
-        for (let i = 1; i <= bulanFilter; i++) {
-          const key = monthKeyMap[i]
-          total += Number(data[key] ?? 0)
-        }
-
-        return <div>{formatRupiah(total)}</div>
-      },
+      accessorFn: (row) => sumMonths(row, 1, bulanFilter),
+      cell: ({ getValue }) => <div>{formatRupiah(getValue<number>())}</div>,
       footer: ({ table }) => {
         const total = table.getFilteredRowModel().rows.reduce((sum, row) => {
-          const item = row.original
-          let subtotal = 0
-          for (let i = 1; i <= bulanFilter; i++) {
-            const key = monthKeyMap[i]
-            subtotal += Number(item[key] ?? 0)
-          }
-          return sum + subtotal
+          return sum + (row.getValue<number>('sd_bulan_ini') ?? 0)
         }, 0)
 
         return <strong>{formatRupiah(total)}</strong>

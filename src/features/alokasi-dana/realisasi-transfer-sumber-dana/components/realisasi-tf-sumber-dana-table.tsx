@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { startOfMonth, endOfMonth } from 'date-fns'
+import { getRouteApi } from '@tanstack/react-router'
 import {
   flexRender,
   getCoreRowModel,
@@ -12,7 +13,7 @@ import {
 import type { RekapSumberDanaItem } from '@/api'
 // import { toast } from 'sonner'
 // import { useSyncRealisasiTransferSumberDanaPajak } from '@/api/alokasi-dana/realisasi-transfer-sumber-dana/use-post-sumber-dana-pajak'
-import { type NavigateFn } from '@/hooks/use-table-url-state'
+import { useTableUrlState, type NavigateFn } from '@/hooks/use-table-url-state'
 // import { Button } from '@/components/ui/button'
 // import {
 //   Select,
@@ -35,6 +36,10 @@ import RangeDatePicker from '@/components/form-date-range'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { ReferensiRekapSumberDanaItemColumns as columns } from './realisasi-tf-sumber-dana-columns'
 
+const route = getRouteApi(
+  '/_authenticated/alokasi-dana/realisasi-transfer-sumber-dana'
+)
+
 type DataTableProps = {
   data: RekapSumberDanaItem[]
   search: Record<string, unknown>
@@ -44,22 +49,6 @@ type DataTableProps = {
 }
 
 const currentMonth = new Date().getMonth() + 1
-
-// Mapping bulan → key sesuai schema dari backend
-const monthKeyMap: Record<number, keyof RekapSumberDanaItem> = {
-  1: 'total_jan',
-  2: 'total_feb',
-  3: 'total_mar',
-  4: 'total_apr',
-  5: 'total_may',
-  6: 'total_jun',
-  7: 'total_jul',
-  8: 'total_aug',
-  9: 'total_sep',
-  10: 'total_oct',
-  11: 'total_nov',
-  12: 'total_dec',
-}
 
 export function RekapTransferSumberDanaTable({
   data,
@@ -98,12 +87,18 @@ export function RekapTransferSumberDanaTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState({})
 
+  const { globalFilter, onGlobalFilterChange } = useTableUrlState({
+    search: route.useSearch(),
+    navigate: route.useNavigate(),
+  })
+
   const table = useReactTable({
     data,
     columns: columns(bulanFilter),
     state: {
       rowSelection,
       columnVisibility,
+      globalFilter,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -113,38 +108,36 @@ export function RekapTransferSumberDanaTable({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    onGlobalFilterChange,
+    globalFilterFn: (row, _, filterValue) => {
+      const search = String(filterValue).toLowerCase()
+
+      return row.getAllCells().some((cell) => {
+        const raw = cell.getValue()
+        const value = Number(raw)
+
+        if (!isNaN(value)) {
+          if (search.startsWith('>')) {
+            return value > Number(search.slice(1))
+          }
+          if (search.startsWith('<')) {
+            return value < Number(search.slice(1))
+          }
+        }
+
+        return String(raw ?? '')
+          .toLowerCase()
+          .includes(search)
+      })
+    },
   })
-
-  // const handleExportSumberDanaPajak = async () => {
-  //   await toast.promise(
-  //     mutateAsync(), // memanggil hook mutation tanpa payload
-  //     {
-  //       loading: 'Sinkronisasi sedang berjalan...',
-  //       success: () => 'Sinkronisasi berhasil!',
-  //       error: (err) => `Sinkronisasi gagal: ${err.message || err}`,
-  //     }
-  //   )
-  // }
-
-  // Fungsi untuk memeriksa apakah ada nilai negatif di dalam baris
-  function getTotalForRow(
-    row: RekapSumberDanaItem,
-    bulanFilter: number
-  ): number {
-    let total = 0
-    for (let i = 1; i <= bulanFilter; i++) {
-      const key = monthKeyMap[i]
-      total += Number(row[key] ?? 0)
-    }
-    return total
-  }
 
   return (
     <div className='space-y-4'>
       <DataTableToolbar
         table={table}
         searchPlaceholder='Cari Realisasi Transfer Sumber Dana...'
-        searchKey='nm_sumber'
+        searchKey={undefined}
         extraControls={
           <div className='flex items-center space-x-2'>
             {/* <Select
@@ -241,7 +234,7 @@ export function RekapTransferSumberDanaTable({
               <>
                 {table.getRowModel().rows.map((row) => {
                   // Cek apakah baris ini memiliki nilai negatif
-                  const total = getTotalForRow(row.original, bulanFilter)
+                  const total = row.getValue<number>('sd_bulan_ini') ?? 0
                   const isNegative = total < 0
 
                   return (
@@ -264,7 +257,7 @@ export function RekapTransferSumberDanaTable({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table.getAllLeafColumns().length}
                   className='text-muted-foreground h-24 text-center'
                 >
                   No results.

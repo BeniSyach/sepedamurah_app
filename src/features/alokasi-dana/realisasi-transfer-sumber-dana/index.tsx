@@ -42,7 +42,7 @@ export function RealisasiTransferSumberDana() {
     bulan: bulanFilter,
     tgl_awal: format(finalFrom, 'yyyy-MM-dd'),
     tgl_akhir: format(finalTo, 'yyyy-MM-dd'),
-    search: search.search,
+    // search: search.search,
   })
 
   return (
