@@ -87,7 +87,7 @@ export function RekapTransferSumberDanaTable({
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState({})
 
-  const { globalFilter, onGlobalFilterChange } = useTableUrlState({
+  const { globalFilter } = useTableUrlState({
     search: route.useSearch(),
     navigate: route.useNavigate(),
   })
@@ -108,7 +108,14 @@ export function RekapTransferSumberDanaTable({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    onGlobalFilterChange,
+    onGlobalFilterChange: (value) => {
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          search: value, // ✅ JANGAN trim
+        }),
+      })
+    },
     globalFilterFn: (row, _, filterValue) => {
       const keywords = String(filterValue).toLowerCase().trim().split(/\s+/) // 🔥 pecah berdasarkan spasi
 
