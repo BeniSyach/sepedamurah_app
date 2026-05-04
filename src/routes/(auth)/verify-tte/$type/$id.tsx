@@ -53,7 +53,7 @@ function VerifyPage() {
             >
               <ShieldCheck className='mb-4 h-14 w-14 text-blue-700' />
               <CardTitle className='text-4xl font-extrabold tracking-tight text-gray-800'>
-                Verifikasi TTE {type.toUpperCase()}
+                Informasi Penandatanganan
               </CardTitle>
               <p className='mt-2 text-lg text-gray-600'>
                 Pemeriksaan keaslian Tanda Tangan Elektronik Dokumen
