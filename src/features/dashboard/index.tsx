@@ -27,6 +27,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
+import { DashboardBelanjaSKPD } from './components/dashboard-belanja-SKPD'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import DashboardMonitoringDPA from './components/reports'
@@ -188,7 +189,7 @@ export function Dashboard() {
               <TabsTrigger value='overview'>Utama</TabsTrigger>
               <TabsTrigger value='analytics'>Laporan Fungsional</TabsTrigger>
               <TabsTrigger value='reports'>Laporan DPA</TabsTrigger>
-              {/* <TabsTrigger value='notifications'>Notifikasi</TabsTrigger> */}
+              <TabsTrigger value='notifications'>Belanja SKPD</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -481,6 +482,9 @@ export function Dashboard() {
           </TabsContent>
           <TabsContent value='reports' className='space-y-4'>
             <DashboardMonitoringDPA />
+          </TabsContent>
+          <TabsContent value='notifications' className='space-y-4'>
+            <DashboardBelanjaSKPD />
           </TabsContent>
         </Tabs>
       </Main>

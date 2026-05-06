@@ -170,3 +170,35 @@ export interface DPAStatisticsResponse {
   success: boolean
   data: DPAStatisticItem[]
 }
+
+export interface TableGetBelanjaSKPDRequest {
+  tahun?: string
+  kd_belanja1?: string
+  kd_belanja2?: string
+  kd_belanja3?: string
+}
+
+export type BulanBelanja = {
+  [key: string]: number | false
+}
+
+export interface BelanjaSKPDItem {
+  skpd: string
+  kd_opd1: string
+  kd_opd2: string
+  kd_opd3: string
+  kd_opd4: string
+  kd_opd5: string
+  bulan: BulanBelanja
+}
+
+export interface BelanjaResponseData {
+  tahun_list: string[]
+  tahun_selected: string
+  belanja: BelanjaSKPDItem[]
+}
+
+export interface BelanjaResponse {
+  success: boolean
+  data: BelanjaResponseData
+}
