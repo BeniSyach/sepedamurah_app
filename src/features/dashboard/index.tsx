@@ -28,6 +28,10 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
 import { DashboardBelanjaSKPD } from './components/dashboard-belanja-SKPD'
+import { DashboardBMD } from './components/dashboard-bmd'
+import { DashboardPajakBendahara } from './components/dashboard-pajak-bendahara'
+import { DashboardRekonGaji } from './components/dashboard-rekon-gaji'
+import { DashboardSPB } from './components/dashboard-spb'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import DashboardMonitoringDPA from './components/reports'
@@ -190,6 +194,10 @@ export function Dashboard() {
               <TabsTrigger value='analytics'>Laporan Fungsional</TabsTrigger>
               <TabsTrigger value='reports'>Laporan DPA</TabsTrigger>
               <TabsTrigger value='notifications'>Belanja SKPD</TabsTrigger>
+              <TabsTrigger value='pajakBendahara'>Pajak Bendahara</TabsTrigger>
+              <TabsTrigger value='bmd'> BMD</TabsTrigger>
+              <TabsTrigger value='spb'> SPB</TabsTrigger>
+              <TabsTrigger value='RekonGaji'>Rekon Gaji</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -485,6 +493,18 @@ export function Dashboard() {
           </TabsContent>
           <TabsContent value='notifications' className='space-y-4'>
             <DashboardBelanjaSKPD />
+          </TabsContent>
+          <TabsContent value='pajakBendahara' className='space-y-4'>
+            <DashboardPajakBendahara />
+          </TabsContent>
+          <TabsContent value='bmd' className='space-y-4'>
+            <DashboardBMD />
+          </TabsContent>
+          <TabsContent value='spb' className='space-y-4'>
+            <DashboardSPB />
+          </TabsContent>
+          <TabsContent value='RekonGaji' className='space-y-4'>
+            <DashboardRekonGaji />
           </TabsContent>
         </Tabs>
       </Main>

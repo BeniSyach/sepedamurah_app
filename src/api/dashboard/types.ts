@@ -202,3 +202,36 @@ export interface BelanjaResponse {
   success: boolean
   data: BelanjaResponseData
 }
+
+export interface TableGetPajakBendaharaRequest {
+  tahun?: string
+}
+
+export interface DashboardPajakBendaharaResponse {
+  success: boolean
+  data: DashboardPajakBendaharaData
+}
+
+export interface DashboardPajakBendaharaData {
+  tahun_list: string[]
+  tahun_selected: string
+
+  // header dinamis
+  referensi: string[]
+
+  // isi tabel
+  rows: DashboardPajakBendaharaRow[]
+}
+
+export interface DashboardPajakBendaharaRow {
+  skpd: string
+
+  kd_opd1: string
+  kd_opd2: string
+  kd_opd3: string
+  kd_opd4: string
+  kd_opd5: string
+
+  // dynamic referensi
+  [key: string]: string | number
+}
