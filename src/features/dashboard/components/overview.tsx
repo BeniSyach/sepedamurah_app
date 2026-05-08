@@ -1,4 +1,4 @@
-import { useGetSp2dChart } from '@/api'
+import { type MasterSkpd, useGetSp2dChart } from '@/api'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 interface Props {
@@ -6,9 +6,23 @@ interface Props {
 }
 
 export function Overview({ tahun }: Props) {
-  const { data } = useGetSp2dChart({
-    tahun,
-  })
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
+
+  const params = {
+    tahun: Number(tahun),
+
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
+  }
+  const { data } = useGetSp2dChart(params)
 
   // Convert response: Sp2dChartResponse → Recharts format
   const chartData =

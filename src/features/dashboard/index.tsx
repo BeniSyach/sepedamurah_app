@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { useGetCountData } from '@/api'
+import { type MasterSkpd, useGetCountData } from '@/api'
 import { formatTanggaldanJam } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -103,16 +103,30 @@ function SkeletonTabs() {
 }
 const currentYear = new Date().getFullYear()
 export function Dashboard() {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
   const [tahun, setTahun] = useState(String(currentYear))
 
   const tahunList = Array.from({ length: 4 }, (_, i) => currentYear - 3 + i)
 
-  // 🔥 API otomatis refetch saat `tahun` berubah
-  const { data, isLoading } = useGetCountData({
+  const params = {
     from: '',
     to: '',
     tahun: Number(tahun),
-  })
+
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
+  }
+
+  const { data, isLoading } = useGetCountData(params)
+
   if (isLoading) {
     return (
       <>

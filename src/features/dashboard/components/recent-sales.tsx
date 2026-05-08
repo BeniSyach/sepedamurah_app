@@ -1,9 +1,22 @@
-import { type Sp2dItem, useGetBerkasMasuk } from '@/api'
+import { type MasterSkpd, type Sp2dItem, useGetBerkasMasuk } from '@/api'
 import { formatTanggaldanJam } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function RecentSales() {
-  const { data } = useGetBerkasMasuk()
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
+  const params = {
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
+  }
+  const { data } = useGetBerkasMasuk(params)
   const items: Sp2dItem[] = data?.data ?? []
 
   return (
