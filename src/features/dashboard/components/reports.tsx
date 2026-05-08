@@ -101,18 +101,12 @@ const DashboardMonitoringDPA = () => {
   const dpaTypes = dpaTypesData?.data ?? []
   const data = monitoringData?.data?.monitoring ?? []
 
-  // 🔵 Summary
-  const summary = useMemo(() => {
-    const allItems = data.flatMap((skpd) => skpd.items)
-
-    const total = allItems.length
-    const uploaded = allItems.filter((i) => i.status === 'Sudah Upload').length
-
-    const notUploaded = total - uploaded
-    const percentage = total > 0 ? Math.round((uploaded / total) * 100) : 0
-
-    return { total, uploaded, notUploaded, percentage }
-  }, [data])
+  const summary = monitoringData?.data?.summary ?? {
+    total: 0,
+    uploaded: 0,
+    notUploaded: 0,
+    percentage: 0,
+  }
 
   // 🔵 Filtering table
   const filteredData = useMemo(() => {
