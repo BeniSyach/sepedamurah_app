@@ -185,10 +185,10 @@ export function DashboardPajakBendahara() {
                     {referensi.map((ref: string) => (
                       <TableHead
                         key={ref}
-                        className='min-w-[120px] border-b text-center text-sm font-semibold whitespace-nowrap'
+                        className='max-w-[160px] min-w-[120px] border-b text-center text-sm font-semibold whitespace-normal'
                       >
-                        <div className='flex flex-col items-center justify-center'>
-                          <span className='mt-1 rounded-md bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
+                        <div className='flex flex-wrap items-center justify-center gap-1'>
+                          <span className='rounded-md bg-blue-100 px-2 py-1 text-center text-xs font-bold break-words text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
                             {ref}
                           </span>
                         </div>
