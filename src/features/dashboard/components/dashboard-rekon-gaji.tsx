@@ -5,7 +5,7 @@ import {
   type DashboardPajakBendaharaRow,
 } from '@/api'
 import { motion } from 'framer-motion'
-import { Check, X } from 'lucide-react'
+import { Check, Minus, X } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
@@ -219,43 +219,34 @@ export function DashboardRekonGaji() {
                               <TableCell key={ref} className='p-3 text-center'>
                                 {value === 1 ? (
                                   <motion.div
-                                    initial={{
-                                      scale: 0.5,
-                                      opacity: 0,
-                                    }}
-                                    animate={{
-                                      scale: 1,
-                                      opacity: 1,
-                                    }}
-                                    whileHover={{
-                                      scale: 1.15,
-                                    }}
-                                    transition={{
-                                      duration: 0.2,
-                                    }}
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    whileHover={{ scale: 1.15 }}
+                                    transition={{ duration: 0.2 }}
                                     className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-white shadow'
                                   >
                                     <Check className='h-4 w-4' />
                                   </motion.div>
-                                ) : (
+                                ) : value === 0 ? (
                                   <motion.div
-                                    initial={{
-                                      scale: 0.5,
-                                      opacity: 0,
-                                    }}
-                                    animate={{
-                                      scale: 1,
-                                      opacity: 1,
-                                    }}
-                                    whileHover={{
-                                      scale: 1.15,
-                                    }}
-                                    transition={{
-                                      duration: 0.2,
-                                    }}
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    whileHover={{ scale: 1.15 }}
+                                    transition={{ duration: 0.2 }}
                                     className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow'
                                   >
                                     <X className='h-4 w-4' />
+                                  </motion.div>
+                                ) : (
+                                  // value === 2 (belum ada data / belum akses)
+                                  <motion.div
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    whileHover={{ scale: 1.15 }}
+                                    transition={{ duration: 0.2 }}
+                                    className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-400 text-white shadow'
+                                  >
+                                    <Minus className='h-4 w-4' />
                                   </motion.div>
                                 )}
                               </TableCell>
