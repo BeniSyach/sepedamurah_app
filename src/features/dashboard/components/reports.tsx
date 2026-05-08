@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from 'react'
+import type { MasterSkpd } from '@/api'
 import { motion, useReducedMotion } from 'framer-motion'
 import {
   Building2,
@@ -72,6 +73,11 @@ const cardAnim = {
 }
 
 const DashboardMonitoringDPA = () => {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
+
   const [selectedYear, setSelectedYear] = useState(() =>
     new Date().getFullYear().toString()
   )
@@ -93,6 +99,15 @@ const DashboardMonitoringDPA = () => {
   } = useGetMonitoringDPA({
     tahun: selectedYear,
     dpa_id: selectedDPA !== 'all' ? selectedDPA : undefined,
+    ...(userRole === 'Bendahara'
+      ? {
+          kd_opd1: skpd?.kd_opd1,
+          kd_opd2: skpd?.kd_opd2,
+          kd_opd3: skpd?.kd_opd3,
+          kd_opd4: skpd?.kd_opd4,
+          kd_opd5: skpd?.kd_opd5,
+        }
+      : {}),
   })
 
   const shouldReduceMotion = useReducedMotion()

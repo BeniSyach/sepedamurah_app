@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import { useGetCheckFungsional, useGetCountFungsional } from '@/api'
+import {
+  type MasterSkpd,
+  useGetCheckFungsional,
+  useGetCountFungsional,
+} from '@/api'
 import { motion } from 'framer-motion'
 import { X, Check } from 'lucide-react'
 import { formatTanggaldanJam } from '@/lib/utils'
@@ -91,27 +95,29 @@ function SkeletonCard() {
 }
 
 export function Analytics() {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
   const [tahun, setTahun] = useState<string>('')
+
+  const params = {
+    tahun: tahun,
+
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
+  }
   // === API Call ===
   const { data: datacheck, isLoading: loadingDataCheck } =
-    useGetCheckFungsional({
-      kd_opd1: '',
-      kd_opd2: '',
-      kd_opd3: '',
-      kd_opd4: '',
-      kd_opd5: '',
-      tahun,
-    })
+    useGetCheckFungsional(params)
 
   const { data: dataCount, isLoading: loadingDataCount } =
-    useGetCountFungsional({
-      kd_opd1: '',
-      kd_opd2: '',
-      kd_opd3: '',
-      kd_opd4: '',
-      kd_opd5: '',
-      tahun,
-    })
+    useGetCountFungsional(params)
 
   const tahunList = datacheck?.data?.tahun_list ?? []
   const tahunSelected = datacheck?.data?.tahun_selected ?? ''

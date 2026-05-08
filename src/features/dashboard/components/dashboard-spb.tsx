@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useGetDashboardSPB, type DashboardPajakBendaharaRow } from '@/api'
+import {
+  type MasterSkpd,
+  useGetDashboardSPB,
+  type DashboardPajakBendaharaRow,
+} from '@/api'
 import { motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -75,10 +79,22 @@ function SkeletonTable() {
 }
 
 export function DashboardSPB() {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
   const [tahun, setTahun] = useState<string>('')
 
   const { data: datacheck, isLoading: loadingDataCheck } = useGetDashboardSPB({
     tahun,
+    // hanya bendahara kirim filter OPD
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
   })
 
   const tahunList = datacheck?.data?.tahun_list ?? []

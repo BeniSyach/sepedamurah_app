@@ -176,6 +176,11 @@ export interface TableGetBelanjaSKPDRequest {
   kd_belanja1?: string
   kd_belanja2?: string
   kd_belanja3?: string
+  kd_opd1?: string
+  kd_opd2?: string
+  kd_opd3?: string
+  kd_opd4?: string
+  kd_opd5?: string
 }
 
 export type BulanBelanja = {
@@ -205,6 +210,11 @@ export interface BelanjaResponse {
 
 export interface TableGetPajakBendaharaRequest {
   tahun?: string
+  kd_opd1?: string
+  kd_opd2?: string
+  kd_opd3?: string
+  kd_opd4?: string
+  kd_opd5?: string
 }
 
 export interface DashboardPajakBendaharaResponse {

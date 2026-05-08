@@ -10,6 +10,11 @@ import type {
 interface payloadMonitoringDPA {
   tahun?: string
   dpa_id?: string
+  kd_opd1?: string
+  kd_opd2?: string
+  kd_opd3?: string
+  kd_opd4?: string
+  kd_opd5?: string
 }
 
 export function useGetMonitoringDPA(params: payloadMonitoringDPA) {
@@ -22,6 +27,11 @@ export function useGetMonitoringDPA(params: payloadMonitoringDPA) {
           params: {
             tahun: params.tahun ?? '',
             dpa_id: params.dpa_id ?? '',
+            kd_opd1: params.kd_opd1 ?? '',
+            kd_opd2: params.kd_opd2 ?? '',
+            kd_opd3: params.kd_opd3 ?? '',
+            kd_opd4: params.kd_opd4 ?? '',
+            kd_opd5: params.kd_opd5 ?? '',
           },
         }
       )

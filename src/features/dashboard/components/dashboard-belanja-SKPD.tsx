@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useGetBelanjaSKPD, useGetRefJenisBelanja } from '@/api'
+import {
+  type MasterSkpd,
+  useGetBelanjaSKPD,
+  useGetRefJenisBelanja,
+} from '@/api'
 import { motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -90,17 +94,33 @@ function SkeletonCard() {
 }
 
 export function DashboardBelanjaSKPD() {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
   const [tahun, setTahun] = useState<string>('')
   const [jenis, setJenis] = useState<string>('5|1|01')
   const [kd1, kd2, kd3] = (jenis || '').split('|')
   const [activeCell, setActiveCell] = useState<string | null>(null)
 
-  const { data: datacheck, isLoading: loadingDataCheck } = useGetBelanjaSKPD({
+  const params = {
     kd_belanja1: kd1 || '',
     kd_belanja2: kd2 || '',
     kd_belanja3: kd3 || '',
     tahun,
-  })
+
+    // hanya bendahara kirim OPD
+    ...(userRole === 'Bendahara' && {
+      kd_opd1: skpd?.kd_opd1,
+      kd_opd2: skpd?.kd_opd2,
+      kd_opd3: skpd?.kd_opd3,
+      kd_opd4: skpd?.kd_opd4,
+      kd_opd5: skpd?.kd_opd5,
+    }),
+  }
+
+  const { data: datacheck, isLoading: loadingDataCheck } =
+    useGetBelanjaSKPD(params)
 
   const { data: dataBelanja, isLoading: loadingBelanja } =
     useGetRefJenisBelanja({})

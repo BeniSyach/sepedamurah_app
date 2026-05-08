@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
+  type MasterSkpd,
   useGetDashboardPajakBendahara,
   type DashboardPajakBendaharaRow,
 } from '@/api'
@@ -78,11 +79,24 @@ function SkeletonTable() {
 }
 
 export function DashboardPajakBendahara() {
+  const skpd = JSON.parse(
+    localStorage.getItem('user_skpd') || '{}'
+  ) as MasterSkpd
+  const userRole = localStorage.getItem('user_role') ?? ''
   const [tahun, setTahun] = useState<string>('')
 
   const { data: datacheck, isLoading: loadingDataCheck } =
     useGetDashboardPajakBendahara({
       tahun,
+
+      // hanya bendahara kirim filter OPD
+      ...(userRole === 'Bendahara' && {
+        kd_opd1: skpd?.kd_opd1,
+        kd_opd2: skpd?.kd_opd2,
+        kd_opd3: skpd?.kd_opd3,
+        kd_opd4: skpd?.kd_opd4,
+        kd_opd5: skpd?.kd_opd5,
+      }),
     })
 
   const tahunList = datacheck?.data?.tahun_list ?? []
