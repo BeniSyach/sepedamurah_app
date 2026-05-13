@@ -2,7 +2,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
 import { type LaporanDPA } from '@/api'
 import { Eye, FolderSearch2 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
+// import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -21,7 +21,7 @@ type DataTableRowActionsProps = {
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useRefLaporanDPA()
   const levelAkses = localStorage.getItem('user_role')
-  const user = useAuthStore((s) => s.user)
+  // const user = useAuthStore((s) => s.user)
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          {levelAkses !== 'Bendahara' && user?.nip === '198712022011011007' && (
+          {levelAkses !== 'Bendahara' && (
             <>
               <DropdownMenuItem
                 onClick={() => {

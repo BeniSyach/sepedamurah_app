@@ -39,7 +39,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          {levelAkses !== 'Bendahara' && user?.nip === '198712022011011007' && (
+          {levelAkses !== 'Bendahara' && (
             <DropdownMenuItem
               onClick={() => {
                 setCurrentRow(row.original)
