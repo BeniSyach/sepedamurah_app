@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client'
 
 import { z } from 'zod'
@@ -24,8 +25,12 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+/* eslint-disable no-console */
+
+/* eslint-disable no-console */
+
 const formSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kd_rekening1: z.string().min(1, 'Kode Rekening Ke - 1 Harus Ada.'),
   kd_rekening2: z.string().min(1, 'Kode Rekening Ke - 2 Harus Ada.'),
   kd_rekening3: z.string().min(1, 'Kode Rekening Ke - 3 Harus Ada.'),
@@ -72,6 +77,7 @@ export function RekeningsActionDialog({
       toast.error('ID rekening tidak ditemukan')
       return
     }
+    console.log(data)
     const requestPromise = isEdit
       ? putRefRekeningAsync(data)
       : postRefRekeningAsync(data)

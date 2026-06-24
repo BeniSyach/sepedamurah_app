@@ -3,7 +3,7 @@ import { api } from '../../common/client'
 import type { Rekening } from './types'
 
 interface UpdateRekeningPayload {
-  id?: number
+  id?: string
 
   kd_rekening1: string
   kd_rekening2: string
