@@ -3,6 +3,8 @@ import { api } from '../../common/client'
 import type { Rekening } from './types'
 
 interface UpdateRekeningPayload {
+  id?: number
+
   kd_rekening1: string
   kd_rekening2: string
   kd_rekening3: string
@@ -22,7 +24,7 @@ export function usePutRefRekening() {
     // mutationFn menerima payload dan id
     mutationFn: async (payload: UpdateRekeningPayload): Promise<Rekening> => {
       const { data } = await api.put<Rekening>(
-        `/master-data/rekening/${payload.kd_rekening1}/${payload.kd_rekening2}/${payload.kd_rekening3}/${payload.kd_rekening4}/${payload.kd_rekening5}/${payload.kd_rekening6}`,
+        `/master-data/rekening/${payload.id}`,
         payload
       )
       return data

@@ -25,6 +25,7 @@ import {
 import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
+  id: z.number().optional(),
   kd_rekening1: z.string().min(1, 'Kode Rekening Ke - 1 Harus Ada.'),
   kd_rekening2: z.string().min(1, 'Kode Rekening Ke - 2 Harus Ada.'),
   kd_rekening3: z.string().min(1, 'Kode Rekening Ke - 3 Harus Ada.'),
@@ -55,6 +56,7 @@ export function RekeningsActionDialog({
   const form = useForm<RekeningForm>({
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
+      id: undefined,
       kd_rekening1: '',
       kd_rekening2: '',
       kd_rekening3: '',
@@ -66,6 +68,10 @@ export function RekeningsActionDialog({
   })
 
   const onSubmit = async (data: RekeningForm) => {
+    if (isEdit && !data.id) {
+      toast.error('ID rekening tidak ditemukan')
+      return
+    }
     const requestPromise = isEdit
       ? putRefRekeningAsync(data)
       : postRefRekeningAsync(data)

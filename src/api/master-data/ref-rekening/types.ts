@@ -1,6 +1,7 @@
 import type { PaginationLinks, PaginationMeta } from '@/api/users'
 
 export interface Rekening {
+  id: number
   kd_rekening1: string
   kd_rekening2: string
   kd_rekening3: string
