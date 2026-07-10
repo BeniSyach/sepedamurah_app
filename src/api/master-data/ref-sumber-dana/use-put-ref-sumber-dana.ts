@@ -11,6 +11,7 @@ interface UpdateSumberDanaPayload {
   kd_ref6: string
   nm_ref: string
   status: string
+  jenis_sumber_dana: string
 }
 
 /**

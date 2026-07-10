@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { CaretSortIcon } from '@radix-ui/react-icons'
@@ -19,8 +19,9 @@ import {
   useGetSubRincian,
 } from '@/api'
 import { CheckIcon } from 'lucide-react'
+import { toast } from 'sonner'
 import { useGetRekKelompok } from '@/api/master-data/rek-kelompok'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { downloadLraSumberDanaPdf } from '@/lib/download-pdf'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -284,6 +285,7 @@ const defaultValues: AccountFormValues = {
 }
 
 export function LaporanPembukuan() {
+  const [loading, setLoading] = useState(false)
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
@@ -456,9 +458,20 @@ export function LaporanPembukuan() {
   })
   const sumberDanaList = dataSD?.data || []
 
-  function onSubmit(data: AccountFormValues) {
-    showSubmittedData(data)
+  async function onSubmit(data: AccountFormValues) {
+    try {
+      setLoading(true)
+
+      if (data.jenis_laporan === 'lra_sd') {
+        await downloadLraSumberDanaPdf(data)
+      } else {
+        toast.error('laporan masih dalam perbaikan')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
+
   useEffect(() => {
     if (urusanValue) {
       form.setValue('bidang_urusan', { kd_bu1: '', kd_bu2: '', nm_bu: '' })
@@ -2236,10 +2249,13 @@ export function LaporanPembukuan() {
 
                 {/* === Tombol === */}
                 <div className='flex justify-end space-x-4 pt-6'>
-                  <Button type='button' variant='outline'>
+                  <Button type='button' variant='outline' disabled={loading}>
                     Preview
                   </Button>
-                  <Button type='submit'>Cetak Laporan</Button>
+
+                  <Button type='submit' disabled={loading}>
+                    {loading ? 'Memproses...' : 'Cetak Laporan'}
+                  </Button>
                 </div>
               </form>
             </Form>
