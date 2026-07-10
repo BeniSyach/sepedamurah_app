@@ -111,8 +111,6 @@ export function EditSumberDanaDialog({
   const nilaiBelanja = form.watch('nilai_belanja')
 
   const total = sumberDana.reduce((a, b) => a + Number(b.nilai || 0), 0)
-  const sisaBelanja = nilaiBelanja - total
-  const isCukup = sisaBelanja <= 0
 
   const hasKhusus = sumberDana.some((s) => getJenisByKode(s.kode) === 'KHUSUS')
 
@@ -179,6 +177,11 @@ export function EditSumberDanaDialog({
               <p>
                 Total Sumber Dana: <b>Rp {total.toLocaleString('id-ID')}</b>
               </p>
+              {total !== nilaiBelanja && (
+                <p className='text-red-500'>
+                  Selisih Rp {(nilaiBelanja - total).toLocaleString('id-ID')}
+                </p>
+              )}
             </div>
 
             {/* ===== List ===== */}
@@ -300,10 +303,12 @@ export function EditSumberDanaDialog({
                         <FormLabel>Nilai</FormLabel>
                         <FormControl>
                           <Input
-                            readOnly
-                            value={`Rp ${Number(
-                              field.value || 0
-                            ).toLocaleString('id-ID')}`}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const value =
+                                Number(e.target.value.replace(/\D/g, '')) || 0
+                              field.onChange(value)
+                            }}
                           />
                         </FormControl>
                       </FormItem>
@@ -330,7 +335,7 @@ export function EditSumberDanaDialog({
             <Button
               type='button'
               variant='outline'
-              disabled={isCukup || hasKhusus}
+              disabled={hasKhusus}
               onClick={() => {
                 if (hasKhusus) {
                   toast.error('Sumber dana KHUSUS tidak boleh ditambah')
