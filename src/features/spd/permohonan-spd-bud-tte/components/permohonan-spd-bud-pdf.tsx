@@ -25,8 +25,6 @@ type ElementItem = {
 
 export default function PdfEditorPdfLib({
   currentRow,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onExport,
   onSaveTrigger,
 }: {
   currentRow?: SpdTerkirim
@@ -218,12 +216,16 @@ export default function PdfEditorPdfLib({
     }
 
     const finalBytes = await pdfDoc.save()
-    const blob = new Blob([finalBytes], {
+    const arrayBuffer = finalBytes.buffer.slice(
+      finalBytes.byteOffset,
+      finalBytes.byteOffset + finalBytes.byteLength
+    )
+
+    const blob = new Blob([arrayBuffer], {
       type: 'application/pdf',
     })
 
     const url = URL.createObjectURL(blob)
-
     window.open(url, '_blank')
     // const arrayBuffer = new Uint8Array(finalBytes).buffer
 
