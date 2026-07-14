@@ -200,10 +200,10 @@ export default function PdfEditorPdfLib({
       const H = el.height * scale
 
       page.drawRectangle({
-        x: X - 4,
-        y: Y - 4,
-        width: W + 8,
-        height: H + 8,
+        x: X - 1,
+        y: Y - 1,
+        width: W + 2,
+        height: H + 2,
         color: rgb(1, 1, 1),
       })
 
