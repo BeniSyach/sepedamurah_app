@@ -75,7 +75,11 @@ export default function PdfEditorPdfLib({
 
   const addBarcode = async () => {
     const link = `${window.location.origin}/verify-tte/berkaslain/${currentRow?.id}`
-    const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
+    const qr = await createQRCodeWithLogo(
+      link,
+      '/images/logo-sepeda-murah.png',
+      800
+    )
 
     const defaultWidth = 90
     const defaultHeight = 90
@@ -245,15 +249,13 @@ export default function PdfEditorPdfLib({
       }
 
       let embeddedImage
-      try {
+      if (el.type === 'barcode') {
         embeddedImage = await pdfDoc.embedPng(imgBytes)
-      } catch {
+      } else {
         try {
+          embeddedImage = await pdfDoc.embedPng(imgBytes)
+        } catch {
           embeddedImage = await pdfDoc.embedJpg(imgBytes)
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-          // console.error('Failed to embed image:', error)
-          continue
         }
       }
 
@@ -351,6 +353,14 @@ export default function PdfEditorPdfLib({
         //   `📄 0° ${el.type}: canvas(${el.x},${el.y}) -> pdf(${pdfX.toFixed(1)},${pdfY.toFixed(1)})`
         // )
 
+        page.drawRectangle({
+          x: pdfX - 1,
+          y: pdfY - 1,
+          width: W + 2,
+          height: H + 2,
+          color: rgb(1, 1, 1),
+        })
+
         page.drawImage(embeddedImage, {
           x: pdfX,
           y: pdfY,
@@ -426,6 +436,7 @@ export default function PdfEditorPdfLib({
             <Rnd
               key={el.id}
               bounds='#pdf-container'
+              lockAspectRatio={true}
               size={{ width: el.width, height: el.height }}
               position={{ x: el.x, y: el.y }}
               onDragStop={(_e, data) => {
@@ -436,13 +447,15 @@ export default function PdfEditorPdfLib({
                 )
               }}
               onResizeStop={(_e, _d, ref, _delta, pos) => {
+                const size = parseFloat(ref.style.width)
+
                 setElements((prev) =>
                   prev.map((x) =>
                     x.id === el.id
                       ? {
                           ...x,
-                          width: parseFloat(ref.style.width),
-                          height: parseFloat(ref.style.height),
+                          width: size,
+                          height: size,
                           x: pos.x,
                           y: pos.y,
                         }
