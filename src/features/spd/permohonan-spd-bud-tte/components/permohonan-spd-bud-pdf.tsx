@@ -25,6 +25,7 @@ type ElementItem = {
 
 export default function PdfEditorPdfLib({
   currentRow,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onExport,
   onSaveTrigger,
 }: {
@@ -217,13 +218,20 @@ export default function PdfEditorPdfLib({
     }
 
     const finalBytes = await pdfDoc.save()
-    const arrayBuffer = new Uint8Array(finalBytes).buffer
-
-    const file = new File([arrayBuffer], `${currentRow?.namafile}.pdf`, {
+    const blob = new Blob([finalBytes], {
       type: 'application/pdf',
     })
 
-    onExport?.(file)
+    const url = URL.createObjectURL(blob)
+
+    window.open(url, '_blank')
+    // const arrayBuffer = new Uint8Array(finalBytes).buffer
+
+    // const file = new File([arrayBuffer], `${currentRow?.namafile}.pdf`, {
+    //   type: 'application/pdf',
+    // })
+
+    // onExport?.(file)
   }, [elements, pdfUrl, currentRow, canvasSize])
 
   // Parent menerima fungsi EXPORT versi terbaru
