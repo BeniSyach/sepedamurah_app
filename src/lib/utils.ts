@@ -186,44 +186,53 @@ export function getJam(dateString?: string | null): string {
 export async function createQRCodeWithLogo(
   text: string,
   logoUrl: string,
-  size = 200
+  size = 800 // lebih besar
 ): Promise<string> {
-  // Buat canvas
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
+
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Canvas context gagal dibuat')
 
-  // Generate QR code di canvas
   await QRCode.toCanvas(canvas, text, {
     width: size,
-    margin: 2,
+    margin: 4, // Quiet Zone lebih lebar
+    errorCorrectionLevel: 'high', // WAJIB jika ada logo
     color: {
       dark: '#000000',
-      light: '#ffffff',
+      light: '#FFFFFF',
     },
   })
 
-  // Load logo
   const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image()
-    img.crossOrigin = 'anonymous' // penting untuk hindari CORS error
+    img.crossOrigin = 'anonymous'
     img.src = logoUrl
     img.onload = () => resolve(img)
     img.onerror = reject
   })
 
-  // Hitung posisi tengah
-  const logoSize = size * 0.25 // 25% dari ukuran QR
+  // logo cukup 18-20%
+  const logoSize = size * 0.18
+
   const x = (size - logoSize) / 2
   const y = (size - logoSize) / 2
 
-  // Gambar background putih untuk logo agar QR tetap bisa discan
-  ctx.fillStyle = 'white'
-  ctx.fillRect(x - 5, y - 5, logoSize + 10, logoSize + 10)
+  // Background putih
+  const padding = logoSize * 0.18
 
-  // Gambar logo di tengah
+  ctx.fillStyle = '#FFFFFF'
+  ctx.fillRect(
+    x - padding,
+    y - padding,
+    logoSize + padding * 2,
+    logoSize + padding * 2
+  )
+
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+
   ctx.drawImage(logo, x, y, logoSize, logoSize)
 
   return canvas.toDataURL('image/png')

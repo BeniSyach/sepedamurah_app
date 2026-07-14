@@ -61,7 +61,11 @@ export default function PdfEditorPdfLib({
   // ============================
   const addBarcode = async () => {
     const link = `${window.location.origin}/verify-tte/berkaslain/${currentRow?.id}`
-    const qr = await createQRCodeWithLogo(link, '/images/logo-sepeda-murah.png')
+    const qr = await createQRCodeWithLogo(
+      link,
+      '/images/logo-sepeda-murah.png',
+      800
+    )
 
     const defaultWidth = 90
     const defaultHeight = 90
@@ -179,16 +183,30 @@ export default function PdfEditorPdfLib({
       }
 
       let embeddedImage
-      try {
+      if (el.type === 'barcode') {
         embeddedImage = await pdfDoc.embedPng(imgBytes)
-      } catch {
-        embeddedImage = await pdfDoc.embedJpg(imgBytes)
+      } else {
+        try {
+          embeddedImage = await pdfDoc.embedPng(imgBytes)
+        } catch {
+          embeddedImage = await pdfDoc.embedJpg(imgBytes)
+        }
       }
 
       const X = el.x * scaleX
       const Y = pdfHeight - (el.y + el.height) * scaleY
-      const W = el.width * scaleX
-      const H = el.height * scaleY
+      const scale = Math.min(scaleX, scaleY)
+
+      const W = el.width * scale
+      const H = el.height * scale
+
+      page.drawRectangle({
+        x: X - 4,
+        y: Y - 4,
+        width: W + 8,
+        height: H + 8,
+        color: rgb(1, 1, 1),
+      })
 
       page.drawImage(embeddedImage, {
         x: X,
@@ -254,6 +272,7 @@ export default function PdfEditorPdfLib({
             <Rnd
               key={el.id}
               bounds='#pdf-container'
+              lockAspectRatio={true}
               size={{ width: el.width, height: el.height }}
               position={{ x: el.x, y: el.y }}
               onDragStop={(_e, data) => {
@@ -264,13 +283,15 @@ export default function PdfEditorPdfLib({
                 )
               }}
               onResizeStop={(_e, _d, ref, _delta, pos) => {
+                const size = parseFloat(ref.style.width)
+
                 setElements((prev) =>
                   prev.map((x) =>
                     x.id === el.id
                       ? {
                           ...x,
-                          width: parseFloat(ref.style.width),
-                          height: parseFloat(ref.style.height),
+                          width: size,
+                          height: size,
                           x: pos.x,
                           y: pos.y,
                         }
@@ -287,9 +308,11 @@ export default function PdfEditorPdfLib({
               <img
                 src={el.src}
                 alt=''
+                draggable={false}
                 style={{
                   width: '100%',
                   height: '100%',
+                  objectFit: 'contain',
                   userSelect: 'none',
                   pointerEvents: 'none',
                 }}
