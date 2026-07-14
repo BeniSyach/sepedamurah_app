@@ -25,6 +25,7 @@ type ElementItem = {
 
 export default function PdfEditorPdfLib({
   currentRow,
+  onExport,
   onSaveTrigger,
 }: {
   currentRow?: SpdTerkirim
@@ -217,23 +218,23 @@ export default function PdfEditorPdfLib({
 
     const finalBytes = await pdfDoc.save()
 
-    const arrayBuffer = new ArrayBuffer(finalBytes.length)
-    const view = new Uint8Array(arrayBuffer)
-    view.set(finalBytes)
+    // const arrayBuffer = new ArrayBuffer(finalBytes.length)
+    // const view = new Uint8Array(arrayBuffer)
+    // view.set(finalBytes)
 
-    const blob = new Blob([arrayBuffer], {
-      type: 'application/pdf',
-    })
-
-    const url = URL.createObjectURL(blob)
-    window.open(url, '_blank')
-    // const arrayBuffer = new Uint8Array(finalBytes).buffer
-
-    // const file = new File([arrayBuffer], `${currentRow?.namafile}.pdf`, {
+    // const blob = new Blob([arrayBuffer], {
     //   type: 'application/pdf',
     // })
 
-    // onExport?.(file)
+    // const url = URL.createObjectURL(blob)
+    // window.open(url, '_blank')
+    const arrayBuffer = new Uint8Array(finalBytes).buffer
+
+    const file = new File([arrayBuffer], `${currentRow?.namafile}.pdf`, {
+      type: 'application/pdf',
+    })
+
+    onExport?.(file)
   }, [elements, pdfUrl, currentRow, canvasSize])
 
   // Parent menerima fungsi EXPORT versi terbaru
