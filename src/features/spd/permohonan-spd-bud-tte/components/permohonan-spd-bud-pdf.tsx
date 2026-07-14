@@ -216,10 +216,10 @@ export default function PdfEditorPdfLib({
     }
 
     const finalBytes = await pdfDoc.save()
-    const arrayBuffer = finalBytes.buffer.slice(
-      finalBytes.byteOffset,
-      finalBytes.byteOffset + finalBytes.byteLength
-    )
+
+    const arrayBuffer = new ArrayBuffer(finalBytes.length)
+    const view = new Uint8Array(arrayBuffer)
+    view.set(finalBytes)
 
     const blob = new Blob([arrayBuffer], {
       type: 'application/pdf',
