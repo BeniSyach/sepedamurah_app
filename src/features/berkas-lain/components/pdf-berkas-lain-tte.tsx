@@ -380,9 +380,16 @@ export default function PdfEditorPdfLib({
     // onExport?.(file)
 
     const finalBytes = await pdfDoc.save()
-    const blob = new Blob([finalBytes], { type: 'application/pdf' })
+    const arrayBuffer = new ArrayBuffer(finalBytes.length)
+    const view = new Uint8Array(arrayBuffer)
+    view.set(finalBytes)
 
-    window.open(URL.createObjectURL(blob), '_blank')
+    const blob = new Blob([arrayBuffer], {
+      type: 'application/pdf',
+    })
+
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank')
 
     // const file = new File(
     //   [blob],
