@@ -31,7 +31,7 @@ type PageDimensions = {
 
 export default function PdfEditorPdfLib({
   currentRow,
-  // onExport,
+  onExport,
   onSaveTrigger,
 }: {
   currentRow?: BerkasLain
@@ -370,35 +370,26 @@ export default function PdfEditorPdfLib({
       }
     }
 
-    // const finalBytes = await pdfDoc.save()
-    // const arrayBuffer = new Uint8Array(finalBytes).buffer
-
-    // const file = new File([arrayBuffer], `${currentRow?.nama_dokumen}.pdf`, {
-    //   type: 'application/pdf',
-    // })
-
-    // onExport?.(file)
-
     const finalBytes = await pdfDoc.save()
-    const arrayBuffer = new ArrayBuffer(finalBytes.length)
-    const view = new Uint8Array(arrayBuffer)
-    view.set(finalBytes)
+    const arrayBuffer = new Uint8Array(finalBytes).buffer
 
-    const blob = new Blob([arrayBuffer], {
+    const file = new File([arrayBuffer], `${currentRow?.nama_dokumen}.pdf`, {
       type: 'application/pdf',
     })
 
-    const url = URL.createObjectURL(blob)
-    window.open(url, '_blank')
+    onExport?.(file)
 
-    // const file = new File(
-    //   [blob],
-    //   `${currentRow?.nama_dokumen ?? 'export'}.pdf`,
-    //   {
-    //     type: 'application/pdf',
-    //   }
-    // )
-    // onExport?.(file)
+    // const finalBytes = await pdfDoc.save()
+    // const arrayBuffer = new ArrayBuffer(finalBytes.length)
+    // const view = new Uint8Array(arrayBuffer)
+    // view.set(finalBytes)
+
+    // const blob = new Blob([arrayBuffer], {
+    //   type: 'application/pdf',
+    // })
+
+    // const url = URL.createObjectURL(blob)
+    // window.open(url, '_blank')
   }, [elements, pdfUrl, currentRow, pageDimensions])
 
   useEffect(() => {
