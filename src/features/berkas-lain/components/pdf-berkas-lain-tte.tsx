@@ -31,11 +31,11 @@ type PageDimensions = {
 
 export default function PdfEditorPdfLib({
   currentRow,
-  onExport,
+  // onExport,
   onSaveTrigger,
 }: {
   currentRow?: BerkasLain
-  onExport?: (file: File) => void
+  // onExport?: (file: File) => void
   onSaveTrigger?: (fn: () => Promise<void>) => void
 }) {
   const ASSET_URL = import.meta.env.VITE_ASSET_URL
