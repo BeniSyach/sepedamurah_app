@@ -436,7 +436,7 @@ export default function PdfEditorPdfLib({
             <Rnd
               key={el.id}
               bounds='#pdf-container'
-              lockAspectRatio={true}
+              lockAspectRatio={el.type === 'barcode'}
               size={{ width: el.width, height: el.height }}
               position={{ x: el.x, y: el.y }}
               onDragStop={(_e, data) => {
@@ -447,20 +447,21 @@ export default function PdfEditorPdfLib({
                 )
               }}
               onResizeStop={(_e, _d, ref, _delta, pos) => {
-                const size = parseFloat(ref.style.width)
+                const width = parseFloat(ref.style.width)
+                const height = parseFloat(ref.style.height)
 
                 setElements((prev) =>
-                  prev.map((x) =>
-                    x.id === el.id
-                      ? {
-                          ...x,
-                          width: size,
-                          height: size,
-                          x: pos.x,
-                          y: pos.y,
-                        }
-                      : x
-                  )
+                  prev.map((x) => {
+                    if (x.id !== el.id) return x
+
+                    return {
+                      ...x,
+                      width,
+                      height: x.type === 'barcode' ? width : height,
+                      x: pos.x,
+                      y: pos.y,
+                    }
+                  })
                 )
               }}
               style={{
@@ -478,7 +479,7 @@ export default function PdfEditorPdfLib({
                   height: '100%',
                   userSelect: 'none',
                   pointerEvents: 'none',
-                  objectFit: 'contain',
+                  objectFit: 'fill',
                 }}
               />
             </Rnd>
