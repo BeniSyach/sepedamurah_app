@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import {
   useGetRefUrusan,
   useGetRefBidangUrusan,
@@ -12,6 +13,9 @@ import {
   useGetRefSubKegiatan,
   useGetRefRekening,
   useGetRefSKPD,
+  useGetRefSumberDana,
+  usePostRefPaguBelanja,
+  usePutRefPaguBelanja,
   type BidangUrusan,
   type Program,
   type PaguBelanja,
@@ -19,6 +23,7 @@ import {
   type SubKegiatan,
   type Rekening,
   type MasterSkpd,
+  type SumberDana,
   type Urusan,
 } from '@/api'
 import { Button } from '@/components/ui/button'
@@ -83,9 +88,178 @@ const formSchema = z.object({
   jumlah_pagu: z.string().min(1, 'Jumlah Pagu is required.'),
   kd_relasi: z.string().optional(),
   kd_berapax: z.string().optional(),
+  kd_pagu_sd1: z.string().optional(),
+  kd_pagu_sd2: z.string().optional(),
+  kd_pagu_sd3: z.string().optional(),
+  kd_pagu_sd4: z.string().optional(),
+  kd_pagu_sd5: z.string().optional(),
+  kd_pagu_sd6: z.string().optional(),
+  sumber_dana: z.string().optional(),
 })
 
 type PaguBelanjaForm = z.infer<typeof formSchema>
+
+const getInitialValues = (row?: PaguBelanja | null): PaguBelanjaForm => {
+  if (!row) {
+    return {
+      tahun_rek: new Date().getFullYear().toString(),
+      kd_urusan: '',
+      kd_bu1: '',
+      kd_bu2: '',
+      kd_prog1: '',
+      kd_prog2: '',
+      kd_prog3: '',
+      kd_keg1: '',
+      kd_keg2: '',
+      kd_keg3: '',
+      kd_keg4: '',
+      kd_keg5: '',
+      kd_subkeg1: '',
+      kd_subkeg2: '',
+      kd_subkeg3: '',
+      kd_subkeg4: '',
+      kd_subkeg5: '',
+      kd_subkeg6: '',
+      kd_rekening1: '',
+      kd_rekening2: '',
+      kd_rekening3: '',
+      kd_rekening4: '',
+      kd_rekening5: '',
+      kd_rekening6: '',
+      kd_opd1: '',
+      kd_opd2: '',
+      kd_opd3: '',
+      kd_opd4: '',
+      kd_opd5: '',
+      kd_opd6: '',
+      kd_opd7: '',
+      kd_opd8: '',
+      jumlah_pagu: '',
+      kd_relasi: '',
+      kd_berapax: '',
+      kd_pagu_sd1: '',
+      kd_pagu_sd2: '',
+      kd_pagu_sd3: '',
+      kd_pagu_sd4: '',
+      kd_pagu_sd5: '',
+      kd_pagu_sd6: '',
+      sumber_dana: '',
+    }
+  }
+
+  const sdCode =
+    [
+      row.kd_pagu_sd1,
+      row.kd_pagu_sd2,
+      row.kd_pagu_sd3,
+      row.kd_pagu_sd4,
+      row.kd_pagu_sd5,
+      row.kd_pagu_sd6,
+    ].filter(Boolean).join('.') ||
+    [
+      row.kd_ref1,
+      row.kd_ref2,
+      row.kd_ref3,
+      row.kd_ref4,
+      row.kd_ref5,
+      row.kd_ref6,
+    ].filter(Boolean).join('.') ||
+    ''
+
+  return {
+    tahun_rek: row.tahun_rek ?? new Date().getFullYear().toString(),
+    kd_urusan: row.kd_urusan ?? '',
+    kd_bu1: row.kd_bu1 ?? '',
+    kd_bu2: row.kd_bu2 ?? '',
+    kd_prog1: row.kd_prog1 ?? '',
+    kd_prog2: row.kd_prog2 ?? '',
+    kd_prog3: row.kd_prog3 ?? '',
+    kd_keg1: row.kd_keg1 ?? '',
+    kd_keg2: row.kd_keg2 ?? '',
+    kd_keg3: row.kd_keg3 ?? '',
+    kd_keg4: row.kd_keg4 ?? '',
+    kd_keg5: row.kd_keg5 ?? '',
+    kd_subkeg1: row.kd_subkeg1 ?? '',
+    kd_subkeg2: row.kd_subkeg2 ?? '',
+    kd_subkeg3: row.kd_subkeg3 ?? '',
+    kd_subkeg4: row.kd_subkeg4 ?? '',
+    kd_subkeg5: row.kd_subkeg5 ?? '',
+    kd_subkeg6: row.kd_subkeg6 ?? '',
+    kd_rekening1: row.kd_rekening1 ?? '',
+    kd_rekening2: row.kd_rekening2 ?? '',
+    kd_rekening3: row.kd_rekening3 ?? '',
+    kd_rekening4: row.kd_rekening4 ?? '',
+    kd_rekening5: row.kd_rekening5 ?? '',
+    kd_rekening6: row.kd_rekening6 ?? '',
+    kd_opd1: row.kd_opd1 ?? '',
+    kd_opd2: row.kd_opd2 ?? '',
+    kd_opd3: row.kd_opd3 ?? '',
+    kd_opd4: row.kd_opd4 ?? '',
+    kd_opd5: row.kd_opd5 ?? '',
+    kd_opd6: row.kd_opd6 ?? '',
+    kd_opd7: row.kd_opd7 ?? '',
+    kd_opd8: row.kd_opd8 ?? '',
+    jumlah_pagu: String(row.jumlah_pagu ?? ''),
+    kd_relasi: row.kd_relasi ?? '',
+    kd_berapax: row.kd_berapax ?? '',
+    kd_pagu_sd1: row.kd_pagu_sd1 ?? '',
+    kd_pagu_sd2: row.kd_pagu_sd2 ?? '',
+    kd_pagu_sd3: row.kd_pagu_sd3 ?? '',
+    kd_pagu_sd4: row.kd_pagu_sd4 ?? '',
+    kd_pagu_sd5: row.kd_pagu_sd5 ?? '',
+    kd_pagu_sd6: row.kd_pagu_sd6 ?? '',
+    sumber_dana: sdCode,
+  }
+}
+
+const getSdKey = (item: SumberDana) =>
+  [item.kd_ref1, item.kd_ref2, item.kd_ref3, item.kd_ref4, item.kd_ref5, item.kd_ref6]
+    .filter(Boolean)
+    .join('.')
+
+const getPaguSdKey = (item: {
+  kd_pagu_sd1?: string | null
+  kd_pagu_sd2?: string | null
+  kd_pagu_sd3?: string | null
+  kd_pagu_sd4?: string | null
+  kd_pagu_sd5?: string | null
+  kd_pagu_sd6?: string | null
+}) =>
+  [
+    item.kd_pagu_sd1,
+    item.kd_pagu_sd2,
+    item.kd_pagu_sd3,
+    item.kd_pagu_sd4,
+    item.kd_pagu_sd5,
+    item.kd_pagu_sd6,
+  ]
+    .filter(Boolean)
+    .join('.')
+
+const findSdRefKey = (row?: PaguBelanja | null, list?: SumberDana[]) => {
+  if (!row || !list || list.length === 0) return ''
+  const rowPaguKey = getPaguSdKey(row)
+  const rowRefKey = [
+    row.kd_ref1,
+    row.kd_ref2,
+    row.kd_ref3,
+    row.kd_ref4,
+    row.kd_ref5,
+    row.kd_ref6,
+  ]
+    .filter(Boolean)
+    .join('.')
+
+  const found = list.find((item) => {
+    const itemPaguKey = getPaguSdKey(item)
+    const itemRefKey = getSdKey(item)
+    if (rowPaguKey && itemPaguKey && rowPaguKey === itemPaguKey) return true
+    if (rowRefKey && itemRefKey && rowRefKey === itemRefKey) return true
+    return false
+  })
+
+  return found ? getSdKey(found) : ''
+}
 
 type PaguBelanjaActionDialogProps = {
   currentRow?: PaguBelanja
@@ -129,64 +303,114 @@ export function PaguBelanjaActionDialog({
     page: 1,
     perPage: 1000,
   })
+  const { data: sdData, isLoading: sdLoading } = useGetRefSumberDana({
+    page: 1,
+    perPage: 1000,
+    status: '1',
+  })
 
-  const [selectedBU, setSelectedBU] = useState<string>('')
-  const [selectedProgram, setSelectedProgram] = useState<string>('')
-  const [selectedKegiatan, setSelectedKegiatan] = useState<string>('')
-  const [selectedSubKegiatan, setSelectedSubKegiatan] = useState<string>('')
-  const [selectedRekening, setSelectedRekening] = useState<string>('')
-  const [selectedSKPD, setSelectedSKPD] = useState<string>('')
+  const { mutateAsync: postPagu, isPending: isPosting } = usePostRefPaguBelanja()
+  const { mutateAsync: putPagu, isPending: isPutting } = usePutRefPaguBelanja()
+
+  const [selectedBU, setSelectedBU] = useState<string>(
+    currentRow ? `${currentRow.kd_bu1 ?? ''}.${currentRow.kd_bu2 ?? ''}` : ''
+  )
+  const [selectedProgram, setSelectedProgram] = useState<string>(
+    currentRow
+      ? `${currentRow.kd_prog1 ?? ''}.${currentRow.kd_prog2 ?? ''}.${currentRow.kd_prog3 ?? ''}`
+      : ''
+  )
+  const [selectedKegiatan, setSelectedKegiatan] = useState<string>(
+    currentRow
+      ? `${currentRow.kd_keg1 ?? ''}.${currentRow.kd_keg2 ?? ''}.${currentRow.kd_keg3 ?? ''}.${currentRow.kd_keg4 ?? ''}.${currentRow.kd_keg5 ?? ''}`
+      : ''
+  )
+  const [selectedSubKegiatan, setSelectedSubKegiatan] = useState<string>(
+    currentRow
+      ? `${currentRow.kd_subkeg1 ?? ''}.${currentRow.kd_subkeg2 ?? ''}.${currentRow.kd_subkeg3 ?? ''}.${currentRow.kd_subkeg4 ?? ''}.${currentRow.kd_subkeg5 ?? ''}.${currentRow.kd_subkeg6 ?? ''}`
+      : ''
+  )
+  const [selectedRekening, setSelectedRekening] = useState<string>(
+    currentRow
+      ? `${currentRow.kd_rekening1 ?? ''}.${currentRow.kd_rekening2 ?? ''}.${currentRow.kd_rekening3 ?? ''}.${currentRow.kd_rekening4 ?? ''}.${currentRow.kd_rekening5 ?? ''}.${currentRow.kd_rekening6 ?? ''}`
+      : ''
+  )
+  const [selectedSKPD, setSelectedSKPD] = useState<string>(
+    currentRow
+      ? `${currentRow.kd_opd1 ?? ''}.${currentRow.kd_opd2 ?? ''}.${currentRow.kd_opd3 ?? ''}.${currentRow.kd_opd4 ?? ''}.${currentRow.kd_opd5 ?? ''}.${currentRow.kd_opd6 ?? ''}.${currentRow.kd_opd7 ?? ''}.${currentRow.kd_opd8 ?? ''}`
+      : ''
+  )
+  const [selectedSD, setSelectedSD] = useState<string>('')
 
   const form = useForm<PaguBelanjaForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-        }
-      : {
-          tahun_rek: new Date().getFullYear().toString(),
-          kd_urusan: '',
-          kd_bu1: '',
-          kd_bu2: '',
-          kd_prog1: '',
-          kd_prog2: '',
-          kd_prog3: '',
-          kd_keg1: '',
-          kd_keg2: '',
-          kd_keg3: '',
-          kd_keg4: '',
-          kd_keg5: '',
-          kd_subkeg1: '',
-          kd_subkeg2: '',
-          kd_subkeg3: '',
-          kd_subkeg4: '',
-          kd_subkeg5: '',
-          kd_subkeg6: '',
-          kd_rekening1: '',
-          kd_rekening2: '',
-          kd_rekening3: '',
-          kd_rekening4: '',
-          kd_rekening5: '',
-          kd_rekening6: '',
-          kd_opd1: '',
-          kd_opd2: '',
-          kd_opd3: '',
-          kd_opd4: '',
-          kd_opd5: '',
-          kd_opd6: '',
-          kd_opd7: '',
-          kd_opd8: '',
-          jumlah_pagu: '',
-          kd_relasi: '',
-          kd_berapax: '',
-        },
+    defaultValues: getInitialValues(currentRow),
   })
 
-  const onSubmit = (values: PaguBelanjaForm) => {
-    // eslint-disable-next-line no-console
-    console.log('Submitted values:', values)
-    form.reset()
-    onOpenChange(false)
+  useEffect(() => {
+    if (isEdit && currentRow) {
+      setSelectedBU(`${currentRow.kd_bu1 ?? ''}.${currentRow.kd_bu2 ?? ''}`)
+      setSelectedProgram(
+        `${currentRow.kd_prog1 ?? ''}.${currentRow.kd_prog2 ?? ''}.${currentRow.kd_prog3 ?? ''}`
+      )
+      setSelectedKegiatan(
+        `${currentRow.kd_keg1 ?? ''}.${currentRow.kd_keg2 ?? ''}.${currentRow.kd_keg3 ?? ''}.${currentRow.kd_keg4 ?? ''}.${currentRow.kd_keg5 ?? ''}`
+      )
+      setSelectedSubKegiatan(
+        `${currentRow.kd_subkeg1 ?? ''}.${currentRow.kd_subkeg2 ?? ''}.${currentRow.kd_subkeg3 ?? ''}.${currentRow.kd_subkeg4 ?? ''}.${currentRow.kd_subkeg5 ?? ''}.${currentRow.kd_subkeg6 ?? ''}`
+      )
+      setSelectedRekening(
+        `${currentRow.kd_rekening1 ?? ''}.${currentRow.kd_rekening2 ?? ''}.${currentRow.kd_rekening3 ?? ''}.${currentRow.kd_rekening4 ?? ''}.${currentRow.kd_rekening5 ?? ''}.${currentRow.kd_rekening6 ?? ''}`
+      )
+      setSelectedSKPD(
+        `${currentRow.kd_opd1 ?? ''}.${currentRow.kd_opd2 ?? ''}.${currentRow.kd_opd3 ?? ''}.${currentRow.kd_opd4 ?? ''}.${currentRow.kd_opd5 ?? ''}.${currentRow.kd_opd6 ?? ''}.${currentRow.kd_opd7 ?? ''}.${currentRow.kd_opd8 ?? ''}`
+      )
+      setSelectedSD(findSdRefKey(currentRow, sdData?.data))
+      form.reset(getInitialValues(currentRow))
+    } else if (!isEdit && open) {
+      setSelectedBU('')
+      setSelectedProgram('')
+      setSelectedKegiatan('')
+      setSelectedSubKegiatan('')
+      setSelectedRekening('')
+      setSelectedSKPD('')
+      setSelectedSD('')
+      form.reset(getInitialValues())
+    }
+  }, [currentRow, isEdit, open, form, sdData?.data])
+
+  const onSubmit = async (values: PaguBelanjaForm) => {
+    const actionPromise =
+      isEdit && currentRow
+        ? putPagu({
+            id_pb: Number(currentRow.id_pb),
+            ...values,
+          })
+        : postPagu({
+            ...values,
+          })
+
+    await toast.promise(actionPromise, {
+      loading: isEdit ? 'Menyimpan perubahan...' : 'Menambahkan data...',
+      success: () => {
+        form.reset()
+        onOpenChange(false)
+        return isEdit
+          ? 'Data Pagu Belanja berhasil diperbarui!'
+          : 'Data Pagu Belanja berhasil ditambahkan!'
+      },
+      error: (err: unknown) => {
+        const error = err as {
+          response?: { data?: { message?: string } }
+          message?: string
+        }
+        return (
+          error?.response?.data?.message ||
+          error?.message ||
+          'Terjadi kesalahan saat menyimpan data.'
+        )
+      },
+    })
   }
 
   const handleBUChange = (value: string) => {
@@ -278,6 +502,33 @@ export function PaguBelanjaActionDialog({
       form.setValue('kd_opd6', kodeParts[5] || '')
       form.setValue('kd_opd7', kodeParts[6] || '')
       form.setValue('kd_opd8', kodeParts[7] || '')
+    }
+  }
+
+  const handleSDChange = (value: string) => {
+    if (value === '__none__' || !value) {
+      setSelectedSD('')
+      form.setValue('sumber_dana', '')
+      form.setValue('kd_pagu_sd1', '')
+      form.setValue('kd_pagu_sd2', '')
+      form.setValue('kd_pagu_sd3', '')
+      form.setValue('kd_pagu_sd4', '')
+      form.setValue('kd_pagu_sd5', '')
+      form.setValue('kd_pagu_sd6', '')
+      return
+    }
+
+    setSelectedSD(value)
+    const sd = sdData?.data?.find((item: SumberDana) => getSdKey(item) === value)
+    if (sd) {
+      const paguKey = getPaguSdKey(sd)
+      form.setValue('sumber_dana', paguKey || value)
+      form.setValue('kd_pagu_sd1', sd.kd_pagu_sd1 || '')
+      form.setValue('kd_pagu_sd2', sd.kd_pagu_sd2 || '')
+      form.setValue('kd_pagu_sd3', sd.kd_pagu_sd3 || '')
+      form.setValue('kd_pagu_sd4', sd.kd_pagu_sd4 || '')
+      form.setValue('kd_pagu_sd5', sd.kd_pagu_sd5 || '')
+      form.setValue('kd_pagu_sd6', sd.kd_pagu_sd6 || '')
     }
   }
 
@@ -511,6 +762,33 @@ export function PaguBelanjaActionDialog({
               </FormItem>
 
               <FormItem>
+                <FormLabel>Sumber Dana</FormLabel>
+                <Select
+                  onValueChange={handleSDChange}
+                  value={selectedSD || '__none__'}
+                  disabled={sdLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Pilih Sumber Dana (Opsional)' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='__none__'>
+                      -- Tidak Memilih Sumber Dana --
+                    </SelectItem>
+                    {sdData?.data?.map((item: SumberDana) => {
+                      const refKey = getSdKey(item)
+                      const paguKey = getPaguSdKey(item)
+                      return (
+                        <SelectItem key={refKey} value={refKey}>
+                          {paguKey ? `${paguKey} - ` : `${refKey} - `}{item.nm_ref}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+
+              <FormItem>
                 <FormLabel>SKPD/OPD</FormLabel>
                 <Select
                   onValueChange={handleSKPDChange}
@@ -557,7 +835,11 @@ export function PaguBelanjaActionDialog({
                     <FormItem>
                       <FormLabel>Kode Relasi (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder='Kode Relasi' {...field} />
+                        <Input
+                          placeholder='Kode Relasi'
+                          {...field}
+                          value={field.value ?? ''}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -571,7 +853,11 @@ export function PaguBelanjaActionDialog({
                     <FormItem>
                       <FormLabel>Kode Berapa X (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder='Kode Berapa X' {...field} />
+                        <Input
+                          placeholder='Kode Berapa X'
+                          {...field}
+                          value={field.value ?? ''}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -583,10 +869,12 @@ export function PaguBelanjaActionDialog({
         </div>
 
         <DialogFooter>
-          <Button variant='outline' onClick={() => onOpenChange(false)}>
+          <Button variant='outline' onClick={() => onOpenChange(false)} disabled={isPosting || isPutting}>
             Batal
           </Button>
-          <Button onClick={handleSubmit}>Simpan</Button>
+          <Button onClick={handleSubmit} disabled={isPosting || isPutting}>
+            {isPosting || isPutting ? 'Menyimpan...' : 'Simpan'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -140,6 +140,27 @@ export const ReferensiPaguBelanjaColumns: ColumnDef<PaguBelanja>[] = [
     enableSorting: true,
   },
 
+  // ✅ Sumber Dana
+  {
+    accessorKey: 'nm_sumber_dana',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Sumber Dana' />
+    ),
+    cell: ({ row }) => {
+      const original = row.original
+      const nama = original.nm_sumber_dana
+      const kode = original.kode_pagu_sd || original.kode_sumber_dana
+      if (!nama && !kode) return <div>-</div>
+      return (
+        <div>
+          {kode && <div className='text-xs font-semibold text-muted-foreground'>{kode}</div>}
+          <div>{nama ?? '-'}</div>
+        </div>
+      )
+    },
+    enableSorting: true,
+  },
+
   // ✅ pergeseran
   {
     accessorKey: 'kd_berapax',

@@ -21,7 +21,14 @@ import {
 import { CheckIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { useGetRekKelompok } from '@/api/master-data/rek-kelompok'
-import { downloadLraSumberDanaPdf } from '@/lib/download-pdf'
+import {
+  downloadLraSumberDanaPdf,
+  downloadLraUrusanPdf,
+  downloadLraProgramKegiatanPdf,
+  downloadLraPendapatanBelanjaPdf,
+  downloadRincianSaldoBukuBesarPdf,
+  downloadLraPriodePdf,
+} from '@/lib/download-pdf'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -462,10 +469,28 @@ export function LaporanPembukuan() {
     try {
       setLoading(true)
 
+      const selectedUrusan = (urusanList as any[]).find(
+        (u: any) => String(u.kd_urusan ?? u.KD_URUSAN ?? '').trim() === String(data.urusan ?? '').trim()
+      )
+      const payload = {
+        ...data,
+        nm_urusan: selectedUrusan ? (selectedUrusan.nm_urusan ?? selectedUrusan.NM_URUSAN ?? '') : '',
+      }
+
       if (data.jenis_laporan === 'lra_sd') {
-        await downloadLraSumberDanaPdf(data)
+        await downloadLraSumberDanaPdf(payload)
+      } else if (data.jenis_laporan === 'lra_anggaran_per_urusan') {
+        await downloadLraUrusanPdf(payload)
+      } else if (data.jenis_laporan === 'lra_anggaran_per_program_kegiatan') {
+        await downloadLraProgramKegiatanPdf(payload)
+      } else if (data.jenis_laporan === 'lra_pendapatan_belanja') {
+        await downloadLraPendapatanBelanjaPdf(payload)
+      } else if (data.jenis_laporan === 'r_saldo_buku_besar') {
+        await downloadRincianSaldoBukuBesarPdf(payload)
+      } else if (data.jenis_laporan === 'lra_anggaran_per_priode') {
+        await downloadLraPriodePdf(payload)
       } else {
-        toast.error('laporan masih dalam perbaikan')
+        toast.error('Jenis laporan belum didukung')
       }
     } finally {
       setLoading(false)

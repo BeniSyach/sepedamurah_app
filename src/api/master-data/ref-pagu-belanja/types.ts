@@ -5,6 +5,7 @@ export interface PaguBelanja {
   tahun_rek: string
   kd_berapax: string
   jumlah_pagu: string
+  kd_relasi: string
 
   nm_opd: string
   kd_opd1: string
@@ -44,6 +45,22 @@ export interface PaguBelanja {
   kd_rekening4: string
   kd_rekening5: string
   kd_rekening6: string
+
+  nm_sumber_dana?: string | null
+  kd_pagu_sd1?: string | null
+  kd_pagu_sd2?: string | null
+  kd_pagu_sd3?: string | null
+  kd_pagu_sd4?: string | null
+  kd_pagu_sd5?: string | null
+  kd_pagu_sd6?: string | null
+  kode_pagu_sd?: string | null
+  kd_ref1?: string | null
+  kd_ref2?: string | null
+  kd_ref3?: string | null
+  kd_ref4?: string | null
+  kd_ref5?: string | null
+  kd_ref6?: string | null
+  kode_sumber_dana?: string | null
 
   created_at: string
 }

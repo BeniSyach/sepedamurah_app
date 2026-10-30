@@ -26,6 +26,12 @@ interface UpdatePaguBelanjaPayload {
   kd_rekening4: string
   kd_rekening5: string
   kd_rekening6: string
+  kd_pagu_sd1?: string | null
+  kd_pagu_sd2?: string | null
+  kd_pagu_sd3?: string | null
+  kd_pagu_sd4?: string | null
+  kd_pagu_sd5?: string | null
+  kd_pagu_sd6?: string | null
   jumlah_pagu: string
 }
 

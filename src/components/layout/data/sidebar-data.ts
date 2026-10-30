@@ -496,6 +496,31 @@ export const sidebarData: SidebarData = {
             },
           ],
         },
+        {
+          id: 'skpp',
+          title: 'SKPP',
+          icon: FileText,
+          items: [
+            {
+              id: 'skpp-permohonan',
+              title: 'Permohonan SKPP',
+              url: '/dokumen/skpp/permohonan',
+              icon: FileSignature,
+            },
+            {
+              id: 'skpp-diterima',
+              title: 'SKPP - Diterima',
+              url: '/dokumen/skpp/diterima',
+              icon: CheckCircle2,
+            },
+            {
+              id: 'skpp-ditolak',
+              title: 'SKPP - Ditolak',
+              url: '/dokumen/skpp/ditolak',
+              icon: XCircle,
+            },
+          ],
+        },
       ],
     },
     {

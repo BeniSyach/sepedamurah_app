@@ -93,6 +93,9 @@ import { Route as AuthenticatedDokumenSp2dPermohonanPenerbitanSp2dRouteImport } 
 import { Route as AuthenticatedDokumenSp2dPermohonanDitolakRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-ditolak'
 import { Route as AuthenticatedDokumenSp2dPermohonanDiterimaRouteImport } from './routes/_authenticated/dokumen/sp2d/permohonan-diterima'
 import { Route as AuthenticatedDokumenSp2dBerkasMasukRouteImport } from './routes/_authenticated/dokumen/sp2d/berkas-masuk'
+import { Route as AuthenticatedDokumenSkppPermohonanRouteImport } from './routes/_authenticated/dokumen/skpp/permohonan'
+import { Route as AuthenticatedDokumenSkppDitolakRouteImport } from './routes/_authenticated/dokumen/skpp/ditolak'
+import { Route as AuthenticatedDokumenSkppDiterimaRouteImport } from './routes/_authenticated/dokumen/skpp/diterima'
 import { Route as AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
 import { Route as AuthenticatedDokumenLpjUpNihilDitolakRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/ditolak'
 import { Route as AuthenticatedDokumenLpjUpNihilDiterimaRouteImport } from './routes/_authenticated/dokumen/lpj-up-nihil/diterima'
@@ -616,6 +619,24 @@ const AuthenticatedDokumenSp2dBerkasMasukRoute =
     path: '/dokumen/sp2d/berkas-masuk',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDokumenSkppPermohonanRoute =
+  AuthenticatedDokumenSkppPermohonanRouteImport.update({
+    id: '/dokumen/skpp/permohonan',
+    path: '/dokumen/skpp/permohonan',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenSkppDitolakRoute =
+  AuthenticatedDokumenSkppDitolakRouteImport.update({
+    id: '/dokumen/skpp/ditolak',
+    path: '/dokumen/skpp/ditolak',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDokumenSkppDiterimaRoute =
+  AuthenticatedDokumenSkppDiterimaRouteImport.update({
+    id: '/dokumen/skpp/diterima',
+    path: '/dokumen/skpp/diterima',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute =
   AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRouteImport.update({
     id: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil',
@@ -940,6 +961,9 @@ export interface FileRoutesByFullPath {
   '/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
   '/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
   '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
+  '/dokumen/skpp/diterima': typeof AuthenticatedDokumenSkppDiterimaRoute
+  '/dokumen/skpp/ditolak': typeof AuthenticatedDokumenSkppDitolakRoute
+  '/dokumen/skpp/permohonan': typeof AuthenticatedDokumenSkppPermohonanRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1056,6 +1080,9 @@ export interface FileRoutesByTo {
   '/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
   '/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
   '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
+  '/dokumen/skpp/diterima': typeof AuthenticatedDokumenSkppDiterimaRoute
+  '/dokumen/skpp/ditolak': typeof AuthenticatedDokumenSkppDitolakRoute
+  '/dokumen/skpp/permohonan': typeof AuthenticatedDokumenSkppPermohonanRoute
   '/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1176,6 +1203,9 @@ export interface FileRoutesById {
   '/_authenticated/dokumen/lpj-up-nihil/diterima': typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
   '/_authenticated/dokumen/lpj-up-nihil/ditolak': typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
   '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
+  '/_authenticated/dokumen/skpp/diterima': typeof AuthenticatedDokumenSkppDiterimaRoute
+  '/_authenticated/dokumen/skpp/ditolak': typeof AuthenticatedDokumenSkppDitolakRoute
+  '/_authenticated/dokumen/skpp/permohonan': typeof AuthenticatedDokumenSkppPermohonanRoute
   '/_authenticated/dokumen/sp2d/berkas-masuk': typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   '/_authenticated/dokumen/sp2d/permohonan-diterima': typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   '/_authenticated/dokumen/sp2d/permohonan-ditolak': typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -1296,6 +1326,9 @@ export interface FileRouteTypes {
     | '/dokumen/lpj-up-nihil/diterima'
     | '/dokumen/lpj-up-nihil/ditolak'
     | '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+    | '/dokumen/skpp/diterima'
+    | '/dokumen/skpp/ditolak'
+    | '/dokumen/skpp/permohonan'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -1412,6 +1445,9 @@ export interface FileRouteTypes {
     | '/dokumen/lpj-up-nihil/diterima'
     | '/dokumen/lpj-up-nihil/ditolak'
     | '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+    | '/dokumen/skpp/diterima'
+    | '/dokumen/skpp/ditolak'
+    | '/dokumen/skpp/permohonan'
     | '/dokumen/sp2d/berkas-masuk'
     | '/dokumen/sp2d/permohonan-diterima'
     | '/dokumen/sp2d/permohonan-ditolak'
@@ -1531,6 +1567,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dokumen/lpj-up-nihil/diterima'
     | '/_authenticated/dokumen/lpj-up-nihil/ditolak'
     | '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
+    | '/_authenticated/dokumen/skpp/diterima'
+    | '/_authenticated/dokumen/skpp/ditolak'
+    | '/_authenticated/dokumen/skpp/permohonan'
     | '/_authenticated/dokumen/sp2d/berkas-masuk'
     | '/_authenticated/dokumen/sp2d/permohonan-diterima'
     | '/_authenticated/dokumen/sp2d/permohonan-ditolak'
@@ -2155,6 +2194,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dokumen/skpp/permohonan': {
+      id: '/_authenticated/dokumen/skpp/permohonan'
+      path: '/dokumen/skpp/permohonan'
+      fullPath: '/dokumen/skpp/permohonan'
+      preLoaderRoute: typeof AuthenticatedDokumenSkppPermohonanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/skpp/ditolak': {
+      id: '/_authenticated/dokumen/skpp/ditolak'
+      path: '/dokumen/skpp/ditolak'
+      fullPath: '/dokumen/skpp/ditolak'
+      preLoaderRoute: typeof AuthenticatedDokumenSkppDitolakRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dokumen/skpp/diterima': {
+      id: '/_authenticated/dokumen/skpp/diterima'
+      path: '/dokumen/skpp/diterima'
+      fullPath: '/dokumen/skpp/diterima'
+      preLoaderRoute: typeof AuthenticatedDokumenSkppDiterimaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil': {
       id: '/_authenticated/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
       path: '/dokumen/lpj-up-nihil/penerbitan-lpj-up-nihil'
@@ -2511,6 +2571,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDokumenLpjUpNihilDiterimaRoute: typeof AuthenticatedDokumenLpjUpNihilDiterimaRoute
   AuthenticatedDokumenLpjUpNihilDitolakRoute: typeof AuthenticatedDokumenLpjUpNihilDitolakRoute
   AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute: typeof AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute
+  AuthenticatedDokumenSkppDiterimaRoute: typeof AuthenticatedDokumenSkppDiterimaRoute
+  AuthenticatedDokumenSkppDitolakRoute: typeof AuthenticatedDokumenSkppDitolakRoute
+  AuthenticatedDokumenSkppPermohonanRoute: typeof AuthenticatedDokumenSkppPermohonanRoute
   AuthenticatedDokumenSp2dBerkasMasukRoute: typeof AuthenticatedDokumenSp2dBerkasMasukRoute
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute: typeof AuthenticatedDokumenSp2dPermohonanDiterimaRoute
   AuthenticatedDokumenSp2dPermohonanDitolakRoute: typeof AuthenticatedDokumenSp2dPermohonanDitolakRoute
@@ -2676,6 +2739,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDokumenLpjUpNihilDitolakRoute,
   AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute:
     AuthenticatedDokumenLpjUpNihilPenerbitanLpjUpNihilRoute,
+  AuthenticatedDokumenSkppDiterimaRoute: AuthenticatedDokumenSkppDiterimaRoute,
+  AuthenticatedDokumenSkppDitolakRoute: AuthenticatedDokumenSkppDitolakRoute,
+  AuthenticatedDokumenSkppPermohonanRoute:
+    AuthenticatedDokumenSkppPermohonanRoute,
   AuthenticatedDokumenSp2dBerkasMasukRoute:
     AuthenticatedDokumenSp2dBerkasMasukRoute,
   AuthenticatedDokumenSp2dPermohonanDiterimaRoute:

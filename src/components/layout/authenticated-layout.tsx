@@ -45,9 +45,11 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
 
   // 🔥 Ambil hanya menu dari rule yang sesuai role aktif
   const userMenuNames = useMemo(() => {
-    if (!user?.rules || !activeRole) return []
+    const skppAllowed = ['dokumen', 'skpp', 'skpp-menu', 'skpp-permohonan', 'skpp-diterima', 'skpp-ditolak']
+    if (!user?.rules || !activeRole) return skppAllowed
     const activeRule = user.rules.find((rule) => rule.rule === activeRole)
-    return activeRule ? activeRule.menus.map((m) => m.menu) : []
+    const menus = activeRule ? activeRule.menus.map((m) => m.menu) : []
+    return Array.from(new Set([...menus, ...skppAllowed]))
   }, [user, activeRole])
 
   function filterMenuItems(items: NavItem[], allowedIds: string[]): NavItem[] {
