@@ -14,8 +14,15 @@ export function useLogin() {
   >({
     mutationFn: async (variables) => {
       const { captcha, ...body } = variables
+      const encodedCaptcha = captcha ? btoa(captcha) : undefined
+
       const { data } = await api.post<LoginResponse>('/login', body, {
-        headers: captcha ? { 'X-Recaptcha-Token': captcha } : {},
+        headers: encodedCaptcha
+          ? {
+              'X-Recaptcha-Token': encodedCaptcha,
+              'X-Recaptcha-Encoding': 'base64',
+            }
+          : {},
       })
       return data
     },
