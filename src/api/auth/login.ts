@@ -13,7 +13,10 @@ export function useLogin() {
     LoginVariables
   >({
     mutationFn: async (variables) => {
-      const { data } = await api.post<LoginResponse>('/login', variables)
+      const { captcha, ...body } = variables
+      const { data } = await api.post<LoginResponse>('/login', body, {
+        headers: captcha ? { 'X-Recaptcha-Token': captcha } : {},
+      })
       return data
     },
     onSuccess: (data) => {
