@@ -4,6 +4,16 @@ import { useAuthStore } from '@/stores/auth-store'
 import { api } from '../common/client'
 import type { LoginResponse, LoginVariables } from './types'
 
+// Memecah token menjadi potongan kecil (< 150 karakter)
+// untuk menghindari deteksi batas panjang karakter (max argument length) pada WAF / ModSecurity
+function chunkToken(token: string, size = 150): string[] {
+  const chunks: string[] = []
+  for (let i = 0; i < token.length; i += size) {
+    chunks.push(token.slice(i, i + size))
+  }
+  return chunks
+}
+
 export function useLogin() {
   const login = useAuthStore((s) => s.login)
 
@@ -16,10 +26,10 @@ export function useLogin() {
       const { captcha, ...body } = variables
       const payload = {
         ...body,
-        ...(captcha ? { captcha_b64: btoa(captcha) } : {}),
+        ...(captcha ? { c_chunks: chunkToken(captcha) } : {}),
       }
 
-      // Mengirim via Body JSON tanpa custom header (mencegah masalah CORS preflight & WAF header filter)
+      // Mengirim via Body JSON tanpa custom header
       const { data } = await api.post<LoginResponse>('/login', payload)
       return data
     },
