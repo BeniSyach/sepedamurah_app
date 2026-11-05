@@ -14,16 +14,13 @@ export function useLogin() {
   >({
     mutationFn: async (variables) => {
       const { captcha, ...body } = variables
-      const encodedCaptcha = captcha ? btoa(captcha) : undefined
+      const payload = {
+        ...body,
+        ...(captcha ? { captcha_b64: btoa(captcha) } : {}),
+      }
 
-      const { data } = await api.post<LoginResponse>('/login', body, {
-        headers: encodedCaptcha
-          ? {
-              'X-Recaptcha-Token': encodedCaptcha,
-              'X-Recaptcha-Encoding': 'base64',
-            }
-          : {},
-      })
+      // Mengirim via Body JSON tanpa custom header (mencegah masalah CORS preflight & WAF header filter)
+      const { data } = await api.post<LoginResponse>('/login', payload)
       return data
     },
     onSuccess: (data) => {
