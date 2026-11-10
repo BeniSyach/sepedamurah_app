@@ -17,14 +17,13 @@ import {
   FileCheck2,
   FolderSearch,
   KeyRound,
-  Download,
   CheckCircle2,
   AlertCircle,
   XCircle,
-  FileText,
 } from 'lucide-react'
 import type { SkppData } from '../types'
 import { useSkpp } from './skpp-provider'
+import { useAuthStore } from '@/stores/auth-store'
 
 export const skppColumns: ColumnDef<SkppData>[] = [
   {
@@ -138,7 +137,7 @@ export const skppColumns: ColumnDef<SkppData>[] = [
             <Badge className='bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-300 flex items-center gap-1 w-fit'>
               <CheckCircle2 className='w-3 h-3' /> Diterima
             </Badge>
-            {item.status_tte === 'Sudah TTE' ? (
+            {Boolean(item.berkas_tte && item.berkas_tte.trim()) ? (
               <span className='text-[10px] font-semibold text-blue-600 flex items-center gap-0.5'>
                 <FileCheck2 className='w-3 h-3' /> Sudah TTE
               </span>
@@ -223,6 +222,7 @@ export const skppColumns: ColumnDef<SkppData>[] = [
 
 function RowActions({ row }: { row: SkppData }) {
   const { setCurrentRow, setOpen, isBendahara } = useSkpp()
+  const user = useAuthStore((s) => s.user)
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -230,37 +230,61 @@ function RowActions({ row }: { row: SkppData }) {
     window.open(`${API_URL}/skpp/${row.id}/download-tte`, '_blank')
   }
 
-  const handleOpenPdfBackend = () => {
-    window.open(`${API_URL}/skpp/${row.id}/pdf`, '_blank')
-  }
+  const isDiterima = row.status === 'Diterima' || row.status === 'Disetujui'
+  const isSigned = Boolean(row.berkas_tte && row.berkas_tte.trim())
+
+  const isTargetSigner = Boolean(
+    user &&
+      !isBendahara &&
+      ((row.penandatangan_id && user.id && String(row.penandatangan_id) === String(user.id)) ||
+        (row.penandatangan_nik && user.nik && String(row.penandatangan_nik) === String(user.nik)) ||
+        (row.nip_penandatangan && user.nip && String(row.nip_penandatangan) === String(user.nip)) ||
+        (row.nama_penandatangan && user.name && user.name.trim().toLowerCase() === row.nama_penandatangan.trim().toLowerCase()))
+  )
 
   return (
-    <div className='flex items-center gap-1'>
-      {/* Tombol Cepat Periksa Berkas */}
-      <Button
-        variant='outline'
-        size='sm'
-        className='h-8 px-2 text-primary border-primary/30 hover:bg-primary/10 flex items-center gap-1'
-        onClick={() => {
-          setCurrentRow(row)
-          setOpen('periksa')
-        }}
-        title='Periksa Berkas SKPP'
-      >
-        <FolderSearch className='h-3.5 w-3.5' />
-        <span className='text-xs'>Periksa</span>
-      </Button>
-
-      {/* Tombol Cepat Cetak Dokumen Asli Backend */}
-      <Button
-        variant='ghost'
-        size='sm'
-        className='h-8 px-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1'
-        onClick={handleOpenPdfBackend}
-        title='Cetak Dokumen Asli dari Backend'
-      >
-        <Printer className='h-3.5 w-3.5' />
-      </Button>
+    <div className='flex items-center gap-1.5'>
+      {/* Jika sudah di TTE, tombol utama adalah Cetak SKPP TTE */}
+      {isSigned ? (
+        <Button
+          variant='outline'
+          size='sm'
+          className='h-8 px-2.5 text-emerald-600 border-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950 flex items-center gap-1.5 text-xs font-semibold'
+          onClick={handleDownloadTte}
+          title='Cetak SKPP TTE (Output Final Resmi)'
+        >
+          <Printer className='h-3.5 w-3.5' />
+          <span>Cetak SKPP TTE</span>
+        </Button>
+      ) : isDiterima && isTargetSigner ? (
+        <Button
+          variant='default'
+          size='sm'
+          className='h-8 px-2.5 bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1.5 text-xs font-medium'
+          onClick={() => {
+            setCurrentRow(row)
+            setOpen('tte')
+          }}
+          title='Tanda Tangan Elektronik Dokumen SKPP'
+        >
+          <KeyRound className='h-3.5 w-3.5' />
+          <span>TTE Berkas</span>
+        </Button>
+      ) : (
+        <Button
+          variant='outline'
+          size='sm'
+          className='h-8 px-2 text-primary border-primary/30 hover:bg-primary/10 flex items-center gap-1'
+          onClick={() => {
+            setCurrentRow(row)
+            setOpen('periksa')
+          }}
+          title='Periksa Berkas SKPP'
+        >
+          <FolderSearch className='h-3.5 w-3.5' />
+          <span className='text-xs'>{isBendahara ? 'Detail' : 'Periksa'}</span>
+        </Button>
+      )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -279,11 +303,11 @@ function RowActions({ row }: { row: SkppData }) {
             }}
           >
             <FolderSearch className='mr-2 h-4 w-4 text-primary' />
-            <span>Periksa Berkas</span>
+            <span>{isBendahara ? 'Lihat Detail Berkas' : 'Periksa Berkas'}</span>
           </DropdownMenuItem>
 
-          {/* TTE action if accepted and not Bendahara */}
-          {row.status === 'Diterima' && !isBendahara && (
+          {/* TTE action if accepted, not signed yet, and matches target signer */}
+          {isDiterima && !isSigned && isTargetSigner && (
             <DropdownMenuItem
               onClick={() => {
                 setCurrentRow(row)
@@ -295,28 +319,13 @@ function RowActions({ row }: { row: SkppData }) {
             </DropdownMenuItem>
           )}
 
-          {/* Download TTE if signed */}
-          {row.berkas_tte && (
+          {/* Cetak SKPP TTE if signed */}
+          {isSigned && (
             <DropdownMenuItem onClick={handleDownloadTte}>
-              <Download className='mr-2 h-4 w-4 text-emerald-600' />
-              <span>Download Berkas TTE</span>
+              <Printer className='mr-2 h-4 w-4 text-emerald-600' />
+              <span>Cetak SKPP TTE</span>
             </DropdownMenuItem>
           )}
-
-          <DropdownMenuItem onClick={handleOpenPdfBackend}>
-            <Printer className='mr-2 h-4 w-4 text-slate-600' />
-            <span>Lihat / Cetak Asli (Backend)</span>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row)
-              setOpen('preview')
-            }}
-          >
-            <FileText className='mr-2 h-4 w-4 text-blue-500' />
-            <span>Pratinjau PDF Modal</span>
-          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 

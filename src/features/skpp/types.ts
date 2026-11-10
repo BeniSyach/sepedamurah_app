@@ -86,6 +86,8 @@ export interface SkppData {
   jabatan_penandatangan: string
   nama_penandatangan: string
   nip_penandatangan: string
+  penandatangan_nik?: string | null
+  penandatangan_id?: string | number | null
 
   // Tembusan
   tembusan: string[]

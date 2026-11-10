@@ -72,7 +72,7 @@ interface SkppContextType {
   tolakSkpp: (id: string | number, alasan: string) => Promise<void>
   verifikasiSkpp: (
     id: string | number,
-    statusOrPayload: 'Diterima' | 'Perlu Perbaikan' | 'Ditolak' | 'Draft' | { status: any; catatan_perbaikan?: string; verifikasi_berkas?: any },
+    statusOrPayload: 'Diterima' | 'Perlu Perbaikan' | 'Ditolak' | 'Draft' | (Record<string, any> & { status: any; catatan_perbaikan?: string; verifikasi_berkas?: any }),
     alasan?: string,
     verifikasi_berkas?: any
   ) => Promise<void>
@@ -113,21 +113,23 @@ export function SkppProvider({ children, menu }: SkppProviderProps) {
   }, [])
 
   const opdFilter = useMemo(() => {
-    if (!isBendahara) return {}
-    if (skpd?.kd_opd1) {
-      return {
-        kd_opd1: skpd.kd_opd1,
-        kd_opd2: skpd.kd_opd2,
-        kd_opd3: skpd.kd_opd3,
-        kd_opd4: skpd.kd_opd4,
-        kd_opd5: skpd.kd_opd5,
-        user_id: user?.id,
+    if (isBendahara) {
+      if (skpd?.kd_opd1) {
+        return {
+          kd_opd1: skpd.kd_opd1,
+          kd_opd2: skpd.kd_opd2,
+          kd_opd3: skpd.kd_opd3,
+          kd_opd4: skpd.kd_opd4,
+          kd_opd5: skpd.kd_opd5,
+          user_id: user?.id,
+        }
       }
+      return { user_id: user?.id }
     }
-    if (user?.id) {
-      return { user_id: user.id }
+    // Untuk Operator dan role lainnya, selalu kirim user_id agar backend dapat menerapkan Akses Operator
+    return {
+      user_id: user?.id,
     }
-    return {}
   }, [isBendahara, skpd, user?.id])
 
   const { data: serverResponse, isLoading } = useGetSkpp({
@@ -217,30 +219,33 @@ export function SkppProvider({ children, menu }: SkppProviderProps) {
 
   const verifikasiSkpp = async (
     id: string | number,
-    statusOrPayload: 'Diterima' | 'Perlu Perbaikan' | 'Ditolak' | 'Draft' | { status: any; catatan_perbaikan?: string; verifikasi_berkas?: any },
+    statusOrPayload: 'Diterima' | 'Perlu Perbaikan' | 'Ditolak' | 'Draft' | (Record<string, any> & { status: any; catatan_perbaikan?: string; verifikasi_berkas?: any }),
     alasan?: string,
     verifikasi_berkas?: any
   ) => {
     try {
-      let finalStatus: string
-      let finalAlasan: string | undefined = alasan
-      let finalBerkas: any = verifikasi_berkas
+      let payloadObj: Record<string, any> = {}
 
       if (typeof statusOrPayload === 'object' && statusOrPayload !== null) {
-        finalStatus = statusOrPayload.status
-        finalAlasan = statusOrPayload.catatan_perbaikan
-        finalBerkas = statusOrPayload.verifikasi_berkas
+        payloadObj = {
+          ...statusOrPayload,
+          status: statusOrPayload.status,
+          alasan: statusOrPayload.catatan_perbaikan || statusOrPayload.alasan,
+          verifikasi_berkas: statusOrPayload.verifikasi_berkas,
+        }
       } else {
-        finalStatus = statusOrPayload
+        payloadObj = {
+          status: statusOrPayload,
+          alasan,
+          verifikasi_berkas,
+        }
       }
 
       await verifikasiSkppAsync({
         id: id.toString(),
-        status: finalStatus as 'Draft' | 'Diterima' | 'Ditolak' | 'Perlu Perbaikan',
-        alasan: finalAlasan,
-        verifikasi_berkas: finalBerkas,
-      })
-      toast.success(`Hasil pemeriksaan berhasil disimpan: ${finalStatus}!`)
+        ...payloadObj,
+      } as any)
+      toast.success(`Hasil pemeriksaan berhasil disimpan: ${payloadObj.status}!`)
       setOpen(null)
     } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Gagal menyimpan hasil pemeriksaan SKPP.')

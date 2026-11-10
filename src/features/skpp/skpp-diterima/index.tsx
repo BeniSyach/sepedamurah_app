@@ -12,9 +12,7 @@ import {
   CheckCircle2,
   FileCheck2,
   KeyRound,
-  Download,
   Printer,
-  FileText,
   MoreHorizontal,
   FolderSearch,
   DollarSign,
@@ -25,7 +23,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
@@ -42,20 +39,22 @@ import { SkppDialogs } from '../components/skpp-dialogs'
 import { SkppToolbar } from '../components/skpp-toolbar'
 import { SkppPagination } from '../components/skpp-pagination'
 import { type SkppData, formatRupiah } from '../types'
+import { useAuthStore } from '@/stores/auth-store'
 
 function SkppDiterimaContent() {
   const { data, isLoading, meta, setOpen, setCurrentRow, isBendahara } = useSkpp()
+  const user = useAuthStore((s) => s.user)
 
   const totalBersih = useMemo(
     () => data.reduce((acc, curr) => acc + (curr.jumlah_bersih || 0), 0),
     [data]
   )
   const countSudahTte = useMemo(
-    () => data.filter((d) => d.status_tte === 'Sudah TTE').length,
+    () => data.filter((d) => Boolean(d.berkas_tte && d.berkas_tte.trim())).length,
     [data]
   )
   const countBelumTte = useMemo(
-    () => data.filter((d) => d.status_tte !== 'Sudah TTE').length,
+    () => data.filter((d) => !d.berkas_tte || !d.berkas_tte.trim()).length,
     [data]
   )
   const countPensiun = useMemo(
@@ -207,7 +206,7 @@ function SkppDiterimaContent() {
       accessorKey: 'status_tte',
       header: 'Status TTE',
       cell: ({ row }) => {
-        const sudah = row.original.status_tte === 'Sudah TTE'
+        const sudah = Boolean(row.original.berkas_tte && row.original.berkas_tte.trim())
         return sudah ? (
           <Badge className='bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border-blue-300 flex items-center gap-1 w-fit'>
             <FileCheck2 className='w-3.5 h-3.5' /> Sudah TTE
@@ -224,7 +223,16 @@ function SkppDiterimaContent() {
       header: 'Aksi',
       cell: ({ row }) => {
         const item = row.original
-        const sudahTte = item.status_tte === 'Sudah TTE'
+        const sudahTte = Boolean(item.berkas_tte && item.berkas_tte.trim())
+
+        const isTargetSigner = Boolean(
+          user &&
+            !isBendahara &&
+            ((item.penandatangan_id && user.id && String(item.penandatangan_id) === String(user.id)) ||
+              (item.penandatangan_nik && user.nik && String(item.penandatangan_nik) === String(user.nik)) ||
+              (item.nip_penandatangan && user.nip && String(item.nip_penandatangan) === String(user.nip)) ||
+              (item.nama_penandatangan && user.name && user.name.trim().toLowerCase() === item.nama_penandatangan.trim().toLowerCase()))
+        )
 
         const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -234,29 +242,18 @@ function SkppDiterimaContent() {
               <Button
                 variant='outline'
                 size='sm'
-                className='h-8 px-2.5 text-emerald-600 border-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950 flex items-center gap-1 text-xs'
+                className='h-8 px-2.5 text-emerald-600 border-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950 flex items-center gap-1.5 text-xs font-semibold'
                 onClick={() => window.open(`${API_URL}/skpp/${item.id}/download-tte`, '_blank')}
-                title='Unduh Dokumen Hasil TTE'
-              >
-                <Download className='w-3.5 h-3.5' />
-                <span>Unduh TTE</span>
-              </Button>
-            ) : isBendahara ? (
-              <Button
-                variant='outline'
-                size='sm'
-                className='h-8 px-2.5 text-primary border-primary/30 hover:bg-primary/10 flex items-center gap-1 text-xs'
-                onClick={() => window.open(`${API_URL}/skpp/${item.id}/pdf`, '_blank')}
-                title='Lihat / Cetak Dokumen Asli (PDF)'
+                title='Cetak SKPP TTE (Output Final Resmi)'
               >
                 <Printer className='w-3.5 h-3.5' />
-                <span>Cetak Asli</span>
+                <span>Cetak SKPP TTE</span>
               </Button>
-            ) : (
+            ) : isTargetSigner ? (
               <Button
                 variant='default'
                 size='sm'
-                className='h-8 px-2.5 bg-primary hover:bg-primary/90 flex items-center gap-1 text-xs text-white'
+                className='h-8 px-2.5 bg-blue-600 hover:bg-blue-700 flex items-center gap-1.5 text-xs text-white'
                 onClick={() => {
                   setCurrentRow(item)
                   setOpen('tte')
@@ -265,6 +262,20 @@ function SkppDiterimaContent() {
               >
                 <KeyRound className='w-3.5 h-3.5' />
                 <span>TTE Berkas</span>
+              </Button>
+            ) : (
+              <Button
+                variant='outline'
+                size='sm'
+                className='h-8 px-2.5 text-primary border-primary/30 hover:bg-primary/10 flex items-center gap-1 text-xs'
+                onClick={() => {
+                  setCurrentRow(item)
+                  setOpen('periksa')
+                }}
+                title='Lihat Detail Berkas SKPP'
+              >
+                <FolderSearch className='w-3.5 h-3.5' />
+                <span>{isBendahara ? 'Detail' : 'Periksa'}</span>
               </Button>
             )}
 
@@ -283,37 +294,28 @@ function SkppDiterimaContent() {
                   }}
                 >
                   <FolderSearch className='mr-2 h-4 w-4 text-primary' />
-                  <span>{isBendahara ? 'Lihat Detail' : 'Periksa Kembali'}</span>
+                  <span>{isBendahara ? 'Lihat Detail Berkas' : 'Periksa Berkas'}</span>
                 </DropdownMenuItem>
 
-                {/* LIHAT DOKUMEN ASLI DARI BACKEND */}
-                <DropdownMenuItem
-                  onClick={() => window.open(`${API_URL}/skpp/${item.id}/pdf`, '_blank')}
-                >
-                  <Printer className='mr-2 h-4 w-4 text-slate-600' />
-                  <span>Lihat Dokumen Asli (PDF)</span>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  onClick={() => {
-                    setCurrentRow(item)
-                    setOpen('preview')
-                  }}
-                >
-                  <FileText className='mr-2 h-4 w-4 text-blue-500' />
-                  <span>Pratinjau PDF Modal</span>
-                </DropdownMenuItem>
+                {!sudahTte && isTargetSigner && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setCurrentRow(item)
+                      setOpen('tte')
+                    }}
+                  >
+                    <KeyRound className='mr-2 h-4 w-4 text-blue-600' />
+                    <span>TTE Dokumen</span>
+                  </DropdownMenuItem>
+                )}
 
                 {sudahTte && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => window.open(`${API_URL}/skpp/${item.id}/download-tte`, '_blank')}
-                    >
-                      <Download className='mr-2 h-4 w-4 text-emerald-600' />
-                      <span>Download File TTE</span>
-                    </DropdownMenuItem>
-                  </>
+                  <DropdownMenuItem
+                    onClick={() => window.open(`${API_URL}/skpp/${item.id}/download-tte`, '_blank')}
+                  >
+                    <Printer className='mr-2 h-4 w-4 text-emerald-600' />
+                    <span>Cetak SKPP TTE</span>
+                  </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>

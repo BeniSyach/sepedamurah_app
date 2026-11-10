@@ -21,7 +21,22 @@ import {
   ArrowLeft,
   Calculator,
   UserCheck,
+  ChevronsUpDown,
 } from 'lucide-react'
+import { useUsersQuery } from '@/api/users/getUsers'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -90,24 +105,71 @@ export function SkppPeriksaDialog({
 
   const isPensiun = currentRow?.jenis_skpp === 'pensiun'
 
-  // Build document items list
+  // User list query for Selecting Pejabat Penandatangan
+  const { data: usersData } = useUsersQuery({ perPage: 200 })
+  const usersList = useMemo(() => usersData?.data || [], [usersData])
+
+  const [signerPopoverOpen, setSignerPopoverOpen] = useState(false)
+  const [tempatPenetapan, setTempatPenetapan] = useState<string>('Sei Rampah')
+  const [tglPenetapan, setTglPenetapan] = useState<string>(new Date().toISOString().substring(0, 10))
+  const [jabatanPenandatangan, setJabatanPenandatangan] = useState<string>(
+    'An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN'
+  )
+  const [selectedUserId, setSelectedUserId] = useState<string>('')
+  const [namaPenandatangan, setNamaPenandatangan] = useState<string>('')
+  const [nipPenandatangan, setNipPenandatangan] = useState<string>('')
+  const [penandatanganNik, setPenandatanganNik] = useState<string>('')
+
+  // Sync state when currentRow changes
+  useEffect(() => {
+    if (currentRow) {
+      setTempatPenetapan(currentRow.tempat_penetapan || 'Sei Rampah')
+      setTglPenetapan(currentRow.tgl_penetapan || new Date().toISOString().substring(0, 10))
+      setJabatanPenandatangan(
+        currentRow.jabatan_penandatangan ||
+          'An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN'
+      )
+      setNamaPenandatangan(currentRow.nama_penandatangan || '')
+      setNipPenandatangan(currentRow.nip_penandatangan || '')
+      setPenandatanganNik(currentRow.penandatangan_nik || '')
+      setSelectedUserId(currentRow.penandatangan_id ? String(currentRow.penandatangan_id) : '')
+    }
+  }, [currentRow])
+
+  // Try matching user if selectedUserId is not yet set
+  useEffect(() => {
+    if (!selectedUserId && usersList.length > 0 && currentRow) {
+      const match = usersList.find((u) => {
+        if (currentRow.penandatangan_id && String(u.id) === String(currentRow.penandatangan_id)) return true
+        if (currentRow.penandatangan_nik && u.nik && String(u.nik) === String(currentRow.penandatangan_nik)) return true
+        if (currentRow.nip_penandatangan && u.nip && String(u.nip) === String(currentRow.nip_penandatangan)) return true
+        if (currentRow.nama_penandatangan && u.name && u.name.trim().toLowerCase() === currentRow.nama_penandatangan.trim().toLowerCase()) return true
+        return false
+      })
+      if (match) {
+        setSelectedUserId(String(match.id))
+        setNamaPenandatangan(match.name)
+        setNipPenandatangan(match.nip || '-')
+        setPenandatanganNik(match.nik || '')
+      }
+    }
+  }, [selectedUserId, usersList, currentRow])
+
+  const handleSelectSigner = (userId: string) => {
+    setSelectedUserId(userId)
+    const foundUser = usersList.find((u) => String(u.id) === String(userId))
+    if (foundUser) {
+      setNamaPenandatangan(foundUser.name || '')
+      setNipPenandatangan(foundUser.nip || '-')
+      setPenandatanganNik(foundUser.nik || '')
+    }
+  }
+
+  // Build document items list (Draft SKPP dihapus sesuai arahan, hanya berkas pemohon yang diverifikasi)
   const documents: DocumentItem[] = useMemo(() => {
     if (!currentRow) return []
 
     return [
-      {
-        id: 'draft_skpp',
-        label: 'Draft SKPP Resmi',
-        sublabel: 'Dokumen SKPP hasil sistem yang akan diterbitkan',
-        icon: FileCheck,
-        required: true,
-        url: `${API_URL}/skpp/${currentRow.id}/pdf`,
-        quickSuggestions: [
-          'Rincian gaji belum sesuai dengan SK',
-          'Data hutang / potongan perlu diperbaiki',
-          'Nama atau NIP penandatangan belum sesuai',
-        ],
-      },
       {
         id: 'berkas_pengantar_opd',
         label: 'Surat Pengantar OPD',
@@ -163,9 +225,9 @@ export function SkppPeriksaDialog({
       {
         id: 'berkas_pendukung',
         label: 'Dokumen Pendukung',
-        sublabel: 'Akta kematian, akta nikah/cerai, atau surat keterangan lain (opsional)',
+        sublabel: 'Akta kematian, akta nikah/cerai, atau surat keterangan lain',
         icon: Paperclip,
-        required: false,
+        required: true,
         url: currentRow.berkas_urls?.berkas_pendukung || (currentRow.berkas_pendukung ? `${API_URL}/skpp/${currentRow.id}/berkas/berkas_pendukung` : null),
         quickSuggestions: [
           'Surat kematian / akta belum dilampirkan',
@@ -296,6 +358,24 @@ export function SkppPeriksaDialog({
       return
     }
 
+    if (autoStatus === 'Diterima') {
+      if (!selectedUserId && !penandatanganNik.trim()) {
+        toast.error('Pilih Pejabat Penandatangan Elektronik (User & NIK terdaftar) terlebih dahulu pada Tab 4. Pengesahan!')
+        setActiveTab('pengesahan')
+        return
+      }
+      if (!namaPenandatangan.trim() || !nipPenandatangan.trim()) {
+        toast.error('Nama dan NIP Pejabat Penandatangan wajib diisi pada Tab 4. Pengesahan!')
+        setActiveTab('pengesahan')
+        return
+      }
+      if (!tempatPenetapan.trim() || !tglPenetapan.trim() || !jabatanPenandatangan.trim()) {
+        toast.error('Tempat, Tanggal, dan Jabatan Penandatangan wajib diisi lengkap pada Tab 4. Pengesahan!')
+        setActiveTab('pengesahan')
+        return
+      }
+    }
+
     try {
       setIsSaving(true)
       const payloadBerkas: Record<string, { status: string; alasan: string }> = {}
@@ -310,6 +390,13 @@ export function SkppPeriksaDialog({
       await verifikasiSkpp(currentRow.id, {
         status: autoStatus,
         verifikasi_berkas: payloadBerkas,
+        tempat_penetapan: tempatPenetapan,
+        tgl_penetapan: tglPenetapan,
+        jabatan_penandatangan: jabatanPenandatangan,
+        nama_penandatangan: namaPenandatangan,
+        nip_penandatangan: nipPenandatangan,
+        penandatangan_nik: penandatanganNik,
+        penandatangan_id: selectedUserId,
       })
       onOpenChange(false)
     } catch {
@@ -996,34 +1083,153 @@ export function SkppPeriksaDialog({
               </TabsContent>
 
               {/* ======================================================== */}
-              {/* TAB 4: PENGESAHAN & TEMBUSAN (READ-ONLY) */}
+              {/* TAB 4: PENGESAHAN & TEMBUSAN */}
               {/* ======================================================== */}
               <TabsContent value='pengesahan' className='space-y-4 pt-3 flex-1 overflow-y-auto pr-2'>
-                <div className='rounded-lg border p-4 space-y-3.5 bg-muted/15'>
-                  <h4 className='text-sm font-semibold text-primary flex items-center gap-1.5'>
-                    <UserCheck className='h-4 w-4' />
-                    Data Pejabat Penandatangan SKPP
-                  </h4>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div className='rounded-lg border p-4 space-y-4 bg-muted/15'>
+                  <div>
+                    <h4 className='text-sm font-semibold text-primary flex items-center gap-1.5'>
+                      <UserCheck className='h-4 w-4' />
+                      Penetapan Pejabat Penandatangan Elektronik (TTE)
+                    </h4>
+                    <p className='text-xs text-muted-foreground mt-0.5'>
+                      Pilih pejabat penandatangan dari user terdaftar di database yang memiliki NIK untuk pelaksanaan TTE SKPP.
+                    </p>
+                  </div>
+
+                  {/* Dropdown Pemilihan User Penandatangan */}
+                  <div className='space-y-1.5'>
+                    <Label className='text-xs font-semibold'>
+                      Pilih Pejabat Penandatangan (User Terdaftar & NIK) <span className='text-destructive'>*</span>
+                    </Label>
+                    <Popover open={signerPopoverOpen} onOpenChange={setSignerPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant='outline'
+                          role='combobox'
+                          aria-expanded={signerPopoverOpen}
+                          className='w-full justify-between font-normal text-left h-10 bg-background'
+                        >
+                          {selectedUserId && usersList.find((u) => String(u.id) === String(selectedUserId)) ? (
+                            <div className='flex items-center gap-2 truncate'>
+                              <span className='font-semibold text-foreground'>
+                                {usersList.find((u) => String(u.id) === String(selectedUserId))?.name}
+                              </span>
+                              <span className='text-xs text-muted-foreground'>
+                                (NIP: {usersList.find((u) => String(u.id) === String(selectedUserId))?.nip || '-'} | NIK: {usersList.find((u) => String(u.id) === String(selectedUserId))?.nik || '-'})
+                              </span>
+                            </div>
+                          ) : (
+                            <span className='text-muted-foreground'>-- Pilih User Pejabat Penandatangan --</span>
+                          )}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className='w-[480px] p-0' align='start'>
+                        <Command>
+                          <CommandInput placeholder='Cari berdasarkan nama, NIP, atau NIK...' />
+                          <CommandList>
+                            <CommandEmpty>User tidak ditemukan.</CommandEmpty>
+                            <CommandGroup heading='Daftar User Terdaftar'>
+                              {usersList.map((u) => (
+                                <CommandItem
+                                  key={u.id}
+                                  value={`${u.name} ${u.nip || ''} ${u.nik || ''}`}
+                                  onSelect={() => {
+                                    handleSelectSigner(String(u.id))
+                                    setSignerPopoverOpen(false)
+                                  }}
+                                  className='cursor-pointer'
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      String(selectedUserId) === String(u.id) ? 'opacity-100 text-primary' : 'opacity-0'
+                                    )}
+                                  />
+                                  <div className='flex flex-col flex-1'>
+                                    <span className='font-semibold text-xs text-foreground'>{u.name}</span>
+                                    <span className='text-[11px] text-muted-foreground'>
+                                      NIP: {u.nip || '-'} • NIK: {u.nik || '-'}
+                                      {u.skpd?.nm_opd ? ` • ${u.skpd.nm_opd}` : ''}
+                                    </span>
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  {/* Detail Pejabat Terpilih & Pengesahan */}
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t'>
                     <div className='space-y-1.5'>
-                      <Label className='text-xs font-semibold text-muted-foreground'>Tempat Penetapan</Label>
-                      <Input readOnly value={currentRow.tempat_penetapan || 'Sei Rampah'} className='bg-muted/30 text-foreground cursor-default' />
+                      <Label className='text-xs font-semibold'>
+                        Nama Pejabat <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        value={namaPenandatangan}
+                        onChange={(e) => setNamaPenandatangan(e.target.value)}
+                        placeholder='Nama pejabat'
+                        className='font-bold bg-background'
+                      />
                     </div>
                     <div className='space-y-1.5'>
-                      <Label className='text-xs font-semibold text-muted-foreground'>Tanggal Penetapan</Label>
-                      <Input readOnly value={currentRow.tgl_penetapan || '-'} className='bg-muted/30 text-foreground cursor-default' />
+                      <Label className='text-xs font-semibold'>
+                        NIP Pejabat <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        value={nipPenandatangan}
+                        onChange={(e) => setNipPenandatangan(e.target.value)}
+                        placeholder='NIP pejabat'
+                        className='font-mono bg-background'
+                      />
+                    </div>
+                    <div className='space-y-1.5'>
+                      <Label className='text-xs font-semibold'>
+                        NIK Pejabat (Kunci TTE) <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        value={penandatanganNik}
+                        onChange={(e) => setPenandatanganNik(e.target.value)}
+                        placeholder='NIK pejabat terdaftar'
+                        className='font-mono bg-background'
+                      />
+                    </div>
+                    <div className='space-y-1.5'>
+                      <Label className='text-xs font-semibold'>
+                        Tempat Penetapan <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        value={tempatPenetapan}
+                        onChange={(e) => setTempatPenetapan(e.target.value)}
+                        placeholder='Sei Rampah'
+                        className='bg-background'
+                      />
+                    </div>
+                    <div className='space-y-1.5'>
+                      <Label className='text-xs font-semibold'>
+                        Tanggal Penetapan <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        type='date'
+                        value={tglPenetapan}
+                        onChange={(e) => setTglPenetapan(e.target.value)}
+                        className='bg-background'
+                      />
                     </div>
                     <div className='space-y-1.5 md:col-span-2'>
-                      <Label className='text-xs font-semibold text-muted-foreground'>Jabatan Penandatangan</Label>
-                      <Input readOnly value={currentRow.jabatan_penandatangan || 'An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN'} className='bg-muted/30 text-foreground cursor-default' />
-                    </div>
-                    <div className='space-y-1.5'>
-                      <Label className='text-xs font-semibold text-muted-foreground'>Nama Pejabat</Label>
-                      <Input readOnly value={currentRow.nama_penandatangan || 'MUHAMMAD ALI LUBIS, SE'} className='bg-muted/30 font-bold text-foreground cursor-default' />
-                    </div>
-                    <div className='space-y-1.5'>
-                      <Label className='text-xs font-semibold text-muted-foreground'>NIP Pejabat</Label>
-                      <Input readOnly value={currentRow.nip_penandatangan || '197801172008031002'} className='bg-muted/30 font-mono text-foreground cursor-default' />
+                      <Label className='text-xs font-semibold'>
+                        Jabatan Penandatangan <span className='text-destructive'>*</span>
+                      </Label>
+                      <Input
+                        value={jabatanPenandatangan}
+                        onChange={(e) => setJabatanPenandatangan(e.target.value)}
+                        placeholder='Jabatan penandatangan SKPP'
+                        className='bg-background'
+                      />
                     </div>
                   </div>
                 </div>

@@ -50,6 +50,7 @@ import {
   Eye,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth-store'
 import { useGetRefSKPD, type MasterSkpd } from '@/api'
 import { useSkpp } from './skpp-provider'
 import { RupiahInput } from './rupiah-input'
@@ -317,11 +318,11 @@ export function SkppActionDialog() {
       keterangan: '-',
     },
 
-    tempat_penetapan: 'Sei Rampah',
-    tgl_penetapan: new Date().toISOString().substring(0, 10),
-    jabatan_penandatangan: 'An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN',
-    nama_penandatangan: 'MUHAMMAD ALI LUBIS, SE',
-    nip_penandatangan: '197801172008031002',
+    tempat_penetapan: '',
+    tgl_penetapan: '',
+    jabatan_penandatangan: '',
+    nama_penandatangan: '',
+    nip_penandatangan: '',
 
     tembusan: generateDefaultTembusan(),
     catatan: '',
@@ -486,11 +487,11 @@ export function SkppActionDialog() {
           keterangan: '-',
         },
 
-        tempat_penetapan: 'Sei Rampah',
-        tgl_penetapan: today,
-        jabatan_penandatangan: 'An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN',
-        nama_penandatangan: 'MUHAMMAD ALI LUBIS, SE',
-        nip_penandatangan: '197801172008031002',
+        tempat_penetapan: '',
+        tgl_penetapan: '',
+        jabatan_penandatangan: '',
+        nama_penandatangan: '',
+        nip_penandatangan: '',
 
         tembusan: generateDefaultTembusan(opdName),
         catatan: '',
@@ -680,9 +681,52 @@ export function SkppActionDialog() {
       toast.error('Unit Kerja Asal (OPD) harus dipilih!')
       return
     }
+    if (!formData.sk_dari?.trim() || !formData.nomor_sk?.trim() || !formData.tgl_sk || !formData.tmt_sk) {
+      toast.error('Data Dasar SK (SK Dari, Nomor SK, Tanggal SK, TMT SK) harus diisi!')
+      return
+    }
+    if (!formData.gaji_terakhir_bulan?.trim()) {
+      toast.error('Bulan Pembayaran Gaji Terakhir harus diisi!')
+      return
+    }
+    if (formData.jenis_skpp === 'pensiun' && !formData.alasan_pensiun?.trim()) {
+      toast.error('Alasan Pensiun harus diisi!')
+      return
+    }
+    if (formData.jenis_skpp === 'mutasi' && !formData.mutasi_ke?.trim()) {
+      toast.error('Instansi Mutasi Tujuan harus diisi!')
+      return
+    }
+
+    // Validasi Wajib 5 Berkas Lampiran
+    const requiredFiles = [
+      { key: 'berkas_pengantar_opd', label: 'Surat Pengantar OPD' },
+      { key: 'berkas_sk', label: formData.jenis_skpp === 'pensiun' ? 'SK Pensiun' : 'SK Mutasi' },
+      { key: 'berkas_daftar_gaji', label: 'Daftar Gaji Terakhir' },
+      { key: 'berkas_kk', label: 'FC Kartu Keluarga' },
+      { key: 'berkas_pendukung', label: 'Dokumen Pendukung' },
+    ] as const
+
+    for (const f of requiredFiles) {
+      const hasUploaded = Boolean(files[f.key])
+      const hasExisting = Boolean(currentRow?.[f.key] || currentRow?.berkas_urls?.[f.key])
+      if (!hasUploaded && !hasExisting) {
+        toast.error(`Berkas ${f.label} wajib diunggah!`)
+        return
+      }
+    }
+
+    const user = useAuthStore.getState().user
 
     const payload = {
       ...formData,
+      users_id: user?.id,
+      user_id: user?.id,
+      kd_opd1: formData.kd_opd1 || userSkpd?.kd_opd1 || '',
+      kd_opd2: formData.kd_opd2 || userSkpd?.kd_opd2 || '',
+      kd_opd3: formData.kd_opd3 || userSkpd?.kd_opd3 || '',
+      kd_opd4: formData.kd_opd4 || userSkpd?.kd_opd4 || '',
+      kd_opd5: formData.kd_opd5 || userSkpd?.kd_opd5 || '',
       status: isBendahara ? 'Draft' : formData.status,
       pensiun_pokok: Number(formData.pensiun_pokok || 0),
       alasan_pensiun: formData.alasan_pensiun || 'diberhentikan dengan hormat sebagai Pegawai Negeri Sipil',
@@ -724,6 +768,18 @@ export function SkppActionDialog() {
         jumlah_hutang: Number(formData.hutang?.jumlah_hutang ?? 0),
         keterangan: formData.hutang?.keterangan ?? '-',
       },
+    }
+
+    if (!isEdit || isBendahara) {
+      delete (payload as any).nama_penandatangan
+      delete (payload as any).nip_penandatangan
+      delete (payload as any).jabatan_penandatangan
+      delete (payload as any).penandatangan_id
+      delete (payload as any).penandatangan_nik
+      if (!isEdit) {
+        delete (payload as any).tempat_penetapan
+        delete (payload as any).tgl_penetapan
+      }
     }
 
     // Build FormData for multipart payload
@@ -785,7 +841,7 @@ export function SkppActionDialog() {
               </TabsTrigger>
               <TabsTrigger value='pengesahan' className='text-xs sm:text-sm flex items-center gap-1.5'>
                 <FileText className='h-4 w-4' />
-                <span className='truncate'>4. Pengesahan</span>
+                <span className='truncate'>4. Tembusan & Catatan</span>
               </TabsTrigger>
               <TabsTrigger value='berkas' className='text-xs sm:text-sm flex items-center gap-1.5'>
                 <UploadCloud className='h-4 w-4' />
@@ -1464,73 +1520,8 @@ export function SkppActionDialog() {
               </div>
             </TabsContent>
 
-            {/* TAB 4: PENGESAHAN & TEMBUSAN */}
+            {/* TAB 4: TEMBUSAN & CATATAN */}
             <TabsContent value='pengesahan' className='space-y-4 pt-3 flex-1 overflow-y-auto pr-2'>
-              {/* Penandatangan */}
-              <div className='rounded-lg border p-4 space-y-3.5 bg-muted/20'>
-                <h4 className='text-sm font-semibold text-primary flex items-center gap-1.5'>
-                  <UserCheck className='h-4 w-4' />
-                  Data Pejabat Penandatangan
-                </h4>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div className='space-y-1.5'>
-                    <Label htmlFor='tempat_penetapan' className='text-xs font-semibold'>
-                      Tempat Penetapan
-                    </Label>
-                    <Input
-                      id='tempat_penetapan'
-                      value={formData.tempat_penetapan}
-                      onChange={(e) => updateField('tempat_penetapan', e.target.value)}
-                      placeholder='Sei Rampah'
-                    />
-                  </div>
-                  <div className='space-y-1.5'>
-                    <Label htmlFor='tgl_penetapan' className='text-xs font-semibold'>
-                      Tanggal Penetapan
-                    </Label>
-                    <Input
-                      id='tgl_penetapan'
-                      type='date'
-                      value={formData.tgl_penetapan}
-                      onChange={(e) => updateField('tgl_penetapan', e.target.value)}
-                    />
-                  </div>
-                  <div className='space-y-1.5 md:col-span-2'>
-                    <Label htmlFor='jabatan_penandatangan' className='text-xs font-semibold'>
-                      Jabatan Penandatangan
-                    </Label>
-                    <Input
-                      id='jabatan_penandatangan'
-                      value={formData.jabatan_penandatangan}
-                      onChange={(e) => updateField('jabatan_penandatangan', e.target.value)}
-                      placeholder='An. KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH KABUPATEN SERDANG BEDAGAI KABID PERBENDAHARAAN, AKUNTANSI DAN PELAPORAN'
-                    />
-                  </div>
-                  <div className='space-y-1.5'>
-                    <Label htmlFor='nama_penandatangan' className='text-xs font-semibold'>
-                      Nama Pejabat
-                    </Label>
-                    <Input
-                      id='nama_penandatangan'
-                      value={formData.nama_penandatangan}
-                      onChange={(e) => updateField('nama_penandatangan', e.target.value)}
-                      placeholder='MUHAMMAD ALI LUBIS, SE'
-                    />
-                  </div>
-                  <div className='space-y-1.5'>
-                    <Label htmlFor='nip_penandatangan' className='text-xs font-semibold'>
-                      NIP Pejabat
-                    </Label>
-                    <Input
-                      id='nip_penandatangan'
-                      value={formData.nip_penandatangan}
-                      onChange={(e) => updateField('nip_penandatangan', e.target.value)}
-                      placeholder='197801172008031002'
-                    />
-                  </div>
-                </div>
-              </div>
-
               {/* Tembusan SKPP */}
               <div className='rounded-lg border p-4 space-y-3.5'>
                 <div className='flex items-center justify-between flex-wrap gap-2'>

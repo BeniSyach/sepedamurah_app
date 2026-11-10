@@ -66,6 +66,13 @@ export interface VerifikasiSkppPayload {
   verifikasi_berkas?: Record<string, { status: 'valid' | 'perlu_perbaikan' | 'tidak_valid'; catatan?: string }>
   id_operator?: string
   nama_operator?: string
+  tempat_penetapan?: string
+  tgl_penetapan?: string
+  jabatan_penandatangan?: string
+  nama_penandatangan?: string
+  nip_penandatangan?: string
+  penandatangan_nik?: string
+  penandatangan_id?: string | number
 }
 
 export function useVerifikasiSkpp() {
