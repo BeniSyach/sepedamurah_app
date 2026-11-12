@@ -74,7 +74,7 @@ export function PermohonanDiterimaSPDPeriksa({
     const fetchPdf = async () => {
       try {
         const response = await api.get<Blob>(
-          `/spd/permohonan-spd/download/${currentRow.id}`,
+          `/spd/spd-terkirim/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {

@@ -94,7 +94,7 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Hapus Fungsional Penerimaan Ini: ${currentRow.dpa?.nm_dpa} ?`}
+            title={`Hapus Laporan DPA Ditolak Ini: ${currentRow.dpa?.nm_dpa} ?`}
             desc={
               <>
                 Kamu akan menghapus data dengan nama{' '}

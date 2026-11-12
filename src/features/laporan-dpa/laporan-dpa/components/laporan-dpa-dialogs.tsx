@@ -1,4 +1,4 @@
-import { useDeleteLaporanFungsional } from '@/api'
+import { useDeleteLaporanDPA } from '@/api'
 import { toast } from 'sonner'
 import { api } from '@/api/common/client'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -8,7 +8,7 @@ import { useRefLaporanDPA } from './laporan-dpa-provider'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useRefLaporanDPA()
-  const { mutateAsync } = useDeleteLaporanFungsional()
+  const { mutateAsync } = useDeleteLaporanDPA()
 
   const handleDelete = async () => {
     if (!currentRow) return
@@ -35,7 +35,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/laporan/fungsional/download/${currentRow.id}`,
+          `/laporan/laporan-dpa/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -79,7 +79,7 @@ export function UsersDialogs() {
     await toast.promise(
       (async () => {
         const response = await api.get(
-          `/laporan/fungsional/download/${currentRow.id}`,
+          `/laporan/laporan-dpa/download/${currentRow.id}`,
           {
             responseType: 'blob',
             headers: {
@@ -114,7 +114,7 @@ export function UsersDialogs() {
   return (
     <>
       <LaporanDPAActionDialog
-        key='laporan-fungsional-penerimaan-add'
+        key='laporan-dpa-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
       />
@@ -122,7 +122,7 @@ export function UsersDialogs() {
       {currentRow && (
         <>
           <LaporanDPAActionDialog
-            key={`laporan-fungsional-penerimaan-edit-${currentRow.id}`}
+            key={`laporan-dpa-edit-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -134,7 +134,7 @@ export function UsersDialogs() {
           />
 
           <LaporanDPAPeriksa
-            key={`laporan-fungsional-penerimaan-periksa-${currentRow.id}`}
+            key={`laporan-dpa-periksa-${currentRow.id}`}
             open={open === 'periksa'}
             onOpenChange={() => {
               setOpen('periksa')
@@ -146,7 +146,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`laporan-fungsional-penerimaan-delete-${currentRow.id}`}
+            key={`laporan-dpa-delete-${currentRow.id}`}
             destructive
             open={open === 'delete'}
             onOpenChange={() => {
@@ -157,7 +157,7 @@ export function UsersDialogs() {
             }}
             handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Hapus Laporan Fungsional Penerimaan Ini: ${currentRow.id} ?`}
+            title={`Hapus Laporan DPA Ini: ${currentRow.id} ?`}
             desc={
               <>
                 Kamu akan menghapus data dengan nama{' '}
@@ -169,7 +169,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`fungsional-penerimaan-lihat-${currentRow.id}`}
+            key={`laporan-dpa-lihat-${currentRow.id}`}
             destructive={false}
             open={open === 'lihat'}
             onOpenChange={() => {
@@ -189,7 +189,7 @@ export function UsersDialogs() {
           />
 
           <ConfirmDialog
-            key={`fungsional-penerimaan-downloadBerkas-${currentRow.id}`}
+            key={`laporan-dpa-downloadBerkas-${currentRow.id}`}
             destructive={false}
             open={open === 'downloadBerkas'}
             onOpenChange={() => {

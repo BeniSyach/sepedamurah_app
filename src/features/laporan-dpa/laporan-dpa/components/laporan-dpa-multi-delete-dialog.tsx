@@ -36,13 +36,13 @@ export function UsersMultiDeleteDialog<TData>({
     onOpenChange(false)
 
     toast.promise(sleep(2000), {
-      loading: 'Menghapus Laporan Fungsional Penerimaan...',
+      loading: 'Menghapus Laporan DPA...',
       success: () => {
         table.resetRowSelection()
         return `Telah Dihapus ${selectedRows.length} ${
           selectedRows.length > 1
-            ? 'Laporan Fungsional Penerimaan'
-            : 'Laporan Fungsional Penerimaan'
+            ? 'Laporan DPA'
+            : 'Laporan DPA'
         }`
       },
       error: 'Error',
@@ -63,8 +63,8 @@ export function UsersMultiDeleteDialog<TData>({
           />{' '}
           Hapus {selectedRows.length}{' '}
           {selectedRows.length > 1
-            ? 'Laporan Fungsional Penerimaan'
-            : 'Laporan Fungsional Penerimaan'}
+            ? 'Laporan DPA'
+            : 'Laporan DPA'}
         </span>
       }
       desc={
